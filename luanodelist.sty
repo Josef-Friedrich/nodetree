@@ -1,0 +1,14 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{luanodelist}
+\RequirePackage{luatexbase-mcb}
+
+\directlua{
+  require("luanodelist")
+
+  inspector = function(head)
+    luanodelist.nodelist_visualize(head)
+    return true
+  end
+
+  luatexbase.add_to_callback("post_linebreak_filter", inspector, "inspector")
+}

@@ -77,7 +77,7 @@ local function label(n,tab )
   local typ = node.type(n.id)
   local nodename = get_nodename(n)
   local subtype = get_subtype(n)
-  local ret = string.format("%s [ label = \"<title> name: %s | <sub> type: %s  |  { <prev> prev |<next> next }",nodename or "??",typ or "??",subtype or "?")
+  local ret = string.format("name: %s; type: %s;",typ or "??",subtype or "?")
   if tab then
     for i=1,#tab do
       if tab[i][1] then
@@ -85,7 +85,7 @@ local function label(n,tab )
       end
     end
   end
-  return ret .. "\"]\n"
+  return format_type(typ) .. ret .. "\n"
 end
 
 local function draw_node( n,tab )
@@ -250,7 +250,7 @@ local function analyze_nodelist( head )
     -- disc
     --
     elseif typ == "disc" then
-	    ret[#ret + 1] = format_type(typ) .. "pre" .. "post" .. "replace" .. "\n;"
+	    ret[#ret + 1] = format_type(typ) .. "pre" .. "post" .. "replace" .. ";\n"
 	    if head.pre then
 	      ret[#ret + 1] = analyze_nodelist(head.pre)
 	    end
@@ -325,7 +325,11 @@ end
 function nodelist_visualize( nodelist )
   local output = analyze_nodelist(nodelist)
 
-  output = "\n\n\n" .. output
+  output = debug_heading("BEGIN nodelist debug") .. output .. debug_heading("END nodelist debug")
   print(output)
 end
 
+function debug_heading(heading)
+  local line = '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
+  return '\n' .. line .. '% ' .. heading .. line .. '\n'
+end

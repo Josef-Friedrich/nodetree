@@ -2,6 +2,12 @@
 \ProvidesPackage{luanodelist}
 \RequirePackage{luatexbase-mcb}
 
+\DeclareOption{log}{\directlua{output_way = 'log'}}
+\DeclareOption{term}{\directlua{output_way = 'term'}}
+\DeclareOption{termandlog}{\directlua{output_way = 'term and log'}}
+
+\ProcessOptions\relax
+
 \directlua{
   require("luanodelist")
 

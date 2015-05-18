@@ -6,8 +6,6 @@
 \DeclareOption{term}{\directlua{output_way = 'term'}}
 \DeclareOption{termandlog}{\directlua{output_way = 'term and log'}}
 
-\newcommand{\setcallback}[1]{\directlua{debug_callback = '#1'}}
-
 \ProcessOptions\relax
 
 \directlua{
@@ -18,9 +16,5 @@
     return true
   end
 
-  if not debug_callback then
-    debug_callback = 'post_linebreak_filter'
-  end
-
-  luatexbase.add_to_callback(debug_callback, inspector, "inspector")
+  luatexbase.add_to_callback('post_linebreak_filter', inspector, "inspector")
 }

@@ -1,28 +1,34 @@
 %!TEX program = lualatex
 \documentclass{article}
 \usepackage{listings}
-\lstset{language=TeX}
+
+\lstset{
+  basicstyle=\ttfamily,
+  language=TeX,
+  frame=single,
+ }
 
 \begin{document}
 
-\section{Options}
+\section{Option 'channel'}
 
-Option "term"
+Value "term"
+
 
 \begin{lstlisting}
-\usepackage[term]{luanodelist}
+\usepackage[channel=term]{luanodelist}
 \end{lstlisting}
 
-Option "log"
+Value "log"
 
 \begin{lstlisting}
-\usepackage[log]{luanodelist}
+\usepackage[channel=log]{luanodelist}
 \end{lstlisting}
 
-Option "termandlog"
+Value "term and log"
 
 \begin{lstlisting}
-\usepackage[termandlog]{luanodelist}
+\usepackage[channel={term and log}]{luanodelist}
 \end{lstlisting}
 
 \end{document}

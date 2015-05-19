@@ -1,15 +1,24 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{luanodelist}
 \RequirePackage{luatexbase-mcb}
+\RequirePackage{kvoptions}
 
-\DeclareOption{log}{\directlua{output_way = 'log'}}
-\DeclareOption{term}{\directlua{output_way = 'term'}}
-\DeclareOption{termandlog}{\directlua{output_way = 'term and log'}}
+\SetupKeyvalOptions{
+  family=LN,
+  prefix=LN@
+}
 
-\ProcessOptions\relax
+\DeclareStringOption[term and log]{channel}
+\DeclareStringOption[postlinebreak]{callback}
+
+\ProcessKeyvalOptions*
+
+\newcommand{\setluanodelist}[1]{\setkeys{LN}{#1}}
 
 \directlua{
   require("luanodelist")
+
+  channel = '\LN@channel'
 
   inspector = function(head)
     luanodelist.nodelist_visualize(head)

@@ -327,11 +327,7 @@ function nodelist_visualize( nodelist )
 
   output = debug_heading("BEGIN nodelist debug") .. output .. debug_heading("END nodelist debug")
 
-  if not output_way then
-    output_way = 'term and log'
-  end
-
-  texio.write(output_way, output)
+  texio.write(channel, output)
 end
 
 function debug_heading(heading)

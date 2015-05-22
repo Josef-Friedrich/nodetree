@@ -25,5 +25,5 @@
     return true
   end
 
-  luatexbase.add_to_callback('post_linebreak_filter', inspector, "inspector")
+  luatexbase.add_to_callback(luanodelist.get_luatex_callback("\LN@callback"), inspector, "inspector")
 }

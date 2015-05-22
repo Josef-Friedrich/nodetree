@@ -1,6 +1,5 @@
 -- Based on http://gist.github.com/556247
 
-
 local io,string,table = io,string,table
 local assert,tostring,type = assert,tostring,type
 local tex,texio,node,unicode,font=tex,texio,node,unicode,font
@@ -77,11 +76,11 @@ local function label(n,tab )
   local typ = node.type(n.id)
   local nodename = get_nodename(n)
   local subtype = get_subtype(n)
-  local ret = string.format("name: %s; type: %s;",typ or "??",subtype or "?")
+  local ret = string.format("name: %s; type: %s;",typ or "??",subtype or "?") .. "; "
   if tab then
     for i=1,#tab do
       if tab[i][1] then
-        ret = ret .. string.format("|<%s> %s",tab[i][1],tab[i][2])
+        ret = ret .. string.format("%s: %s; ",tab[i][1],tab[i][2])
       end
     end
   end
@@ -109,23 +108,17 @@ local function draw_node( n,tab )
 end
 
 local function draw_action( n )
-  local nodename = get_nodename(n)
-  local ret = string.format("%s [ label = \"<title> name: %s ", nodename, "action")
-  local tab = {
-    {"action_type", string.format("action_type: %s", tostring(n.action_type))},
-    {"action_id" ,  string.format("action_id: %s",tostring(n.action_id))},
-    {"named_id",    string.format("named_id: %s",tostring(n.named_id))},
-    {"file",        string.format("file: %s",tostring(n.file))},
-    {"new_window" , string.format("new_window: %s",tostring(n.new_window))},
-    {"data",        string.format("data: %s",tostring(n.data):gsub(">","\\>"):gsub("<","\\<"))},
-    {"refcount" ,   string.format("ref_count: %s",tostring(n.ref_count))},
-  }
-  for i=1,#tab do
-    if tab[i][1] then
-      ret = ret .. string.format("|<%s> %s",tab[i][1],tab[i][2])
-    end
-  end
-  return ret .. "\"]\n"
+  local ret = {}
+  ret[#ret + 1] = "name: action; "
+  ret[#ret + 1] = string.format("action_type: %s", tostring(n.action_type)) .. "; "
+  ret[#ret + 1] = string.format("action_id: %s",tostring(n.action_id)) .. "; "
+  ret[#ret + 1] = string.format("named_id: %s",tostring(n.named_id)) .. "; "
+  ret[#ret + 1] = string.format("file: %s",tostring(n.file)) .. "; "
+  ret[#ret + 1] = string.format("new_window: %s",tostring(n.new_window)) .. "; "
+  ret[#ret + 1] = string.format("data: %s",tostring(n.data):gsub(">","\\>"):gsub("<","\\<")) .. "; "
+  ret[#ret + 1] = string.format("ref_count: %s",tostring(n.ref_count)) .. "; "
+
+  return table.concat(ret ) .. "\n"
 end
 
 local function analyze_nodelist( head )
@@ -245,12 +238,12 @@ local function analyze_nodelist( head )
     -- penalty
     --
     elseif typ == "penalty" then
-      ret[#ret + 1] = format_type(typ) .. head.penalty .. "\n"
+      ret[#ret + 1] = format_type(typ) .. head.penalty .. ";\n"
 
     -- disc
     --
     elseif typ == "disc" then
-	    ret[#ret + 1] = format_type(typ) .. "pre" .. "post" .. "replace" .. ";\n"
+	    ret[#ret + 1] = format_type(typ) .. ";\n"
 	    if head.pre then
 	      ret[#ret + 1] = analyze_nodelist(head.pre)
 	    end
@@ -325,7 +318,7 @@ end
 function nodelist_visualize( nodelist )
   local output = analyze_nodelist(nodelist)
 
-  output = debug_heading("BEGIN nodelist debug") .. output .. debug_heading("END nodelist debug")
+  output = debug_heading("BEGIN nodelist debug (Callback: " .. callback .. ")") .. output .. debug_heading("END nodelist debug")
 
   texio.write(channel, output)
 end
@@ -333,4 +326,21 @@ end
 function debug_heading(heading)
   local line = '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
   return '\n' .. line .. '% ' .. heading .. line .. '\n'
+end
+
+function get_luatex_callback(key)
+
+  if key == "prelinebreak" then callback = "pre_linebreak_filter"
+  elseif key == "linebreak" then callback = "linebreak_filter"
+  elseif key == "postlinebreak" then callback = "post_linebreak_filter"
+  elseif key == "hpack" then callback = "hpack_filter"
+  elseif key == "vpack" then callback = "vpack_filter"
+  elseif key == "hyphenate" then callback = "hyphenate"
+  elseif key == "ligaturing" then callback = "ligaturing"
+  elseif key == "kerning" then callback = "kerning"
+  elseif key == "mhlist" then callback = "mlist_to_hlist"
+  else callback = "post_linebreak_filter"
+  end
+
+  return callback
 end

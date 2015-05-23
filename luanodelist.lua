@@ -121,17 +121,51 @@ local function draw_action(n)
   return table.concat(ret ) .. "\n"
 end
 
+
+function pt(pt)
+  return string.format("%gpt", pt / 2^16)
+end
+
+
 function format_glyph(node,typ)
-  local output = format_type(typ) ..
-    string.format("char: %q; ", unicode.utf8.char(node.char)) ..
-    string.format("lang: %d; ", node.lang) ..
-    string.format("font: %d; ", node.font) ..
-    string.format("width: %gpt; ", node.width / 2^16) .. "\n"
+  local out = format_type(typ) ..
+    kv("char", string.format("%q", unicode.utf8.char(node.char))) ..
+    kv("lang", string.format("%d", node.lang)) ..
+    kv("font", string.format("%d", node.font)) ..
+    kv("width", pt(node.width)) .. "\n"
   if node.components then
-    output = output .. analyze_nodelist(node.components)
+    out = out .. analyze_nodelist(node.components)
   end
 
-  return output
+  return out
+end
+
+function kv(key, value)
+  return key .. ': ' .. value .. '; '
+end
+
+function format_rule(node, typ)
+  local out = format_type(typ)
+
+  if node.width == -1073741824 then
+    out = out .. kv("width", "flexible")
+  else
+    out = out .. kv("width", pt(node.width))
+  end
+
+  if node.height == -1073741824 then
+    out = out .. kv("height", "flexible")
+  else
+    out = out .. kv("height", pt(node.height))
+  end
+
+  if node.depth == -1073741824 then
+    out = out .. kv("depth", "flexible")
+  else
+    out = out .. kv("depth", pt(node.depth))
+  end
+
+  return out .. "\n"
 end
 
 local function analyze_nodelist(head)
@@ -242,11 +276,7 @@ local function analyze_nodelist(head)
     -- rule
     --
     elseif typ == "rule" then
-  	  local wd,ht,dp
-  	  if head.width  == -1073741824 then wd = "width: flexible; "  else wd = string.format("width: %gpt; ", head.width  / 2^16) end
-  	  if head.height == -1073741824 then ht = "height: flexible; " else ht = string.format("height: %gpt; ", head.height / 2^16) end
-  	  if head.depth  == -1073741824 then dp = "depth: flexible; "  else dp = string.format("depth: %gpt; ", head.depth  / 2^16) end
-      ret[#ret + 1] = format_type(typ) .. wd .. ht .. dp .. ";\n"
+      ret[#ret + 1] = format_rule(head, typ)
 
     -- penalty
     --

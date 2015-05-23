@@ -13,7 +13,7 @@ local function get_nodename(n)
   return "\"n" .. string.gsub(tostring(n), "^<node%s+%S+%s+<%s+(%d+).*","%1") .. "\""
 end
 
-local function get_subtype( n )
+local function get_subtype(n)
   typ = node.type(n.id)
   local subtypes = {
     hlist = {
@@ -72,7 +72,7 @@ local function get_subtype( n )
   assert(false)
 end
 
-local function label(n,tab )
+local function label(n,tab)
   local typ = node.type(n.id)
   local nodename = get_nodename(n)
   local subtype = get_subtype(n)
@@ -87,7 +87,7 @@ local function label(n,tab )
   return format_type(typ) .. ret .. "\n"
 end
 
-local function draw_node( n,tab )
+local function draw_node(n,tab)
   local ret = {}
   if not tab then
     tab = {}
@@ -107,7 +107,7 @@ local function draw_node( n,tab )
   return table.concat(ret)
 end
 
-local function draw_action( n )
+local function draw_action(n)
   local ret = {}
   ret[#ret + 1] = "name: action; "
   ret[#ret + 1] = string.format("action_type: %s", tostring(n.action_type)) .. "; "
@@ -121,7 +121,20 @@ local function draw_action( n )
   return table.concat(ret ) .. "\n"
 end
 
-local function analyze_nodelist( head )
+function format_glyph(node,typ)
+  local output = format_type(typ) ..
+    string.format("char: %q; ", unicode.utf8.char(node.char)) ..
+    string.format("lang: %d; ", node.lang) ..
+    string.format("font: %d; ", node.font) ..
+    string.format("width: %gpt; ", node.width / 2^16) .. "\n"
+  if node.components then
+    output = output .. analyze_nodelist(node.components)
+  end
+
+  return output
+end
+
+local function analyze_nodelist(head)
   local ret = {}
   local typ,nodename
 	while head do
@@ -257,15 +270,7 @@ local function analyze_nodelist( head )
     -- glyph
     --
   	elseif typ == "glyph" then
-      local ch = string.format("char: %q; ", unicode.utf8.char(head.char))
-  	  local lng = string.format("lang: %d; ", head.lang)
-  	  local fnt = string.format("font: %d; ", head.font)
-      local wd  = string.format("width: %gpt; ", head.width / 2^16)
-  	  local comp = {"comp","components"}
-      ret[#ret + 1] = format_type(typ) .. ch .. lng .. fnt .. wd .. "\n"
-      if head.components then
-        ret[#ret + 1] = analyze_nodelist(head.components)
-      end
+      ret[#ret + 1] = format_glyph(head,typ)
 
     -- math
     --
@@ -315,7 +320,7 @@ function format_type(typ)
   return string.upper(typ) .. " "
 end
 
-function nodelist_visualize( nodelist )
+function nodelist_visualize(nodelist)
   local output = analyze_nodelist(nodelist)
 
   output = debug_heading("BEGIN nodelist debug (Callback: " .. callback .. ")") .. output .. debug_heading("END nodelist debug")

@@ -22,6 +22,11 @@ str.d = function(input)
   return string.format("%d", input)
 end
 
+-- string
+str.s = function(input)
+  return string.format("%s", input)
+end
+
 -- quoted string
 str.q = function(input)
   return string.format("%q", input)
@@ -36,6 +41,14 @@ local fmt = {}
 -- key value
 fmt.kv = function(key, value)
   return key .. ': ' .. value .. '; '
+end
+
+fmt.heading = function(text)
+  return '\n' .. fmt.line() .. '% ' .. text .. fmt.line() .. '\n'
+end
+
+fmt.line = function()
+  return '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
 end
 
 ------------------------------------------------------------------------
@@ -237,8 +250,43 @@ end
 
 -- kern
 process.kern = function(n)
-  return process.base(n) .. fmt.kv("kern", str.pt(n.kern)) .. fmt.nl()
+  return process.base(n) .. fmt.kv("kern", str.pt(n.kern))
 end
+
+-- glue
+process.glue = function(n)
+  local subtype = get_subtype(n)
+  local spec = string.format("%gpt", n.spec.width / 2^16)
+
+  if n.spec.stretch ~= 0 then
+    local stretch_order, shrink_order
+    if n.spec.stretch_order == 0 then
+      stretch_order = string.format(" + %gpt",n.spec.stretch / 2^16)
+    else
+      stretch_order = string.format(" + %g fi%s", n.spec.stretch  / 2^16, string.rep("l",n.spec.stretch_order - 1))
+    end
+    spec = spec .. stretch_order
+  end
+  if n.spec.shrink ~= 0 then
+    if n.spec.shrink_order == 0 then
+      shrink_order = string.format(" - %gpt",n.spec.shrink / 2^16)
+    else
+      shrink_order = string.format(" - %g fi%s", n.spec.shrink  / 2^16, string.rep("l",n.spec.shrink_order - 1))
+    end
+
+    spec = spec .. shrink_order
+  end
+  return process.base(n) .. subtype .. ": " .. spec .. ";"
+end
+
+-- whatsit colorstack
+process.whatsit_colorstack = function(n)
+  return process.base(n) .. "subtype: colorstack; " ..
+    fmt.kv("stack", str.d(n.stack)) ..
+    fmt.kv("cmd", str.s(n.cmd)) ..
+    fmt.kv("data", str.s(n.data))
+end
+
 
 -- tostring(a_node) looks like "<node    nil <    172 >    nil : hlist 2>", so we can
 -- grab the number in the middle (172 here) as a unique id. So the node
@@ -362,10 +410,7 @@ function analyze_nodelist(head)
 	  typ = node.type(head.id)
 	  nodename = get_nodename(head)
 
-    -- hlist
-    --
-  	if typ == "hlist" then
-      ret[#ret + 1] = process.hlist(head)
+  	if typ == "hlist" then ret[#ret + 1] = process.hlist(head)
 
     -- vlist
     --
@@ -405,55 +450,13 @@ function analyze_nodelist(head)
   	    ret[#ret + 1] = analyze_nodelist(head.head)
   	  end
 
-    -- glue
-    --
-  	elseif typ == "glue" then
-  	  local subtype = get_subtype(head)
-  	  local spec = string.format("%gpt", head.spec.width / 2^16)
-  	  if head.spec.stretch ~= 0 then
-  	    local stretch_order, shrink_order
-  	    if head.spec.stretch_order == 0 then
-  	      stretch_order = string.format(" + %gpt",head.spec.stretch / 2^16)
-  	    else
-  	      stretch_order = string.format(" + %g fi%s", head.spec.stretch  / 2^16, string.rep("l",head.spec.stretch_order - 1))
-  	    end
-  	    spec = spec .. stretch_order
-  	  end
-  	  if head.spec.shrink ~= 0 then
-  	    if head.spec.shrink_order == 0 then
-  	      shrink_order = string.format(" - %gpt",head.spec.shrink / 2^16)
-  	    else
-  	      shrink_order = string.format(" - %g fi%s", head.spec.shrink  / 2^16, string.rep("l",head.spec.shrink_order - 1))
-  	    end
 
-  	    spec = spec .. shrink_order
-  	  end
-      ret[#ret + 1] = format_type(typ) .. subtype .. ": " .. spec .. ";\n"
-
-    -- kern
-    --
-  	elseif typ == "kern" then
-      ret[#ret + 1] = process.kern(head)
-
-    -- rule
-    --
-    elseif typ == "rule" then
-      ret[#ret + 1] = process.rule(head)
-
-    -- penalty
-    --
-    elseif typ == "penalty" then
-      ret[#ret + 1] = process.penalty(head)
-
-    -- disc
-    --
-    elseif typ == "disc" then
-      ret[#ret + 1] = process.disc(head)
-
-    -- glyph
-    --
-  	elseif typ == "glyph" then
-      ret[#ret + 1] = process.glyph(head)
+  	elseif typ == "glue" then ret[#ret + 1] = process.glue(head)
+  	elseif typ == "kern" then ret[#ret + 1] = process.kern(head)
+    elseif typ == "rule" then ret[#ret + 1] = process.rule(head)
+    elseif typ == "penalty" then ret[#ret + 1] = process.penalty(head)
+    elseif typ == "disc" then ret[#ret + 1] = process.disc(head)
+  	elseif typ == "glyph" then ret[#ret + 1] = process.glyph(head)
 
     -- math
     --
@@ -475,13 +478,8 @@ function analyze_nodelist(head)
       ret[#ret + 1] = draw_action(head.action)
       ret[#ret + 1] = draw_node(head, {{ "subtype", "pdf_start_link"}, {"width", wd},{"widthraw",head.width}, {"height" , ht}, {"depth",dp}, {"objnum", objnum}, {"action", "action"}})
 
-    -- whatsit
-    --
-    elseif typ == "whatsit" and head.subtype == 39 then
-      local stack = string.format("stack: %d; ", head.stack)
-      local cmd   = string.format("cmd: %s; ", head.cmd)
-      local data  = string.format("data: %s; ", head.data)
-      ret[#ret + 1] = format_type(typ) .. "subtype: colorstack; " .. stack .. cmd .. data
+    elseif typ == "whatsit" and head.subtype == 39 then ret[#ret + 1] = process.whatsit_colorstack(head)
+
 
     -- whatsit
     --
@@ -507,14 +505,11 @@ function nodelist_visualize(nodelist)
 
   local output = analyze_nodelist(nodelist)
 
-  output = debug_heading("BEGIN nodelist debug (Callback: " .. callback .. ")") .. output .. debug_heading("END nodelist debug")
+  output = fmt.heading("BEGIN nodelist debug (Callback: " .. callback .. ")") ..
+    output ..
+    fmt.heading("END nodelist debug")
 
   texio.write(options.channel, output)
-end
-
-function debug_heading(heading)
-  local line = '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
-  return '\n' .. line .. '% ' .. heading .. line .. '\n'
 end
 
 function get_luatex_callback(key)

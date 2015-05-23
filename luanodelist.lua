@@ -430,11 +430,12 @@ function format_type(typ)
 end
 
 function nodelist_visualize(nodelist)
+
   local output = analyze_nodelist(nodelist)
 
   output = debug_heading("BEGIN nodelist debug (Callback: " .. callback .. ")") .. output .. debug_heading("END nodelist debug")
 
-  texio.write(channel, output)
+  texio.write(options.channel, output)
 end
 
 function debug_heading(heading)
@@ -443,7 +444,6 @@ function debug_heading(heading)
 end
 
 function get_luatex_callback(key)
-
   if key == "prelinebreak" then callback = "pre_linebreak_filter"
   elseif key == "linebreak" then callback = "linebreak_filter"
   elseif key == "postlinebreak" then callback = "post_linebreak_filter"

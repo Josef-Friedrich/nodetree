@@ -10,6 +10,7 @@
 
 \DeclareStringOption[term and log]{channel}
 \DeclareStringOption[postlinebreak]{callback}
+\DeclareStringOption[1]{verbosity}
 
 \ProcessKeyvalOptions*
 
@@ -18,12 +19,15 @@
 \directlua{
   require("luanodelist")
 
-  channel = '\LN@channel'
+  options = {}
+  options.verbosity = '\LN@verbosity'
+  options.channel = '\LN@channel'
+  options.callback = '\LN@callback'
 
   inspector = function(head)
     luanodelist.nodelist_visualize(head)
     return true
   end
 
-  luatexbase.add_to_callback(luanodelist.get_luatex_callback("\LN@callback"), inspector, "inspector")
+  luatexbase.add_to_callback(luanodelist.get_luatex_callback(options.callback), inspector, "inspector")
 }

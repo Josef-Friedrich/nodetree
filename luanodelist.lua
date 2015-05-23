@@ -6,6 +6,117 @@ local tex,texio,node,unicode,font=tex,texio,node,unicode,font
 
 module(..., package.seeall)
 
+--
+--- string
+--
+local str = {}
+
+-- points
+str.pt = function(input)
+  return string.format("%gpt", input / 2^16)
+end
+
+-- decimal
+str.d = function(input)
+  return string.format("%d", input)
+end
+
+-- quoted string
+str.q = function(input)
+  return string.format("%q", input)
+end
+
+--
+--- format
+--
+local fmt = {}
+
+fmt.kv = function(key, value)
+  return key .. ': ' .. value .. '; '
+end
+
+local process = {}
+
+-- glyph
+process.glyph = function(node,typ)
+  local out = format_type(typ) ..
+    fmt.kv("char", str.q(unicode.utf8.char(node.char))) ..
+    fmt.kv("lang", str.d(node.lang)) ..
+    fmt.kv("font", str.d(node.font)) ..
+    fmt.kv("width", str.pt(node.width)) .. "\n"
+  if node.components then
+    out = out .. analyze_nodelist(node.components)
+  end
+
+  return out
+end
+
+-- rule
+process.rule = function(node, typ)
+  local out = format_type(typ)
+
+  if node.width == -1073741824 then
+    out = out .. fmt.kv("width", "flexible")
+  else
+    out = out .. fmt.kv("width", str.pt(node.width))
+  end
+
+  if node.height == -1073741824 then
+    out = out .. fmt.kv("height", "flexible")
+  else
+    out = out .. fmt.kv("height", str.pt(node.height))
+  end
+
+  if node.depth == -1073741824 then
+    out = out .. fmt.kv("depth", "flexible")
+  else
+    out = out .. fmt.kv("depth", str.pt(node.depth))
+  end
+
+  return out .. "\n"
+end
+
+-- hlist
+process.hlist = function(node, typ)
+  local out = format_type(typ)
+
+  if node.width ~= 0 then
+    out = out .. fmt.kv("width", str.pt(node.width))
+  end
+
+  if node.height ~= 0 then
+    out = out .. fmt.kv("height", str.pt(node.height))
+  end
+
+  if node.depth ~= 0 then
+    out = out .. fmt.kv("depth", str.pt(node.depth))
+  end
+
+  if node.glue_set ~= 0 then
+    out = out .. fmt.kv("glue_set", str.d(node.glue_set))
+  end
+
+  if node.glue_sign ~= 0 then
+    out = out .. fmt.kv("glue_sign", str.d(node.glue_sign))
+  end
+
+  if node.glue_order ~= 0 then
+    out = out .. fmt.kv("glue_order", str.d(node.glue_order))
+  end
+
+  if node.shift ~= 0 then
+    out = out .. fmt.kv("shift", str.d(node.shift))
+  end
+
+  out = out .. "\n"
+
+  if node.head then
+    out = out .. analyze_nodelist(node.head)
+  end
+
+  return out
+end
+
 -- tostring(a_node) looks like "<node    nil <    172 >    nil : hlist 2>", so we can
 -- grab the number in the middle (172 here) as a unique id. So the node
 -- is named "node172"
@@ -121,54 +232,7 @@ local function draw_action(n)
   return table.concat(ret ) .. "\n"
 end
 
-
-function pt(pt)
-  return string.format("%gpt", pt / 2^16)
-end
-
-
-function format_glyph(node,typ)
-  local out = format_type(typ) ..
-    kv("char", string.format("%q", unicode.utf8.char(node.char))) ..
-    kv("lang", string.format("%d", node.lang)) ..
-    kv("font", string.format("%d", node.font)) ..
-    kv("width", pt(node.width)) .. "\n"
-  if node.components then
-    out = out .. analyze_nodelist(node.components)
-  end
-
-  return out
-end
-
-function kv(key, value)
-  return key .. ': ' .. value .. '; '
-end
-
-function format_rule(node, typ)
-  local out = format_type(typ)
-
-  if node.width == -1073741824 then
-    out = out .. kv("width", "flexible")
-  else
-    out = out .. kv("width", pt(node.width))
-  end
-
-  if node.height == -1073741824 then
-    out = out .. kv("height", "flexible")
-  else
-    out = out .. kv("height", pt(node.height))
-  end
-
-  if node.depth == -1073741824 then
-    out = out .. kv("depth", "flexible")
-  else
-    out = out .. kv("depth", pt(node.depth))
-  end
-
-  return out .. "\n"
-end
-
-local function analyze_nodelist(head)
+function analyze_nodelist(head)
   local ret = {}
   local typ,nodename
 	while head do
@@ -178,32 +242,7 @@ local function analyze_nodelist(head)
     -- hlist
     --
   	if typ == "hlist" then
-      local tmp = {}
-      if head.width ~= 0 then
-        tmp[#tmp + 1] = string.format("width %gpt; ",head.width / 2^16)
-      end
-      if head.height ~= 0 then
-        tmp[#tmp + 1] = string.format("height %gpt; ",head.height / 2^16)
-      end
-      if head.depth ~= 0 then
-        tmp[#tmp + 1] = string.format("depth %gpt; ",head.depth / 2^16)
-      end
-      if head.glue_set ~= 0 then
-        tmp[#tmp + 1] = string.format("glue_set %d; ",head.glue_set)
-      end
-      if head.glue_sign ~= 0 then
-        tmp[#tmp + 1] = string.format("glue_sign %d; ",head.glue_sign)
-      end
-      if head.glue_order ~= 0 then
-        tmp[#tmp + 1] = string.format("glue_order %d; ",head.glue_order)
-      end
-      if head.shift ~= 0 then
-  	    tmp[#tmp + 1] = string.format("shift d%; ",head.shift / 2^16)
-      end
-      ret[#ret + 1] = "\n" .. format_type(typ) .. table.concat(tmp) .. "\n"
-  	  if head.head then
-  	    ret[#ret + 1] = analyze_nodelist(head.head)
-  	  end
+      ret[#ret + 1] = process.hlist(head, typ)
 
     -- vlist
     --
@@ -276,7 +315,7 @@ local function analyze_nodelist(head)
     -- rule
     --
     elseif typ == "rule" then
-      ret[#ret + 1] = format_rule(head, typ)
+      ret[#ret + 1] = process.rule(head, typ)
 
     -- penalty
     --
@@ -300,7 +339,7 @@ local function analyze_nodelist(head)
     -- glyph
     --
   	elseif typ == "glyph" then
-      ret[#ret + 1] = format_glyph(head,typ)
+      ret[#ret + 1] = process.glyph(head,typ)
 
     -- math
     --

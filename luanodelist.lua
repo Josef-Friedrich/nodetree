@@ -43,90 +43,129 @@ end
 
 local process = {}
 
+process.head = function(n)
+  return "TYPE: " .. node.type(n.id) .. " " ..
+  "ID: " .. process.node_id(n) .. " " ..
+  "NEXT: " .. process.node_id(n.next)  .. " " ..
+  "previous: " .. process.node_id(n.prev)  .. " " ..
+  "SUBTYPE: " .. get_subtype(n)
+end
+
+-- Get the node id form <node    nil <    172 >    nil : hlist 2>
+process.node_id = function(n)
+  return string.gsub(tostring(n), "^<node%s+%S+%s+<%s+(%d+).*","%1")
+end
+
 -- glyph
-process.glyph = function(node,typ)
-  local out = format_type(typ) ..
-    fmt.kv("char", str.q(unicode.utf8.char(node.char))) ..
-    fmt.kv("lang", str.d(node.lang)) ..
-    fmt.kv("font", str.d(node.font)) ..
-    fmt.kv("width", str.pt(node.width)) .. fmt.nl()
-  if node.components then
-    out = out .. analyze_nodelist(node.components)
+process.glyph = function(n,typ)
+  local out = format_type(typ) .. process.head(n) ..
+    fmt.kv("char", str.q(unicode.utf8.char(n.char))) ..
+    fmt.kv("lang", str.d(n.lang)) ..
+    fmt.kv("font", str.d(n.font)) ..
+    fmt.kv("width", str.pt(n.width)) .. fmt.nl()
+  if n.components then
+    out = out .. analyze_nodelist(n.components)
   end
 
   return out
 end
 
 -- rule
-process.rule = function(node, typ)
+process.rule = function(n, typ)
   local out = format_type(typ)
 
-  if node.width == -1073741824 then
+  if n.width == -1073741824 then
     out = out .. fmt.kv("width", "flexible")
   else
-    out = out .. fmt.kv("width", str.pt(node.width))
+    out = out .. fmt.kv("width", str.pt(n.width))
   end
 
-  if node.height == -1073741824 then
+  if n.height == -1073741824 then
     out = out .. fmt.kv("height", "flexible")
   else
-    out = out .. fmt.kv("height", str.pt(node.height))
+    out = out .. fmt.kv("height", str.pt(n.height))
   end
 
-  if node.depth == -1073741824 then
+  if n.depth == -1073741824 then
     out = out .. fmt.kv("depth", "flexible")
   else
-    out = out .. fmt.kv("depth", str.pt(node.depth))
+    out = out .. fmt.kv("depth", str.pt(n.depth))
   end
 
   return out .. fmt.nl()
 end
 
 -- hlist
-process.hlist = function(node, typ)
+process.hlist = function(n, typ)
   local out = format_type(typ)
 
-  if node.width ~= 0 then
-    out = out .. fmt.kv("width", str.pt(node.width))
+  if n.width ~= 0 then
+    out = out .. fmt.kv("width", str.pt(n.width))
   end
 
-  if node.height ~= 0 then
-    out = out .. fmt.kv("height", str.pt(node.height))
+  if n.height ~= 0 then
+    out = out .. fmt.kv("height", str.pt(n.height))
   end
 
-  if node.depth ~= 0 then
-    out = out .. fmt.kv("depth", str.pt(node.depth))
+  if n.depth ~= 0 then
+    out = out .. fmt.kv("depth", str.pt(n.depth))
   end
 
-  if node.glue_set ~= 0 then
-    out = out .. fmt.kv("glue_set", str.d(node.glue_set))
+  if n.glue_set ~= 0 then
+    out = out .. fmt.kv("glue_set", str.d(n.glue_set))
   end
 
-  if node.glue_sign ~= 0 then
-    out = out .. fmt.kv("glue_sign", str.d(node.glue_sign))
+  if n.glue_sign ~= 0 then
+    out = out .. fmt.kv("glue_sign", str.d(n.glue_sign))
   end
 
-  if node.glue_order ~= 0 then
-    out = out .. fmt.kv("glue_order", str.d(node.glue_order))
+  if n.glue_order ~= 0 then
+    out = out .. fmt.kv("glue_order", str.d(n.glue_order))
   end
 
-  if node.shift ~= 0 then
-    out = out .. fmt.kv("shift", str.d(node.shift))
+  if n.shift ~= 0 then
+    out = out .. fmt.kv("shift", str.d(n.shift))
   end
 
   out = out .. fmt.nl()
 
-  if node.head then
-    out = out .. analyze_nodelist(node.head)
+  if n.head then
+    out = out .. analyze_nodelist(n.head)
   end
 
   return out
 end
 
 -- penalty
-process.penalty = function(node, typ)
-  return format_type(typ) .. fmt.kv("penalty", node.penalty) .. "\n"
+process.penalty = function(n, typ)
+  return format_type(typ) .. fmt.kv("penalty", n.penalty) .. "\n"
 end
+
+-- disc
+process.disc = function(n, typ)
+  local out = format_type(typ)
+  out = out .. fmt.kv("subtype", get_subtype(n))  .. fmt.nl()
+
+  if n.pre then
+    out = out .. analyze_nodelist(n.pre)
+  end
+
+  if n.post then
+    out = out .. analyze_nodelist(n.post)
+  end
+
+  if n.replace then
+    out = out .. analyze_nodelist(n.replace)
+  end
+
+  return out
+end
+
+-- kern
+process.kern = function(n, typ)
+  return format_type(typ) .. fmt.kv("kern", str.pt(n.kern)) .. fmt.nl()
+end
+
 -- tostring(a_node) looks like "<node    nil <    172 >    nil : hlist 2>", so we can
 -- grab the number in the middle (172 here) as a unique id. So the node
 -- is named "node172"
@@ -134,7 +173,7 @@ local function get_nodename(n)
   return "\"n" .. string.gsub(tostring(n), "^<node%s+%S+%s+<%s+(%d+).*","%1") .. "\""
 end
 
-local function get_subtype(n)
+function get_subtype(n)
   typ = node.type(n.id)
   local subtypes = {
     hlist = {
@@ -320,7 +359,7 @@ function analyze_nodelist(head)
     -- kern
     --
   	elseif typ == "kern" then
-      ret[#ret + 1] = format_type(typ) .. string.format("kern: %gpt",head.kern / 2^16) .. ";\n"
+      ret[#ret + 1] = process.kern(head, typ)
 
     -- rule
     --
@@ -335,16 +374,7 @@ function analyze_nodelist(head)
     -- disc
     --
     elseif typ == "disc" then
-	    ret[#ret + 1] = format_type(typ) .. ";\n"
-	    if head.pre then
-	      ret[#ret + 1] = analyze_nodelist(head.pre)
-	    end
-	    if head.post then
-	      ret[#ret + 1] = analyze_nodelist(head.post)
-	    end
-	    if head.replace then
-	      ret[#ret + 1] = analyze_nodelist(head.replace)
-	    end
+      ret[#ret + 1] = process.disc(head, typ)
 
     -- glyph
     --
@@ -408,7 +438,7 @@ function nodelist_visualize(nodelist)
 end
 
 function debug_heading(heading)
-  local line = '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
+  local line = '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
   return '\n' .. line .. '% ' .. heading .. line .. '\n'
 end
 

@@ -31,8 +31,14 @@ end
 --
 local fmt = {}
 
+-- key value
 fmt.kv = function(key, value)
   return key .. ': ' .. value .. '; '
+end
+
+-- new line
+fmt.nl = function()
+  return '\n'
 end
 
 local process = {}
@@ -43,7 +49,7 @@ process.glyph = function(node,typ)
     fmt.kv("char", str.q(unicode.utf8.char(node.char))) ..
     fmt.kv("lang", str.d(node.lang)) ..
     fmt.kv("font", str.d(node.font)) ..
-    fmt.kv("width", str.pt(node.width)) .. "\n"
+    fmt.kv("width", str.pt(node.width)) .. fmt.nl()
   if node.components then
     out = out .. analyze_nodelist(node.components)
   end
@@ -73,7 +79,7 @@ process.rule = function(node, typ)
     out = out .. fmt.kv("depth", str.pt(node.depth))
   end
 
-  return out .. "\n"
+  return out .. fmt.nl()
 end
 
 -- hlist
@@ -108,7 +114,7 @@ process.hlist = function(node, typ)
     out = out .. fmt.kv("shift", str.d(node.shift))
   end
 
-  out = out .. "\n"
+  out = out .. fmt.nl()
 
   if node.head then
     out = out .. analyze_nodelist(node.head)
@@ -117,6 +123,10 @@ process.hlist = function(node, typ)
   return out
 end
 
+-- penalty
+process.penalty = function(node, typ)
+  return format_type(typ) .. fmt.kv("penalty", node.penalty) .. "\n"
+end
 -- tostring(a_node) looks like "<node    nil <    172 >    nil : hlist 2>", so we can
 -- grab the number in the middle (172 here) as a unique id. So the node
 -- is named "node172"
@@ -320,7 +330,7 @@ function analyze_nodelist(head)
     -- penalty
     --
     elseif typ == "penalty" then
-      ret[#ret + 1] = format_type(typ) .. head.penalty .. ";\n"
+      ret[#ret + 1] = process.penalty(head, typ)
 
     -- disc
     --

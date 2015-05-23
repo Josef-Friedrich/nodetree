@@ -7,7 +7,6 @@
   family=LN,
   prefix=LN@
 }
-
 \DeclareStringOption[term and log]{channel}
 \DeclareStringOption[postlinebreak]{callback}
 \DeclareStringOption[1]{verbosity}
@@ -20,7 +19,7 @@
   require("luanodelist")
 
   options = {}
-  options.verbosity = '\LN@verbosity'
+  options.verbosity = tonumber(\LN@verbosity)
   options.channel = '\LN@channel'
   options.callback = '\LN@callback'
 

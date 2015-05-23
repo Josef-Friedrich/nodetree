@@ -6,9 +6,10 @@ local tex,texio,node,unicode,font=tex,texio,node,unicode,font
 
 module(..., package.seeall)
 
---
---- string
---
+------------------------------------------------------------------------
+-- string
+------------------------------------------------------------------------
+
 local str = {}
 
 -- points
@@ -26,9 +27,10 @@ str.q = function(input)
   return string.format("%q", input)
 end
 
---
---- format
---
+------------------------------------------------------------------------
+-- format
+------------------------------------------------------------------------
+
 local fmt = {}
 
 -- key value
@@ -41,24 +43,101 @@ fmt.nl = function()
   return '\n'
 end
 
-local process = {}
-
-process.head = function(n)
-  return "TYPE: " .. node.type(n.id) .. " " ..
-  "ID: " .. process.node_id(n) .. " " ..
-  "NEXT: " .. process.node_id(n.next)  .. " " ..
-  "previous: " .. process.node_id(n.prev)  .. " " ..
-  "SUBTYPE: " .. get_subtype(n)
-end
+------------------------------------------------------------------------
+-- node
+------------------------------------------------------------------------
 
 -- Get the node id form <node    nil <    172 >    nil : hlist 2>
-process.node_id = function(n)
+node.node_id = function(n)
   return string.gsub(tostring(n), "^<node%s+%S+%s+<%s+(%d+).*","%1")
+end
+
+node.subtype = function(n)
+  typ = node.type(n.id)
+  local subtypes = {
+    hlist = {
+      [0] = "unknown origin",
+      "created by linebreaking",
+      "explicit box command",
+      "parindent",
+      "alignment column or row",
+      "alignment cell",
+    },
+    glyph = {
+      [0] = "character",
+      "glyph",
+      "ligature",
+    },
+    disc  = {
+      [0] = "\\discretionary",
+      "\\-",
+      "- (auto)",
+      "h&j (simple)",
+      "h&j (hard, first item)",
+      "h&j (hard, second item)",
+    },
+    glue = {
+      [0]   = "skip",
+      [1]   = "lineskip",
+      [2]   = "baselineskip",
+      [3]   = "parskip",
+      [4]   = "abovedisplayskip",
+      [5]   = "belowdisplayskip",
+      [6]   = "abovedisplayshortskip",
+      [7]   = "belowdisplayshortskip",
+      [8]   = "leftskip",
+      [9]   = "rightskip",
+      [10]  = "topskip",
+      [11]  = "splittopskip",
+      [12]  = "tabskip",
+      [13]  = "spaceskip",
+      [14]  = "xspaceskip",
+      [15]  = "parfillskip",
+      [16]  = "thinmuskip",
+      [17]  = "medmuskip",
+      [18]  = "thickmuskip",
+      [100] = "leaders",
+      [101] = "cleaders",
+      [102] = "xleaders",
+      [103] = "gleaders"
+    },
+  }
+  subtypes.whatsit = node.whatsits()
+  if subtypes[typ] then
+    return subtypes[typ][n.subtype] or tostring(n.subtype)
+  else
+    return tostring(n.subtype)
+  end
+  assert(false)
+end
+
+------------------------------------------------------------------------
+-- process
+------------------------------------------------------------------------
+
+local process = {}
+
+-- Process fields which each node has.
+process.base = function(n)
+  local out
+
+  out = string.upper(node.type(n.id)) .. " "
+
+  if options.verbosity == 1 then
+    out = out .. fmt.kv("id", node.node_id(n))
+  end
+
+  if options.verbosity > 1 then
+    out = out .. fmt.kv("next", node.node_id(n.next))
+    out = out .. fmt.kv("previous", node.node_id(n.prev))
+  end
+
+  return out
 end
 
 -- glyph
 process.glyph = function(n,typ)
-  local out = format_type(typ) .. process.head(n) ..
+  local out = process.base(n) ..
     fmt.kv("char", str.q(unicode.utf8.char(n.char))) ..
     fmt.kv("lang", str.d(n.lang)) ..
     fmt.kv("font", str.d(n.font)) ..

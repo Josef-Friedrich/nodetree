@@ -1,0 +1,16 @@
+#! /bin/sh
+
+# Extensions:
+EXT="aux fdb_latexmk log out pdf synctex.gz"
+
+# Symlink to .git/hooks/pre-commit
+#	cd .git/hook
+#	ln -s ../../.githook_pre-commit pre-commit
+
+_remove() {
+	find . -iname "*.$1" -exec rm -f {} \;
+}
+
+for i in $EXT; do
+	_remove $i
+done

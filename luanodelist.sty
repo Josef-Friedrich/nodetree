@@ -10,23 +10,24 @@
 \DeclareStringOption[term and log]{channel}
 \DeclareStringOption[postlinebreak]{callback}
 \DeclareStringOption[1]{verbosity}
+\DeclareStringOption[guided]{interface}
 
 \ProcessKeyvalOptions*
 
 \newcommand{\setluanodelist}[1]{\setkeys{LN}{#1}}
 
 \directlua{
-  require("luanodelist")
-
   options = {}
   options.verbosity = tonumber(\LN@verbosity)
   options.channel = '\LN@channel'
   options.callback = '\LN@callback'
+  options.interface = '\LN@interface'
 
-  inspector = function(head)
-    luanodelist.nodelist_visualize(head)
-    return true
+  if options.interface == "guided" then
+    require("guided")
+  else
+    require("automatic")
   end
 
-  luatexbase.add_to_callback(luanodelist.get_luatex_callback(options.callback), inspector, "inspector")
+  register_callback()
 }

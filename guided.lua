@@ -117,7 +117,7 @@ end
 -- disc
 process.disc = function(n)
   local out = process.base(n)
-  out = out .. fmt.kv("subtype", get_subtype(n))
+  out = out .. fmt.kv("subtype", node.subtype(n))
 
   if n.pre then
     out = out .. analyze_nodelist(n.pre)
@@ -141,7 +141,7 @@ end
 
 -- glue
 process.glue = function(n)
-  local subtype = get_subtype(n)
+  local subtype = node.subtype(n)
   local spec = string.format("%gpt", n.spec.width / 2^16)
 
   if n.spec.stretch ~= 0 then
@@ -173,77 +173,10 @@ process.whatsit_colorstack = function(n)
     fmt.kv("data", str.s(n.data))
 end
 
-
--- tostring(a_node) looks like "<node    nil <    172 >    nil : hlist 2>", so we can
--- grab the number in the middle (172 here) as a unique id. So the node
--- is named "node172"
-local function get_nodename(n)
-  return "\"n" .. string.gsub(tostring(n), "^<node%s+%S+%s+<%s+(%d+).*","%1") .. "\""
-end
-
-function get_subtype(n)
-  typ = node.type(n.id)
-  local subtypes = {
-    hlist = {
-      [0] = "unknown origin",
-      "created by linebreaking",
-      "explicit box command",
-      "parindent",
-      "alignment column or row",
-      "alignment cell",
-    },
-    glyph = {
-      [0] = "character",
-      "glyph",
-      "ligature",
-    },
-    disc  = {
-      [0] = "\\discretionary",
-      "\\-",
-      "- (auto)",
-      "h&j (simple)",
-      "h&j (hard, first item)",
-      "h&j (hard, second item)",
-    },
-    glue = {
-      [0]   = "skip",
-      [1]   = "lineskip",
-      [2]   = "baselineskip",
-      [3]   = "parskip",
-      [4]   = "abovedisplayskip",
-      [5]   = "belowdisplayskip",
-      [6]   = "abovedisplayshortskip",
-      [7]   = "belowdisplayshortskip",
-      [8]   = "leftskip",
-      [9]   = "rightskip",
-      [10]  = "topskip",
-      [11]  = "splittopskip",
-      [12]  = "tabskip",
-      [13]  = "spaceskip",
-      [14]  = "xspaceskip",
-      [15]  = "parfillskip",
-      [16]  = "thinmuskip",
-      [17]  = "medmuskip",
-      [18]  = "thickmuskip",
-      [100] = "leaders",
-      [101] = "cleaders",
-      [102] = "xleaders",
-      [103] = "gleaders"
-    },
-  }
-  subtypes.whatsit = node.whatsits()
-  if subtypes[typ] then
-    return subtypes[typ][n.subtype] or tostring(n.subtype)
-  else
-    return tostring(n.subtype)
-  end
-  assert(false)
-end
-
 local function label(n,tab)
   local typ = node.type(n.id)
-  local nodename = get_nodename(n)
-  local subtype = get_subtype(n)
+  local nodename = node.node_id(n)
+  local subtype = node.subtype(n)
   local ret = string.format("name: %s; type: %s;",typ or "??",subtype or "?") .. "; "
   if tab then
     for i=1,#tab do
@@ -260,7 +193,7 @@ local function draw_node(n,tab)
   if not tab then
     tab = {}
   end
-  local nodename = get_nodename(n)
+  local nodename = node.node_id(n)
   if n.id ~= 50 then
     local attlist = n.attr
     if attlist then
@@ -294,7 +227,7 @@ function analyze_nodelist(head)
   local typ,nodename
 	while head do
 	  typ = node.type(head.id)
-	  nodename = get_nodename(head)
+	  nodename = node.node_id(head)
 
   	if typ == "hlist" then ret[#ret + 1] = process.hlist(head)
 

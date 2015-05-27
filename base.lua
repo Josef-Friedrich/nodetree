@@ -44,6 +44,12 @@ fmt.line = function()
   return '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
 end
 
+fmt.frame = function(text)
+  local begin_text = "BEGIN nodelist debug (Callback: " .. callback .. ")"
+  local end_text = "END nodelist debug"
+  return fmt.heading(begin_text) .. text .. fmt.heading(end_text)
+end
+
 ------------------------------------------------------------------------
 -- node
 ------------------------------------------------------------------------

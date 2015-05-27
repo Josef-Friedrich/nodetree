@@ -345,13 +345,8 @@ end
 --
 ---
 get_nodes = function(head)
-  local output = run_through(head)
-
-  output = fmt.heading("BEGIN nodelist debug (Callback: " .. callback .. ")") ..
-    output ..
-    fmt.heading("END nodelist debug")
-
-  texio.write(options.channel, output)
+  local out = run_through(head)
+  texio.write(options.channel, fmt.frame(out))
 end
 
 ---

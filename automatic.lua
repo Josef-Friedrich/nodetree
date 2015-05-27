@@ -37,29 +37,39 @@ analayze_node = function(n)
     tmp[#tmp + 1] = format_field(n,field_name)
   end
 
-  out = out .. table.concat(tmp, "; ")
-
-  texio.write_nl(options.channel, out)
+  return out .. table.concat(tmp, "; ")
 end
 
 ---
 --
 ---
-run_through_nodes = function(head)
+run_through = function(head)
+  local out = {}
   while head do
 
     if head.id == 0 or head.id == 1 then
-      run_through_nodes(head.head)
+      out[#out + 1] = run_through(head.head)
     else
-      analayze_node(head)
+      out[#out + 1] = analayze_node(head)
     end
 
     head = head.next
   end
 
-  return true
+  return table.concat(out, "\n")
 end
 
+---
+--
+---
+get_nodes = function(head)
+  local out = run_through(head)
+  texio.write(options.channel, fmt.frame(out))
+end
+
+---
+--
+---
 register_callback = function()
-  luatexbase.add_to_callback(get_callback(options.callback), run_through_nodes, "automatic")
+  luatexbase.add_to_callback(get_callback(options.callback), get_nodes, "automatic")
 end

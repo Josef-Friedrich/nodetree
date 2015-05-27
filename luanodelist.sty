@@ -23,6 +23,9 @@
   options.callback = '\LN@callback'
   options.interface = '\LN@interface'
 
+  colors = require("ansicolors")
+
+
   if options.interface == "guided" then
     require("guided")
   else
@@ -30,4 +33,5 @@
   end
 
   register_callback()
+
 }

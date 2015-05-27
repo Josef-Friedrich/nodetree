@@ -33,7 +33,7 @@ fmt = {}
 
 -- key value
 fmt.kv = function(key, value)
-  return key .. ': ' .. value .. '; '
+  return colors.yellow .. key .. ': ' .. colors.green .. value .. '; '
 end
 
 fmt.heading = function(text)

@@ -13,7 +13,7 @@ local process = {}
 process.base = function(n)
   local out
 
-  out = string.upper(node.type(n.id)) .. " "
+  out = colors.red .. string.upper(node.type(n.id)) .. " "
 
   if options.verbosity > 1 then
     out = out .. fmt.kv("id", node.node_id(n))
@@ -346,7 +346,7 @@ end
 ---
 get_nodes = function(head)
   local out = run_through(head)
-  texio.write(options.channel, fmt.frame(out))
+  print(colors.red .. fmt.frame(out))
 end
 
 ---

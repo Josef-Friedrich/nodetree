@@ -7,7 +7,9 @@ dofile("base.lua")
 
 local process = {}
 
+---
 -- Process fields which each node has.
+---
 process.base = function(n)
   local out
 
@@ -25,7 +27,9 @@ process.base = function(n)
   return out
 end
 
+---
 -- glyph
+---
 process.glyph = function(n)
   local out = process.base(n) ..
     fmt.kv("char", str.q(unicode.utf8.char(n.char))) ..
@@ -33,13 +37,15 @@ process.glyph = function(n)
     fmt.kv("font", str.d(n.font)) ..
     fmt.kv("width", str.pt(n.width))
   if n.components then
-    out = out .. analyze_nodelist(n.components)
+    out = out .. run_through(n.components)
   end
 
   return out
 end
 
+---
 -- rule
+---
 process.rule = function(n)
   local out = process.base(n)
 
@@ -64,7 +70,9 @@ process.rule = function(n)
   return out
 end
 
+---
 -- hlist
+---
 process.hlist = function(n)
   local out = process.base(n)
 
@@ -99,43 +107,51 @@ process.hlist = function(n)
   out = out
 
   if n.head then
-    out = out .. analyze_nodelist(n.head)
+    out = out .. run_through(n.head)
   end
 
   return out
 end
 
+---
 -- penalty
+---
 process.penalty = function(n)
   return process.base(n) .. fmt.kv("penalty", n.penalty)
 end
 
+---
 -- disc
+---
 process.disc = function(n)
   local out = process.base(n)
   out = out .. fmt.kv("subtype", node.subtype(n))
 
   if n.pre then
-    out = out .. analyze_nodelist(n.pre)
+    out = out .. run_through(n.pre)
   end
 
   if n.post then
-    out = out .. analyze_nodelist(n.post)
+    out = out .. run_through(n.post)
   end
 
   if n.replace then
-    out = out .. analyze_nodelist(n.replace)
+    out = out .. run_through(n.replace)
   end
 
   return out
 end
 
+---
 -- kern
+---
 process.kern = function(n)
   return process.base(n) .. fmt.kv("kern", str.pt(n.kern))
 end
 
+---
 -- glue
+---
 process.glue = function(n)
   local subtype = node.subtype(n)
   local spec = string.format("%gpt", n.spec.width / 2^16)
@@ -161,7 +177,9 @@ process.glue = function(n)
   return process.base(n) .. subtype .. ": " .. spec .. ";"
 end
 
+---
 -- whatsit colorstack
+---
 process.whatsit_colorstack = function(n)
   return process.base(n) .. "subtype: colorstack; " ..
     fmt.kv("stack", str.d(n.stack)) ..
@@ -172,7 +190,7 @@ end
 ---
 --
 ---
-local function label(n,tab)
+label = function(n,tab)
   local typ = node.type(n.id)
   local nodename = node.node_id(n)
   local subtype = node.subtype(n)
@@ -190,7 +208,7 @@ end
 ---
 --
 ---
-local function draw_node(n,tab)
+draw_node = function(n,tab)
   local ret = {}
   if not tab then
     tab = {}
@@ -213,7 +231,7 @@ end
 ---
 --
 ---
-local function draw_action(n)
+draw_action = function(n)
   local ret = {}
   ret[#ret + 1] = "name: action; "
   ret[#ret + 1] = string.format("action_type: %s", tostring(n.action_type)) .. "; "
@@ -230,7 +248,7 @@ end
 ---
 --
 ---
-function analyze_nodelist(head)
+run_through = function(head)
   local ret = {}
   local typ,nodename
 	while head do
@@ -274,9 +292,8 @@ function analyze_nodelist(head)
       tmp[#tmp + 1] = {"head", "head"}
       ret[#ret + 1] = draw_node(head, tmp)
   	  if head.head then
-  	    ret[#ret + 1] = analyze_nodelist(head.head)
+  	    ret[#ret + 1] = run_through(head.head)
   	  end
-
 
   	elseif typ == "glue" then ret[#ret + 1] = process.glue(head)
   	elseif typ == "kern" then ret[#ret + 1] = process.kern(head)
@@ -327,8 +344,8 @@ end
 ---
 --
 ---
-function run_through_nodes(nodelist)
-  local output = analyze_nodelist(nodelist)
+get_nodes = function(head)
+  local output = run_through(head)
 
   output = fmt.heading("BEGIN nodelist debug (Callback: " .. callback .. ")") ..
     output ..
@@ -341,5 +358,5 @@ end
 --
 ---
 register_callback = function()
-  luatexbase.add_to_callback(get_callback(options.callback), run_through_nodes, "guided")
+  luatexbase.add_to_callback(get_callback(options.callback), get_nodes, "guided")
 end

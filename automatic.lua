@@ -1,6 +1,10 @@
 dofile("base.lua")
 
--- f: field_name
+---
+--
+-- n = node
+-- f = field
+---
 format_field = function(n, f)
   local out = ''
   if not n[f] or n[f] == 0 then
@@ -17,6 +21,9 @@ format_field = function(n, f)
   return f .. ': ' .. out
 end
 
+---
+-- n = node
+---
 analayze_node = function(n)
   local out = {}
 
@@ -35,6 +42,9 @@ analayze_node = function(n)
   texio.write_nl(options.channel, out)
 end
 
+---
+--
+---
 run_through_nodes = function(head)
   while head do
 

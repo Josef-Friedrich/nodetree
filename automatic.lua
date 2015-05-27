@@ -5,7 +5,6 @@ register_callback = function()
 end
 
 run_through_nodes = function(head)
-
   while head do
 
     if head.id == 0 or head.id == 1 then
@@ -35,7 +34,7 @@ analayze_node = function(n)
 
   out = out .. table.concat(tmp, "; ")
 
-  print(out)
+  texio.write_nl(options.channel, out)
 end
 
 -- f: field_name
@@ -44,8 +43,10 @@ format_field = function(n, f)
   if not n[f] or n[f] == 0 then
     return
   end
-  if f == 'prev' or f == 'next' or f == 'spec' then
+  if f == 'prev' or f == 'next' or f == 'spec' or f == 'pre' then
     out = node.node_id(n[f])
+  elseif f == 'subtype' then
+    out = node.subtype(n)
   else
     out = tostring(n[f])
   end

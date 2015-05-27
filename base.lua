@@ -58,24 +58,24 @@ node.subtype = function(n)
   local subtypes = {
     hlist = {
       [0] = "unknown origin",
-      "created by linebreaking",
-      "explicit box command",
-      "parindent",
-      "alignment column or row",
-      "alignment cell",
+      [1] = "created by linebreaking",
+      [2] = "explicit box command",
+      [3] = "parindent",
+      [4] = "alignment column or row",
+      [5] = "alignment cell",
     },
     glyph = {
       [0] = "character",
-      "glyph",
-      "ligature",
+      [1] = "glyph",
+      [2] = "ligature",
     },
     disc  = {
       [0] = "\\discretionary",
-      "\\-",
-      "- (auto)",
-      "h&j (simple)",
-      "h&j (hard, first item)",
-      "h&j (hard, second item)",
+      [1] = "\\-",
+      [2] = "- (auto)",
+      [3] = "h&j (simple)",
+      [4] = "h&j (hard, first item)",
+      [5] = "h&j (hard, second item)",
     },
     glue = {
       [0]   = "skip",
@@ -111,7 +111,6 @@ node.subtype = function(n)
   end
   assert(false)
 end
-
 
 function get_callback(key)
   if key == "prelinebreak" then callback = "pre_linebreak_filter"

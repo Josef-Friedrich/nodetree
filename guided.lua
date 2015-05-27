@@ -185,7 +185,7 @@ local function label(n,tab)
       end
     end
   end
-  return format_type(typ) .. ret .. "\n"
+  return process.base(n) .. ret .. "\n"
 end
 
 local function draw_node(n,tab)
@@ -306,7 +306,7 @@ function analyze_nodelist(head)
       local uid = string.format("user_id: %s; ",tostring(head.user_id))
       local t = string.format("type: %s; ",tostring(head.type))
       local val = string.format("value: %s; ", tostring(head.value))
-      ret[#ret + 1] = format_type(typ) .. "subtype: user_defined; " .. uid .. t .. val
+      ret[#ret + 1] = process.base(head) .. "subtype: user_defined; " .. uid .. t .. val
     else
       ret[#ret + 1] = draw_node(head, { })
     end
@@ -314,10 +314,6 @@ function analyze_nodelist(head)
     head = head.next
 	end
   return table.concat(ret, "\n")
-end
-
-function format_type(typ)
-  return string.upper(typ) .. " "
 end
 
 function run_through_nodes(nodelist)

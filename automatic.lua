@@ -1,22 +1,20 @@
 dofile("base.lua")
 
-register_callback = function()
-  luatexbase.add_to_callback(get_callback(options.callback), run_through_nodes, "automatic")
-end
-
-run_through_nodes = function(head)
-  while head do
-
-    if head.id == 0 or head.id == 1 then
-      run_through_nodes(head.head)
-    else
-      analayze_node(head)
-    end
-
-    head = head.next
+-- f: field_name
+format_field = function(n, f)
+  local out = ''
+  if not n[f] or n[f] == 0 then
+    return
+  end
+  if f == 'prev' or f == 'next' or f == 'spec' or f == 'pre' then
+    out = node.node_id(n[f])
+  elseif f == 'subtype' then
+    out = node.subtype(n)
+  else
+    out = tostring(n[f])
   end
 
-  return true
+  return f .. ': ' .. out
 end
 
 analayze_node = function(n)
@@ -37,19 +35,21 @@ analayze_node = function(n)
   texio.write_nl(options.channel, out)
 end
 
--- f: field_name
-format_field = function(n, f)
-  local out = ''
-  if not n[f] or n[f] == 0 then
-    return
-  end
-  if f == 'prev' or f == 'next' or f == 'spec' or f == 'pre' then
-    out = node.node_id(n[f])
-  elseif f == 'subtype' then
-    out = node.subtype(n)
-  else
-    out = tostring(n[f])
+run_through_nodes = function(head)
+  while head do
+
+    if head.id == 0 or head.id == 1 then
+      run_through_nodes(head.head)
+    else
+      analayze_node(head)
+    end
+
+    head = head.next
   end
 
-  return f .. ': ' .. out
+  return true
+end
+
+register_callback = function()
+  luatexbase.add_to_callback(get_callback(options.callback), run_through_nodes, "automatic")
 end

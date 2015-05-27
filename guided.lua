@@ -1,10 +1,6 @@
 -- Based on http://gist.github.com/556247
 dofile("base.lua")
 
-register_callback = function()
-  luatexbase.add_to_callback(get_callback(options.callback), run_through_nodes, "guided")
-end
-
 ------------------------------------------------------------------------
 -- process
 ------------------------------------------------------------------------
@@ -173,6 +169,9 @@ process.whatsit_colorstack = function(n)
     fmt.kv("data", str.s(n.data))
 end
 
+---
+--
+---
 local function label(n,tab)
   local typ = node.type(n.id)
   local nodename = node.node_id(n)
@@ -188,6 +187,9 @@ local function label(n,tab)
   return process.base(n) .. ret .. "\n"
 end
 
+---
+--
+---
 local function draw_node(n,tab)
   local ret = {}
   if not tab then
@@ -208,6 +210,9 @@ local function draw_node(n,tab)
   return table.concat(ret)
 end
 
+---
+--
+---
 local function draw_action(n)
   local ret = {}
   ret[#ret + 1] = "name: action; "
@@ -222,6 +227,9 @@ local function draw_action(n)
   return table.concat(ret )
 end
 
+---
+--
+---
 function analyze_nodelist(head)
   local ret = {}
   local typ,nodename
@@ -316,8 +324,10 @@ function analyze_nodelist(head)
   return table.concat(ret, "\n")
 end
 
+---
+--
+---
 function run_through_nodes(nodelist)
-
   local output = analyze_nodelist(nodelist)
 
   output = fmt.heading("BEGIN nodelist debug (Callback: " .. callback .. ")") ..
@@ -327,4 +337,9 @@ function run_through_nodes(nodelist)
   texio.write(options.channel, output)
 end
 
-
+---
+--
+---
+register_callback = function()
+  luatexbase.add_to_callback(get_callback(options.callback), run_through_nodes, "guided")
+end

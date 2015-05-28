@@ -4,6 +4,47 @@ base = require("base")
 ---
 --
 ---
+label = function(n,tab)
+  local typ = node.type(n.id)
+  local nodename = nodex.node_id(n)
+  local subtype = nodex.subtype(n)
+  local ret = string.format("name: %s; type: %s;",typ or "??",subtype or "?") .. "; "
+  if tab then
+    for i=1,#tab do
+      if tab[i][1] then
+        ret = ret .. string.format("%s: %s; ",tab[i][1],tab[i][2])
+      end
+    end
+  end
+  return process.base(n) .. ret .. "\n"
+end
+
+---
+--
+---
+draw_node = function(n,tab)
+  local ret = {}
+  if not tab then
+    tab = {}
+  end
+  local nodename = nodex.node_id(n)
+  if n.id ~= 50 then
+    local attlist = n.attr
+    if attlist then
+      attlist = attlist.next
+      while attlist do
+        tab[#tab + 1] = { "", string.format("attr%d=%d",attlist.number, attlist.value) }
+        attlist = attlist.next
+      end
+    end
+  end
+  ret[#ret + 1] = label(n,tab)
+  return table.concat(ret)
+end
+
+---
+--
+---
 run_through = function(head)
   local ret = {}
   local typ,nodename
@@ -25,7 +66,7 @@ run_through = function(head)
     elseif typ == "whatsit" and head.subtype == 39 then ret[#ret + 1] = process.whatsit_colorstack(head)
     elseif typ == "whatsit" and head.subtype == 44 then ret[#ret + 1] = process.whatsit_user_definded(head)
     else
-      ret[#ret + 1] = 'draw_node(head, { })'
+      ret[#ret + 1] = draw_node(head, { })
     end
 
     head = head.next

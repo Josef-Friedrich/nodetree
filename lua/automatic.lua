@@ -1,4 +1,4 @@
-dofile("lua/base.lua")
+base = require("base")
 
 ---
 --
@@ -11,9 +11,9 @@ format_field = function(n, f)
     return ''
   end
   if f == 'prev' or f == 'next' or f == 'spec' or f == 'pre' then
-    out = node.node_id(n[f])
+    out = nodex.node_id(n[f])
   elseif f == 'subtype' then
-    out = node.subtype(n)
+    out = nodex.subtype(n)
   else
     out = tostring(n[f])
   end
@@ -28,7 +28,7 @@ analayze_node = function(n)
   local out = {}
 
   out = template.type(node.type(n.id)) .. ' '
-  out = out .. template.key_value('no', node.node_id(n))
+  out = out .. template.key_value('no', nodex.node_id(n))
 
   local tmp = {}
   fields = node.fields(n.id, n.subtype)
@@ -70,5 +70,5 @@ end
 --
 ---
 register_callback = function()
-  luatexbase.add_to_callback(get_callback(options.callback), get_nodes, "automatic")
+  luatexbase.add_to_callback(base.get_callback(options.callback), get_nodes, "automatic")
 end

@@ -9,6 +9,10 @@ function template.heading(text)
   return '\n' .. template.line() .. '% ' .. text .. template.line() .. '\n'
 end
 
+function template.length(input)
+  return string.format("%gpt", input / 2^16)
+end
+
 function template.line()
   return '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
 end

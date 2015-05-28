@@ -1,5 +1,5 @@
 -- Based on http://gist.github.com/556247
-dofile("lua/base.lua")
+base = require("base")
 
 ------------------------------------------------------------------------
 -- process
@@ -16,12 +16,12 @@ process.base = function(n)
   out = template.type(node.type(n.id))
 
   if options.verbosity > 1 then
-    out = out .. template.key_value("id", node.node_id(n))
+    out = out .. template.key_value("id", nodex.node_id(n))
   end
 
   if options.verbosity > 2 then
-    out = out .. template.key_value("next", node.node_id(n.next))
-    out = out .. template.key_value("previous", node.node_id(n.prev))
+    out = out .. template.key_value("next", nodex.node_id(n.next))
+    out = out .. template.key_value("previous", nodex.node_id(n.prev))
   end
 
   return out
@@ -32,10 +32,10 @@ end
 ---
 process.glyph = function(n)
   local out = process.base(n) ..
-    template.key_value("char", str.q(unicode.utf8.char(n.char))) ..
-    template.key_value("lang", str.d(n.lang)) ..
-    template.key_value("font", str.d(n.font)) ..
-    template.key_value("width", str.pt(n.width))
+    template.key_value("char", string.format("%q", unicode.utf8.char(n.char))) ..
+    template.key_value("lang", string.format("%d", n.lang)) ..
+    template.key_value("font", string.format("%d", n.font)) ..
+    template.key_value("width", template.length(n.width))
   if n.components then
     out = out .. run_through(n.components)
   end
@@ -52,19 +52,19 @@ process.rule = function(n)
   if n.width == -1073741824 then
     out = out .. template.key_value("width", "flexible")
   else
-    out = out .. template.key_value("width", str.pt(n.width))
+    out = out .. template.key_value("width", template.length(n.width))
   end
 
   if n.height == -1073741824 then
     out = out .. template.key_value("height", "flexible")
   else
-    out = out .. template.key_value("height", str.pt(n.height))
+    out = out .. template.key_value("height", template.length(n.height))
   end
 
   if n.depth == -1073741824 then
     out = out .. template.key_value("depth", "flexible")
   else
-    out = out .. template.key_value("depth", str.pt(n.depth))
+    out = out .. template.key_value("depth", template.length(n.depth))
   end
 
   return out
@@ -77,31 +77,31 @@ process.hlist = function(n)
   local out = process.base(n)
 
   if n.width ~= 0 then
-    out = out .. template.key_value("width", str.pt(n.width))
+    out = out .. template.key_value("width", template.length(n.width))
   end
 
   if n.height ~= 0 then
-    out = out .. template.key_value("height", str.pt(n.height))
+    out = out .. template.key_value("height", template.length(n.height))
   end
 
   if n.depth ~= 0 then
-    out = out .. template.key_value("depth", str.pt(n.depth))
+    out = out .. template.key_value("depth", template.length(n.depth))
   end
 
   if n.glue_set ~= 0 then
-    out = out .. template.key_value("glue_set", str.d(n.glue_set))
+    out = out .. template.key_value("glue_set", string.format("%d", n.glue_set))
   end
 
   if n.glue_sign ~= 0 then
-    out = out .. template.key_value("glue_sign", str.d(n.glue_sign))
+    out = out .. template.key_value("glue_sign", string.format("%d", n.glue_sign))
   end
 
   if n.glue_order ~= 0 then
-    out = out .. template.key_value("glue_order", str.d(n.glue_order))
+    out = out .. template.key_value("glue_order", string.format("%d", n.glue_order))
   end
 
   if n.shift ~= 0 then
-    out = out .. template.key_value("shift", str.d(n.shift))
+    out = out .. template.key_value("shift", string.format("%d", n.shift))
   end
 
   out = out
@@ -125,7 +125,7 @@ end
 ---
 process.disc = function(n)
   local out = process.base(n)
-  out = out .. template.key_value("subtype", node.subtype(n))
+  out = out .. template.key_value("subtype", nodex.subtype(n))
 
   if n.pre then
     out = out .. run_through(n.pre)
@@ -146,14 +146,14 @@ end
 -- kern
 ---
 process.kern = function(n)
-  return process.base(n) .. template.key_value("kern", str.pt(n.kern))
+  return process.base(n) .. template.key_value("kern", template.length(n.kern))
 end
 
 ---
 -- glue
 ---
 process.glue = function(n)
-  local subtype = node.subtype(n)
+  local subtype = nodex.subtype(n)
   local spec = string.format("%gpt", n.spec.width / 2^16)
 
   if n.spec.stretch ~= 0 then
@@ -182,9 +182,9 @@ end
 ---
 process.whatsit_colorstack = function(n)
   return process.base(n) .. "subtype: colorstack; " ..
-    template.key_value("stack", str.d(n.stack)) ..
-    template.key_value("cmd", str.s(n.cmd)) ..
-    template.key_value("data", str.s(n.data))
+    template.key_value("stack", string.format("%d", n.stack)) ..
+    template.key_value("cmd", string.format("%s", n.cmd)) ..
+    template.key_value("data", string.format("%s", n.data))
 end
 
 ---
@@ -192,8 +192,8 @@ end
 ---
 label = function(n,tab)
   local typ = node.type(n.id)
-  local nodename = node.node_id(n)
-  local subtype = node.subtype(n)
+  local nodename = nodex.node_id(n)
+  local subtype = nodex.subtype(n)
   local ret = string.format("name: %s; type: %s;",typ or "??",subtype or "?") .. "; "
   if tab then
     for i=1,#tab do
@@ -213,7 +213,7 @@ draw_node = function(n,tab)
   if not tab then
     tab = {}
   end
-  local nodename = node.node_id(n)
+  local nodename = nodex.node_id(n)
   if n.id ~= 50 then
     local attlist = n.attr
     if attlist then
@@ -253,7 +253,7 @@ run_through = function(head)
   local typ,nodename
 	while head do
 	  typ = node.type(head.id)
-	  nodename = node.node_id(head)
+	  nodename = nodex.node_id(head)
 
   	if typ == "hlist" then ret[#ret + 1] = process.hlist(head)
 
@@ -353,5 +353,5 @@ end
 --
 ---
 register_callback = function()
-  luatexbase.add_to_callback(get_callback(options.callback), get_nodes, "guided")
+  luatexbase.add_to_callback(base.get_callback(options.callback), get_nodes, "guided")
 end

@@ -1,5 +1,6 @@
 colors = require("ansicolors")
 template = require("template")
+process = require("process")
 nodex = require("nodex")
 
 local base = {}

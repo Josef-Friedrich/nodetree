@@ -1,5 +1,5 @@
 -- Based on http://gist.github.com/556247
-dofile("base.lua")
+dofile("lua/base.lua")
 
 ------------------------------------------------------------------------
 -- process

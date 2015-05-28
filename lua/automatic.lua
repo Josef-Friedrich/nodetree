@@ -1,4 +1,4 @@
-dofile("base.lua")
+dofile("lua/base.lua")
 
 ---
 --
@@ -8,7 +8,7 @@ dofile("base.lua")
 format_field = function(n, f)
   local out = ''
   if not n[f] or n[f] == 0 then
-    return
+    return ''
   end
   if f == 'prev' or f == 'next' or f == 'spec' or f == 'pre' then
     out = node.node_id(n[f])
@@ -18,7 +18,7 @@ format_field = function(n, f)
     out = tostring(n[f])
   end
 
-  return f .. ': ' .. out
+  return template.key_value(f, out)
 end
 
 ---
@@ -27,9 +27,8 @@ end
 analayze_node = function(n)
   local out = {}
 
-  out = string.upper(node.type(n.id)) .. ' '
-  out = out .. 'no: '
-  out = out .. node.node_id(n) .. '; '
+  out = template.type(node.type(n.id)) .. ' '
+  out = out .. template.key_value('no', node.node_id(n))
 
   local tmp = {}
   fields = node.fields(n.id, n.subtype)
@@ -37,7 +36,7 @@ analayze_node = function(n)
     tmp[#tmp + 1] = format_field(n,field_name)
   end
 
-  return out .. table.concat(tmp, "; ")
+  return out .. table.concat(tmp, "")
 end
 
 ---
@@ -64,7 +63,7 @@ end
 ---
 get_nodes = function(head)
   local out = run_through(head)
-  texio.write(options.channel, fmt.frame(out))
+  template.print(out)
 end
 
 ---

@@ -23,8 +23,10 @@
   options.callback = '\LN@callback'
   options.interface = '\LN@interface'
 
-  colors = require("ansicolors")
 
+  package.path = './lua/?.lua;' .. package.path
+  colors = require("ansicolors")
+  template = require("template")
 
   if options.interface == "guided" then
     require("guided")

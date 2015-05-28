@@ -40,7 +40,8 @@ end
 -- vlist
 ---
 function process.vlist(n)
-  local out
+  local out = process.base(n)
+
   if n.width ~= 0 then
     out = out .. template.key_value('width', template.length(n.width))
   end
@@ -211,6 +212,50 @@ function process.whatsit_colorstack(n)
     template.key_value("stack", string.format("%d", n.stack)) ..
     template.key_value("cmd", string.format("%s", n.cmd)) ..
     template.key_value("data", string.format("%s", n.data))
+end
+
+---
+-- whatsit action
+---
+function process.whatsit_action(n)
+  return process.base(n) .. "subtype: action; " ..
+    template.key_value("width",template.length(n.width)) ..
+    template.key_value("height", template.length(n.height)) ..
+    template.key_value("depth",  template.length(n.depth)) ..
+    template.key_value("objnum",n.objnum) ..
+    template.key_value("action_type", tostring(n.action_type)) ..
+    template.key_value("action_id",tostring(n.action_id)) ..
+    template.key_value("named_id",tostring(n.named_id)) ..
+    template.key_value("file",tostring(n.file)) ..
+    template.key_value("new_window",tostring(n.new_window)) ..
+    template.key_value("data",tostring(n.data):gsub(">","\\>"):gsub("<","\\<")) ..
+    template.key_value("ref_count",tostring(n.ref_count))
+end
+
+---
+-- whatsit action
+---
+function process.whatsit_user_definded(n)
+  return process.base(head) .. "subtype: user_defined; " ..
+    template.key_value("user_id",tostring(head.user_id)) ..
+    template.key_value("type",tostring(head.type)) ..
+    template.key_value("value:",tostring(head.value))
+end
+
+---
+-- whatsit dir
+---
+function process.whatsit_dir(n)
+  return process.base(head) .. "subtype: dir; " ..
+    template.key_value("dir", head.dir)
+end
+
+---
+-- math
+---
+function process.math(n)
+  return process.base(n) ..
+    template.key_value("math", n.subtype == 0 and "on" or "off")
 end
 
 return process

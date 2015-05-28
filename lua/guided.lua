@@ -13,15 +13,15 @@ local process = {}
 process.base = function(n)
   local out
 
-  out = colors.red .. string.upper(node.type(n.id)) .. " "
+  out = template.type(node.type(n.id))
 
   if options.verbosity > 1 then
-    out = out .. fmt.kv("id", node.node_id(n))
+    out = out .. template.key_value("id", node.node_id(n))
   end
 
   if options.verbosity > 2 then
-    out = out .. fmt.kv("next", node.node_id(n.next))
-    out = out .. fmt.kv("previous", node.node_id(n.prev))
+    out = out .. template.key_value("next", node.node_id(n.next))
+    out = out .. template.key_value("previous", node.node_id(n.prev))
   end
 
   return out
@@ -32,10 +32,10 @@ end
 ---
 process.glyph = function(n)
   local out = process.base(n) ..
-    fmt.kv("char", str.q(unicode.utf8.char(n.char))) ..
-    fmt.kv("lang", str.d(n.lang)) ..
-    fmt.kv("font", str.d(n.font)) ..
-    fmt.kv("width", str.pt(n.width))
+    template.key_value("char", str.q(unicode.utf8.char(n.char))) ..
+    template.key_value("lang", str.d(n.lang)) ..
+    template.key_value("font", str.d(n.font)) ..
+    template.key_value("width", str.pt(n.width))
   if n.components then
     out = out .. run_through(n.components)
   end
@@ -50,21 +50,21 @@ process.rule = function(n)
   local out = process.base(n)
 
   if n.width == -1073741824 then
-    out = out .. fmt.kv("width", "flexible")
+    out = out .. template.key_value("width", "flexible")
   else
-    out = out .. fmt.kv("width", str.pt(n.width))
+    out = out .. template.key_value("width", str.pt(n.width))
   end
 
   if n.height == -1073741824 then
-    out = out .. fmt.kv("height", "flexible")
+    out = out .. template.key_value("height", "flexible")
   else
-    out = out .. fmt.kv("height", str.pt(n.height))
+    out = out .. template.key_value("height", str.pt(n.height))
   end
 
   if n.depth == -1073741824 then
-    out = out .. fmt.kv("depth", "flexible")
+    out = out .. template.key_value("depth", "flexible")
   else
-    out = out .. fmt.kv("depth", str.pt(n.depth))
+    out = out .. template.key_value("depth", str.pt(n.depth))
   end
 
   return out
@@ -77,31 +77,31 @@ process.hlist = function(n)
   local out = process.base(n)
 
   if n.width ~= 0 then
-    out = out .. fmt.kv("width", str.pt(n.width))
+    out = out .. template.key_value("width", str.pt(n.width))
   end
 
   if n.height ~= 0 then
-    out = out .. fmt.kv("height", str.pt(n.height))
+    out = out .. template.key_value("height", str.pt(n.height))
   end
 
   if n.depth ~= 0 then
-    out = out .. fmt.kv("depth", str.pt(n.depth))
+    out = out .. template.key_value("depth", str.pt(n.depth))
   end
 
   if n.glue_set ~= 0 then
-    out = out .. fmt.kv("glue_set", str.d(n.glue_set))
+    out = out .. template.key_value("glue_set", str.d(n.glue_set))
   end
 
   if n.glue_sign ~= 0 then
-    out = out .. fmt.kv("glue_sign", str.d(n.glue_sign))
+    out = out .. template.key_value("glue_sign", str.d(n.glue_sign))
   end
 
   if n.glue_order ~= 0 then
-    out = out .. fmt.kv("glue_order", str.d(n.glue_order))
+    out = out .. template.key_value("glue_order", str.d(n.glue_order))
   end
 
   if n.shift ~= 0 then
-    out = out .. fmt.kv("shift", str.d(n.shift))
+    out = out .. template.key_value("shift", str.d(n.shift))
   end
 
   out = out
@@ -117,7 +117,7 @@ end
 -- penalty
 ---
 process.penalty = function(n)
-  return process.base(n) .. fmt.kv("penalty", n.penalty)
+  return process.base(n) .. template.key_value("penalty", n.penalty)
 end
 
 ---
@@ -125,7 +125,7 @@ end
 ---
 process.disc = function(n)
   local out = process.base(n)
-  out = out .. fmt.kv("subtype", node.subtype(n))
+  out = out .. template.key_value("subtype", node.subtype(n))
 
   if n.pre then
     out = out .. run_through(n.pre)
@@ -146,7 +146,7 @@ end
 -- kern
 ---
 process.kern = function(n)
-  return process.base(n) .. fmt.kv("kern", str.pt(n.kern))
+  return process.base(n) .. template.key_value("kern", str.pt(n.kern))
 end
 
 ---
@@ -182,9 +182,9 @@ end
 ---
 process.whatsit_colorstack = function(n)
   return process.base(n) .. "subtype: colorstack; " ..
-    fmt.kv("stack", str.d(n.stack)) ..
-    fmt.kv("cmd", str.s(n.cmd)) ..
-    fmt.kv("data", str.s(n.data))
+    template.key_value("stack", str.d(n.stack)) ..
+    template.key_value("cmd", str.s(n.cmd)) ..
+    template.key_value("data", str.s(n.data))
 end
 
 ---
@@ -346,7 +346,7 @@ end
 ---
 get_nodes = function(head)
   local out = run_through(head)
-  print(colors.red .. fmt.frame(out))
+  print(template.frame(out,callback))
 end
 
 ---

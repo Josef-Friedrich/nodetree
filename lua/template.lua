@@ -14,13 +14,13 @@ function template.line()
 end
 
 function template.frame(text,callback)
-  local begin_text = "BEGIN nodelist debug (Callback: " .. callback .. ")"
+  local begin_text = "BEGIN nodelist debug (Callback: " .. tostring(callback) .. ")"
   local end_text = "END nodelist debug"
   return template.heading(begin_text) .. text .. template.heading(end_text)
 end
 
 function template.type(type)
-  return colors.red .. string.upper(type) .. colors.reset
+  return colors.red .. string.upper(type) .. ' ' .. colors.reset
 end
 
 function template.print(text)

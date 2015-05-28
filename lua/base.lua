@@ -26,31 +26,6 @@ str.q = function(input)
 end
 
 ------------------------------------------------------------------------
--- format
-------------------------------------------------------------------------
-
-fmt = {}
-
--- key value
-fmt.kv = function(key, value)
-  return colors.yellow .. key .. ': ' .. colors.green .. value .. '; '
-end
-
-fmt.heading = function(text)
-  return '\n' .. fmt.line() .. '% ' .. text .. fmt.line() .. '\n'
-end
-
-fmt.line = function()
-  return '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
-end
-
-fmt.frame = function(text)
-  local begin_text = "BEGIN nodelist debug (Callback: " .. callback .. ")"
-  local end_text = "END nodelist debug"
-  return fmt.heading(begin_text) .. text .. fmt.heading(end_text)
-end
-
-------------------------------------------------------------------------
 -- node
 ------------------------------------------------------------------------
 

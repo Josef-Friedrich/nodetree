@@ -2,6 +2,8 @@ colors = require("ansicolors")
 template = require("template")
 process = require("process")
 nodex = require("nodex")
+guided = require("guided")
+automatic = require("automatic")
 
 local base = {}
 
@@ -19,6 +21,14 @@ function base.get_callback(key)
   end
 
   return callback
+end
+
+function base.execute()
+  if options.interface == "guided" then
+    luatexbase.add_to_callback(base.get_callback(options.callback), guided.get_nodes, "guided")
+  else
+    luatexbase.add_to_callback(base.get_callback(options.callback), automatic.get_nodes, "automatic")
+  end
 end
 
 return base

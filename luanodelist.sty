@@ -25,13 +25,6 @@
 
   package.path = './lua/?.lua;' .. package.path
 
-  if options.interface == "guided" then
-    guided = require("guided")
-    guided.register_callback()
-  else
-    local automatic = require("automatic")
-    automatic.register_callback()
-  end
-
-
+  local base = require("base")
+  base.execute()
 }

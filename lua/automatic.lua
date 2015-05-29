@@ -1,5 +1,3 @@
-base = require("base")
-
 local automatic = {}
 
 ---
@@ -66,13 +64,6 @@ end
 function automatic.get_nodes(head)
   local out = automatic.run_through(head)
   template.print(out)
-end
-
----
---
----
-function automatic.register_callback()
-  luatexbase.add_to_callback(base.get_callback(options.callback), automatic.get_nodes, "automatic")
 end
 
 return automatic

@@ -210,7 +210,7 @@ end
 -- whatsit colorstack
 ---
 function process.whatsit_colorstack(n)
-  return process.base(n) .. "subtype: colorstack; " ..
+  return process.base(n) ..
     template.key_value("stack", string.format("%d", n.stack)) ..
     template.key_value("cmd", string.format("%s", n.cmd)) ..
     template.key_value("data", string.format("%s", n.data))
@@ -220,7 +220,7 @@ end
 -- whatsit action
 ---
 function process.whatsit_action(n)
-  return process.base(n) .. "subtype: action; " ..
+  return process.base(n) ..
     template.key_value("width",template.length(n.width)) ..
     template.key_value("height", template.length(n.height)) ..
     template.key_value("depth",  template.length(n.depth)) ..
@@ -255,7 +255,7 @@ end
 -- whatsit dir
 ---
 function process.whatsit_dir(n)
-  return process.base(n) .. "subtype: dir; " ..
+  return process.base(n) ..
     template.key_value("dir", n.dir)
 end
 

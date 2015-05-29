@@ -7,13 +7,23 @@ local automatic = {}
 ---
 function automatic.format_field(n, f)
   local out = ''
+
   if not n[f] or n[f] == 0 then
     return ''
   end
-  if f == 'prev' or f == 'next' or f == 'spec' or f == 'pre' then
+
+  if options.verbosity < 2 and f == 'prev' or f == 'next' or f == 'id' or f == 'attr' then
+    return ''
+  end
+
+  if f == 'prev' or f == 'next' or f == 'spec' or f == 'pre' or f == 'attr' then
     out = nodex.node_id(n[f])
   elseif f == 'subtype' then
     out = nodex.subtype(n)
+  elseif f == 'width' or f == 'height' or f == 'depth' then
+    out = template.length(n[f])
+  elseif f == 'char' then
+    out = template.char(n[f])
   else
     out = tostring(n[f])
   end
@@ -28,7 +38,10 @@ function automatic.analayze_node(n)
   local out = {}
 
   out = template.type(node.type(n.id)) .. ' '
-  out = out .. template.key_value('no', nodex.node_id(n))
+
+  if options.verbosity > 1 then
+    out = out .. template.key_value('no', nodex.node_id(n))
+  end
 
   local tmp = {}
   fields = node.fields(n.id, n.subtype)

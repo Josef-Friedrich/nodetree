@@ -7,7 +7,8 @@ function guided.run_through(head)
   local ret = {}
   local typ,nodename
 	while head do
-	  typ = node.type(head.id)
+    typ = node.type(head.id)
+
 
   	if typ == "hlist" then ret[#ret + 1] = process.hlist(head)
     elseif typ == "vlist" then ret[#ret + 1] = process.vlist(head)

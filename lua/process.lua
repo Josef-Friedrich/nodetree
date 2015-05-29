@@ -8,6 +8,8 @@ function process.base(n)
 
   out = template.type(node.type(n.id))
 
+  out = out .. template.key_value("subtype", nodex.subtype(n))
+
   if options.verbosity > 1 then
     out = out .. template.key_value("id", nodex.node_id(n))
   end
@@ -236,18 +238,25 @@ end
 -- whatsit action
 ---
 function process.whatsit_user_definded(n)
-  return process.base(head) .. "subtype: user_defined; " ..
-    template.key_value("user_id",tostring(head.user_id)) ..
-    template.key_value("type",tostring(head.type)) ..
-    template.key_value("value:",tostring(head.value))
+  local types = {
+    [97] = "attribute node list",
+    [100] = "number",
+    [110] = "node list",
+    [115] = "string",
+    [116] = "token list",
+  }
+  return process.base(n) ..
+    template.key_value("user_id",tostring(n.user_id)) ..
+    template.key_value("type",types[tonumber(n.type)]) ..
+    template.key_value("value",tostring(n.value))
 end
 
 ---
 -- whatsit dir
 ---
 function process.whatsit_dir(n)
-  return process.base(head) .. "subtype: dir; " ..
-    template.key_value("dir", head.dir)
+  return process.base(n) .. "subtype: dir; " ..
+    template.key_value("dir", n.dir)
 end
 
 ---

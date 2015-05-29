@@ -12,6 +12,10 @@ function template.length(input)
   return string.format("%gpt", input / 2^16)
 end
 
+function template.char(input)
+  return string.format("%q", unicode.utf8.char(input))
+end
+
 function template.line()
   return '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
 end

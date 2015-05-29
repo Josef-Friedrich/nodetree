@@ -9,7 +9,10 @@ function template.heading(text)
 end
 
 function template.length(input)
-  return string.format("%gpt", input / 2^16)
+	input = tonumber(input)
+	input = input / 2^16
+	input = math.floor((input * 10^2) + 0.5) / (10^2)
+  return string.format("%gpt", input)
 end
 
 function template.char(input)

@@ -23,15 +23,15 @@
   options.callback = '\LN@callback'
   options.interface = '\LN@interface'
 
-
   package.path = './lua/?.lua;' .. package.path
 
   if options.interface == "guided" then
-    require("guided")
+    guided = require("guided")
+    guided.register_callback()
   else
-    require("automatic")
+    local automatic = require("automatic")
+    automatic.register_callback()
   end
 
-  register_callback()
 
 }

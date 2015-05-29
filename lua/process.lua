@@ -30,7 +30,7 @@ function process.glyph(n)
     template.key_value("font", string.format("%d", n.font)) ..
     template.key_value("width", template.length(n.width))
   if n.components then
-    out = out .. run_through(n.components)
+    out = out .. guided.run_through(n.components)
   end
 
   return out
@@ -64,7 +64,7 @@ function process.vlist(n)
     out = out .. template.key_value('shift', template.length(n.shift))
   end
   if n.head then
-    out = out .. run_through(n.head)
+    out = out .. guided.run_through(n.head)
   end
 
   return out
@@ -134,7 +134,7 @@ function process.hlist(n)
   out = out
 
   if n.head then
-    out = out .. run_through(n.head)
+    out = out .. guided.run_through(n.head)
   end
 
   return out
@@ -155,15 +155,15 @@ function process.disc(n)
   out = out .. template.key_value("subtype", nodex.subtype(n))
 
   if n.pre then
-    out = out .. run_through(n.pre)
+    out = out .. guided.run_through(n.pre)
   end
 
   if n.post then
-    out = out .. run_through(n.post)
+    out = out .. guided.run_through(n.post)
   end
 
   if n.replace then
-    out = out .. run_through(n.replace)
+    out = out .. guided.run_through(n.replace)
   end
 
   return out

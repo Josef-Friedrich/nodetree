@@ -1,11 +1,13 @@
 base = require("base")
 
+local automatic = {}
+
 ---
 --
 -- n = node
 -- f = field
 ---
-format_field = function(n, f)
+function automatic.format_field(n, f)
   local out = ''
   if not n[f] or n[f] == 0 then
     return ''
@@ -24,7 +26,7 @@ end
 ---
 -- n = node
 ---
-analayze_node = function(n)
+function automatic.analayze_node(n)
   local out = {}
 
   out = template.type(node.type(n.id)) .. ' '
@@ -33,7 +35,7 @@ analayze_node = function(n)
   local tmp = {}
   fields = node.fields(n.id, n.subtype)
   for field_id,field_name in pairs(fields) do
-    tmp[#tmp + 1] = format_field(n,field_name)
+    tmp[#tmp + 1] = automatic.format_field(n,field_name)
   end
 
   return out .. table.concat(tmp, "")
@@ -42,14 +44,14 @@ end
 ---
 --
 ---
-run_through = function(head)
+function automatic.run_through(head)
   local out = {}
   while head do
 
     if head.id == 0 or head.id == 1 then
-      out[#out + 1] = run_through(head.head)
+      out[#out + 1] = automatic.run_through(head.head)
     else
-      out[#out + 1] = analayze_node(head)
+      out[#out + 1] = automatic.analayze_node(head)
     end
 
     head = head.next
@@ -61,14 +63,16 @@ end
 ---
 --
 ---
-get_nodes = function(head)
-  local out = run_through(head)
+function automatic.get_nodes(head)
+  local out = automatic.run_through(head)
   template.print(out)
 end
 
 ---
 --
 ---
-register_callback = function()
-  luatexbase.add_to_callback(base.get_callback(options.callback), get_nodes, "automatic")
+function automatic.register_callback()
+  luatexbase.add_to_callback(base.get_callback(options.callback), automatic.get_nodes, "automatic")
 end
+
+return automatic

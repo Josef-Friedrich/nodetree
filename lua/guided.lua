@@ -1,10 +1,12 @@
 -- Based on http://gist.github.com/556247
 base = require("base")
 
+local guided = {}
+
 ---
 --
 ---
-label = function(n,tab)
+function guided.label(n,tab)
   local typ = node.type(n.id)
   local nodename = nodex.node_id(n)
   local subtype = nodex.subtype(n)
@@ -22,7 +24,7 @@ end
 ---
 --
 ---
-draw_node = function(n,tab)
+function guided.draw_node(n,tab)
   local ret = {}
   if not tab then
     tab = {}
@@ -38,14 +40,14 @@ draw_node = function(n,tab)
       end
     end
   end
-  ret[#ret + 1] = label(n,tab)
+  ret[#ret + 1] = guided.label(n,tab)
   return table.concat(ret)
 end
 
 ---
 --
 ---
-run_through = function(head)
+function guided.run_through(head)
   local ret = {}
   local typ,nodename
 	while head do
@@ -66,7 +68,7 @@ run_through = function(head)
     elseif typ == "whatsit" and head.subtype == 39 then ret[#ret + 1] = process.whatsit_colorstack(head)
     elseif typ == "whatsit" and head.subtype == 44 then ret[#ret + 1] = process.whatsit_user_definded(head)
     else
-      ret[#ret + 1] = draw_node(head, { })
+      ret[#ret + 1] = guided.draw_node(head, { })
     end
 
     head = head.next
@@ -77,14 +79,16 @@ end
 ---
 --
 ---
-get_nodes = function(head)
-  local out = run_through(head)
+function guided.get_nodes(head)
+  local out = guided.run_through(head)
   print(template.frame(out,callback))
 end
 
 ---
 --
 ---
-register_callback = function()
-  luatexbase.add_to_callback(base.get_callback(options.callback), get_nodes, "guided")
+function guided.register_callback()
+  luatexbase.add_to_callback(base.get_callback(options.callback), guided.get_nodes, "guided")
 end
+
+return guided

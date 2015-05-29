@@ -25,9 +25,9 @@ end
 
 function base.execute()
   if options.interface == "guided" then
-    luatexbase.add_to_callback(base.get_callback(options.callback), guided.get_nodes, "guided")
+    luatexbase.add_to_callback(base.get_callback(options.callback), guided.get_nodes, "guided", 1000)
   else
-    luatexbase.add_to_callback(base.get_callback(options.callback), automatic.get_nodes, "automatic")
+    luatexbase.add_to_callback(base.get_callback(options.callback), automatic.get_nodes, "automatic", 1000)
   end
 end
 

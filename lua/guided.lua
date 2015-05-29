@@ -38,6 +38,8 @@ end
 function guided.get_nodes(head)
   local out = guided.run_through(head)
   print(template.frame(out,callback))
+
+  return head
 end
 
 return guided

@@ -77,6 +77,8 @@ end
 function automatic.get_nodes(head)
   local out = automatic.run_through(head)
   template.print(out)
+
+  return head
 end
 
 return automatic

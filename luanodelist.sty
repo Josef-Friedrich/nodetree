@@ -17,7 +17,7 @@
 \newcommand{\setluanodelist}[1]{\setkeys{LN}{#1}}
 
 \directlua{
-  options = {}
+  local options = {}
   options.verbosity = tonumber(\LN@verbosity)
   options.channel = '\LN@channel'
   options.callback = '\LN@callback'
@@ -25,6 +25,7 @@
 
   package.path = './lua/?.lua;' .. package.path
 
-  local base = require("base")
-  base.execute()
+  local luanodelist = require("luanodelist")
+  luanodelist.get_options(options)
+  luanodelist.execute()
 }

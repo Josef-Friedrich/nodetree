@@ -16,7 +16,7 @@ local options
 
 -- Get the node id form <node    nil <    172 >    nil : hlist 2>
 function nodex.node_id(n)
-  return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*','%1')
+  return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
 end
 
 function nodex.subtype(n)
@@ -82,7 +82,7 @@ end
 -- template
 ------------------------------------------------------------------------
 
-function template.key_value(key,value)
+function template.key_value(key, value)
   return colors.yellow .. key .. ': ' .. colors.white .. value .. '; ' .. colors.reset
 end
 
@@ -105,7 +105,7 @@ function template.line()
   return '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
 end
 
-function template.frame(text,callback)
+function template.frame(text, callback)
   local begin_text = 'BEGIN nodelist debug (Callback: ' .. tostring(callback) .. ')'
   local end_text = 'END nodelist debug'
   return template.heading(begin_text) .. text .. template.heading(end_text)
@@ -317,17 +317,17 @@ end
 ---
 function process.whatsit_pdf_start_link(n)
   return process.base(n) ..
-    template.key_value('width',template.length(n.width)) ..
+    template.key_value('width', template.length(n.width)) ..
     template.key_value('height', template.length(n.height)) ..
     template.key_value('depth',  template.length(n.depth)) ..
-    template.key_value('objnum',n.objnum) ..
+    template.key_value('objnum', n.objnum) ..
     template.key_value('action_type', tostring(n.action_type)) ..
-    template.key_value('action_id',tostring(n.action_id)) ..
-    template.key_value('named_id',tostring(n.named_id)) ..
-    template.key_value('file',tostring(n.file)) ..
-    template.key_value('new_window',tostring(n.new_window)) ..
-    template.key_value('data',tostring(n.data):gsub('>','\\>'):gsub('<','\\<')) ..
-    template.key_value('ref_count',tostring(n.ref_count))
+    template.key_value('action_id', tostring(n.action_id)) ..
+    template.key_value('named_id', tostring(n.named_id)) ..
+    template.key_value('file', tostring(n.file)) ..
+    template.key_value('new_window', tostring(n.new_window)) ..
+    template.key_value('data', tostring(n.data):gsub('>','\\>'):gsub('<','\\<')) ..
+    template.key_value('ref_count', tostring(n.ref_count))
 end
 
 ---
@@ -352,9 +352,9 @@ function process.whatsit_user_definded(n)
     [116] = 'token list',
   }
   return process.base(n) ..
-    template.key_value('user_id',tostring(n.user_id)) ..
-    template.key_value('type',types[tonumber(n.type)]) ..
-    template.key_value('value',tostring(n.value))
+    template.key_value('user_id', tostring(n.user_id)) ..
+    template.key_value('type', types[tonumber(n.type)]) ..
+    template.key_value('value', tostring(n.value))
 end
 
 -- End whatsits --------------------------------------------------------
@@ -380,20 +380,20 @@ function process.glue(n)
     if n.spec.stretch_order == 0 then
       stretch_order = string.format(' + %gpt', n.spec.stretch / 2^16)
     else
-      stretch_order = string.format(' + %g fi%s', n.spec.stretch  / 2^16, string.rep('l',n.spec.stretch_order - 1))
+      stretch_order = string.format(' + %g fi%s', n.spec.stretch  / 2^16, string.rep('l', n.spec.stretch_order - 1))
     end
     spec = spec .. stretch_order
   end
   if n.spec.shrink ~= 0 then
     if n.spec.shrink_order == 0 then
-      shrink_order = string.format(' - %gpt',n.spec.shrink / 2^16)
+      shrink_order = string.format(' - %gpt', n.spec.shrink / 2^16)
     else
-      shrink_order = string.format(' - %g fi%s', n.spec.shrink  / 2^16, string.rep('l',n.spec.shrink_order - 1))
+      shrink_order = string.format(' - %g fi%s', n.spec.shrink  / 2^16, string.rep('l', n.spec.shrink_order - 1))
     end
 
     spec = spec .. shrink_order
   end
-  return process.base(n) .. template.key_value(subtype,spec)
+  return process.base(n) .. template.key_value(subtype, spec)
 end
 
 ---
@@ -537,7 +537,7 @@ function automatic.analayze_node(n)
   local tmp = {}
   fields = node.fields(n.id, n.subtype)
   for field_id,field_name in pairs(fields) do
-    tmp[#tmp + 1] = automatic.format_field(n,field_name)
+    tmp[#tmp + 1] = automatic.format_field(n, field_name)
   end
 
   return out .. table.concat(tmp, '')

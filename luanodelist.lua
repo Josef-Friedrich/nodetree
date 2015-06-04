@@ -604,4 +604,8 @@ function base.execute()
   end
 end
 
+function base.analyze(n)
+  template.print(automatic.run_through(n))
+end
+
 return base

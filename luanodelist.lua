@@ -174,85 +174,10 @@ function process.base(n)
   return out
 end
 
----
--- glyph
----
-function process.glyph(n)
-  local out = process.base(n) ..
-    template.key_value("char", string.format("%q", unicode.utf8.char(n.char))) ..
-    template.key_value("lang", string.format("%d", n.lang)) ..
-    template.key_value("font", string.format("%d", n.font)) ..
-    template.key_value("width", template.length(n.width))
-  if n.components then
-    out = out .. guided.run_through(n.components)
-  end
-
-  return out
-end
+-- Sorted by IDs -------------------------------------------------------
 
 ---
--- vlist
----
-function process.vlist(n)
-  local out = process.base(n)
-
-  if n.width ~= 0 then
-    out = out .. template.key_value('width', template.length(n.width))
-  end
-  if n.height ~= 0 then
-    out = out .. template.key_value('height', template.length(n.height))
-  end
-  if n.depth ~= 0 then
-    out = out .. template.key_value('depth', template.length(n.depth))
-  end
-  if n.glue_set ~= 0 then
-    out = out .. template.key_value('glue_set', n.glue_set)
-  end
-  if n.glue_sign ~= 0 then
-    out = out .. template.key_value('glue_sign', n.glue_sign)
-  end
-  if n.glue_order ~= 0 then
-    out = out .. template.key_value('glue_order', n.glue_order)
-  end
-  if n.shift ~= 0 then
-    out = out .. template.key_value('shift', template.length(n.shift))
-  end
-  if n.head then
-    out = out .. guided.run_through(n.head)
-  end
-
-  return out
-end
-
----
--- rule
----
-function process.rule(n)
-  local out = process.base(n)
-
-  if n.width == -1073741824 then
-    out = out .. template.key_value("width", "flexible")
-  else
-    out = out .. template.key_value("width", template.length(n.width))
-  end
-
-  if n.height == -1073741824 then
-    out = out .. template.key_value("height", "flexible")
-  else
-    out = out .. template.key_value("height", template.length(n.height))
-  end
-
-  if n.depth == -1073741824 then
-    out = out .. template.key_value("depth", "flexible")
-  else
-    out = out .. template.key_value("depth", template.length(n.depth))
-  end
-
-  return out
-end
-
----
--- hlist
+-- hlist (0)
 ---
 function process.hlist(n)
   local out = process.base(n)
@@ -295,14 +220,68 @@ function process.hlist(n)
 end
 
 ---
--- penalty
+-- vlist (1)
 ---
-function process.penalty(n)
-  return process.base(n) .. template.key_value("penalty", n.penalty)
+function process.vlist(n)
+  local out = process.base(n)
+
+  if n.width ~= 0 then
+    out = out .. template.key_value('width', template.length(n.width))
+  end
+  if n.height ~= 0 then
+    out = out .. template.key_value('height', template.length(n.height))
+  end
+  if n.depth ~= 0 then
+    out = out .. template.key_value('depth', template.length(n.depth))
+  end
+  if n.glue_set ~= 0 then
+    out = out .. template.key_value('glue_set', n.glue_set)
+  end
+  if n.glue_sign ~= 0 then
+    out = out .. template.key_value('glue_sign', n.glue_sign)
+  end
+  if n.glue_order ~= 0 then
+    out = out .. template.key_value('glue_order', n.glue_order)
+  end
+  if n.shift ~= 0 then
+    out = out .. template.key_value('shift', template.length(n.shift))
+  end
+  if n.head then
+    out = out .. guided.run_through(n.head)
+  end
+
+  return out
 end
 
 ---
--- disc
+-- rule (2)
+---
+function process.rule(n)
+  local out = process.base(n)
+
+  if n.width == -1073741824 then
+    out = out .. template.key_value("width", "flexible")
+  else
+    out = out .. template.key_value("width", template.length(n.width))
+  end
+
+  if n.height == -1073741824 then
+    out = out .. template.key_value("height", "flexible")
+  else
+    out = out .. template.key_value("height", template.length(n.height))
+  end
+
+  if n.depth == -1073741824 then
+    out = out .. template.key_value("depth", "flexible")
+  else
+    out = out .. template.key_value("depth", template.length(n.depth))
+  end
+
+  return out
+end
+
+---
+-- disc (7)
 ---
 function process.disc(n)
   local out = process.base(n)
@@ -323,15 +302,74 @@ function process.disc(n)
   return out
 end
 
+-- Whatsits: sorted by IDs ---------------------------------------------
+
 ---
--- kern
+-- whatsit (8) dir (7)
 ---
-function process.kern(n)
-  return process.base(n) .. template.key_value("kern", template.length(n.kern))
+function process.whatsit_dir(n)
+  return process.base(n) ..
+    template.key_value("dir", n.dir)
 end
 
 ---
--- glue
+-- whatsit (8) pdf_start_link (16)
+---
+function process.whatsit_pdf_start_link(n)
+  return process.base(n) ..
+    template.key_value("width",template.length(n.width)) ..
+    template.key_value("height", template.length(n.height)) ..
+    template.key_value("depth",  template.length(n.depth)) ..
+    template.key_value("objnum",n.objnum) ..
+    template.key_value("action_type", tostring(n.action_type)) ..
+    template.key_value("action_id",tostring(n.action_id)) ..
+    template.key_value("named_id",tostring(n.named_id)) ..
+    template.key_value("file",tostring(n.file)) ..
+    template.key_value("new_window",tostring(n.new_window)) ..
+    template.key_value("data",tostring(n.data):gsub(">","\\>"):gsub("<","\\<")) ..
+    template.key_value("ref_count",tostring(n.ref_count))
+end
+
+---
+-- whatsit (8) pdf_colorstack (39)
+---
+function process.whatsit_pdf_colorstack(n)
+  return process.base(n) ..
+    template.key_value("stack", string.format("%d", n.stack)) ..
+    template.key_value("cmd", string.format("%s", n.cmd)) ..
+    template.key_value("data", string.format("%s", n.data))
+end
+
+---
+-- whatsit (8) user_definded (44)
+---
+function process.whatsit_user_definded(n)
+  local types = {
+    [97] = "attribute node list",
+    [100] = "number",
+    [110] = "node list",
+    [115] = "string",
+    [116] = "token list",
+  }
+  return process.base(n) ..
+    template.key_value("user_id",tostring(n.user_id)) ..
+    template.key_value("type",types[tonumber(n.type)]) ..
+    template.key_value("value",tostring(n.value))
+end
+
+-- End whatsits --------------------------------------------------------
+
+---
+-- math (9)
+---
+function process.math(n)
+  return process.base(n) ..
+    template.key_value("math", n.subtype == 0 and "on" or "off")
+end
+
+
+---
+-- glue (10)
 ---
 function process.glue(n)
   local subtype = nodex.subtype(n)
@@ -359,64 +397,33 @@ function process.glue(n)
 end
 
 ---
--- whatsit colorstack
+-- kern (11)
 ---
-function process.whatsit_colorstack(n)
-  return process.base(n) ..
-    template.key_value("stack", string.format("%d", n.stack)) ..
-    template.key_value("cmd", string.format("%s", n.cmd)) ..
-    template.key_value("data", string.format("%s", n.data))
+function process.kern(n)
+  return process.base(n) .. template.key_value("kern", template.length(n.kern))
 end
 
 ---
--- whatsit action
+-- penalty (12)
 ---
-function process.whatsit_action(n)
-  return process.base(n) ..
-    template.key_value("width",template.length(n.width)) ..
-    template.key_value("height", template.length(n.height)) ..
-    template.key_value("depth",  template.length(n.depth)) ..
-    template.key_value("objnum",n.objnum) ..
-    template.key_value("action_type", tostring(n.action_type)) ..
-    template.key_value("action_id",tostring(n.action_id)) ..
-    template.key_value("named_id",tostring(n.named_id)) ..
-    template.key_value("file",tostring(n.file)) ..
-    template.key_value("new_window",tostring(n.new_window)) ..
-    template.key_value("data",tostring(n.data):gsub(">","\\>"):gsub("<","\\<")) ..
-    template.key_value("ref_count",tostring(n.ref_count))
+function process.penalty(n)
+  return process.base(n) .. template.key_value("penalty", n.penalty)
 end
 
 ---
--- whatsit action
+-- glyph (37)
 ---
-function process.whatsit_user_definded(n)
-  local types = {
-    [97] = "attribute node list",
-    [100] = "number",
-    [110] = "node list",
-    [115] = "string",
-    [116] = "token list",
-  }
-  return process.base(n) ..
-    template.key_value("user_id",tostring(n.user_id)) ..
-    template.key_value("type",types[tonumber(n.type)]) ..
-    template.key_value("value",tostring(n.value))
-end
+function process.glyph(n)
+  local out = process.base(n) ..
+    template.key_value("char", string.format("%q", unicode.utf8.char(n.char))) ..
+    template.key_value("lang", string.format("%d", n.lang)) ..
+    template.key_value("font", string.format("%d", n.font)) ..
+    template.key_value("width", template.length(n.width))
+  if n.components then
+    out = out .. guided.run_through(n.components)
+  end
 
----
--- whatsit dir
----
-function process.whatsit_dir(n)
-  return process.base(n) ..
-    template.key_value("dir", n.dir)
-end
-
----
--- math
----
-function process.math(n)
-  return process.base(n) ..
-    template.key_value("math", n.subtype == 0 and "on" or "off")
+  return out
 end
 
 ------------------------------------------------------------------------
@@ -432,19 +439,35 @@ function guided.run_through(head)
   while head do
     typ = node.type(head.id)
 
+    -- hlist (0)
     if typ == "hlist" then ret[#ret + 1] = process.hlist(head)
+    -- vlist (1)
     elseif typ == "vlist" then ret[#ret + 1] = process.vlist(head)
-    elseif typ == "glue" then ret[#ret + 1] = process.glue(head)
-    elseif typ == "kern" then ret[#ret + 1] = process.kern(head)
+    -- rule (2)
     elseif typ == "rule" then ret[#ret + 1] = process.rule(head)
-    elseif typ == "penalty" then ret[#ret + 1] = process.penalty(head)
+    -- disc (7)
     elseif typ == "disc" then ret[#ret + 1] = process.disc(head)
-    elseif typ == "glyph" then ret[#ret + 1] = process.glyph(head)
-    elseif typ == "math" then ret[#ret + 1] = process.math(head)
+
+    -- whatsit (8) dir (7)
     elseif typ == "whatsit" and head.subtype == 7 then ret[#ret + 1] = process.whatsit_dir(head)
-    elseif typ == "whatsit" and head.subtype == 16 then ret[#ret + 1] = process.whatsit_action(head)
-    elseif typ == "whatsit" and head.subtype == 39 then ret[#ret + 1] = process.whatsit_colorstack(head)
+    -- whatsit (8) pdf_start_link (16)
+    elseif typ == "whatsit" and head.subtype == 16 then ret[#ret + 1] = process.whatsit_pdf_start_link(head)
+    -- whatsit (8) pdf_colorstack (39)
+    elseif typ == "whatsit" and head.subtype == 39 then ret[#ret + 1] = process.whatsit_pdf_colorstack(head)
+    -- whatsit (8) user_definded (44)
     elseif typ == "whatsit" and head.subtype == 44 then ret[#ret + 1] = process.whatsit_user_definded(head)
+
+    -- math (9)
+    elseif typ == "math" then ret[#ret + 1] = process.math(head)
+    -- glue (10)
+    elseif typ == "glue" then ret[#ret + 1] = process.glue(head)
+    -- kern (11)
+    elseif typ == "kern" then ret[#ret + 1] = process.kern(head)
+    -- penalty (12)
+    elseif typ == "penalty" then ret[#ret + 1] = process.penalty(head)
+    -- glyph (37)
+    elseif typ == "glyph" then ret[#ret + 1] = process.glyph(head)
+
     else
       ret[#ret + 1] = automatic.analayze_node(head)
     end

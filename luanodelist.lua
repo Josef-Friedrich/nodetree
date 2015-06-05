@@ -15,6 +15,11 @@ local options
 ------------------------------------------------------------------------
 
 -- Get the node id form <node    nil <    172 >    nil : hlist 2>
+function nodex.is_node(n)
+  return string.find(tostring(n), "^<node%s+%S+%s+<%s+(%d+).*","%1")
+end
+
+-- Get the node id form <node    nil <    172 >    nil : hlist 2>
 function nodex.node_id(n)
   return string.gsub(tostring(n), "^<node%s+%S+%s+<%s+(%d+).*","%1")
 end

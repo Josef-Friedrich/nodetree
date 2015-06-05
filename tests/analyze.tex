@@ -1,0 +1,13 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{luanodelist}
+
+\begin{document}
+\directlua{
+  local glyph = node.new(node.id('glyph'))
+  glyph.char = 34
+
+  luanodelist.analyze(glyph)
+
+}
+\end{document}

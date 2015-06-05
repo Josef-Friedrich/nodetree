@@ -25,7 +25,7 @@
 
   package.path = './lua/?.lua;' .. package.path
 
-  local luanodelist = require("luanodelist")
+  luanodelist = require("luanodelist")
   luanodelist.get_options(options)
   luanodelist.execute()
 }

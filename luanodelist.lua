@@ -16,7 +16,7 @@ local options
 
 -- Get the node id form <node    nil <    172 >    nil : hlist 2>
 function nodex.is_node(n)
-  return string.find(tostring(n), "^<node%s+%S+%s+<%s+(%d+).*","%1")
+  return string.find(tostring(n), '^<node%s+%S+%s+<%s+%d+.*>$')
 end
 
 -- Get the node id form <node    nil <    172 >    nil : hlist 2>
@@ -119,6 +119,12 @@ end
 -- t = type
 function template.type(t)
   return template.type_color(t) .. string.upper(t) .. colors.reset  .. ' '
+end
+
+-- t = type
+function template.recursion(field)
+  -- return '\n  ' .. colors.red .. string.upper(field) .. ' (recursion): '.. colors.reset  .. ' '
+  return '\n  --> '
 end
 
 -- t = type
@@ -512,8 +518,10 @@ function automatic.format_field(n, f)
     return ''
   end
 
-  if f == 'prev' or f == 'next' or f == 'spec' or f == 'pre' or f == 'attr' then
+  if f == 'prev' or f == 'next' then
     out = nodex.node_id(n[f])
+  elseif nodex.is_node(n[f]) then
+    out = template.recursion(f) .. automatic.run_through(n[f])
   elseif f == 'subtype' then
     out = nodex.subtype(n)
   elseif f == 'width' or f == 'height' or f == 'depth' then
@@ -554,13 +562,7 @@ end
 function automatic.run_through(head)
   local out = {}
   while head do
-
-    if head.id == 0 or head.id == 1 then
-      out[#out + 1] = automatic.run_through(head.head)
-    else
-      out[#out + 1] = automatic.analayze_node(head)
-    end
-
+    out[#out + 1] = automatic.analayze_node(head)
     head = head.next
   end
 

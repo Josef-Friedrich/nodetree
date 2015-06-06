@@ -25,7 +25,8 @@ function nodex.node_id(n)
 end
 
 function nodex.subtype(n)
-  typ = node.type(n.id)
+  local typ = node.type(n.id)
+
   local subtypes = {
     hlist = {
       [0] = 'unknown origin',
@@ -74,12 +75,22 @@ function nodex.subtype(n)
       [103] = 'gleaders'
     },
   }
+
   subtypes.whatsit = node.whatsits()
-  if subtypes[typ] then
-    return subtypes[typ][n.subtype] or tostring(n.subtype)
+
+  local out = ''
+  if subtypes[typ] and subtypes[typ][n.subtype] then
+    out = subtypes[typ][n.subtype]
+
+    if options.verbosity > 1 then
+      out = out .. template.type_id(n.subtype)
+    end
+
+    return out
   else
     return tostring(n.subtype)
   end
+
   assert(false)
 end
 
@@ -117,11 +128,21 @@ function template.frame(text, callback)
 end
 
 -- t = type
-function template.type(t)
-  return template.type_color(t) .. string.upper(t) .. colors.reset  .. ' '
+function template.type(t, id)
+  local out = ''
+  out = template.type_color(t) .. string.upper(t)
+
+  if options.verbosity > 1 then
+    out = out .. template.type_id(id)
+  end
+
+  return out .. colors.reset  .. ' '
 end
 
--- t = type
+function template.type_id(id)
+  return '[' .. id .. ']'
+end
+
 function template.recursion(field)
   -- return '\n  ' .. colors.red .. string.upper(field) .. ' (recursion): '.. colors.reset  .. ' '
   return '\n  --> '
@@ -520,8 +541,6 @@ function automatic.format_field(n, f)
 
   if f == 'prev' or f == 'next' then
     out = nodex.node_id(n[f])
-  elseif nodex.is_node(n[f]) then
-    out = template.recursion(f) .. automatic.run_through(n[f])
   elseif f == 'subtype' then
     out = nodex.subtype(n)
   elseif f == 'width' or f == 'height' or f == 'depth' then
@@ -541,16 +560,30 @@ end
 function automatic.analayze_node(n)
   local out = {}
 
-  out = template.type(node.type(n.id)) .. ' '
+  out = template.type(node.type(n.id), n.id)
 
   if options.verbosity > 1 then
     out = out .. template.key_value('no', nodex.node_id(n))
   end
 
   local tmp = {}
+  local r = {} -- recurison
+
   fields = node.fields(n.id, n.subtype)
+
   for field_id,field_name in pairs(fields) do
-    tmp[#tmp + 1] = automatic.format_field(n, field_name)
+    if field_name ~= 'next' and
+      field_name ~= 'prev' and
+      field_name ~= 'attr' and
+      nodex.is_node(n[field_name]) then
+      r[field_name] = n[field_name]
+    else
+      tmp[#tmp + 1] = automatic.format_field(n, field_name)
+    end
+  end
+
+  for field_name,recursion_node in pairs(r) do
+    tmp[#tmp + 1] = template.recursion(field_name) .. automatic.run_through(recursion_node)
   end
 
   return out .. table.concat(tmp, '')

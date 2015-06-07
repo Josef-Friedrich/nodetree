@@ -15,12 +15,18 @@ local options
 ------------------------------------------------------------------------
 
 -- Get the node id form <node    nil <    172 >    nil : hlist 2>
+function nodex.is_node(n)
+  return string.find(tostring(n), '^<node%s+%S+%s+<%s+%d+.*>$')
+end
+
+-- Get the node id form <node    nil <    172 >    nil : hlist 2>
 function nodex.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
 end
 
 function nodex.subtype(n)
-  typ = node.type(n.id)
+  local typ = node.type(n.id)
+
   local subtypes = {
     hlist = {
       [0] = 'unknown origin',
@@ -69,12 +75,22 @@ function nodex.subtype(n)
       [103] = 'gleaders'
     },
   }
+
   subtypes.whatsit = node.whatsits()
-  if subtypes[typ] then
-    return subtypes[typ][n.subtype] or tostring(n.subtype)
+
+  local out = ''
+  if subtypes[typ] and subtypes[typ][n.subtype] then
+    out = subtypes[typ][n.subtype]
+
+    if options.verbosity > 1 then
+      out = out .. template.type_id(n.subtype)
+    end
+
+    return out
   else
     return tostring(n.subtype)
   end
+
   assert(false)
 end
 
@@ -112,8 +128,24 @@ function template.frame(text, callback)
 end
 
 -- t = type
-function template.type(t)
-  return template.type_color(t) .. string.upper(t) .. colors.reset  .. ' '
+function template.type(t, id)
+  local out = ''
+  out = template.type_color(t) .. string.upper(t)
+
+  if options.verbosity > 1 then
+    out = out .. template.type_id(id)
+  end
+
+  return out .. colors.reset  .. ' '
+end
+
+function template.type_id(id)
+  return '[' .. id .. ']'
+end
+
+function template.recursion(field)
+  -- return '\n  ' .. colors.red .. string.upper(field) .. ' (recursion): '.. colors.reset  .. ' '
+  return '\n  --> '
 end
 
 -- t = type
@@ -507,7 +539,7 @@ function automatic.format_field(n, f)
     return ''
   end
 
-  if f == 'prev' or f == 'next' or f == 'spec' or f == 'pre' or f == 'attr' then
+  if f == 'prev' or f == 'next' then
     out = nodex.node_id(n[f])
   elseif f == 'subtype' then
     out = nodex.subtype(n)
@@ -528,16 +560,30 @@ end
 function automatic.analayze_node(n)
   local out = {}
 
-  out = template.type(node.type(n.id)) .. ' '
+  out = template.type(node.type(n.id), n.id)
 
   if options.verbosity > 1 then
     out = out .. template.key_value('no', nodex.node_id(n))
   end
 
   local tmp = {}
+  local r = {} -- recurison
+
   fields = node.fields(n.id, n.subtype)
+
   for field_id,field_name in pairs(fields) do
-    tmp[#tmp + 1] = automatic.format_field(n, field_name)
+    if field_name ~= 'next' and
+      field_name ~= 'prev' and
+      field_name ~= 'attr' and
+      nodex.is_node(n[field_name]) then
+      r[field_name] = n[field_name]
+    else
+      tmp[#tmp + 1] = automatic.format_field(n, field_name)
+    end
+  end
+
+  for field_name,recursion_node in pairs(r) do
+    tmp[#tmp + 1] = template.recursion(field_name) .. automatic.run_through(recursion_node)
   end
 
   return out .. table.concat(tmp, '')
@@ -549,13 +595,7 @@ end
 function automatic.run_through(head)
   local out = {}
   while head do
-
-    if head.id == 0 or head.id == 1 then
-      out[#out + 1] = automatic.run_through(head.head)
-    else
-      out[#out + 1] = automatic.analayze_node(head)
-    end
-
+    out[#out + 1] = automatic.analayze_node(head)
     head = head.next
   end
 

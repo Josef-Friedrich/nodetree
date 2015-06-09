@@ -1,0 +1,20 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage[callback=postlinebreak]{luanodelist}
+
+\begin{document}
+
+\spaceskip=5cm
+
+a a a
+
+GLUE[10] no: 514; subtype: leaders[100]; prev: 718;
+  --> spec: GLUE_SPEC[47] no: 12; stretch: 65536; stretch_order: 3; ref_count: 2;
+  --> leader: RULE[2] no: 507; width: -16384pt; depth: 3pt; height: -2.6pt; dir: TLT;
+
+
+GLUE[10] no: 928; subtype: leaders[100]; prev: 1152;
+  --> spec: GLUE_SPEC[47] no: 8; stretch: 65536; stretch_order: 2; ref_count: 2;
+  --> leader: RULE[2] no: 921; width: -16384pt; depth: 3pt; height: -2.6pt; dir: TLT;
+
+\end{document}

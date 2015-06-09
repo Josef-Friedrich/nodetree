@@ -145,7 +145,7 @@ end
 
 function template.recursion(field)
   -- return '\n  ' .. colors.red .. string.upper(field) .. ' (recursion): '.. colors.reset  .. ' '
-  return '\n  --> '
+  return '\n  --> ' .. field .. ': '
 end
 
 -- t = type

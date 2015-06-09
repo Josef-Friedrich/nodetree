@@ -645,7 +645,11 @@ function base.execute()
 end
 
 function base.analyze(n)
-  template.print(automatic.run_through(n))
+  local out = template.line() ..
+    automatic.run_through(n) ..
+    template.line()
+
+  template.print(out)
 end
 
 return base

@@ -1,14 +1,16 @@
 jobname = luanodelist
 texmf = $(HOME)/texmf
+texmftex = $(texmf)/tex/lualatex
+installdir = $(texmftex)/$(jobname)
 
 all: install doc
 
 install:
 	luatex $(jobname).ins
-	mkdir -p $(texmf)/$(jobname)
-	cp -f $(jobname).sty $(texmf)/$(jobname)
-	cp -f $(jobname).lua $(texmf)/$(jobname)
-	cp -f ansicolors.lua $(texmf)/$(jobname)
+	mkdir -p $(installdir)
+	cp -f $(jobname).sty $(installdir)
+	cp -f $(jobname).lua $(installdir)
+	cp -f ansicolors.lua $(installdir)
 
 doc:
 	lualatex $(jobname).dtx

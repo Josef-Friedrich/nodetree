@@ -1,4 +1,3 @@
-
 local colors = require('ansicolors')
 
 local nodex = {}
@@ -107,9 +106,9 @@ function template.heading(text)
 end
 
 function template.length(input)
-	input = tonumber(input)
-	input = input / 2^16
-	input = math.floor((input * 10^2) + 0.5) / (10^2)
+  input = tonumber(input)
+  input = input / 2^16
+  input = math.floor((input * 10^2) + 0.5) / (10^2)
   return string.format('%gpt', input)
 end
 
@@ -398,7 +397,6 @@ function process.math(n)
   return process.base(n) ..
     template.key_value('math', n.subtype == 0 and 'on' or 'off')
 end
-
 
 ---
 -- glue (10)

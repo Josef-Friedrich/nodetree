@@ -16,7 +16,6 @@ This is LuaTeX, Version beta-0.79.1 (TeX Live 2014) (rev 4971)
 (./luanodelist.lua)) (./example.aux)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% BEGIN nodelist debug
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 GLUE baselineskip: 5.05556pt;
@@ -60,12 +59,11 @@ PENALTY 10000
 GLUE parfillskip: 0pt + 1 fil;
 GLUE rightskip: 0pt;
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% END nodelist debug
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ...
 Output written on example.pdf (1 page, 12841 bytes).
 Transcript written on example.log.
 ```
+

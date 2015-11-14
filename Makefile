@@ -6,6 +6,7 @@ install:
 	mkdir -p $(texmf)/$(jobname)
 	cp -f $(jobname).sty $(texmf)/$(jobname)
 	cp -f $(jobname).lua $(texmf)/$(jobname)
+	cp -f ansicolors.lua $(texmf)/$(jobname)
 
 doc:
 	lualatex $(jobname).dtx

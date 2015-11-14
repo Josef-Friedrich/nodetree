@@ -7,4 +7,9 @@
 *.out
 *.lua
 *.sty
+*.glo
+*.gls
+*.idx
+*.ilg
+*.ind
 

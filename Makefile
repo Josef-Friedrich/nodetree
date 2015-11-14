@@ -1,6 +1,8 @@
 jobname = luanodelist
 texmf = $(HOME)/texmf
 
+all: install doc
+
 install:
 	luatex $(jobname).ins
 	mkdir -p $(texmf)/$(jobname)
@@ -13,6 +15,8 @@ doc:
 	makeindex -s gglo.ist -o $(jobname).gls $(jobname).glo
 	makeindex -s gind.ist -o $(jobname).ind $(jobname).idx
 	lualatex $(jobname).dtx
+	mkdir -p $(texmf)/doc
+	cp $(jobname).pdf $(texmf)/doc
 
 clean:
 	./.githook_pre-commit

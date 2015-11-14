@@ -32,8 +32,23 @@
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
-
+\usepackage{hyperref}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
 \begin{document}
+
+\providecommand*{\url}{\texttt}
+\GetFileInfo{luanodelist.dtx}
+\title{The \textsf{luanodelist} package}
+\author{%
+  Josef Friedrich\\%
+  \url{josef@friedrich.rocks}\\%
+  \href{https://github.com/Josef-Friedrich/cloze}{github.com/Josef-Friedrich/luanodelist}%
+}
+\date{\fileversion~from \filedate}
+
+\maketitle
 
 \section{Option 'channel'}
 

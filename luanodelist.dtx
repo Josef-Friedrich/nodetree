@@ -841,6 +841,8 @@ function automatic.run_through(head)
     head = head.next
   end
 
+  out[#out + 1] = '-----end-of-list-------------------------------------------------------'
+
   return table.concat(out, '\n')
 end
 

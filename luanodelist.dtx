@@ -385,6 +385,15 @@ function template.type_id(id)
   return '[' .. tostring(id) .. ']'
 end
 
+function template.tree(level)
+  local out = ''
+  for i = 1, level do
+    out = '  ' .. out
+  end
+  return out
+end
+
+
 function template.recursion(field)
   -- return '\n  ' .. colors.red .. string.upper(field) .. ' (recursion): '.. colors.reset  .. ' '
   return '\n  --> ' .. field .. ': '
@@ -487,7 +496,7 @@ function process.hlist(n)
   out = out
 
   if n.head then
-    out = out .. guided.run_through(n.head)
+    out = out .. guided.run_through(n.head, 1)
   end
 
   return out
@@ -707,7 +716,7 @@ end
 ---
 --
 ---
-function guided.run_through(head)
+function guided.run_through(head, level)
   local ret = {}
   local typ,nodename
   while head do
@@ -743,7 +752,7 @@ function guided.run_through(head)
     elseif typ == 'glyph' then ret[#ret + 1] = process.glyph(head)
 
     else
-      ret[#ret + 1] = automatic.analayze_node(head)
+      ret[#ret + 1] = automatic.analayze_node(head, level)
     end
 
     head = head.next
@@ -755,7 +764,7 @@ end
 --
 ---
 function guided.get_nodes(head)
-  local out = guided.run_through(head)
+  local out = guided.run_through(head, 1)
   print(template.frame(out,callback))
 
   return head
@@ -799,7 +808,7 @@ end
 ---
 -- n = node
 ---
-function automatic.analayze_node(n)
+function automatic.analayze_node(n, level)
   local out = {}
 
   out = template.type(node.type(n.id), n.id)
@@ -825,19 +834,21 @@ function automatic.analayze_node(n)
   end
 
   for field_name,recursion_node in pairs(r) do
-    tmp[#tmp + 1] = template.recursion(field_name) .. automatic.run_through(recursion_node)
+    --tmp[#tmp + 1] = template.recursion(field_name) .. automatic.run_through(recursion_node, level + 1)
+    tmp[#tmp + 1] = automatic.run_through(recursion_node, level + 1)
+
   end
 
-  return out .. table.concat(tmp, '')
+  return template.tree(level) .. out .. table.concat(tmp, '')
 end
 
 ---
 --
 ---
-function automatic.run_through(head)
+function automatic.run_through(head, level)
   local out = {}
   while head do
-    out[#out + 1] = automatic.analayze_node(head)
+    out[#out + 1] = automatic.analayze_node(head, level)
     head = head.next
   end
 
@@ -848,7 +859,7 @@ end
 --
 ---
 function automatic.get_nodes(head)
-  local out = automatic.run_through(head)
+  local out = automatic.run_through(head, 0)
   template.print(out)
 
   return head
@@ -888,7 +899,7 @@ end
 
 function base.analyze(n)
   local out = template.line() ..
-    automatic.run_through(n) ..
+    automatic.run_through(n, 1) ..
     template.line()
 
   template.print(out)

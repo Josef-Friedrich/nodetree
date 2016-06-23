@@ -388,7 +388,7 @@ end
 function template.tree(level)
   local out = ''
   for i = 1, level do
-    out = '  ' .. out
+    out = '    ' .. out
   end
   return out
 end
@@ -835,7 +835,7 @@ function automatic.analayze_node(n, level)
 
   for field_name,recursion_node in pairs(r) do
     --tmp[#tmp + 1] = template.recursion(field_name) .. automatic.run_through(recursion_node, level + 1)
-    tmp[#tmp + 1] = automatic.run_through(recursion_node, level + 1)
+    tmp[#tmp + 1] = '\n' .. automatic.run_through(recursion_node, level + 1)
 
   end
 

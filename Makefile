@@ -23,6 +23,7 @@ doc:
 clean:
 	./.githook_pre-commit
 
+test:
+	find tests -name "*.tex" -exec lualatex {} \;
 
-
-.PHONY: all clean ctan
+.PHONY: all clean ctan test

@@ -272,6 +272,30 @@ local nodex = {}
 local template = {}
 local automatic = {}
 local base = {}
+%    \end{macrocode}
+%
+% Nodes in Lua\TeX are connected. The tree view distinguishs betweens
+% the |list| and |field| connections.
+
+% \begin{itemize}
+%  \item |list|: Nodes, which are double connected by |next| and
+%        |previous| fields.
+%  \item |field|: Connections to nodes by other fields than |next| and
+%        |previous| fields, e. g. |head|, |pre|.
+% \end{itemize}
+%
+% The lua table named |tree| holds states values for the present tree
+% item.
+% \begin{verbatim}
+%  tree:
+%    - 1:
+%      - list: continue
+%      - field: stop
+%    - 2:
+%      - list: continue
+%      - field: stop
+% \end{verbatim}
+%    \begin{macrocode}
 local tree = {}
 
 local options

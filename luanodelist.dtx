@@ -245,6 +245,7 @@ local nodex = {}
 local template = {}
 local automatic = {}
 local base = {}
+local tree = {}
 
 local options
 
@@ -381,12 +382,29 @@ function template.type_id(id)
   return '[' .. tostring(id) .. ']'
 end
 
-function template.tree(level)
+function template.tree(current, level, recursion_field)
+
   local out = ''
-  for i = 1, level do
-    out = '    ' .. out
+  for i = 1, level - 1  do
+    if tree[i] then
+      out = out .. '│  '
+    else
+      out = out .. '   '
+    end
   end
-  return out
+
+  if current.next then
+    out = out .. '├──'
+    tree[level] = true
+  else
+    out = out .. '└──'
+    tree[level] = false
+  end
+  if recursion_field and recursion_field ~= 'head' then
+    return out .. recursion_field .. ': '
+  else
+    return out
+  end
 end
 
 
@@ -461,7 +479,7 @@ end
 ---
 -- n = node
 ---
-function automatic.analayze_node(n, level)
+function automatic.analayze_node(n, level, recursion_field)
   local out = {}
 
   out = template.type(node.type(n.id), n.id)
@@ -488,20 +506,20 @@ function automatic.analayze_node(n, level)
 
   for field_name,recursion_node in pairs(r) do
     --tmp[#tmp + 1] = template.recursion(field_name) .. automatic.run_through(recursion_node, level + 1)
-    tmp[#tmp + 1] = '\n' .. automatic.run_through(recursion_node, level + 1)
+    tmp[#tmp + 1] = '\n' .. automatic.run_through(recursion_node, level + 1, field_name)
 
   end
 
-  return template.tree(level) .. out .. table.concat(tmp, '')
+  return template.tree(n, level, recursion_field) .. out .. table.concat(tmp, '')
 end
 
 ---
 --
 ---
-function automatic.run_through(head, level)
+function automatic.run_through(head, level, recursion_field)
   local out = {}
   while head do
-    out[#out + 1] = automatic.analayze_node(head, level)
+    out[#out + 1] = automatic.analayze_node(head, level, recursion_field)
     head = head.next
   end
 
@@ -512,7 +530,8 @@ end
 --
 ---
 function automatic.get_nodes(head)
-  local out = automatic.run_through(head, 0)
+  local out = automatic.run_through(head, 1)
+  print('\n')
   template.print(out)
 
   return head

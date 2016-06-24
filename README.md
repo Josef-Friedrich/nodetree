@@ -67,3 +67,32 @@ Output written on example.pdf (1 page, 12841 bytes).
 Transcript written on example.log.
 ```
 
+# UTF8 Box drawing symbols
+
+## Light
+
+```
+│ │
+│ ├─┤field1: 1pt├┤field2: 1pt│
+│ └─
+└─
+```
+
+## Heavy
+
+```
+┃ ┃
+┃ ┣━┫field1: 1pt┣┫field2: 1pt┃
+┃ ┗━
+┗━
+```
+
+## Double
+
+```
+║ ║
+║ ╠═╣field1: 1pt╠╣field2: 1pt║
+║ ╚═
+╚═
+```
+

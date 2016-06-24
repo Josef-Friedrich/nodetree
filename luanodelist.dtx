@@ -151,6 +151,37 @@ Output written on example.pdf (1 page, 12841 bytes).
 Transcript written on example.log.
 ```
 
+# UTF8 Box drawing symbols
+
+## Light
+
+```
+│ │
+│ ├─┤field1: 1pt├┤field2: 1pt│
+│ └─
+└─
+```
+
+## Heavy
+
+```
+┃ ┃
+┃ ┣━┫field1: 1pt┣┫field2: 1pt┃
+┃ ┗━
+┗━
+```
+
+## Double
+
+```
+║ ║
+║ ╠═╣field1: 1pt╠╣field2: 1pt║
+║ ╚═
+╚═
+```
+
+
+
 
 
 %</readme>
@@ -505,27 +536,20 @@ function automatic.analayze_node(n, level, recursion_field)
   end
 
   for field_name,recursion_node in pairs(r) do
-    --tmp[#tmp + 1] = template.recursion(field_name) .. automatic.run_through(recursion_node, level + 1)
-    tmp[#tmp + 1] = '\n' .. automatic.run_through(recursion_node, level + 1, field_name)
-
+    automatic.run_through(recursion_node, level + 1, field_name)
   end
 
-  return template.tree(n, level, recursion_field) .. out .. table.concat(tmp, '')
+  template.print(template.tree(n, level, recursion_field) .. out .. table.concat(tmp, ''))
 end
 
 ---
 --
 ---
 function automatic.run_through(head, level, recursion_field)
-  local out = {}
   while head do
-    out[#out + 1] = automatic.analayze_node(head, level, recursion_field)
+    automatic.analayze_node(head, level, recursion_field)
     head = head.next
   end
-
-  out[#out + 1] = '-----end-of-list-------------------------------------------------------'
-
-  return table.concat(out, '\n')
 end
 
 ---

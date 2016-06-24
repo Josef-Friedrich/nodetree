@@ -180,10 +180,6 @@ Transcript written on example.log.
 ╚═
 ```
 
-
-
-
-
 %</readme>
 % \fi
 %
@@ -431,11 +427,11 @@ function template.tree(current, level, recursion_field)
     out = out .. '└──'
     tree[level] = false
   end
-  if recursion_field and recursion_field ~= 'head' then
-    return out .. recursion_field .. ': '
-  else
-    return out
+  if recursion_field and recursion_field ~= tree.last_recursion_field then
+    out = out .. recursion_field .. ': '
   end
+  tree.last_recursion_field = recursion_field
+  return out
 end
 
 

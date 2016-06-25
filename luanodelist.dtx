@@ -433,8 +433,7 @@ function template.type_id(id)
   return '[' .. tostring(id) .. ']'
 end
 
-function template.tree(current, level, recursion_field)
-
+function template.tree(head, level, recursion_field)
   local out = ''
   for i = 1, level - 1  do
     if tree[i] then
@@ -443,8 +442,7 @@ function template.tree(current, level, recursion_field)
       out = out .. '   '
     end
   end
-
-  if current.next then
+  if head.next then
     out = out .. '├──'
     tree[level] = true
   else
@@ -458,34 +456,27 @@ function template.tree(current, level, recursion_field)
   return out
 end
 
-
-function template.recursion(field)
-  -- return '\n  ' .. colors.red .. string.upper(field) .. ' (recursion): '.. colors.reset  .. ' '
-  return '\n  --> ' .. field .. ': '
-end
-
 -- t = type
-function template.type_color(t)
-
-  if t == 'hlist' then
+function template.type_color(id)
+  if id == 'hlist' then
     return colors.red
-  elseif t == 'vlist' then
+  elseif id == 'vlist' then
     return colors.green
-  elseif t == 'rule' then
+  elseif id == 'rule' then
     return colors.yellow
-  elseif t == 'disc' then
+  elseif id == 'disc' then
     return colors.bright .. colors.blue
-  elseif t == 'whatsit' then
+  elseif id == 'whatsit' then
     return colors.bright .. colors.magenta
-  elseif t == 'math' then
+  elseif id == 'math' then
     return colors.cyan
-  elseif t == 'glue' then
+  elseif id == 'glue' then
     return colors.bright .. colors.red
-  elseif t == 'kern' then
+  elseif id == 'kern' then
     return colors.bright .. colors.yellow
-  elseif t == 'penalty' then
+  elseif id == 'penalty' then
     return colors.blue
-  elseif t == 'glyph' then
+  elseif id == 'glyph' then
     return colors.bright .. colors.green
   else
     return colors.magenta

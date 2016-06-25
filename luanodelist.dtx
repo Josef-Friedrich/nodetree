@@ -269,6 +269,7 @@ Transcript written on example.log.
 %
 %    \begin{macrocode}
 local colors = require('ansicolors')
+local c = colors
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -658,33 +659,65 @@ function template.branches(level, connection_type)
   return out
 end
 %    \end{macrocode}
-
+%
+%    \begin{macrocode}
+template.node_colors = {
+  hlist          = c.red,
+  vlist          = c.green,
+  rule           = c.yellow,
+  ins            = c.blue,
+  mark           = c.magenta,
+  adjust         = c.cyan,
+  boundary       = c.bright .. c.red,
+  disc           = c.bright .. c.green,
+  whatsit        = c.bright .. c.yellow,
+  local_par      = c.bright .. c.blue,
+  dir            = c.bright .. c.magenta,
+  math           = c.bright .. c.cyan,
+  glue           = c.dim .. c.red,
+  kern           = c.dim .. c.green,
+  penalty        = c.dim .. c.yellow,
+  unset          = c.dim .. c.blue,
+  style          = c.dim .. c.magenta,
+  choice         = c.dim .. c.cyan,
+  noad           = c.red,
+  radical        = c.green,
+  fraction       = c.yellow,
+  accent         = c.blue,
+  fence          = c.magenta,
+  math_char      = c.cyan,
+  sub_box        = c.bright .. c.red,
+  sub_mlist      = c.bright .. c.green,
+  math_text_char = c.bright .. c.yellow,
+  delim          = c.bright .. c.blue,
+  margin_kern    = c.bright .. c.magenta,
+  glyph          = c.bright .. c.cyan,
+  align_record   = c.dim .. c.red,
+  pseudo_file    = c.dim .. c.green,
+  pseudo_line    = c.dim .. c.yellow,
+  page_insert    = c.dim .. c.blue,
+  split_insert   = c.dim .. c.magenta,
+  expr_stack     = c.dim .. c.cyan,
+  nested_list    = c.red,
+  span           = c.green,
+  attribute      = c.yellow,
+  glue_spec      = c.magenta,
+  attribute_list = c.cyan,
+  temp           = c.magenta,
+  align_stack    = c.bright .. c.red,
+  movement_stack = c.bright .. c.green,
+  if_stack       = c.bright .. c.yellow,
+  unhyphenated   = c.bright .. c.magenta,
+  hyphenated     = c.bright .. c.cyan,
+  delta          = c.red,
+  passive        = c.green,
+  shape          = c.yellow,
+}
+%    \end{macrocode}
 %
 %    \begin{macrocode}
 function template.type_color(id)
-  if id == 'hlist' then
-    return colors.red
-  elseif id == 'vlist' then
-    return colors.green
-  elseif id == 'rule' then
-    return colors.yellow
-  elseif id == 'disc' then
-    return colors.bright .. colors.blue
-  elseif id == 'whatsit' then
-    return colors.bright .. colors.magenta
-  elseif id == 'math' then
-    return colors.cyan
-  elseif id == 'glue' then
-    return colors.bright .. colors.red
-  elseif id == 'kern' then
-    return colors.bright .. colors.yellow
-  elseif id == 'penalty' then
-    return colors.blue
-  elseif id == 'glyph' then
-    return colors.bright .. colors.green
-  else
-    return colors.magenta
-  end
+  return  template.node_colors[id]
 end
 %    \end{macrocode}
 %

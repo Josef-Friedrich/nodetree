@@ -50,6 +50,8 @@
 
 \maketitle
 
+\tableofcontents
+
 \section{Option 'channel'}
 
 Value "term"
@@ -299,21 +301,26 @@ local base = {}
 local tree = {}
 
 local options
-
-------------------------------------------------------------------------
--- nodex ; node extended
-------------------------------------------------------------------------
-
--- Get the node id form <node    nil <    172 >    nil : hlist 2>
+%    \end{macrocode}
+%
+% \subsubsection{nodex --- node extended}
+%
+%    \begin{macrocode}
 function nodex.is_node(n)
   return string.find(tostring(n), '^<node%s+%S+%s+<%s+%d+.*>$')
 end
-
--- Get the node id form <node    nil <    172 >    nil : hlist 2>
+%    \end{macrocode}
+% Get the node id form, e. g.:
+% \begin{verbatim}
+% <node    nil <    172 >    nil : hlist 2>
+% \end{verbatim}
+%    \begin{macrocode}
 function nodex.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function nodex.subtype(n)
   local typ = node.type(n.id)
 
@@ -383,41 +390,52 @@ function nodex.subtype(n)
 
   assert(false)
 end
-
-------------------------------------------------------------------------
--- template
-------------------------------------------------------------------------
-
+%    \end{macrocode}
+%
+% \subsubsection{template}
+%
+%    \begin{macrocode}
 function template.key_value(key, value)
   return colors.yellow .. key .. ': ' .. colors.white .. value .. '; ' .. colors.reset
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.heading(text)
   return '\n' .. template.line() .. '% ' .. text .. template.line() .. '\n'
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.length(input)
   input = tonumber(input)
   input = input / 2^16
   input = math.floor((input * 10^2) + 0.5) / (10^2)
   return string.format('%gpt', input)
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.char(input)
   return string.format('%q', unicode.utf8.char(input))
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.line()
   return '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.frame(text, callback)
   local begin_text = 'BEGIN nodelist debug (Callback: ' .. tostring(callback) .. ')'
   local end_text = 'END nodelist debug'
   return template.heading(begin_text) .. text .. template.heading(end_text)
 end
-
--- t = type
+%    \end{macrocode}
+% t = type
+%    \begin{macrocode}
 function template.type(t, id)
   local out = ''
   out = template.type_color(t) .. string.upper(t)
@@ -428,11 +446,15 @@ function template.type(t, id)
 
   return out .. colors.reset  .. ' '
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.type_id(id)
   return '[' .. tostring(id) .. ']'
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.tree(head, level, recursion_field)
   local out = ''
   for i = 1, level - 1  do
@@ -455,8 +477,9 @@ function template.tree(head, level, recursion_field)
   tree.last_recursion_field = recursion_field
   return out
 end
-
--- t = type
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.type_color(id)
   if id == 'hlist' then
     return colors.red
@@ -482,16 +505,17 @@ function template.type_color(id)
     return colors.magenta
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.print(text)
   print(text)
 end
-
----
---
--- n = node
--- f = field
----
+%    \end{macrocode}
+%
+% \subsubsection{automatic}
+%
+%    \begin{macrocode}
 function automatic.format_field(head, field)
   local out = ''
 
@@ -517,10 +541,9 @@ function automatic.format_field(head, field)
 
   return template.key_value(field, out)
 end
-
----
--- n = node
----
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function automatic.analayze_node(head, level, recursion_field)
   local out = {}
 
@@ -552,20 +575,18 @@ function automatic.analayze_node(head, level, recursion_field)
 
   template.print(template.tree(head, level, recursion_field) .. out .. table.concat(tmp, ''))
 end
-
----
---
----
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function automatic.run_through(head, level, recursion_field)
   while head do
     automatic.analayze_node(head, level, recursion_field)
     head = head.next
   end
 end
-
----
---
----
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function automatic.get_nodes(head)
   local out = automatic.run_through(head, 1)
   print('\n')
@@ -573,11 +594,11 @@ function automatic.get_nodes(head)
 
   return head
 end
-
-------------------------------------------------------------------------
--- base
-------------------------------------------------------------------------
-
+%    \end{macrocode}
+%
+% \subsubsection{base}
+%
+%    \begin{macrocode}
 function base.get_callback(key)
   if key == 'prelinebreak' then callback = 'pre_linebreak_filter'
   elseif key == 'linebreak' then callback = 'linebreak_filter'
@@ -593,15 +614,21 @@ function base.get_callback(key)
 
   return callback
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function base.get_options(localoptions)
   options = localoptions
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function base.execute()
   luatexbase.add_to_callback(base.get_callback(options.callback), automatic.get_nodes, 'automatic', 1000)
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function base.analyze(n)
   local out = template.line() ..
     automatic.run_through(n, 1) ..
@@ -609,13 +636,22 @@ function base.analyze(n)
 
   template.print(out)
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 return base
 %    \end{macrocode}
 % \iffalse
 %</luamain>
 %<*luaansicolors>
 % \fi
+%
+% \makeatletter
+% \c@CodelineNo 0 \relax
+% \makeatother
+%
+% \subsection{The file \tt{ansicolors.lua}}
+%
 %    \begin{macrocode}
 -- Copyright (c) 2009 Rob Hoelz <rob@hoelzro.net>
 --

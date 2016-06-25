@@ -362,14 +362,79 @@ end
 function nodex.subtype(n)
   local typ = node.type(n.id)
 
+-- hlist (0)
+-- vlist (1)
+-- rule (2)
+-- ins (3)
+-- mark (4)
+-- adjust (5)
+-- boundary (6)
+-- disc (7)
+-- whatsit (8)
+-- local_par (9)
+-- dir (10)
+-- math (11)
+-- glue (12)
+-- kern (13)
+-- penalty (14)
+-- unset (15)
+-- style (16)
+-- choice (17)
+-- noad (18)
+-- radical (19)
+-- fraction (20)
+-- accent (21)
+-- fence (22)
+-- math_char (23)
+-- sub_box (24)
+-- sub_mlist (25)
+-- math_text_char (26)
+-- delim (27)
+-- margin_kern (28)
+-- glyph (29)
+-- align_record (30)
+-- pseudo_file (31)
+-- pseudo_line (32)
+-- page_insert (33)
+-- split_insert (34)
+-- expr_stack (35)
+-- nested_list (36)
+-- span (37)
+-- attribute (38)
+-- glue_spec (39)
+-- attribute_list (40)
+-- temp (41)
+-- align_stack (42)
+-- movement_stack (43)
+-- if_stack (44)
+-- unhyphenated (45)
+-- hyphenated (46)
+-- delta (47)
+-- passive (48)
+-- shape (49)
+
   local subtypes = {
     hlist = {
-      [0] = 'unknown origin',
-      [1] = 'created by linebreaking',
-      [2] = 'explicit box command',
-      [3] = 'parindent',
-      [4] = 'alignment column or row',
-      [5] = 'alignment cell',
+      [0] = 'unknown',
+      [1] = 'line',
+      [2] = 'box',
+      [3] = 'indent',
+      [4] = 'alignment',
+      [5] = 'cell',
+      [6] = 'equation',
+      [7] = 'equationnumber',
+    },
+    vlist = {
+      [0] = 'unknown',
+      [4] = 'alignment',
+      [5] = 'cell',
+    },
+    rules = {
+      [0] = 'unknown',
+      [1] = 'box',
+      [2] = 'image',
+      [3] = 'empty',
+      [4] = 'user',
     },
     glyph = {
       [0] = 'character',
@@ -377,12 +442,12 @@ function nodex.subtype(n)
       [2] = 'ligature',
     },
     disc  = {
-      [0] = '\\discretionary',
-      [1] = '\\-',
-      [2] = '- (auto)',
-      [3] = 'h&j (simple)',
-      [4] = 'h&j (hard, first item)',
-      [5] = 'h&j (hard, second item)',
+      [0] = 'discretionary',
+      [1] = 'explicit',
+      [2] = 'automatic',
+      [3] = 'regular',
+      [4] = 'first',
+      [5] = 'second',
     },
     glue = {
       [0]   = 'skip',

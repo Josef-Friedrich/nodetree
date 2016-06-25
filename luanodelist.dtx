@@ -385,8 +385,18 @@ function nodex.subtype(n)
     },
 -- ins (3)
 -- mark (4)
--- adjust (5)
--- boundary (6)
+    -- 5
+    adjust = {
+      [0] = 'normal',
+      [1] = 'pre',
+    },
+    -- 6
+    boundary = {
+      [0] = 'cancel',
+      [1] = 'user',
+      [2] = 'protrusion',
+      [3] = 'word',
+    },
     -- 7
     disc  = {
       [0] = 'discretionary',
@@ -399,10 +409,14 @@ function nodex.subtype(n)
 -- whatsit (8)
 -- local_par (9)
 -- dir (10)
--- math (11)
+    -- 11
+    math = {
+      [0] = 'beginmath',
+      [1] = 'endmath',
+    },
     -- 12
     glue = {
-      [0]   = 'skip',
+      [0]   = 'userskip',
       [1]   = 'lineskip',
       [2]   = 'baselineskip',
       [3]   = 'parskip',
@@ -418,35 +432,82 @@ function nodex.subtype(n)
       [13]  = 'spaceskip',
       [14]  = 'xspaceskip',
       [15]  = 'parfillskip',
-      [16]  = 'thinmuskip',
-      [17]  = 'medmuskip',
-      [18]  = 'thickmuskip',
+      [16]  = 'mathskip',
+      [17]  = 'thinmuskip',
+      [18]  = 'medmuskip',
+      [19]  = 'thickmuskip',
+      [98]  = 'conditionalmathskip',
+      [99]  = 'muglue',
       [100] = 'leaders',
       [101] = 'cleaders',
       [102] = 'xleaders',
       [103] = 'gleaders',
     },
--- kern (13)
+    -- 13
+    kern = {
+      [0] = 'fontkern',
+      [1] = 'userkern',
+      [2] = 'accentkern',
+      [3] = 'italiccorrection',
+    },
 -- penalty (14)
 -- unset (15)
 -- style (16)
 -- choice (17)
--- noad (18)
--- radical (19)
+    -- 18
+    noad = {
+      [0] = 'ord',
+      [1] = 'opdisplaylimits',
+      [2] = 'oplimits',
+      [3] = 'opnolimits',
+      [4] = 'bin',
+      [5] = 'rel',
+      [6] = 'open',
+      [7] = 'close',
+      [8] = 'punct',
+      [9] = 'inner',
+      [10] = 'under',
+      [11] = 'over',
+      [12] = 'vcenter',
+    },
+    -- 19
+    radical = {
+      [0] = 'radical',
+      [1] = 'uradical',
+      [2] = 'uroot',
+      [3] = 'uunderdelimiter',
+      [4] = 'uoverdelimiter',
+      [5] = 'udelimiterunder',
+      [6] = 'udelimiterover',
+    },
 -- fraction (20)
--- accent (21)
--- fence (22)
+     -- 21
+    accent = {
+      [0] = 'bothflexible',
+      [1] = 'fixedtop',
+      [2] = 'fixedbottom',
+      [3] = 'fixedboth',
+    },
+    -- 22
+    fence = {
+      [0] = 'unset',
+      [1] = 'left',
+      [2] = 'middle',
+      [3] = 'right',
+    },
 -- math_char (23)
 -- sub_box (24)
 -- sub_mlist (25)
 -- math_text_char (26)
 -- delim (27)
 -- margin_kern (28)
-    -- 29
+    --  29
     glyph = {
       [0] = 'character',
-      [1] = 'glyph',
-      [2] = 'ligature',
+      [1] = 'ligature',
+      [2] = 'ghost',
+      [3] = 'left',
+      [4] = 'right',
     },
 -- align_record (30)
 -- pseudo_file (31)

@@ -269,10 +269,46 @@ Transcript written on example.log.
 %
 %    \begin{macrocode}
 local colors = require('ansicolors')
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 local nodex = {}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 local template = {}
-local automatic = {}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+local tree = {}
+%    \end{macrocode}
+%
+% Nodes in Lua\TeX are connected. The tree view distinguishs betweens
+% the |list| and |field| connections.
+
+% \begin{itemize}
+%  \item |list|: Nodes, which are double connected by |next| and
+%        |previous| fields.
+%  \item |field|: Connections to nodes by other fields than |next| and
+%        |previous| fields, e. g. |head|, |pre|.
+% \end{itemize}
+%
+% The lua table named |tree| holds states values for the present tree
+% item.
+% \begin{verbatim}
+%  tree:
+%    - 1:
+%      - list: continue
+%      - field: stop
+%    - 2:
+%      - list: continue
+%      - field: stop
+% \end{verbatim}
+%    \begin{macrocode}
+tree.state = {}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 local base = {}
 %    \end{macrocode}
 %
@@ -298,8 +334,10 @@ local base = {}
 %      - field: stop
 % \end{verbatim}
 %    \begin{macrocode}
-local tree = {}
-
+tree.state = {}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 local options
 %    \end{macrocode}
 %
@@ -513,10 +551,10 @@ function template.print(text)
 end
 %    \end{macrocode}
 %
-% \subsubsection{automatic}
+% \subsubsection{tree}
 %
 %    \begin{macrocode}
-function automatic.format_field(head, field)
+function tree.format_field(head, field)
   local out = ''
 
   if not head[field] or head[field] == 0 then
@@ -544,7 +582,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function automatic.analayze_node(head, level, recursion_field)
+function tree.analayze_node(head, level, recursion_field)
   local out = {}
 
   out = template.type(node.type(head.id), head.id)
@@ -565,12 +603,12 @@ function automatic.analayze_node(head, level, recursion_field)
       nodex.is_node(head[field_name]) then
       r[field_name] = head[field_name]
     else
-      tmp[#tmp + 1] = automatic.format_field(head, field_name)
+      tmp[#tmp + 1] = tree.format_field(head, field_name)
     end
   end
 
   for field_name,recursion_node in pairs(r) do
-    automatic.run_through(recursion_node, level + 1, field_name)
+    tree.run_through(recursion_node, level + 1, field_name)
   end
 
   template.print(template.tree(head, level, recursion_field) .. out .. table.concat(tmp, ''))
@@ -578,17 +616,17 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function automatic.run_through(head, level, recursion_field)
+function tree.run_through(head, level, recursion_field)
   while head do
-    automatic.analayze_node(head, level, recursion_field)
+    tree.analayze_node(head, level, recursion_field)
     head = head.next
   end
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function automatic.get_nodes(head)
-  local out = automatic.run_through(head, 1)
+function tree.get_nodes(head)
+  local out = tree.run_through(head, 1)
   print('\n')
   template.print(out)
 
@@ -624,14 +662,14 @@ end
 %
 %    \begin{macrocode}
 function base.execute()
-  luatexbase.add_to_callback(base.get_callback(options.callback), automatic.get_nodes, 'automatic', 1000)
+  luatexbase.add_to_callback(base.get_callback(options.callback), tree.get_nodes, 'tree')
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function base.analyze(n)
   local out = template.line() ..
-    automatic.run_through(n, 1) ..
+    tree.run_through(n, 1) ..
     template.line()
 
   template.print(out)

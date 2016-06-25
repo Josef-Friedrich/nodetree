@@ -343,11 +343,6 @@ local options
 %
 % \subsubsection{nodex --- node extended}
 %
-%    \begin{macrocode}
-function nodex.is_node(n)
-  return string.find(tostring(n), '^<node%s+%S+%s+<%s+%d+.*>$')
-end
-%    \end{macrocode}
 % Get the node id form, e. g.:
 % \begin{verbatim}
 % <node    nil <    172 >    nil : hlist 2>
@@ -702,7 +697,7 @@ function tree.analyze_node(head, level)
     if field_name ~= 'next' and
       field_name ~= 'prev' and
       field_name ~= 'attr' and
-      nodex.is_node(head[field_name]) then
+      node.is_node(head[field_name]) then
       r[field_name] = head[field_name]
     else
       tmp[#tmp + 1] = tree.format_field(head, field_name)

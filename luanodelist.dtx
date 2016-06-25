@@ -493,10 +493,10 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.tree(head, level, recursion_field)
+function template.branches(head, level)
   local out = ''
   for i = 1, level - 1  do
-    if tree[i] then
+    if tree.state[i] then
       out = out .. '│  '
     else
       out = out .. '   '
@@ -504,15 +504,11 @@ function template.tree(head, level, recursion_field)
   end
   if head.next then
     out = out .. '├──'
-    tree[level] = true
+    tree.state[level] = true
   else
     out = out .. '└──'
-    tree[level] = false
+    tree.state[level] = false
   end
-  if recursion_field and recursion_field ~= tree.last_recursion_field then
-    out = out .. recursion_field .. ': '
-  end
-  tree.last_recursion_field = recursion_field
   return out
 end
 %    \end{macrocode}
@@ -582,7 +578,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tree.analayze_node(head, level, recursion_field)
+function tree.analyze_node(head, level)
   local out = {}
 
   out = template.type(node.type(head.id), head.id)
@@ -596,7 +592,7 @@ function tree.analayze_node(head, level, recursion_field)
 
   fields = node.fields(head.id, head.subtype)
 
-  for field_id,field_name in pairs(fields) do
+  for field_id, field_name in pairs(fields) do
     if field_name ~= 'next' and
       field_name ~= 'prev' and
       field_name ~= 'attr' and
@@ -607,26 +603,26 @@ function tree.analayze_node(head, level, recursion_field)
     end
   end
 
-  for field_name,recursion_node in pairs(r) do
-    tree.run_through(recursion_node, level + 1, field_name)
+  for field_name, recursion_node in pairs(r) do
+    tree.analyze_list(recursion_node, level + 1)
   end
 
-  template.print(template.tree(head, level, recursion_field) .. out .. table.concat(tmp, ''))
+  template.print(template.branches(head, level) .. out .. table.concat(tmp, ''))
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tree.run_through(head, level, recursion_field)
+function tree.analyze_list(head, level)
   while head do
-    tree.analayze_node(head, level, recursion_field)
+    tree.analyze_node(head, level)
     head = head.next
   end
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tree.get_nodes(head)
-  local out = tree.run_through(head, 1)
+function tree.analyze(head)
+  local out = tree.analyze_list(head, 1)
   print('\n')
   template.print(out)
 
@@ -662,14 +658,14 @@ end
 %
 %    \begin{macrocode}
 function base.execute()
-  luatexbase.add_to_callback(base.get_callback(options.callback), tree.get_nodes, 'tree')
+  luatexbase.add_to_callback(base.get_callback(options.callback), tree.analyze, 'tree')
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function base.analyze(n)
+function base.analyze(head)
   local out = template.line() ..
-    tree.run_through(n, 1) ..
+    tree.analyze_list(head, 1) ..
     template.line()
 
   template.print(out)

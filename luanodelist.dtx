@@ -529,10 +529,10 @@ function template.branches(level, connection_type)
 % Format the last branches
 %    \begin{macrocode}
   if connection_type == 'list' then
-    out = out .. template.branch('list', 'stop', true)
+    out = out .. template.branch('list', tree.state[level]['list'], true)
   else
     out = out .. template.branch('list', tree.state[level]['list'], false)
-    out = out .. template.branch('field', 'stop', true)
+    out = out .. template.branch('field', tree.state[level]['field'], true)
   end
 
   return out
@@ -620,6 +620,7 @@ end
 %    \begin{macrocode}
 function tree.analyze_node(head, level)
   local out = {}
+  local connection_state
 
   out = template.type(node.type(head.id), head.id)
 
@@ -643,12 +644,20 @@ function tree.analyze_node(head, level)
     end
   end
 
+  if head.next then
+    connection_state = 'continue'
+  else
+    connection_state = 'stop'
+  end
+
+  tree.set_state(level, 'list', connection_state)
+  template.print(template.branches(level, 'list') .. out .. table.concat(tmp, ''))
+
   local max = 0
   for _ in pairs(r) do
     max = max + 1
   end
 
-  local connection_state
   local count = 0
   for field_name, recursion_node in pairs(r) do
     count = count + 1
@@ -663,14 +672,6 @@ function tree.analyze_node(head, level)
     tree.analyze_list(recursion_node, level + 1)
   end
 
-  if head.next then
-    connection_state = 'continue'
-  else
-    connection_state = 'stop'
-  end
-
-  tree.set_state(level, 'list', connection_state)
-  template.print(template.branches(level, 'list') .. out .. table.concat(tmp, ''))
 end
 %    \end{macrocode}
 %
@@ -685,10 +686,8 @@ end
 %
 %    \begin{macrocode}
 function tree.analyze(head)
-  local out = tree.analyze_list(head, 1)
   print('\n')
-  template.print(out)
-
+  tree.analyze_list(head, 1)
   return head
 end
 %    \end{macrocode}

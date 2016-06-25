@@ -493,25 +493,52 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.branches(head, level)
+function template.branch(connection_type, connection_state, last)
+  local c = connection_type
+  local s = connection_state
+  local l = last
+  if c == 'list' and s == 'stop' and l == false then
+    return ' '
+  elseif c == 'field' and s == 'stop' and l == false then
+    return ' '
+  elseif c == 'list' and s == 'continue' and l == false then
+    return '│ '
+  elseif c == 'field' and s == 'continue' and l == false then
+    return '║ '
+  elseif c == 'list' and s == 'continue' and l == true then
+    return '├─'
+  elseif c == 'field' and s == 'continue' and l == true then
+    return '╠═'
+  elseif c == 'list' and s == 'stop' and l == true then
+    return '└─'
+  elseif c == 'field' and s == 'stop' and l == true then
+    return '╚═'
+  end
+end
+%    \end{macrocode}
+
+%    \begin{macrocode}
+function template.branches(level, connection_type)
   local out = ''
+
   for i = 1, level - 1  do
-    if tree.state[i] then
-      out = out .. '│  '
-    else
-      out = out .. '   '
-    end
+    out = out .. template.branch('list', tree.state[i]['list'], false)
+    out = out .. template.branch('field', tree.state[i]['field'], false)
   end
-  if head.next then
-    out = out .. '├──'
-    tree.state[level] = true
+%    \end{macrocode}
+% Format the last branches
+%    \begin{macrocode}
+  if connection_type == 'list' then
+    out = out .. template.branch('list', 'stop', true)
   else
-    out = out .. '└──'
-    tree.state[level] = false
+    out = out .. template.branch('list', tree.state[level]['list'], false)
+    out = out .. template.branch('field', 'stop', true)
   end
+
   return out
 end
 %    \end{macrocode}
+
 %
 %    \begin{macrocode}
 function template.type_color(id)
@@ -577,6 +604,19 @@ function tree.format_field(head, field)
 end
 %    \end{macrocode}
 %
+% |level| is a integer beginning with 1. The variable |connection_type|
+% is a string, which can be either |list| or |field|. The variable
+% |connection_state| is a string, which can be either |continue| or
+% |stop|.
+%    \begin{macrocode}
+function tree.set_state(level, connection_type, connection_state)
+  if not tree.state[level] then
+    tree.state[level] = {}
+  end
+  tree.state[level][connection_type] = connection_state
+end
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 function tree.analyze_node(head, level)
   local out = {}
@@ -603,11 +643,34 @@ function tree.analyze_node(head, level)
     end
   end
 
+  local max = 0
+  for _ in pairs(r) do
+    max = max + 1
+  end
+
+  local connection_state
+  local count = 0
   for field_name, recursion_node in pairs(r) do
+    count = count + 1
+    if count == max then
+      connection_state = 'stop'
+    else
+      connection_state = 'continue'
+    end
+
+    tree.set_state(level, 'field', connection_state)
+    template.print(template.branches(level, 'field') .. field_name .. ':')
     tree.analyze_list(recursion_node, level + 1)
   end
 
-  template.print(template.branches(head, level) .. out .. table.concat(tmp, ''))
+  if head.next then
+    connection_state = 'continue'
+  else
+    connection_state = 'stop'
+  end
+
+  tree.set_state(level, 'list', connection_state)
+  template.print(template.branches(level, 'list') .. out .. table.concat(tmp, ''))
 end
 %    \end{macrocode}
 %

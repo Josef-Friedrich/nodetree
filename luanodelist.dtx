@@ -477,57 +477,57 @@ end
 -- n = node
 -- f = field
 ---
-function automatic.format_field(n, f)
+function automatic.format_field(head, field)
   local out = ''
 
-  if not n[f] or n[f] == 0 then
+  if not head[field] or head[field] == 0 then
     return ''
   end
 
-  if options.verbosity < 2 and f == 'prev' or f == 'next' or f == 'id' or f == 'attr' then
+  if options.verbosity < 2 and field == 'prev' or field == 'next' or field == 'id' or field == 'attr' then
     return ''
   end
 
-  if f == 'prev' or f == 'next' then
-    out = nodex.node_id(n[f])
-  elseif f == 'subtype' then
-    out = nodex.subtype(n)
-  elseif f == 'width' or f == 'height' or f == 'depth' then
-    out = template.length(n[f])
-  elseif f == 'char' then
-    out = template.char(n[f])
+  if field == 'prev' or field == 'next' then
+    out = nodex.node_id(head[field])
+  elseif field == 'subtype' then
+    out = nodex.subtype(head)
+  elseif field == 'width' or field == 'height' or field == 'depth' then
+    out = template.length(head[field])
+  elseif field == 'char' then
+    out = template.char(head[field])
   else
-    out = tostring(n[f])
+    out = tostring(head[field])
   end
 
-  return template.key_value(f, out)
+  return template.key_value(field, out)
 end
 
 ---
 -- n = node
 ---
-function automatic.analayze_node(n, level, recursion_field)
+function automatic.analayze_node(head, level, recursion_field)
   local out = {}
 
-  out = template.type(node.type(n.id), n.id)
+  out = template.type(node.type(head.id), head.id)
 
   if options.verbosity > 1 then
-    out = out .. template.key_value('no', nodex.node_id(n))
+    out = out .. template.key_value('no', nodex.node_id(head))
   end
 
   local tmp = {}
   local r = {} -- recurison
 
-  fields = node.fields(n.id, n.subtype)
+  fields = node.fields(head.id, head.subtype)
 
   for field_id,field_name in pairs(fields) do
     if field_name ~= 'next' and
       field_name ~= 'prev' and
       field_name ~= 'attr' and
-      nodex.is_node(n[field_name]) then
-      r[field_name] = n[field_name]
+      nodex.is_node(head[field_name]) then
+      r[field_name] = head[field_name]
     else
-      tmp[#tmp + 1] = automatic.format_field(n, field_name)
+      tmp[#tmp + 1] = automatic.format_field(head, field_name)
     end
   end
 
@@ -535,7 +535,7 @@ function automatic.analayze_node(n, level, recursion_field)
     automatic.run_through(recursion_node, level + 1, field_name)
   end
 
-  template.print(template.tree(n, level, recursion_field) .. out .. table.concat(tmp, ''))
+  template.print(template.tree(head, level, recursion_field) .. out .. table.concat(tmp, ''))
 end
 
 ---

@@ -357,58 +357,8 @@ end
 function nodex.subtype(n)
   local typ = node.type(n.id)
 
--- hlist (0)
--- vlist (1)
--- rule (2)
--- ins (3)
--- mark (4)
--- adjust (5)
--- boundary (6)
--- disc (7)
--- whatsit (8)
--- local_par (9)
--- dir (10)
--- math (11)
--- glue (12)
--- kern (13)
--- penalty (14)
--- unset (15)
--- style (16)
--- choice (17)
--- noad (18)
--- radical (19)
--- fraction (20)
--- accent (21)
--- fence (22)
--- math_char (23)
--- sub_box (24)
--- sub_mlist (25)
--- math_text_char (26)
--- delim (27)
--- margin_kern (28)
--- glyph (29)
--- align_record (30)
--- pseudo_file (31)
--- pseudo_line (32)
--- page_insert (33)
--- split_insert (34)
--- expr_stack (35)
--- nested_list (36)
--- span (37)
--- attribute (38)
--- glue_spec (39)
--- attribute_list (40)
--- temp (41)
--- align_stack (42)
--- movement_stack (43)
--- if_stack (44)
--- unhyphenated (45)
--- hyphenated (46)
--- delta (47)
--- passive (48)
--- shape (49)
-
   local subtypes = {
+    -- 0
     hlist = {
       [0] = 'unknown',
       [1] = 'line',
@@ -419,23 +369,25 @@ function nodex.subtype(n)
       [6] = 'equation',
       [7] = 'equationnumber',
     },
+    -- 1
     vlist = {
       [0] = 'unknown',
       [4] = 'alignment',
       [5] = 'cell',
     },
-    rules = {
+    -- 2
+    rule = {
       [0] = 'unknown',
       [1] = 'box',
       [2] = 'image',
       [3] = 'empty',
       [4] = 'user',
     },
-    glyph = {
-      [0] = 'character',
-      [1] = 'glyph',
-      [2] = 'ligature',
-    },
+-- ins (3)
+-- mark (4)
+-- adjust (5)
+-- boundary (6)
+    -- 7
     disc  = {
       [0] = 'discretionary',
       [1] = 'explicit',
@@ -444,6 +396,11 @@ function nodex.subtype(n)
       [4] = 'first',
       [5] = 'second',
     },
+-- whatsit (8)
+-- local_par (9)
+-- dir (10)
+-- math (11)
+    -- 12
     glue = {
       [0]   = 'skip',
       [1]   = 'lineskip',
@@ -467,8 +424,50 @@ function nodex.subtype(n)
       [100] = 'leaders',
       [101] = 'cleaders',
       [102] = 'xleaders',
-      [103] = 'gleaders'
+      [103] = 'gleaders',
     },
+-- kern (13)
+-- penalty (14)
+-- unset (15)
+-- style (16)
+-- choice (17)
+-- noad (18)
+-- radical (19)
+-- fraction (20)
+-- accent (21)
+-- fence (22)
+-- math_char (23)
+-- sub_box (24)
+-- sub_mlist (25)
+-- math_text_char (26)
+-- delim (27)
+-- margin_kern (28)
+    -- 29
+    glyph = {
+      [0] = 'character',
+      [1] = 'glyph',
+      [2] = 'ligature',
+    },
+-- align_record (30)
+-- pseudo_file (31)
+-- pseudo_line (32)
+-- page_insert (33)
+-- split_insert (34)
+-- expr_stack (35)
+-- nested_list (36)
+-- span (37)
+-- attribute (38)
+-- glue_spec (39)
+-- attribute_list (40)
+-- temp (41)
+-- align_stack (42)
+-- movement_stack (43)
+-- if_stack (44)
+-- unhyphenated (45)
+-- hyphenated (46)
+-- delta (47)
+-- passive (48)
+-- shape (49)
   }
 
   subtypes.whatsit = node.whatsits()

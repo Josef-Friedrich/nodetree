@@ -24,8 +24,12 @@ doc:
 clean:
 	./clean.sh
 
-test:
+test: testluatex testlualatex
+
+testlualatex:
 	find tests/lualatex -name "*.tex" -exec lualatex {} \;
+
+testluatex:
 	find tests/luatex -name "*.tex" -exec luatex {} \;
 
 ctan:
@@ -38,4 +42,4 @@ ctan:
 	tar cvfz $(jobname).tar.gz $(jobname)
 	rm -rf $(jobname)
 
-.PHONY: all install doc clean test ctan
+.PHONY: all install doc clean test ctan testlualatex testluatex

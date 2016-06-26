@@ -225,7 +225,20 @@ Transcript written on example.log.
 % \subsection{The file \tt{tree.tex}}
 %
 %    \begin{macrocode}
-\directlua{dofile(kpse.find_file("tree.lua"))}
+\directlua{
+  local options = {
+    verbosity = 1,
+    channel = 'term',
+    callback = 'postlinebreak',
+    engine = 'luatex',
+  }
+
+  package.path = './lua/?.lua;' .. package.path
+
+  tree = require("tree")
+  tree.get_options(options)
+  tree.execute()
+}
 %    \end{macrocode}
 %
 % \iffalse
@@ -258,6 +271,7 @@ Transcript written on example.log.
   options.verbosity = tonumber(\TREE@verbosity)
   options.channel = '\TREE@channel'
   options.callback = '\TREE@callback'
+  options.engine = 'lualatex'
 
   package.path = './lua/?.lua;' .. package.path
 
@@ -350,7 +364,12 @@ tree.state = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-local options
+local options = {
+  verbosity = 1,
+  channel = 'term',
+  callback = 'postlinebreak',
+  engine = 'luatex',
+}
 %    \end{macrocode}
 %
 % \subsubsection{nodex --- node extended}
@@ -860,6 +879,7 @@ end
 %
 %    \begin{macrocode}
 function base.get_callback(key)
+  local callback
   if key == 'prelinebreak' then callback = 'pre_linebreak_filter'
   elseif key == 'linebreak' then callback = 'linebreak_filter'
   elseif key == 'postlinebreak' then callback = 'post_linebreak_filter'
@@ -884,7 +904,13 @@ end
 %
 %    \begin{macrocode}
 function base.execute()
-  luatexbase.add_to_callback(base.get_callback(options.callback), tree.analyze, 'tree')
+  local c = base.get_callback(options.callback)
+  print(c)
+  if options.engine == 'lualatex' then
+    luatexbase.add_to_callback(c, tree.analyze, 'tree')
+  else
+    id, error = callback.register(c, tree.analyze)
+  end
 end
 %    \end{macrocode}
 %

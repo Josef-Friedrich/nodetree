@@ -11,6 +11,7 @@ install:
 	cp -f $(jobname).sty $(installdir)
 	cp -f $(jobname).lua $(installdir)
 	cp -f ansicolors.lua $(installdir)
+	./clean.sh install
 
 doc:
 	lualatex $(jobname).dtx
@@ -21,9 +22,19 @@ doc:
 	cp $(jobname).pdf $(texmf)/doc
 
 clean:
-	./.githook_pre-commit
+	./clean.sh
 
 test:
 	find tests -name "*.tex" -exec lualatex {} \;
 
-.PHONY: all clean ctan test
+ctan:
+	rm -rf $(jobname)
+	mkdir $(jobname)
+	cp -f README.md $(jobname)/README
+	cp -f $(jobname).ins $(jobname)/
+	cp -f $(jobname).dtx $(jobname)/
+	cp -f $(jobname).pdf $(jobname)/
+	tar cvfz $(jobname).tar.gz $(jobname)
+	rm -rf $(jobname)
+
+.PHONY: all install doc clean test ctan

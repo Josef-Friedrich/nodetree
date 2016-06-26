@@ -25,7 +25,8 @@ clean:
 	./clean.sh
 
 test:
-	find tests -name "*.tex" -exec lualatex {} \;
+	find tests/lualatex -name "*.tex" -exec lualatex {} \;
+	find tests/luatex -name "*.tex" -exec luatex {} \;
 
 ctan:
 	rm -rf $(jobname)

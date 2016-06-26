@@ -915,6 +915,18 @@ function tree.analyze(head)
 end
 %    \end{macrocode}
 %
+%    \begin{macrocode}
+local callbacks = {}
+function callbacks.post_linebreak_filter(head, groupcode)
+  template.print('post_linebreak_filter')
+  if groupcode then
+    print('groundcode: ' .. groupcode)
+  end
+  tree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
 % \subsubsection{base}
 %
 %    \begin{macrocode}
@@ -947,9 +959,9 @@ end
 function base.execute()
   local c = base.get_callback()
   if options.engine == 'lualatex' then
-    luatexbase.add_to_callback(c, tree.analyze, 'tree')
+    luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'tree')
   else
-    id, error = callback.register(c, tree.analyze)
+    id, error = callback.register(c, callbacks.post_linebreak_filter)
   end
 end
 %    \end{macrocode}

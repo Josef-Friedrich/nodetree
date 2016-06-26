@@ -1,70 +1,42 @@
 # tree
 
-Based on the [gist of Patrick Gundlach](https://gist.github.com/pgundlach/556247).
+Inspired by a [gist of Patrick Gundlach](https://gist.github.com/pgundlach/556247).
 
 `tree` displays some debug informations of the node list in the
 terminal, when you render a Latex document.
 
 ```
-lualatex example.tex
-```
+post_linebreak_filter:
+│
+├─GLUE subtype: baselineskip; width: 5.06pt;
+└─HLIST subtype: line; width: 345pt; height: 6.94pt; dir: TLT; glue_order: 2; glue_sign: 1; glue_set: 304.99993896484;
+ ╚═head:
+  ├─LOCAL_PAR dir: TLT;
+  ├─HLIST subtype: indent; width: 15pt; dir: TLT;
+  ├─GLYPH char: "O"; font: 15; left: 2; right: 3; uchyph: 1; width: 7.78pt; height: 6.83pt;
+  ├─DISC subtype: regular; penalty: 50;
+  │ ╠═post:
+  │ ║ └─GLYPH subtype: ghost; char: "\12"; font: 15; width: 5.56pt; height: 6.94pt;
+  │ ║  ╚═components:
+  │ ║   ├─GLYPH subtype: ligature; char: "f"; font: 15; left: 2; right: 3; uchyph: 1; width: 3.06pt; height: 6.94pt;
+  │ ║   └─GLYPH subtype: ligature; char: "i"; font: 15; left: 2; right: 3; uchyph: 1; width: 2.78pt; height: 6.68pt;
+  │ ╠═pre:
+  │ ║ ├─GLYPH char: "f"; font: 15; left: 2; right: 3; uchyph: 1; width: 3.06pt; height: 6.94pt;
+  │ ║ └─GLYPH char: "-"; font: 15; left: 2; right: 3; uchyph: 1; width: 3.33pt; height: 4.31pt;
+  │ ╚═replace:
+  │  └─GLYPH subtype: ghost; char: "\14"; font: 15; width: 8.33pt; height: 6.94pt;
+  │   ╚═components:
+  │    ├─GLYPH subtype: ghost; char: "\11"; font: 15; width: 5.83pt; height: 6.94pt;
+  │    │ ╚═components:
+  │    │  ├─GLYPH subtype: ligature; char: "f"; font: 15; left: 2; right: 3; uchyph: 1; width: 3.06pt; height: 6.94pt;
+  │    │  └─GLYPH subtype: ligature; char: "f"; font: 15; left: 2; right: 3; uchyph: 1; width: 3.06pt; height: 6.94pt;
+  │    └─GLYPH subtype: ligature; char: "i"; font: 15; left: 2; right: 3; uchyph: 1; width: 2.78pt; height: 6.68pt;
+  ├─GLYPH char: "c"; font: 15; left: 2; right: 3; uchyph: 1; width: 4.44pt; height: 4.31pt;
+  ├─GLYPH char: "e"; font: 15; left: 2; right: 3; uchyph: 1; width: 4.44pt; height: 4.31pt;
+  ├─PENALTY penalty: 10000;
+  ├─GLUE subtype: parfillskip; stretch: 65536; stretch_order: 2;
+  └─GLUE subtype: rightskip;
 
-```
-This is LuaTeX, Version beta-0.79.1 (TeX Live 2014) (rev 4971)
- restricted \write18 enabled.
-...
-(./tree.lua)) (./example.aux)
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-GLUE baselineskip: 5.05556pt;
-
-HLIST width 345pt; height 6.94444pt; depth 1.94444pt; glue_set 205; glue_sign 1; glue_order 2;
-WHATSIT name: whatsit; type: local_par;
-
-HLIST width 15pt;
-GLYPH char: "L"; lang: 0; font: 15; width: 6.25002pt;
-GLYPH char: "o"; lang: 0; font: 15; width: 5.00002pt;
-GLYPH char: "r"; lang: 0; font: 15; width: 3.91667pt;
-GLYPH char: "e"; lang: 0; font: 15; width: 4.44444pt;
-GLYPH char: "m"; lang: 0; font: 15; width: 8.33336pt;
-GLUE skip: 3.33333pt + 1.66666pt - 1.11111pt;
-GLYPH char: "i"; lang: 0; font: 15; width: 2.77779pt;
-GLYPH char: "p"; lang: 0; font: 15; width: 5.55557pt;
-DISC prepostreplace;
-GLYPH char: "-"; lang: 0; font: 15; width: 3.33333pt;
-GLYPH char: "s"; lang: 0; font: 15; width: 3.94444pt;
-GLYPH char: "u"; lang: 0; font: 15; width: 5.55557pt;
-GLYPH char: "m"; lang: 0; font: 15; width: 8.33336pt;
-GLUE skip: 3.33333pt + 1.66666pt - 1.11111pt;
-GLYPH char: "d"; lang: 0; font: 15; width: 5.55557pt;
-GLYPH char: "o"; lang: 0; font: 15; width: 5.00002pt;
-DISC prepostreplace;
-GLYPH char: "-"; lang: 0; font: 15; width: 3.33333pt;
-GLYPH char: "l"; lang: 0; font: 15; width: 2.77779pt;
-GLYPH char: "o"; lang: 0; font: 15; width: 5.00002pt;
-GLYPH char: "r"; lang: 0; font: 15; width: 3.91667pt;
-GLUE skip: 3.33333pt + 1.66666pt - 1.11111pt;
-GLYPH char: "s"; lang: 0; font: 15; width: 3.94444pt;
-GLYPH char: "i"; lang: 0; font: 15; width: 2.77779pt;
-GLYPH char: "t"; lang: 0; font: 15; width: 3.8889pt;
-GLUE skip: 3.33333pt + 1.66666pt - 1.11111pt;
-GLYPH char: "a"; lang: 0; font: 15; width: 5.00002pt;
-GLYPH char: "m"; lang: 0; font: 15; width: 8.33336pt;
-GLYPH char: "e"; lang: 0; font: 15; width: 4.44444pt;
-GLYPH char: "t"; lang: 0; font: 15; width: 3.8889pt;
-GLYPH char: "."; lang: 0; font: 15; width: 2.77779pt;
-PENALTY 10000
-GLUE parfillskip: 0pt + 1 fil;
-GLUE rightskip: 0pt;
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-...
-Output written on example.pdf (1 page, 12841 bytes).
-Transcript written on example.log.
 ```
 
 # UTF8 Box drawing symbols

@@ -662,19 +662,6 @@ function template.char(input)
 end
 %    \end{macrocode}
 %
-%    \begin{macrocode}
-function template.line()
-  return '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function template.frame(text, callback)
-  local begin_text = 'BEGIN nodelist debug (Callback: ' .. tostring(callback) .. ')'
-  local end_text = 'END nodelist debug'
-  return template.heading(begin_text) .. text .. template.heading(end_text)
-end
-%    \end{macrocode}
 % t = type
 %    \begin{macrocode}
 function template.type(t, id)

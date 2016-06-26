@@ -269,6 +269,7 @@ Transcript written on example.log.
 %
 %    \begin{macrocode}
 local colors = require('ansicolors')
+local c = colors
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -343,11 +344,6 @@ local options
 %
 % \subsubsection{nodex --- node extended}
 %
-%    \begin{macrocode}
-function nodex.is_node(n)
-  return string.find(tostring(n), '^<node%s+%S+%s+<%s+%d+.*>$')
-end
-%    \end{macrocode}
 % Get the node id form, e. g.:
 % \begin{verbatim}
 % <node    nil <    172 >    nil : hlist 2>
@@ -362,36 +358,158 @@ end
 function nodex.subtype(n)
   local typ = node.type(n.id)
 
--- hlist (0)
--- vlist (1)
--- rule (2)
+  local subtypes = {
+    -- 0
+    hlist = {
+      [0] = 'unknown',
+      [1] = 'line',
+      [2] = 'box',
+      [3] = 'indent',
+      [4] = 'alignment',
+      [5] = 'cell',
+      [6] = 'equation',
+      [7] = 'equationnumber',
+    },
+    -- 1
+    vlist = {
+      [0] = 'unknown',
+      [4] = 'alignment',
+      [5] = 'cell',
+    },
+    -- 2
+    rule = {
+      [0] = 'unknown',
+      [1] = 'box',
+      [2] = 'image',
+      [3] = 'empty',
+      [4] = 'user',
+    },
 -- ins (3)
 -- mark (4)
--- adjust (5)
--- boundary (6)
--- disc (7)
+    -- 5
+    adjust = {
+      [0] = 'normal',
+      [1] = 'pre',
+    },
+    -- 6
+    boundary = {
+      [0] = 'cancel',
+      [1] = 'user',
+      [2] = 'protrusion',
+      [3] = 'word',
+    },
+    -- 7
+    disc  = {
+      [0] = 'discretionary',
+      [1] = 'explicit',
+      [2] = 'automatic',
+      [3] = 'regular',
+      [4] = 'first',
+      [5] = 'second',
+    },
 -- whatsit (8)
 -- local_par (9)
 -- dir (10)
--- math (11)
--- glue (12)
--- kern (13)
+    -- 11
+    math = {
+      [0] = 'beginmath',
+      [1] = 'endmath',
+    },
+    -- 12
+    glue = {
+      [0]   = 'userskip',
+      [1]   = 'lineskip',
+      [2]   = 'baselineskip',
+      [3]   = 'parskip',
+      [4]   = 'abovedisplayskip',
+      [5]   = 'belowdisplayskip',
+      [6]   = 'abovedisplayshortskip',
+      [7]   = 'belowdisplayshortskip',
+      [8]   = 'leftskip',
+      [9]   = 'rightskip',
+      [10]  = 'topskip',
+      [11]  = 'splittopskip',
+      [12]  = 'tabskip',
+      [13]  = 'spaceskip',
+      [14]  = 'xspaceskip',
+      [15]  = 'parfillskip',
+      [16]  = 'mathskip',
+      [17]  = 'thinmuskip',
+      [18]  = 'medmuskip',
+      [19]  = 'thickmuskip',
+      [98]  = 'conditionalmathskip',
+      [99]  = 'muglue',
+      [100] = 'leaders',
+      [101] = 'cleaders',
+      [102] = 'xleaders',
+      [103] = 'gleaders',
+    },
+    -- 13
+    kern = {
+      [0] = 'fontkern',
+      [1] = 'userkern',
+      [2] = 'accentkern',
+      [3] = 'italiccorrection',
+    },
 -- penalty (14)
 -- unset (15)
 -- style (16)
 -- choice (17)
--- noad (18)
--- radical (19)
+    -- 18
+    noad = {
+      [0] = 'ord',
+      [1] = 'opdisplaylimits',
+      [2] = 'oplimits',
+      [3] = 'opnolimits',
+      [4] = 'bin',
+      [5] = 'rel',
+      [6] = 'open',
+      [7] = 'close',
+      [8] = 'punct',
+      [9] = 'inner',
+      [10] = 'under',
+      [11] = 'over',
+      [12] = 'vcenter',
+    },
+    -- 19
+    radical = {
+      [0] = 'radical',
+      [1] = 'uradical',
+      [2] = 'uroot',
+      [3] = 'uunderdelimiter',
+      [4] = 'uoverdelimiter',
+      [5] = 'udelimiterunder',
+      [6] = 'udelimiterover',
+    },
 -- fraction (20)
--- accent (21)
--- fence (22)
+     -- 21
+    accent = {
+      [0] = 'bothflexible',
+      [1] = 'fixedtop',
+      [2] = 'fixedbottom',
+      [3] = 'fixedboth',
+    },
+    -- 22
+    fence = {
+      [0] = 'unset',
+      [1] = 'left',
+      [2] = 'middle',
+      [3] = 'right',
+    },
 -- math_char (23)
 -- sub_box (24)
 -- sub_mlist (25)
 -- math_text_char (26)
 -- delim (27)
 -- margin_kern (28)
--- glyph (29)
+    --  29
+    glyph = {
+      [0] = 'character',
+      [1] = 'ligature',
+      [2] = 'ghost',
+      [3] = 'left',
+      [4] = 'right',
+    },
 -- align_record (30)
 -- pseudo_file (31)
 -- pseudo_line (32)
@@ -412,68 +530,6 @@ function nodex.subtype(n)
 -- delta (47)
 -- passive (48)
 -- shape (49)
-
-  local subtypes = {
-    hlist = {
-      [0] = 'unknown',
-      [1] = 'line',
-      [2] = 'box',
-      [3] = 'indent',
-      [4] = 'alignment',
-      [5] = 'cell',
-      [6] = 'equation',
-      [7] = 'equationnumber',
-    },
-    vlist = {
-      [0] = 'unknown',
-      [4] = 'alignment',
-      [5] = 'cell',
-    },
-    rules = {
-      [0] = 'unknown',
-      [1] = 'box',
-      [2] = 'image',
-      [3] = 'empty',
-      [4] = 'user',
-    },
-    glyph = {
-      [0] = 'character',
-      [1] = 'glyph',
-      [2] = 'ligature',
-    },
-    disc  = {
-      [0] = 'discretionary',
-      [1] = 'explicit',
-      [2] = 'automatic',
-      [3] = 'regular',
-      [4] = 'first',
-      [5] = 'second',
-    },
-    glue = {
-      [0]   = 'skip',
-      [1]   = 'lineskip',
-      [2]   = 'baselineskip',
-      [3]   = 'parskip',
-      [4]   = 'abovedisplayskip',
-      [5]   = 'belowdisplayskip',
-      [6]   = 'abovedisplayshortskip',
-      [7]   = 'belowdisplayshortskip',
-      [8]   = 'leftskip',
-      [9]   = 'rightskip',
-      [10]  = 'topskip',
-      [11]  = 'splittopskip',
-      [12]  = 'tabskip',
-      [13]  = 'spaceskip',
-      [14]  = 'xspaceskip',
-      [15]  = 'parfillskip',
-      [16]  = 'thinmuskip',
-      [17]  = 'medmuskip',
-      [18]  = 'thickmuskip',
-      [100] = 'leaders',
-      [101] = 'cleaders',
-      [102] = 'xleaders',
-      [103] = 'gleaders'
-    },
   }
 
   subtypes.whatsit = node.whatsits()
@@ -603,33 +659,65 @@ function template.branches(level, connection_type)
   return out
 end
 %    \end{macrocode}
-
+%
+%    \begin{macrocode}
+template.node_colors = {
+  hlist          = c.red,
+  vlist          = c.green,
+  rule           = c.yellow,
+  ins            = c.blue,
+  mark           = c.magenta,
+  adjust         = c.cyan,
+  boundary       = c.bright .. c.red,
+  disc           = c.bright .. c.green,
+  whatsit        = c.bright .. c.yellow,
+  local_par      = c.bright .. c.blue,
+  dir            = c.bright .. c.magenta,
+  math           = c.bright .. c.cyan,
+  glue           = c.dim .. c.red,
+  kern           = c.dim .. c.green,
+  penalty        = c.dim .. c.yellow,
+  unset          = c.dim .. c.blue,
+  style          = c.dim .. c.magenta,
+  choice         = c.dim .. c.cyan,
+  noad           = c.red,
+  radical        = c.green,
+  fraction       = c.yellow,
+  accent         = c.blue,
+  fence          = c.magenta,
+  math_char      = c.cyan,
+  sub_box        = c.bright .. c.red,
+  sub_mlist      = c.bright .. c.green,
+  math_text_char = c.bright .. c.yellow,
+  delim          = c.bright .. c.blue,
+  margin_kern    = c.bright .. c.magenta,
+  glyph          = c.bright .. c.cyan,
+  align_record   = c.dim .. c.red,
+  pseudo_file    = c.dim .. c.green,
+  pseudo_line    = c.dim .. c.yellow,
+  page_insert    = c.dim .. c.blue,
+  split_insert   = c.dim .. c.magenta,
+  expr_stack     = c.dim .. c.cyan,
+  nested_list    = c.red,
+  span           = c.green,
+  attribute      = c.yellow,
+  glue_spec      = c.magenta,
+  attribute_list = c.cyan,
+  temp           = c.magenta,
+  align_stack    = c.bright .. c.red,
+  movement_stack = c.bright .. c.green,
+  if_stack       = c.bright .. c.yellow,
+  unhyphenated   = c.bright .. c.magenta,
+  hyphenated     = c.bright .. c.cyan,
+  delta          = c.red,
+  passive        = c.green,
+  shape          = c.yellow,
+}
+%    \end{macrocode}
 %
 %    \begin{macrocode}
 function template.type_color(id)
-  if id == 'hlist' then
-    return colors.red
-  elseif id == 'vlist' then
-    return colors.green
-  elseif id == 'rule' then
-    return colors.yellow
-  elseif id == 'disc' then
-    return colors.bright .. colors.blue
-  elseif id == 'whatsit' then
-    return colors.bright .. colors.magenta
-  elseif id == 'math' then
-    return colors.cyan
-  elseif id == 'glue' then
-    return colors.bright .. colors.red
-  elseif id == 'kern' then
-    return colors.bright .. colors.yellow
-  elseif id == 'penalty' then
-    return colors.blue
-  elseif id == 'glyph' then
-    return colors.bright .. colors.green
-  else
-    return colors.magenta
-  end
+  return  template.node_colors[id]
 end
 %    \end{macrocode}
 %
@@ -702,7 +790,7 @@ function tree.analyze_node(head, level)
     if field_name ~= 'next' and
       field_name ~= 'prev' and
       field_name ~= 'attr' and
-      nodex.is_node(head[field_name]) then
+      node.is_node(head[field_name]) then
       r[field_name] = head[field_name]
     else
       tmp[#tmp + 1] = tree.format_field(head, field_name)

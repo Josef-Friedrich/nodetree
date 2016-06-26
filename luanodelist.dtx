@@ -214,17 +214,26 @@ Transcript written on example.log.
 % \section{Implementation}
 %
 % \iffalse
-%<*package>
+%<*tex>
 % \fi
 % \MacroTopsep = 10pt plus 2pt minus 2pt
 % \MacrocodeTopsep = 10pt plus 1.2pt minus 1pt
+% \makeatletter
+% \c@CodelineNo 25 \relax
+% \makeatother
+%    \begin{macrocode}
+\lol{}
+%    \end{macrocode}
 %
+% \iffalse
+%</tex>
+%<*package>
+% \fi
 % \makeatletter
 % \c@CodelineNo 25 \relax
 % \makeatother
 %
 % \subsection{The file \tt{luanodelist.sty}}
-%
 %
 %    \begin{macrocode}
 \RequirePackage{luatexbase-mcb}

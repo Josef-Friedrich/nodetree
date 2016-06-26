@@ -1,13 +1,13 @@
 %!TEX program = lualatex
 \documentclass{article}
-\usepackage{luanodelist}
+\usepackage{tree}
 
 \begin{document}
 \directlua{
   local glyph = node.new(node.id('glyph'))
   glyph.char = 34
 
-  luanodelist.analyze(glyph)
+  tree.analyze(glyph)
 }
 
 lorem

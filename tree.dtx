@@ -16,17 +16,17 @@
 %
 % The Current Maintainer of this work is Josef Friedrich.
 %
-% This work consists of the files luanodelist.dtx and luanodelist.ins
-% and the derived filebase luanodelist.sty and luanodelist.lua.
+% This work consists of the files tree.dtx and tree.ins
+% and the derived filebase tree.sty and tree.lua.
 %
 % \fi
 %
 % \iffalse
 %<*driver>
-\ProvidesFile{luanodelist.dtx}
+\ProvidesFile{tree.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
-%<package>\ProvidesPackage{luanodelist}
+%<package>\ProvidesPackage{tree}
 %<*package>
     [2015/11/13 Package to debug node lists used by LuaTeX]
 %</package>
@@ -39,12 +39,12 @@
 \begin{document}
 
 \providecommand*{\url}{\texttt}
-\GetFileInfo{luanodelist.dtx}
-\title{The \textsf{luanodelist} package}
+\GetFileInfo{tree.dtx}
+\title{The \textsf{tree} package}
 \author{%
   Josef Friedrich\\%
   \url{josef@friedrich.rocks}\\%
-  \href{https://github.com/Josef-Friedrich/cloze}{github.com/Josef-Friedrich/luanodelist}%
+  \href{https://github.com/Josef-Friedrich/cloze}{github.com/Josef-Friedrich/tree}%
 }
 \date{\fileversion~from \filedate}
 
@@ -58,22 +58,22 @@ Value "term"
 
 
 \begin{verbatim}
-\usepackage[channel=term]{luanodelist}
+\usepackage[channel=term]{tree}
 \end{verbatim}
 
 Value "log"
 
 \begin{verbatim}
-\usepackage[channel=log]{luanodelist}
+\usepackage[channel=log]{tree}
 \end{verbatim}
 
 Value "term and log"
 
 \begin{verbatim}
-\usepackage[channel={term and log}]{luanodelist}
+\usepackage[channel={term and log}]{tree}
 \end{verbatim}
 
-  \DocInput{luanodelist.dtx}
+  \DocInput{tree.dtx}
   \pagebreak
   \PrintChanges
   \pagebreak
@@ -81,11 +81,11 @@ Value "term and log"
 \end{document}
 %</driver>
 %<*readme>
-# luanodelist
+# tree
 
 Based on the [gist of Patrick Gundlach](https://gist.github.com/pgundlach/556247).
 
-`luanodelist` displays some debug informations of the node list in the
+`tree` displays some debug informations of the node list in the
 terminal, when you render a Latex document.
 
 ```
@@ -96,7 +96,7 @@ lualatex example.tex
 This is LuaTeX, Version beta-0.79.1 (TeX Live 2014) (rev 4971)
  restricted \write18 enabled.
 ...
-(./luanodelist.lua)) (./example.aux)
+(./tree.lua)) (./example.aux)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BEGIN nodelist debug
@@ -233,7 +233,7 @@ Transcript written on example.log.
 % \c@CodelineNo 25 \relax
 % \makeatother
 %
-% \subsection{The file \tt{luanodelist.sty}}
+% \subsection{The file \tt{tree.sty}}
 %
 %    \begin{macrocode}
 \RequirePackage{luatexbase-mcb}
@@ -249,7 +249,7 @@ Transcript written on example.log.
 
 \ProcessKeyvalOptions*
 
-\newcommand{\setluanodelist}[1]{\setkeys{LN}{#1}}
+\newcommand{\settree}[1]{\setkeys{LN}{#1}}
 
 \directlua{
   local options = {}
@@ -259,9 +259,9 @@ Transcript written on example.log.
 
   package.path = './lua/?.lua;' .. package.path
 
-  luanodelist = require("luanodelist")
-  luanodelist.get_options(options)
-  luanodelist.execute()
+  tree = require("tree")
+  tree.get_options(options)
+  tree.execute()
 }
 %    \end{macrocode}
 %
@@ -274,7 +274,7 @@ Transcript written on example.log.
 % \c@CodelineNo 0 \relax
 % \makeatother
 %
-% \subsection{The file \tt{luanodelist.lua}}
+% \subsection{The file \tt{tree.lua}}
 %
 %    \begin{macrocode}
 local colors = require('ansicolors')
@@ -888,11 +888,7 @@ end
 %
 %    \begin{macrocode}
 function base.analyze(head)
-  local out = template.line() ..
-    tree.analyze_list(head, 1) ..
-    template.line()
-
-  template.print(out)
+  tree.analyze_list(head, 1)
 end
 %    \end{macrocode}
 %

@@ -1,8 +1,8 @@
-# luanodelist
+# tree
 
 Based on the [gist of Patrick Gundlach](https://gist.github.com/pgundlach/556247).
 
-`luanodelist` displays some debug informations of the node list in the
+`tree` displays some debug informations of the node list in the
 terminal, when you render a Latex document.
 
 ```
@@ -13,7 +13,7 @@ lualatex example.tex
 This is LuaTeX, Version beta-0.79.1 (TeX Live 2014) (rev 4971)
  restricted \write18 enabled.
 ...
-(./luanodelist.lua)) (./example.aux)
+(./tree.lua)) (./example.aux)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

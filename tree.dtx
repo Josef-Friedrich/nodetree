@@ -32,7 +32,7 @@
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage{hyperref}
+\usepackage{hyperref,paralist}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -222,19 +222,36 @@ post_linebreak_filter:
 %
 %    \begin{macrocode}
 \RequirePackage{kvoptions}
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \SetupKeyvalOptions{
   family=TREE,
   prefix=TREE@
 }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \DeclareStringOption[term and log]{channel}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \DeclareStringOption[postlinebreak]{callback}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \DeclareStringOption[1]{verbosity}
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \ProcessKeyvalOptions*
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \newcommand{\treeset}[1]{\setkeys{TREE}{#1}}
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \directlua{
   local options = {}
   options.verbosity = tonumber(\TREE@verbosity)
@@ -358,7 +375,9 @@ function nodex.subtype(n)
   local typ = node.type(n.id)
 
   local subtypes = {
-    -- 0
+%    \end{macrocode}
+% \paragraph{hlist (0)}
+%    \begin{macrocode}
     hlist = {
       [0] = 'unknown',
       [1] = 'line',
@@ -369,13 +388,17 @@ function nodex.subtype(n)
       [6] = 'equation',
       [7] = 'equationnumber',
     },
-    -- 1
+%    \end{macrocode}
+% \paragraph{vlist (1)}
+%    \begin{macrocode}
     vlist = {
       [0] = 'unknown',
       [4] = 'alignment',
       [5] = 'cell',
     },
-    -- 2
+%    \end{macrocode}
+% \paragraph{rule (2)}
+%    \begin{macrocode}
     rule = {
       [0] = 'unknown',
       [1] = 'box',
@@ -383,21 +406,34 @@ function nodex.subtype(n)
       [3] = 'empty',
       [4] = 'user',
     },
--- ins (3)
--- mark (4)
-    -- 5
+%    \end{macrocode}
+%
+% \noindent
+% Nodes without subtypes:
+% \begin{compactitem}
+% \item ins (3)
+% \item mark (4)
+% \end{compactitem}
+%    \begin{macrocode}
+%    \end{macrocode}
+% \paragraph{adjust (5)}
+%    \begin{macrocode}
     adjust = {
       [0] = 'normal',
       [1] = 'pre',
     },
-    -- 6
+%    \end{macrocode}
+% \paragraph{boundary (6)}
+%    \begin{macrocode}
     boundary = {
       [0] = 'cancel',
       [1] = 'user',
       [2] = 'protrusion',
       [3] = 'word',
     },
-    -- 7
+%    \end{macrocode}
+% \paragraph{disc (7)}
+%    \begin{macrocode}
     disc  = {
       [0] = 'discretionary',
       [1] = 'explicit',
@@ -406,15 +442,25 @@ function nodex.subtype(n)
       [4] = 'first',
       [5] = 'second',
     },
--- whatsit (8)
--- local_par (9)
--- dir (10)
-    -- 11
+%    \end{macrocode}
+%
+% \noindent
+% Nodes without subtypes:
+% \begin{compactitem}
+% \item whatsit (8)
+% \item local\_par (9)
+% \item dir (10)
+% \end{compactitem}
+%
+% \paragraph{math (11)}
+%    \begin{macrocode}
     math = {
       [0] = 'beginmath',
       [1] = 'endmath',
     },
-    -- 12
+%    \end{macrocode}
+% \paragraph{glue (12)}
+%    \begin{macrocode}
     glue = {
       [0]   = 'userskip',
       [1]   = 'lineskip',
@@ -443,18 +489,28 @@ function nodex.subtype(n)
       [102] = 'xleaders',
       [103] = 'gleaders',
     },
-    -- 13
+%    \end{macrocode}
+% \paragraph{kern (13)}
+%    \begin{macrocode}
     kern = {
       [0] = 'fontkern',
       [1] = 'userkern',
       [2] = 'accentkern',
       [3] = 'italiccorrection',
     },
--- penalty (14)
--- unset (15)
--- style (16)
--- choice (17)
-    -- 18
+%    \end{macrocode}
+%
+% \noindent
+% Nodes without subtypes:
+% \begin{compactitem}
+% \item penalty (14)
+% \item unset (15)
+% \item style (16)
+% \item choice (17)
+% \end{compactitem}
+%
+% \paragraph{noad (18)}
+%    \begin{macrocode}
     noad = {
       [0] = 'ord',
       [1] = 'opdisplaylimits',
@@ -470,7 +526,9 @@ function nodex.subtype(n)
       [11] = 'over',
       [12] = 'vcenter',
     },
-    -- 19
+%    \end{macrocode}
+% \paragraph{radical (19)}
+%    \begin{macrocode}
     radical = {
       [0] = 'radical',
       [1] = 'uradical',
@@ -480,28 +538,46 @@ function nodex.subtype(n)
       [5] = 'udelimiterunder',
       [6] = 'udelimiterover',
     },
--- fraction (20)
-     -- 21
+%    \end{macrocode}
+%
+% \noindent
+% Nodes without subtypes:
+% \begin{compactitem}
+% \item fraction (20)
+% \end{compactitem}
+%
+% \paragraph{accent (21)}
+%    \begin{macrocode}
     accent = {
       [0] = 'bothflexible',
       [1] = 'fixedtop',
       [2] = 'fixedbottom',
       [3] = 'fixedboth',
     },
-    -- 22
+%    \end{macrocode}
+% \paragraph{fence (22)}
+%    \begin{macrocode}
     fence = {
       [0] = 'unset',
       [1] = 'left',
       [2] = 'middle',
       [3] = 'right',
     },
--- math_char (23)
--- sub_box (24)
--- sub_mlist (25)
--- math_text_char (26)
--- delim (27)
--- margin_kern (28)
-    --  29
+%    \end{macrocode}
+%
+% \noindent
+% Nodes without subtypes:
+% \begin{compactitem}
+% \item math\_char (23)
+% \item sub\_box (24)
+% \item sub\_mlist (25)
+% \item math\_text\_char (26)
+% \item delim (27)
+% \item margin\_kern (28)
+% \end{compactitem}
+%
+% \paragraph{glyph (29)}
+%    \begin{macrocode}
     glyph = {
       [0] = 'character',
       [1] = 'ligature',
@@ -509,26 +585,33 @@ function nodex.subtype(n)
       [3] = 'left',
       [4] = 'right',
     },
--- align_record (30)
--- pseudo_file (31)
--- pseudo_line (32)
--- page_insert (33)
--- split_insert (34)
--- expr_stack (35)
--- nested_list (36)
--- span (37)
--- attribute (38)
--- glue_spec (39)
--- attribute_list (40)
--- temp (41)
--- align_stack (42)
--- movement_stack (43)
--- if_stack (44)
--- unhyphenated (45)
--- hyphenated (46)
--- delta (47)
--- passive (48)
--- shape (49)
+%    \end{macrocode}
+%
+% \noindent
+% Nodes without subtypes:
+% \begin{compactitem}
+% \item align\_record (30)
+% \item pseudo\_file (31)
+% \item pseudo\_line (32)
+% \item page\_insert (33)
+% \item split\_insert (34)
+% \item expr\_stack (35)
+% \item nested\_list (36)
+% \item span (37)
+% \item attribute (38)
+% \item glue\_spec (39)
+% \item attribute\_list (40)
+% \item temp (41)
+% \item align\_stack (42)
+% \item movement\_stack (43)
+% \item if\_stack (44)
+% \item unhyphenated (45)
+% \item hyphenated (46)
+% \item delta (47)
+% \item passive (48)
+% \item shape (49)
+% \end{compactitem}
+%    \begin{macrocode}
   }
 
   subtypes.whatsit = node.whatsits()

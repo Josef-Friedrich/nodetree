@@ -221,8 +221,11 @@ Transcript written on example.log.
 % \makeatletter
 % \c@CodelineNo 25 \relax
 % \makeatother
+%
+% \subsection{The file \tt{tree.tex}}
+%
 %    \begin{macrocode}
-\lol{}
+\directlua{dofile(kpse.find_file("tree.lua"))}
 %    \end{macrocode}
 %
 % \iffalse
@@ -236,12 +239,11 @@ Transcript written on example.log.
 % \subsection{The file \tt{tree.sty}}
 %
 %    \begin{macrocode}
-\RequirePackage{luatexbase-mcb}
 \RequirePackage{kvoptions}
 
 \SetupKeyvalOptions{
-  family=LN,
-  prefix=LN@
+  family=TREE,
+  prefix=TREE@
 }
 \DeclareStringOption[term and log]{channel}
 \DeclareStringOption[postlinebreak]{callback}
@@ -249,13 +251,13 @@ Transcript written on example.log.
 
 \ProcessKeyvalOptions*
 
-\newcommand{\settree}[1]{\setkeys{LN}{#1}}
+\newcommand{\treeset}[1]{\setkeys{TREE}{#1}}
 
 \directlua{
   local options = {}
-  options.verbosity = tonumber(\LN@verbosity)
-  options.channel = '\LN@channel'
-  options.callback = '\LN@callback'
+  options.verbosity = tonumber(\TREE@verbosity)
+  options.channel = '\TREE@channel'
+  options.callback = '\TREE@callback'
 
   package.path = './lua/?.lua;' .. package.path
 

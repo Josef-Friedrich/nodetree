@@ -195,6 +195,19 @@ post_linebreak_filter:
 %
 %    \begin{macrocode}
 \directlua{
+  options = {}
+}
+\def\treeoption[#1]#2{
+  \directlua{
+    options['#1'] = '#2'
+  }
+}
+\def\treeprocessoptions{
+  \directlua{
+    tree.set_options(options)
+  }
+}
+\directlua{
   tree = require("tree")
   tree.set_options()
   tree.execute()
@@ -945,6 +958,7 @@ function base.set_options(localoptions)
       options[key] = value
     end
   end
+  options.verbosity = tonumber(options.verbosity)
 end
 %    \end{macrocode}
 %

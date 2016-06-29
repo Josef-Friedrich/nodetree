@@ -21,6 +21,19 @@
 %% version 2008/05/05 or later.
 %% 
 \directlua{
+  options = {}
+}
+\def\treeoption[#1]#2{
+  \directlua{
+    options['#1'] = '#2'
+  }
+}
+\def\treeprocessoptions{
+  \directlua{
+    tree.set_options(options)
+  }
+}
+\directlua{
   tree = require("tree")
   tree.set_options()
   tree.execute()

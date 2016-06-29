@@ -1,10 +1,10 @@
 %%
-%% This is file `tree.tex',
+%% This is file `nodetree.tex',
 %% generated with the docstrip utility.
 %%
 %% The original source files were:
 %%
-%% tree.dtx  (with options: `tex')
+%% nodetree.dtx  (with options: `tex')
 %% 
 %% This is a generated file.
 %% 
@@ -23,21 +23,21 @@
 \directlua{
   options = {}
 }
-\def\treeoption[#1]#2{
+\def\nodetreeoption[#1]#2{
   \directlua{
     options['#1'] = '#2'
   }
 }
-\def\treeprocessoptions{
+\def\nodetreeprocessoptions{
   \directlua{
-    tree.set_options(options)
+    nodetree.set_options(options)
   }
 }
 \directlua{
-  tree = require("tree")
-  tree.set_options()
-  tree.execute()
+  nodetree = require("nodetree")
+  nodetree.set_options()
+  nodetree.execute()
 }
 \endinput
 %%
-%% End of file `tree.tex'.
+%% End of file `nodetree.tex'.

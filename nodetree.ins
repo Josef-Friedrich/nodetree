@@ -13,7 +13,7 @@
 \input docstrip.tex
 \keepsilent
 
-\usedir{tex/lualatex/tree}
+\usedir{tex/lualatex/nodetree}
 
 \askforoverwritefalse
 
@@ -35,13 +35,13 @@ version 2008/05/05 or later.
 
 \endpreamble
 
-\generate{\file{tree.tex}{\from{tree.dtx}{tex}}}
-\generate{\file{tree.sty}{\from{tree.dtx}{package}}}
+\generate{\file{nodetree.tex}{\from{nodetree.dtx}{tex}}}
+\generate{\file{nodetree.sty}{\from{nodetree.dtx}{package}}}
 
 \nopreamble
 \nopostamble
-\generate{\file{tree.lua}{\from{tree.dtx}{luamain}}}
-\generate{\file{README.md}{\from{tree.dtx}{readme}}}
+\generate{\file{nodetree.lua}{\from{nodetree.dtx}{luamain}}}
+\generate{\file{README.md}{\from{nodetree.dtx}{readme}}}
 
 \obeyspaces
 \Msg{*************************************************************}
@@ -49,9 +49,9 @@ version 2008/05/05 or later.
 \Msg{* To finish the installation you have to move the following *}
 \Msg{* file into a directory searched by TeX:                    *}
 \Msg{*                                                           *}
-\Msg{*     tree.sty                                       *}
+\Msg{*     nodetree.sty                                       *}
 \Msg{*                                                           *}
-\Msg{* To produce the documentation run the file tree.dtx *}
+\Msg{* To produce the documentation run the file nodetree.dtx *}
 \Msg{* through LaTeX.                                            *}
 \Msg{*                                                           *}
 \Msg{* Happy TeXing!                                             *}

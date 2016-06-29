@@ -1,8 +1,8 @@
-# tree
+# nodetree
 
 Inspired by a [gist of Patrick Gundlach](https://gist.github.com/pgundlach/556247).
 
-`tree` displays some debug informations of the node list in the
+`nodetree` displays some debug informations of the node list in the
 terminal, when you render a Latex document.
 
 ```

@@ -16,17 +16,17 @@
 %
 % The Current Maintainer of this work is Josef Friedrich.
 %
-% This work consists of the files tree.dtx and tree.ins
-% and the derived filebase tree.sty and tree.lua.
+% This work consists of the files nodetree.dtx and nodetree.ins
+% and the derived filebase nodetree.sty and nodetree.lua.
 %
 % \fi
 %
 % \iffalse
 %<*driver>
-\ProvidesFile{tree.dtx}
+\ProvidesFile{nodetree.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
-%<package>\ProvidesPackage{tree}
+%<package>\ProvidesPackage{nodetree}
 %<*package>
     [2015/11/13 Package to debug node lists used by LuaTeX]
 %</package>
@@ -39,12 +39,12 @@
 \begin{document}
 
 \providecommand*{\url}{\texttt}
-\GetFileInfo{tree.dtx}
-\title{The \textsf{tree} package}
+\GetFileInfo{nodetree.dtx}
+\title{The \textsf{nodetree} package}
 \author{%
   Josef Friedrich\\%
   \url{josef@friedrich.rocks}\\%
-  \href{https://github.com/Josef-Friedrich/cloze}{github.com/Josef-Friedrich/tree}%
+  \href{https://github.com/Josef-Friedrich/cloze}{github.com/Josef-Friedrich/nodetree}%
 }
 \date{\fileversion~from \filedate}
 
@@ -58,22 +58,22 @@ Value "term"
 
 
 \begin{verbatim}
-\usepackage[channel=term]{tree}
+\usepackage[channel=term]{nodetree}
 \end{verbatim}
 
 Value "log"
 
 \begin{verbatim}
-\usepackage[channel=log]{tree}
+\usepackage[channel=log]{nodetree}
 \end{verbatim}
 
 Value "term and log"
 
 \begin{verbatim}
-\usepackage[channel={term and log}]{tree}
+\usepackage[channel={term and log}]{nodetree}
 \end{verbatim}
 
-  \DocInput{tree.dtx}
+  \DocInput{nodetree.dtx}
   \pagebreak
   \PrintChanges
   \pagebreak
@@ -81,11 +81,11 @@ Value "term and log"
 \end{document}
 %</driver>
 %<*readme>
-# tree
+# nodetree
 
 Inspired by a [gist of Patrick Gundlach](https://gist.github.com/pgundlach/556247).
 
-`tree` displays some debug informations of the node list in the
+`nodetree` displays some debug informations of the node list in the
 terminal, when you render a Latex document.
 
 ```
@@ -191,26 +191,26 @@ post_linebreak_filter:
 % \c@CodelineNo 25 \relax
 % \makeatother
 %
-% \subsection{The file \tt{tree.tex}}
+% \subsection{The file \tt{nodetree.tex}}
 %
 %    \begin{macrocode}
 \directlua{
   options = {}
 }
-\def\treeoption[#1]#2{
+\def\nodetreeoption[#1]#2{
   \directlua{
     options['#1'] = '#2'
   }
 }
-\def\treeprocessoptions{
+\def\nodetreeprocessoptions{
   \directlua{
-    tree.set_options(options)
+    nodetree.set_options(options)
   }
 }
 \directlua{
-  tree = require("tree")
-  tree.set_options()
-  tree.execute()
+  nodetree = require("nodetree")
+  nodetree.set_options()
+  nodetree.execute()
 }
 %    \end{macrocode}
 %
@@ -222,7 +222,7 @@ post_linebreak_filter:
 % \c@CodelineNo 25 \relax
 % \makeatother
 %
-% \subsection{The file \tt{tree.sty}}
+% \subsection{The file \tt{nodetree.sty}}
 %
 %    \begin{macrocode}
 \RequirePackage{kvoptions}
@@ -230,8 +230,8 @@ post_linebreak_filter:
 %
 %    \begin{macrocode}
 \SetupKeyvalOptions{
-  family=TREE,
-  prefix=TREE@
+  family=nodetree,
+  prefix=nodetree@
 }
 %    \end{macrocode}
 %
@@ -252,20 +252,20 @@ post_linebreak_filter:
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\newcommand{\treeset}[1]{\setkeys{TREE}{#1}}
+\newcommand{\nodetreeset}[1]{\setkeys{nodetree}{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \directlua{
   local options = {}
-  options.verbosity = tonumber(\TREE@verbosity)
-  options.channel = '\TREE@channel'
-  options.callback = '\TREE@callback'
+  options.verbosity = tonumber(\nodetree@verbosity)
+  options.channel = '\nodetree@channel'
+  options.callback = '\nodetree@callback'
   options.engine = 'lualatex'
 
-  tree = require("tree")
-  tree.set_options(options)
-  tree.execute()
+  nodetree = require("nodetree")
+  nodetree.set_options(options)
+  nodetree.execute()
 }
 %    \end{macrocode}
 %
@@ -278,7 +278,7 @@ post_linebreak_filter:
 % \c@CodelineNo 0 \relax
 % \makeatother
 %
-% \subsection{The file \tt{tree.lua}}
+% \subsection{The file \tt{nodetree.lua}}
 %
 %
 %    \begin{macrocode}
@@ -290,10 +290,10 @@ local template = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-local tree = {}
+local nodetree = {}
 %    \end{macrocode}
 %
-% Nodes in Lua\TeX are connected. The tree view distinguishs betweens
+% Nodes in Lua\TeX are connected. The nodetree view distinguishs betweens
 % the |list| and |field| connections.
 
 % \begin{itemize}
@@ -303,10 +303,10 @@ local tree = {}
 %        |previous| fields, e. g. |head|, |pre|.
 % \end{itemize}
 %
-% The lua table named |tree| holds states values for the present tree
+% The lua table named |nodetree| holds states values for the present nodetree
 % item.
 % \begin{verbatim}
-%  tree:
+%  nodetree:
 %    - 1:
 %      - list: continue
 %      - field: stop
@@ -315,7 +315,7 @@ local tree = {}
 %      - field: stop
 % \end{verbatim}
 %    \begin{macrocode}
-tree.state = {}
+nodetree.state = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -704,17 +704,17 @@ function template.branches(level, connection_type)
   local out = ''
 
   for i = 1, level - 1  do
-    out = out .. template.branch('list', tree.state[i]['list'], false)
-    out = out .. template.branch('field', tree.state[i]['field'], false)
+    out = out .. template.branch('list', nodetree.state[i]['list'], false)
+    out = out .. template.branch('field', nodetree.state[i]['field'], false)
   end
 %    \end{macrocode}
 % Format the last branches
 %    \begin{macrocode}
   if connection_type == 'list' then
-    out = out .. template.branch('list', tree.state[level]['list'], true)
+    out = out .. template.branch('list', nodetree.state[level]['list'], true)
   else
-    out = out .. template.branch('list', tree.state[level]['list'], false)
-    out = out .. template.branch('field', tree.state[level]['field'], true)
+    out = out .. template.branch('list', nodetree.state[level]['list'], false)
+    out = out .. template.branch('field', nodetree.state[level]['field'], true)
   end
 
   return out
@@ -788,10 +788,10 @@ function template.print(text)
 end
 %    \end{macrocode}
 %
-% \subsubsection{tree}
+% \subsubsection{nodetree}
 %
 %    \begin{macrocode}
-function tree.format_field(head, field)
+function nodetree.format_field(head, field)
   local out = ''
 
   if not head[field] or head[field] == 0 then
@@ -823,16 +823,16 @@ end
 % |connection_state| is a string, which can be either |continue| or
 % |stop|.
 %    \begin{macrocode}
-function tree.set_state(level, connection_type, connection_state)
-  if not tree.state[level] then
-    tree.state[level] = {}
+function nodetree.set_state(level, connection_type, connection_state)
+  if not nodetree.state[level] then
+    nodetree.state[level] = {}
   end
-  tree.state[level][connection_type] = connection_state
+  nodetree.state[level][connection_type] = connection_state
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tree.analyze_node(head, level)
+function nodetree.analyze_node(head, level)
   local out = {}
   local connection_state
 
@@ -854,7 +854,7 @@ function tree.analyze_node(head, level)
       node.is_node(head[field_name]) then
       r[field_name] = head[field_name]
     else
-      tmp[#tmp + 1] = tree.format_field(head, field_name)
+      tmp[#tmp + 1] = nodetree.format_field(head, field_name)
     end
   end
 
@@ -864,7 +864,7 @@ function tree.analyze_node(head, level)
     connection_state = 'stop'
   end
 
-  tree.set_state(level, 'list', connection_state)
+  nodetree.set_state(level, 'list', connection_state)
   template.print(template.branches(level, 'list') .. out .. table.concat(tmp, ''))
 
   local max = 0
@@ -881,28 +881,28 @@ function tree.analyze_node(head, level)
       connection_state = 'continue'
     end
 
-    tree.set_state(level, 'field', connection_state)
+    nodetree.set_state(level, 'field', connection_state)
     template.print(template.branches(level, 'field') .. field_name .. ':')
-    tree.analyze_list(recursion_node, level + 1)
+    nodetree.analyze_list(recursion_node, level + 1)
   end
 
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tree.analyze_list(head, level)
+function nodetree.analyze_list(head, level)
   while head do
-    tree.analyze_node(head, level)
+    nodetree.analyze_node(head, level)
     head = head.next
   end
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tree.analyze(head)
+function nodetree.analyze(head)
   print('\n')
   print(base.get_callback() .. ':\n│')
-  tree.analyze_list(head, 1)
+  nodetree.analyze_list(head, 1)
   return head
 end
 %    \end{macrocode}
@@ -914,7 +914,7 @@ function callbacks.post_linebreak_filter(head, groupcode)
   if groupcode then
     print('groundcode: ' .. groupcode)
   end
-  tree.analyze_list(head, 1)
+  nodetree.analyze_list(head, 1)
   return true
 end
 %    \end{macrocode}
@@ -966,7 +966,7 @@ end
 function base.execute()
   local c = base.get_callback()
   if options.engine == 'lualatex' then
-    luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'tree')
+    luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'nodetree')
   else
     id, error = callback.register(c, callbacks.post_linebreak_filter)
   end
@@ -975,7 +975,7 @@ end
 %
 %    \begin{macrocode}
 function base.analyze(head)
-  tree.analyze_list(head, 1)
+  nodetree.analyze_list(head, 1)
 end
 %    \end{macrocode}
 %

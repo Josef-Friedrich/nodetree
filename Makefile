@@ -1,4 +1,4 @@
-jobname = tree
+jobname = nodetree
 texmf = $(HOME)/texmf
 texmftex = $(texmf)/tex/lualatex
 installdir = $(texmftex)/$(jobname)

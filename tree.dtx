@@ -730,57 +730,81 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function template.color(color, mode)
+  local out = ''
+  local code
+
+  if mode == 'bright' then
+    out = string.char(27) .. '[' .. tostring(1) .. 'm'
+  elseif mode == 'dim' then
+    out = string.char(27) .. '[' .. tostring(2) .. 'm'
+  end
+    -- foreground
+  if color == 'reset' then code = 0
+  elseif color == 'red' then code = 31
+  elseif color == 'green' then code = 32
+  elseif color == 'yellow' then code = 33
+  elseif color == 'blue' then code = 34
+  elseif color == 'magenta' then code = 35
+  elseif color == 'cyan' then code = 36
+  else code = 37 end
+
+  return out .. string.char(27) .. '[' .. tostring(code) .. 'm'
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 template.node_colors = {
-  hlist          = c.red,
-  vlist          = c.green,
-  rule           = c.yellow,
-  ins            = c.blue,
-  mark           = c.magenta,
-  adjust         = c.cyan,
-  boundary       = c.bright .. c.red,
-  disc           = c.bright .. c.green,
-  whatsit        = c.bright .. c.yellow,
-  local_par      = c.bright .. c.blue,
-  dir            = c.bright .. c.magenta,
-  math           = c.bright .. c.cyan,
-  glue           = c.red,
-  kern           = c.green,
-  penalty        = c.yellow,
-  unset          = c.blue,
-  style          = c.magenta,
-  choice         = c.cyan,
-  noad           = c.red,
-  radical        = c.green,
-  fraction       = c.yellow,
-  accent         = c.blue,
-  fence          = c.magenta,
-  math_char      = c.cyan,
-  sub_box        = c.bright .. c.red,
-  sub_mlist      = c.bright .. c.green,
-  math_text_char = c.bright .. c.yellow,
-  delim          = c.bright .. c.blue,
-  margin_kern    = c.bright .. c.magenta,
-  glyph          = c.bright .. c.cyan,
-  align_record   = c.red,
-  pseudo_file    = c.green,
-  pseudo_line    = c.yellow,
-  page_insert    = c.blue,
-  split_insert   = c.magenta,
-  expr_stack     = c.cyan,
-  nested_list    = c.red,
-  span           = c.green,
-  attribute      = c.yellow,
-  glue_spec      = c.magenta,
-  attribute_list = c.cyan,
-  temp           = c.magenta,
-  align_stack    = c.bright .. c.red,
-  movement_stack = c.bright .. c.green,
-  if_stack       = c.bright .. c.yellow,
-  unhyphenated   = c.bright .. c.magenta,
-  hyphenated     = c.bright .. c.cyan,
-  delta          = c.red,
-  passive        = c.green,
-  shape          = c.yellow,
+  hlist          = template.color('red'),
+  vlist          = template.color('green'),
+  rule           = template.color('yellow'),
+  ins            = template.color('blue'),
+  mark           = template.color('magenta'),
+  adjust         = template.color('cyan'),
+  boundary       = template.color('red', 'bright'),
+  disc           = template.color('green', 'bright'),
+  whatsit        = template.color('yellow', 'bright'),
+  local_par      = template.color('blue', 'bright'),
+  dir            = template.color('magenta', 'bright'),
+  math           = template.color('cyan', 'bright'),
+  glue           = template.color('red'),
+  kern           = template.color('green'),
+  penalty        = template.color('yellow'),
+  unset          = template.color('blue'),
+  style          = template.color('magenta'),
+  choice         = template.color('cyan'),
+  noad           = template.color('red'),
+  radical        = template.color('green'),
+  fraction       = template.color('yellow'),
+  accent         = template.color('blue'),
+  fence          = template.color('magenta'),
+  math_char      = template.color('cyan'),
+  sub_box        = template.color('red', 'bright'),
+  sub_mlist      = template.color('green', 'bright'),
+  math_text_char = template.color('yellow', 'bright'),
+  delim          = template.color('blue', 'bright'),
+  margin_kern    = template.color('magenta', 'bright'),
+  glyph          = template.color('cyan', 'bright'),
+  align_record   = template.color('red'),
+  pseudo_file    = template.color('green'),
+  pseudo_line    = template.color('yellow'),
+  page_insert    = template.color('blue'),
+  split_insert   = template.color('magenta'),
+  expr_stack     = template.color('cyan'),
+  nested_list    = template.color('red'),
+  span           = template.color('green'),
+  attribute      = template.color('yellow'),
+  glue_spec      = template.color('magenta'),
+  attribute_list = template.color('cyan'),
+  temp           = template.color('magenta'),
+  align_stack    = template.color('red', 'bright'),
+  movement_stack = template.color('green', 'bright'),
+  if_stack       = template.color('yellow', 'bright'),
+  unhyphenated   = template.color('magenta', 'bright'),
+  hyphenated     = template.color('cyan', 'bright'),
+  delta          = template.color('red'),
+  passive        = template.color('green'),
+  shape          = template.color('yellow'),
 }
 %    \end{macrocode}
 %

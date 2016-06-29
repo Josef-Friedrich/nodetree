@@ -202,8 +202,6 @@ post_linebreak_filter:
     engine = 'luatex',
   }
 
-  package.path = './lua/?.lua;' .. package.path
-
   tree = require("tree")
   tree.get_options(options)
   tree.execute()
@@ -259,8 +257,6 @@ post_linebreak_filter:
   options.callback = '\TREE@callback'
   options.engine = 'lualatex'
 
-  package.path = './lua/?.lua;' .. package.path
-
   tree = require("tree")
   tree.get_options(options)
   tree.execute()
@@ -278,10 +274,6 @@ post_linebreak_filter:
 %
 % \subsection{The file \tt{tree.lua}}
 %
-%    \begin{macrocode}
-local colors = require('ansicolors')
-local c = colors
-%    \end{macrocode}
 %
 %    \begin{macrocode}
 local nodex = {}
@@ -636,14 +628,32 @@ end
 % \subsubsection{template}
 %
 %    \begin{macrocode}
-function template.key_value(key, value)
-  return colors.yellow .. key .. ': ' .. colors.white .. value .. '; ' .. colors.reset
+function template.color(color, mode)
+  local out = ''
+  local code
+
+  if mode == 'bright' then
+    out = string.char(27) .. '[' .. tostring(1) .. 'm'
+  elseif mode == 'dim' then
+    out = string.char(27) .. '[' .. tostring(2) .. 'm'
+  end
+    -- foreground
+  if color == 'reset' then code = 0
+  elseif color == 'red' then code = 31
+  elseif color == 'green' then code = 32
+  elseif color == 'yellow' then code = 33
+  elseif color == 'blue' then code = 34
+  elseif color == 'magenta' then code = 35
+  elseif color == 'cyan' then code = 36
+  else code = 37 end
+
+  return out .. string.char(27) .. '[' .. tostring(code) .. 'm'
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.heading(text)
-  return '\n' .. template.line() .. '% ' .. text .. template.line() .. '\n'
+function template.key_value(key, value)
+  return template.color('yellow') .. key .. ': ' .. template.color('white') .. value .. '; ' .. template.color('reset')
 end
 %    \end{macrocode}
 %
@@ -672,7 +682,7 @@ function template.type(t, id)
     out = out .. template.type_id(id)
   end
 
-  return out .. colors.reset  .. ' '
+  return out .. template.color('reset')  .. ' '
 end
 %    \end{macrocode}
 %
@@ -726,30 +736,6 @@ function template.branches(level, connection_type)
   end
 
   return out
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function template.color(color, mode)
-  local out = ''
-  local code
-
-  if mode == 'bright' then
-    out = string.char(27) .. '[' .. tostring(1) .. 'm'
-  elseif mode == 'dim' then
-    out = string.char(27) .. '[' .. tostring(2) .. 'm'
-  end
-    -- foreground
-  if color == 'reset' then code = 0
-  elseif color == 'red' then code = 31
-  elseif color == 'green' then code = 32
-  elseif color == 'yellow' then code = 33
-  elseif color == 'blue' then code = 34
-  elseif color == 'magenta' then code = 35
-  elseif color == 'cyan' then code = 36
-  else code = 37 end
-
-  return out .. string.char(27) .. '[' .. tostring(code) .. 'm'
 end
 %    \end{macrocode}
 %
@@ -1001,101 +987,6 @@ return base
 %    \end{macrocode}
 % \iffalse
 %</luamain>
-%<*luaansicolors>
-% \fi
-%
-% \makeatletter
-% \c@CodelineNo 0 \relax
-% \makeatother
-%
-% \subsection{The file \tt{ansicolors.lua}}
-%
-%    \begin{macrocode}
--- Copyright (c) 2009 Rob Hoelz <rob@hoelzro.net>
---
--- Permission is hereby granted, free of charge, to any person obtaining a copy
--- of this software and associated documentation files (the "Software"), to deal
--- in the Software without restriction, including without limitation the rights
--- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
--- copies of the Software, and to permit persons to whom the Software is
--- furnished to do so, subject to the following conditions:
---
--- The above copyright notice and this permission notice shall be included in
--- all copies or substantial portions of the Software.
---
--- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
--- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
--- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
--- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
--- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
--- THE SOFTWARE.
-
-local pairs = pairs
-local tostring = tostring
-local setmetatable = setmetatable
-local schar = string.char
-
-module 'ansicolors'
-
-local colormt = {}
-
-function colormt:__tostring()
-    return self.value
-end
-
-function colormt:__concat(other)
-    return tostring(self) .. tostring(other)
-end
-
-function colormt:__call(s)
-    return self .. s .. _M.reset
-end
-
-colormt.__metatable = {}
-
-local function makecolor(value)
-    return setmetatable({ value = schar(27) .. '[' .. tostring(value) .. 'm' }, colormt)
-end
-
-local colors = {
-    -- attributes
-    reset = 0,
-    clear = 0,
-    bright = 1,
-    dim = 2,
-    underscore = 4,
-    blink = 5,
-    reverse = 7,
-    hidden = 8,
-
-    -- foreground
-    black = 30,
-    red = 31,
-    green = 32,
-    yellow = 33,
-    blue = 34,
-    magenta = 35,
-    cyan = 36,
-    white = 37,
-
-    -- background
-    onblack = 40,
-    onred = 41,
-    ongreen = 42,
-    onyellow = 43,
-    onblue = 44,
-    onmagenta = 45,
-    oncyan = 46,
-    onwhite = 47,
-}
-
-for c, v in pairs(colors) do
-    _M[c] = makecolor(v)
-end
-%    \end{macrocode}
-% \iffalse
-%</luaansicolors>
 % \fi
 %
 % \Finale

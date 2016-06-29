@@ -28,8 +28,6 @@
     engine = 'luatex',
   }
 
-  package.path = './lua/?.lua;' .. package.path
-
   tree = require("tree")
   tree.get_options(options)
   tree.execute()

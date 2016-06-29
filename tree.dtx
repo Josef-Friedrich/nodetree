@@ -628,16 +628,22 @@ end
 % \subsubsection{template}
 %
 %    \begin{macrocode}
+function template.color_code(code)
+  return string.char(27) .. '[' .. tostring(code) .. 'm'
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function template.color(color, mode)
   local out = ''
   local code
 
   if mode == 'bright' then
-    out = string.char(27) .. '[' .. tostring(1) .. 'm'
+    out = template.color_code(1)
   elseif mode == 'dim' then
-    out = string.char(27) .. '[' .. tostring(2) .. 'm'
+    out = template.color_code(2)
   end
-    -- foreground
+
   if color == 'reset' then code = 0
   elseif color == 'red' then code = 31
   elseif color == 'green' then code = 32
@@ -647,7 +653,7 @@ function template.color(color, mode)
   elseif color == 'cyan' then code = 36
   else code = 37 end
 
-  return out .. string.char(27) .. '[' .. tostring(code) .. 'm'
+  return out .. template.color_code(code)
 end
 %    \end{macrocode}
 %

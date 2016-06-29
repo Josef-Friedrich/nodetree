@@ -195,15 +195,8 @@ post_linebreak_filter:
 %
 %    \begin{macrocode}
 \directlua{
-  local options = {
-    verbosity = 1,
-    channel = 'term',
-    callback = 'postlinebreak',
-    engine = 'luatex',
-  }
-
   tree = require("tree")
-  tree.get_options(options)
+  tree.set_options()
   tree.execute()
 }
 %    \end{macrocode}
@@ -258,7 +251,7 @@ post_linebreak_filter:
   options.engine = 'lualatex'
 
   tree = require("tree")
-  tree.get_options(options)
+  tree.set_options(options)
   tree.execute()
 }
 %    \end{macrocode}
@@ -316,38 +309,8 @@ tree.state = {}
 local base = {}
 %    \end{macrocode}
 %
-% Nodes in Lua\TeX are connected. The tree view distinguishs betweens
-% the |list| and |field| connections.
-
-% \begin{itemize}
-%  \item |list|: Nodes, which are double connected by |next| and
-%        |previous| fields.
-%  \item |field|: Connections to nodes by other fields than |next| and
-%        |previous| fields, e. g. |head|, |pre|.
-% \end{itemize}
-%
-% The lua table named |tree| holds states values for the present tree
-% item.
-% \begin{verbatim}
-%  tree:
-%    - 1:
-%      - list: continue
-%      - field: stop
-%    - 2:
-%      - list: continue
-%      - field: stop
-% \end{verbatim}
 %    \begin{macrocode}
-tree.state = {}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-local options = {
-  verbosity = 1,
-  channel = 'term',
-  callback = 'postlinebreak',
-  engine = 'luatex',
-}
+local options = {}
 %    \end{macrocode}
 %
 % \subsubsection{nodex --- node extended}
@@ -966,8 +929,22 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function base.get_options(localoptions)
+function base.set_options(localoptions)
+  if not localoptions then
+    localoptions = {}
+  end
   options = localoptions
+  local defaults = {
+    verbosity = 1,
+    channel = 'term',
+    callback = 'postlinebreak',
+    engine = 'luatex',
+  }
+  for key, value in pairs(defaults) do
+    if not options[key] then
+      options[key] = value
+    end
+  end
 end
 %    \end{macrocode}
 %

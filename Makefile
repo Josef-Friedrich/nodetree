@@ -8,9 +8,9 @@ all: install doc
 install:
 	luatex $(jobname).ins
 	mkdir -p $(installdir)
+	cp -f $(jobname).tex $(installdir)
 	cp -f $(jobname).sty $(installdir)
 	cp -f $(jobname).lua $(installdir)
-	cp -f ansicolors.lua $(installdir)
 	./clean.sh install
 
 doc:

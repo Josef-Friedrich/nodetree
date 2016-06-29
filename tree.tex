@@ -21,15 +21,8 @@
 %% version 2008/05/05 or later.
 %% 
 \directlua{
-  local options = {
-    verbosity = 1,
-    channel = 'term',
-    callback = 'postlinebreak',
-    engine = 'luatex',
-  }
-
   tree = require("tree")
-  tree.get_options(options)
+  tree.set_options()
   tree.execute()
 }
 \endinput

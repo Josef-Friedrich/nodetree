@@ -236,6 +236,11 @@ post_linebreak_filter:
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+\newif\ifcolor
+\colortrue
+\DeclareVoidOption{nocolor}{\colorfalse}
+%    \end{macrocode}
+%    \begin{macrocode}
 \DeclareStringOption[term and log]{channel}
 %    \end{macrocode}
 %
@@ -257,14 +262,15 @@ post_linebreak_filter:
 %
 %    \begin{macrocode}
 \directlua{
-  local options = {}
-  options.verbosity = tonumber(\nodetree@verbosity)
-  options.channel = '\nodetree@channel'
-  options.callback = '\nodetree@callback'
-  options.engine = 'lualatex'
-
   nodetree = require("nodetree")
-  nodetree.set_options(options)
+  nodetree.set_option('verbosity', '\nodetree@verbosity')
+  nodetree.set_option('channel', '\nodetree@channel')
+  nodetree.set_option('callback', '\nodetree@callback')
+  nodetree.set_option('engine', 'lualatex')
+}
+\ifcolor\else\directlua{nodetree.set_option('color', false)}\fi
+\directlua{
+  nodetree.set_options()
   nodetree.execute()
 }
 %    \end{macrocode}
@@ -611,6 +617,10 @@ end
 %
 %    \begin{macrocode}
 function template.color(color, mode)
+  print(options.color)
+  if not options.color then
+    return ''
+  end
   local out = ''
   local code
 
@@ -942,6 +952,15 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function base.set_option(key, value)
+  if not options then
+    options = {}
+  end
+  options[key] = value
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function base.set_options(localoptions)
   if not localoptions then
     localoptions = {}
@@ -951,7 +970,8 @@ function base.set_options(localoptions)
     verbosity = 1,
     channel = 'term',
     callback = 'postlinebreak',
-    engine = 'luatex',
+    engine = 'lualatex',
+    color = true,
   }
   for key, value in pairs(defaults) do
     if not options[key] then

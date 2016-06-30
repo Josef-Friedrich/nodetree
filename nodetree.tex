@@ -21,6 +21,7 @@
 %% version 2008/05/05 or later.
 %% 
 \directlua{
+  nodetree = require('nodetree')
   options = {}
 }
 \def\nodetreeoption[#1]#2{
@@ -29,14 +30,16 @@
   }
 }
 \def\nodetreeprocessoptions{
+  \nodetreeoption[engine]{luatex}
   \directlua{
     nodetree.set_options(options)
   }
 }
-\directlua{
-  nodetree = require("nodetree")
-  nodetree.set_options()
-  nodetree.execute()
+\def\nodetreeregister{
+  \directlua{nodetree.register()}
+}
+\def\nodetreeunregister{
+  \directlua{nodetree.unregister()}
 }
 \endinput
 %%

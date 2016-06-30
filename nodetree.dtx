@@ -195,6 +195,7 @@ post_linebreak_filter:
 %
 %    \begin{macrocode}
 \directlua{
+  nodetree = require('nodetree')
   options = {}
 }
 \def\nodetreeoption[#1]#2{
@@ -203,15 +204,18 @@ post_linebreak_filter:
   }
 }
 \def\nodetreeprocessoptions{
+  \nodetreeoption[engine]{luatex}
   \directlua{
     nodetree.set_options(options)
   }
 }
-\directlua{
-  nodetree = require("nodetree")
-  nodetree.set_options()
-  nodetree.execute()
+\def\nodetreeregister{
+  \directlua{nodetree.register()}
 }
+\def\nodetreeunregister{
+  \directlua{nodetree.unregister()}
+}
+%    \end{macrocode}
 %    \end{macrocode}
 %
 % \iffalse
@@ -268,13 +272,21 @@ post_linebreak_filter:
   nodetree.set_option('callback', '\nodetree@callback')
   nodetree.set_option('engine', 'lualatex')
 }
-\ifcolor\else\directlua{nodetree.set_option('color', false)}\fi
+\ifcolor\else\directlua{nodetree.set_option('color', 'false')}\fi
 \directlua{
   nodetree.set_options()
-  nodetree.execute()
 }
 %    \end{macrocode}
 %
+% \begin{environment}{nodetreeenv}
+%    \begin{macrocode}
+\newenvironment{nodetreeenv}{
+  \directlua{nodetree.register()}
+}{
+  \directlua{nodetree.unregister()}
+}
+%    \end{macrocode}
+% \end{environment}
 % \iffalse
 %</package>
 %<*luamain>
@@ -617,29 +629,29 @@ end
 %
 %    \begin{macrocode}
 function template.color(color, mode)
-  print(options.color)
-  if not options.color then
+  if options.color == 'true' then
+    local out = ''
+    local code = ''
+
+    if mode == 'bright' then
+      out = template.color_code(1)
+    elseif mode == 'dim' then
+      out = template.color_code(2)
+    end
+
+    if color == 'reset' then code = 0
+    elseif color == 'red' then code = 31
+    elseif color == 'green' then code = 32
+    elseif color == 'yellow' then code = 33
+    elseif color == 'blue' then code = 34
+    elseif color == 'magenta' then code = 35
+    elseif color == 'cyan' then code = 36
+    else code = 37 end
+
+    return out .. template.color_code(code)
+  else
     return ''
   end
-  local out = ''
-  local code
-
-  if mode == 'bright' then
-    out = template.color_code(1)
-  elseif mode == 'dim' then
-    out = template.color_code(2)
-  end
-
-  if color == 'reset' then code = 0
-  elseif color == 'red' then code = 31
-  elseif color == 'green' then code = 32
-  elseif color == 'yellow' then code = 33
-  elseif color == 'blue' then code = 34
-  elseif color == 'magenta' then code = 35
-  elseif color == 'cyan' then code = 36
-  else code = 37 end
-
-  return out .. template.color_code(code)
 end
 %    \end{macrocode}
 %
@@ -971,7 +983,7 @@ function base.set_options(localoptions)
     channel = 'term',
     callback = 'postlinebreak',
     engine = 'lualatex',
-    color = true,
+    color = 'true',
   }
   for key, value in pairs(defaults) do
     if not options[key] then
@@ -979,6 +991,29 @@ function base.set_options(localoptions)
     end
   end
   options.verbosity = tonumber(options.verbosity)
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function base.register()
+  local c = base.get_callback()
+  if options.engine == 'lualatex' then
+    luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'nodetree')
+  else
+    id, error = callback.register(c, callbacks.post_linebreak_filter)
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function base.unregister()
+  local c = base.get_callback()
+  if options.engine == 'lualatex' then
+    luatexbase.remove_from_callback(c, 'nodetree')
+  else
+    id, error =
+    callback.register(c, nil)
+  end
 end
 %    \end{macrocode}
 %

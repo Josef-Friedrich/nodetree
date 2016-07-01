@@ -210,7 +210,7 @@ post_linebreak_filter:
   \nodetreeoption[engine]{luatex}
   \directlua{
     nodetree.set_default_options()
-    nodetree.register()
+    nodetree.register_callbacks()
   }
 }
 \def\nodetreeregister{%
@@ -218,7 +218,7 @@ post_linebreak_filter:
   \directlua{nodetree.marker('start')}%
 }
 \def\nodetreeunregister{%
-  \directlua{nodetree.unregister('stop')}%
+  \directlua{nodetree.marker('stop')}%
   \strut%
 }
 %    \end{macrocode}

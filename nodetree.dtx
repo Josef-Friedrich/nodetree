@@ -274,6 +274,11 @@ post_linebreak_filter:
 \ProcessKeyvalOptions*
 \directlua{
   nodetree.set_default_options()
+  callbacks = nodetree.get_option('callback')
+  print(callbacks)
+  for word in string.gmatch(callbacks, '([^,]+)') do
+    print(word)
+  end
 }
 %    \end{macrocode}
 %
@@ -954,22 +959,18 @@ end
 % \subsubsection{base}
 %
 %    \begin{macrocode}
-function base.get_callback()
-  local key = options.callback
-  local callback
-  if key == 'prelinebreak' then callback = 'pre_linebreak_filter'
-  elseif key == 'linebreak' then callback = 'linebreak_filter'
-  elseif key == 'postlinebreak' then callback = 'post_linebreak_filter'
-  elseif key == 'hpack' then callback = 'hpack_filter'
-  elseif key == 'vpack' then callback = 'vpack_filter'
-  elseif key == 'hyphenate' then callback = 'hyphenate'
-  elseif key == 'ligaturing' then callback = 'ligaturing'
-  elseif key == 'kerning' then callback = 'kerning'
-  elseif key == 'mhlist' then callback = 'mlist_to_hlist'
-  else callback = 'post_linebreak_filter'
+function base.get_callback_name(alias)
+  if alias == 'prelinebreak' then return 'pre_linebreak_filter'
+  elseif alias == 'linebreak' then return 'linebreak_filter'
+  elseif alias == 'postlinebreak' then return 'post_linebreak_filter'
+  elseif alias == 'hpack' then return 'hpack_filter'
+  elseif alias == 'vpack' then return 'vpack_filter'
+  elseif alias == 'hyphenate' then return 'hyphenate'
+  elseif alias == 'ligaturing' then return 'ligaturing'
+  elseif alias == 'kerning' then return 'kerning'
+  elseif alias == 'mhlist' then return 'mlist_to_hlist'
+  else return 'post_linebreak_filter'
   end
-
-  return callback
 end
 %    \end{macrocode}
 %
@@ -1013,27 +1014,34 @@ function base.set_default_options()
   options.verbosity = tonumber(options.verbosity)
 end
 %    \end{macrocode}
+
+
+
 %
 %    \begin{macrocode}
-function base.register()
-  print(options.color)
-  local c = base.get_callback()
+function base.register(cb)
   if options.engine == 'lualatex' then
-    luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'nodetree')
+    luatexbase.add_to_callback(cb, callbacks.post_linebreak_filter, 'nodetree')
   else
-    id, error = callback.register(c, callbacks.post_linebreak_filter)
+    id, error = callback.register(cb, callbacks.post_linebreak_filter)
   end
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function base.unregister()
-  local c = base.get_callback()
+function base.register_callbacks()
+  for alias in string.gmatch(options.callbacks, '([^,]+)') do
+    base.register(base.get_callback_name(alias))
+  end
+end
+%    \end{macrocode}
+%    \begin{macrocode}
+function base.unregister(cb)
   if options.engine == 'lualatex' then
-    luatexbase.remove_from_callback(c, 'nodetree')
+    luatexbase.remove_from_callback(cb, 'nodetree')
   else
     id, error =
-    callback.register(c, nil)
+    callback.register(cb, nil)
   end
 end
 %    \end{macrocode}

@@ -274,11 +274,6 @@ post_linebreak_filter:
 \ProcessKeyvalOptions*
 \directlua{
   nodetree.set_default_options()
-  callbacks = nodetree.get_option('callback')
-  print(callbacks)
-  for word in string.gmatch(callbacks, '([^,]+)') do
-    print(word)
-  end
 }
 %    \end{macrocode}
 %
@@ -289,9 +284,14 @@ post_linebreak_filter:
 % \begin{environment}{nodetreeenv}
 %    \begin{macrocode}
 \newenvironment{nodetreeenv}{
-  \directlua{nodetree.register()}
+  \directlua{
+    nodetree.register_callbacks()
+    nodetree.marker('start')
+  }
 }{
-  \directlua{nodetree.unregister()}
+  \directlua{
+    nodetree.marker('stop')
+  }
 }
 %    \end{macrocode}
 % \end{environment}
@@ -362,6 +362,16 @@ options.color = 'no'
 %    \begin{macrocode}
 function nodex.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function nodex.create_marker(string)
+  local marker = node.new('whatsit','user_defined')
+  marker.type = 115
+  marker.user_id = 563428
+  marker.value = string
+  node.write(marker)
 end
 %    \end{macrocode}
 %
@@ -945,6 +955,47 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function base.set_option(key, value)
+  if not options then
+    options = {}
+  end
+  options[key] = value
+end
+%    \end{macrocode}
+
+%    \begin{macrocode}
+function base.get_option(key)
+  if not options then
+    options = {}
+  end
+  if options[key] then
+    return options[key]
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function base.set_default_options()
+  local defaults = {
+    verbosity = 1,
+    channel = 'term',
+    callback = 'postlinebreak',
+    engine = 'luatex',
+    color = 'colored',
+  }
+  if not options then
+    options = {}
+  end
+  for key, value in pairs(defaults) do
+    if not options[key] then
+      options[key] = value
+    end
+  end
+  options.verbosity = tonumber(options.verbosity)
+end
+%    \end{macrocode}
+
+%    \begin{macrocode}
 local callbacks = {}
 function callbacks.post_linebreak_filter(head, groupcode)
   template.print('post_linebreak_filter')
@@ -975,50 +1026,6 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function base.set_option(key, value)
-  if not options then
-    options = {}
-  end
-  options[key] = value
-end
-%    \end{macrocode}
-
-%    \begin{macrocode}
-function base.get_option(key)
-  if not options then
-    options = {}
-  end
-  if options[key] then
-    return options[key]
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function base.set_default_options()
-  local defaults = {
-    verbosity = 1,
-    channel = 'term',
-    callback = 'postlinebreak',
-    engine = 'luatex',
-    color = 'cored',
-  }
-  if not options then
-    options = {}
-  end
-  for key, value in pairs(defaults) do
-    if not options[key] then
-      options[key] = value
-    end
-  end
-  options.verbosity = tonumber(options.verbosity)
-end
-%    \end{macrocode}
-
-
-
-%
-%    \begin{macrocode}
 function base.register(cb)
   if options.engine == 'lualatex' then
     luatexbase.add_to_callback(cb, callbacks.post_linebreak_filter, 'nodetree')
@@ -1030,18 +1037,26 @@ end
 %
 %    \begin{macrocode}
 function base.register_callbacks()
-  for alias in string.gmatch(options.callbacks, '([^,]+)') do
+  for alias in string.gmatch(options.callback, '([^,]+)') do
     base.register(base.get_callback_name(alias))
   end
 end
 %    \end{macrocode}
+%
 %    \begin{macrocode}
 function base.unregister(cb)
   if options.engine == 'lualatex' then
     luatexbase.remove_from_callback(cb, 'nodetree')
   else
-    id, error =
-    callback.register(cb, nil)
+    id, error = callback.register(cb, nil)
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function base.unregister_callbacks()
+  for alias in string.gmatch(options.callback, '([^,]+)') do
+    base.unregister(base.get_callback_name(alias))
   end
 end
 %    \end{macrocode}
@@ -1064,6 +1079,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+base.marker = nodex.create_marker
 return base
 %    \end{macrocode}
 % \iffalse

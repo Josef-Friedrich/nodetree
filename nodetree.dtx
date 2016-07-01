@@ -210,13 +210,16 @@ post_linebreak_filter:
   \nodetreeoption[engine]{luatex}
   \directlua{
     nodetree.set_default_options()
+    nodetree.register()
   }
 }
-\def\nodetreeregister{
-  \directlua{nodetree.register()}
+\def\nodetreeregister{%
+  \strut%
+  \directlua{nodetree.marker('start')}%
 }
-\def\nodetreeunregister{
-  \directlua{nodetree.unregister()}
+\def\nodetreeunregister{%
+  \directlua{nodetree.unregister('stop')}%
+  \strut%
 }
 %    \end{macrocode}
 %    \end{macrocode}
@@ -274,6 +277,7 @@ post_linebreak_filter:
 \ProcessKeyvalOptions*
 \directlua{
   nodetree.set_default_options()
+  nodetree.register_callbacks()
 }
 %    \end{macrocode}
 %
@@ -283,15 +287,16 @@ post_linebreak_filter:
 %
 % \begin{environment}{nodetreeenv}
 %    \begin{macrocode}
-\newenvironment{nodetreeenv}{
+\newenvironment{nodetreeenv}{%
+  \strut%
   \directlua{
-    nodetree.register_callbacks()
     nodetree.marker('start')
-  }
-}{
+  }%
+}{%
   \directlua{
     nodetree.marker('stop')
-  }
+  }%
+  \strut%
 }
 %    \end{macrocode}
 % \end{environment}
@@ -350,7 +355,6 @@ local base = {}
 %
 %    \begin{macrocode}
 local options = {}
-options.color = 'no'
 %    \end{macrocode}
 %
 % \subsubsection{nodex --- node extended}
@@ -369,7 +373,7 @@ end
 function nodex.create_marker(string)
   local marker = node.new('whatsit','user_defined')
   marker.type = 115
-  marker.user_id = 563428
+  marker.user_id = 123
   marker.value = string
   node.write(marker)
 end
@@ -831,7 +835,9 @@ end
 %
 %    \begin{macrocode}
 function template.print(text)
-  print(text)
+  if options.print == 'start' then
+    print(text)
+  end
 end
 %    \end{macrocode}
 %
@@ -882,6 +888,12 @@ end
 function nodetree.analyze_node(head, level)
   local out = {}
   local connection_state
+
+  if head.id == node.id('whatsit')
+    and head.subtype == node.subtype('user_defined')
+    and head.user_id == 123 then
+    options.print = head.value
+  end
 
   out = template.type(node.type(head.id), head.id)
 
@@ -947,8 +959,8 @@ end
 %
 %    \begin{macrocode}
 function nodetree.analyze(head)
-  print('\n')
-  print(base.get_callback() .. ':\n│')
+  template.print('\n')
+  template.print(base.get_callback() .. ':\n│')
   nodetree.analyze_list(head, 1)
   return head
 end
@@ -982,6 +994,7 @@ function base.set_default_options()
     callback = 'postlinebreak',
     engine = 'luatex',
     color = 'colored',
+    user_id = 43192,
   }
   if not options then
     options = {}
@@ -1000,7 +1013,7 @@ local callbacks = {}
 function callbacks.post_linebreak_filter(head, groupcode)
   template.print('post_linebreak_filter')
   if groupcode then
-    print('groundcode: ' .. groupcode)
+    template.print('groundcode: ' .. groupcode)
   end
   nodetree.analyze_list(head, 1)
   return true

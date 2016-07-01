@@ -37,13 +37,16 @@
   \nodetreeoption[engine]{luatex}
   \directlua{
     nodetree.set_default_options()
+    nodetree.register()
   }
 }
-\def\nodetreeregister{
-  \directlua{nodetree.register()}
+\def\nodetreeregister{%
+  \strut%
+  \directlua{nodetree.marker('start')}%
 }
-\def\nodetreeunregister{
-  \directlua{nodetree.unregister()}
+\def\nodetreeunregister{%
+  \directlua{nodetree.unregister('stop')}%
+  \strut%
 }
 \endinput
 %%

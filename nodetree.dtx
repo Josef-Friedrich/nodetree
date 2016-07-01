@@ -209,7 +209,7 @@ post_linebreak_filter:
 \def\nodetreeprocessoptions{
   \nodetreeoption[engine]{luatex}
   \directlua{
-    nodetree.set_options()
+    nodetree.set_default_options()
   }
 }
 \def\nodetreeregister{
@@ -232,53 +232,53 @@ post_linebreak_filter:
 % \subsection{The file \tt{nodetree.sty}}
 %
 %    \begin{macrocode}
+\directlua{
+  nodetree = require('nodetree')
+  nodetree.set_option('engine', 'lualatex')
+}
+%    \end{macrocode}
+%    \begin{macrocode}
 \RequirePackage{kvoptions}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \SetupKeyvalOptions{
-  family=nodetree,
-  prefix=nodetree@
+  family=NT,
+  prefix=NT@
 }
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\newif\ifcolor
-\colortrue
-\DeclareVoidOption{nocolor}{\colorfalse}
+\def\NT@set@option[#1]#2{%
+  \directlua{nodetree.set_option('#1', '#2')}%
+}
+\DeclareStringOption[colored]{color}
+\define@key{NT}{color}[]{\NT@set@option[color]{#1}}
 %    \end{macrocode}
 %    \begin{macrocode}
 \DeclareStringOption[term and log]{channel}
+\define@key{NT}{channel}[]{\NT@set@option[channel]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[postlinebreak]{callback}
+\define@key{NT}{callback}[]{\NT@set@option[callback]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{verbosity}
+\define@key{NT}{verbosity}[]{\NT@set@option[verbosity]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \ProcessKeyvalOptions*
+\directlua{
+  nodetree.set_default_options()
+}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \newcommand{\nodetreeset}[1]{\setkeys{nodetree}{#1}}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\directlua{
-  nodetree = require("nodetree")
-  nodetree.set_option('verbosity', '\nodetree@verbosity')
-  nodetree.set_option('channel', '\nodetree@channel')
-  nodetree.set_option('callback', '\nodetree@callback')
-  nodetree.set_option('engine', 'lualatex')
-}
-\ifcolor\else\directlua{nodetree.set_option('color', 'false')}\fi
-\directlua{
-  nodetree.set_options()
-}
 %    \end{macrocode}
 %
 % \begin{environment}{nodetreeenv}
@@ -749,62 +749,67 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-template.node_colors = {
-  hlist          = template.color('red'),
-  vlist          = template.color('green'),
-  rule           = template.color('yellow'),
-  ins            = template.color('blue'),
-  mark           = template.color('magenta'),
-  adjust         = template.color('cyan'),
-  boundary       = template.color('red', 'bright'),
-  disc           = template.color('green', 'bright'),
-  whatsit        = template.color('yellow', 'bright'),
-  local_par      = template.color('blue', 'bright'),
-  dir            = template.color('magenta', 'bright'),
-  math           = template.color('cyan', 'bright'),
-  glue           = template.color('red'),
-  kern           = template.color('green'),
-  penalty        = template.color('yellow'),
-  unset          = template.color('blue'),
-  style          = template.color('magenta'),
-  choice         = template.color('cyan'),
-  noad           = template.color('red'),
-  radical        = template.color('green'),
-  fraction       = template.color('yellow'),
-  accent         = template.color('blue'),
-  fence          = template.color('magenta'),
-  math_char      = template.color('cyan'),
-  sub_box        = template.color('red', 'bright'),
-  sub_mlist      = template.color('green', 'bright'),
-  math_text_char = template.color('yellow', 'bright'),
-  delim          = template.color('blue', 'bright'),
-  margin_kern    = template.color('magenta', 'bright'),
-  glyph          = template.color('cyan', 'bright'),
-  align_record   = template.color('red'),
-  pseudo_file    = template.color('green'),
-  pseudo_line    = template.color('yellow'),
-  page_insert    = template.color('blue'),
-  split_insert   = template.color('magenta'),
-  expr_stack     = template.color('cyan'),
-  nested_list    = template.color('red'),
-  span           = template.color('green'),
-  attribute      = template.color('yellow'),
-  glue_spec      = template.color('magenta'),
-  attribute_list = template.color('cyan'),
-  temp           = template.color('magenta'),
-  align_stack    = template.color('red', 'bright'),
-  movement_stack = template.color('green', 'bright'),
-  if_stack       = template.color('yellow', 'bright'),
-  unhyphenated   = template.color('magenta', 'bright'),
-  hyphenated     = template.color('cyan', 'bright'),
-  delta          = template.color('red'),
-  passive        = template.color('green'),
-  shape          = template.color('yellow'),
-}
+function template.init_node_colors()
+  template.node_colors = {
+    hlist          = template.color('red'),
+    vlist          = template.color('green'),
+    rule           = template.color('yellow'),
+    ins            = template.color('blue'),
+    mark           = template.color('magenta'),
+    adjust         = template.color('cyan'),
+    boundary       = template.color('red', 'bright'),
+    disc           = template.color('green', 'bright'),
+    whatsit        = template.color('yellow', 'bright'),
+    local_par      = template.color('blue', 'bright'),
+    dir            = template.color('magenta', 'bright'),
+    math           = template.color('cyan', 'bright'),
+    glue           = template.color('red'),
+    kern           = template.color('green'),
+    penalty        = template.color('yellow'),
+    unset          = template.color('blue'),
+    style          = template.color('magenta'),
+    choice         = template.color('cyan'),
+    noad           = template.color('red'),
+    radical        = template.color('green'),
+    fraction       = template.color('yellow'),
+    accent         = template.color('blue'),
+    fence          = template.color('magenta'),
+    math_char      = template.color('cyan'),
+    sub_box        = template.color('red', 'bright'),
+    sub_mlist      = template.color('green', 'bright'),
+    math_text_char = template.color('yellow', 'bright'),
+    delim          = template.color('blue', 'bright'),
+    margin_kern    = template.color('magenta', 'bright'),
+    glyph          = template.color('cyan', 'bright'),
+    align_record   = template.color('red'),
+    pseudo_file    = template.color('green'),
+    pseudo_line    = template.color('yellow'),
+    page_insert    = template.color('blue'),
+    split_insert   = template.color('magenta'),
+    expr_stack     = template.color('cyan'),
+    nested_list    = template.color('red'),
+    span           = template.color('green'),
+    attribute      = template.color('yellow'),
+    glue_spec      = template.color('magenta'),
+    attribute_list = template.color('cyan'),
+    temp           = template.color('magenta'),
+    align_stack    = template.color('red', 'bright'),
+    movement_stack = template.color('green', 'bright'),
+    if_stack       = template.color('yellow', 'bright'),
+    unhyphenated   = template.color('magenta', 'bright'),
+    hyphenated     = template.color('cyan', 'bright'),
+    delta          = template.color('red'),
+    passive        = template.color('green'),
+    shape          = template.color('yellow'),
+  }
+end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function template.type_color(id)
+  if not template.node_colors then
+    template.init_node_colors()
+  end
   return template.node_colors[id]
 end
 %    \end{macrocode}
@@ -989,7 +994,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function base.set_options()
+function base.set_default_options()
   local defaults = {
     verbosity = 1,
     channel = 'term',

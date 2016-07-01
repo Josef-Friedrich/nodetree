@@ -196,17 +196,21 @@ post_linebreak_filter:
 %    \begin{macrocode}
 \directlua{
   nodetree = require('nodetree')
-  options = {}
 }
 \def\nodetreeoption[#1]#2{
   \directlua{
-    options['#1'] = '#2'
+    nodetree.set_option('#1', '#2')
+  }
+}
+\def\nodetreeshowoption#1{
+  \directlua{
+    tex.print(nodetree.get_option('#1'))
   }
 }
 \def\nodetreeprocessoptions{
   \nodetreeoption[engine]{luatex}
   \directlua{
-    nodetree.set_options(options)
+    nodetree.set_options()
   }
 }
 \def\nodetreeregister{
@@ -629,7 +633,7 @@ end
 %
 %    \begin{macrocode}
 function template.color(color, mode)
-  if options.color == 'true' then
+  if options.color == 'colored' then
     local out = ''
     local code = ''
 
@@ -971,20 +975,30 @@ function base.set_option(key, value)
   options[key] = value
 end
 %    \end{macrocode}
+
+%    \begin{macrocode}
+function base.get_option(key)
+  if not options then
+    options = {}
+  end
+  if options[key] then
+    return options[key]
+  end
+end
+%    \end{macrocode}
 %
 %    \begin{macrocode}
-function base.set_options(localoptions)
-  if not localoptions then
-    localoptions = {}
-  end
-  options = localoptions
+function base.set_options()
   local defaults = {
     verbosity = 1,
     channel = 'term',
     callback = 'postlinebreak',
-    engine = 'lualatex',
-    color = 'true',
+    engine = 'luatex',
+    color = 'colored',
   }
+  if not options then
+    options = {}
+  end
   for key, value in pairs(defaults) do
     if not options[key] then
       options[key] = value
@@ -996,6 +1010,7 @@ end
 %
 %    \begin{macrocode}
 function base.register()
+  print(options.color)
   local c = base.get_callback()
   if options.engine == 'lualatex' then
     luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'nodetree')

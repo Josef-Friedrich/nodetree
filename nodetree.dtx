@@ -56,7 +56,6 @@
 
 Value "term"
 
-
 \begin{verbatim}
 \usepackage[channel=term]{nodetree}
 \end{verbatim}
@@ -346,6 +345,7 @@ local base = {}
 %
 %    \begin{macrocode}
 local options = {}
+options.color = 'no'
 %    \end{macrocode}
 %
 % \subsubsection{nodex --- node extended}
@@ -633,29 +633,30 @@ end
 %
 %    \begin{macrocode}
 function template.color(color, mode)
-  if options.color == 'colored' then
-    local out = ''
-    local code = ''
-
-    if mode == 'bright' then
-      out = template.color_code(1)
-    elseif mode == 'dim' then
-      out = template.color_code(2)
-    end
-
-    if color == 'reset' then code = 0
-    elseif color == 'red' then code = 31
-    elseif color == 'green' then code = 32
-    elseif color == 'yellow' then code = 33
-    elseif color == 'blue' then code = 34
-    elseif color == 'magenta' then code = 35
-    elseif color == 'cyan' then code = 36
-    else code = 37 end
-
-    return out .. template.color_code(code)
-  else
+  if options.color ~= 'colored' then
     return ''
   end
+
+  local out = ''
+  local code = ''
+
+  if mode == 'bright' then
+    out = template.color_code(1)
+  elseif mode == 'dim' then
+    out = template.color_code(2)
+  end
+
+  if color == 'reset' then code = 0
+  elseif color == 'red' then code = 31
+  elseif color == 'green' then code = 32
+  elseif color == 'yellow' then code = 33
+  elseif color == 'blue' then code = 34
+  elseif color == 'magenta' then code = 35
+  elseif color == 'cyan' then code = 36
+  else code = 37 end
+
+  return out .. template.color_code(code)
+
 end
 %    \end{macrocode}
 %
@@ -804,7 +805,7 @@ template.node_colors = {
 %
 %    \begin{macrocode}
 function template.type_color(id)
-  return  template.node_colors[id]
+  return template.node_colors[id]
 end
 %    \end{macrocode}
 %
@@ -994,7 +995,7 @@ function base.set_options()
     channel = 'term',
     callback = 'postlinebreak',
     engine = 'luatex',
-    color = 'colored',
+    color = 'cored',
   }
   if not options then
     options = {}

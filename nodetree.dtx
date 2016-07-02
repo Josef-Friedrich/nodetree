@@ -667,9 +667,11 @@ end
 function template.callback(callback_name, variables)
   template.print('\n\n')
   template.print('Callback: ' .. callback_name)
-  for name, value in pairs(variables) do
-    if value ~= nil and value ~= '' then
-      template.print('  - ' .. name .. ': ' .. tostring(value))
+  if variables then
+    for name, value in pairs(variables) do
+      if value ~= nil and value ~= '' then
+        template.print('  - ' .. name .. ': ' .. tostring(value))
+      end
     end
   end
   template.print('--------------------------------')
@@ -965,21 +967,21 @@ local callbacks = {}
 %
 %    \begin{macrocode}
 function callbacks.contribute_filter(extrainfo)
-  template.print('contribute_filter')
+  template.callback('contribute_filter', {extrainfo = extrainfo})
   return true
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.buildpage_filter(extrainfo)
-  template.print('buildpage_filter')
+  template.callback('buildpage_filter', {extrainfo = extrainfo})
   return true
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.pre_linebreak_filter(head, groupcode)
-  template.print('pre_linebreak_filter')
+  template.callback('pre_linebreak_filter', {groupcode = groupcode})
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -987,7 +989,7 @@ end
 %
 %    \begin{macrocode}
 function callbacks.linebreak_filter(head, is_display)
-  template.print('linebreak_filter')
+  template.callback('linebreak_filter', {is_display = is_display})
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -995,7 +997,12 @@ end
 %
 %    \begin{macrocode}
 function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrored)
-  template.print('append_to_vlist_filter')
+  local variables = {
+    locationcode = locationcode,
+    prevdepth = prevdepth,
+    mirrored = mirrored,
+  }
+  template.callback('append_to_vlist_filter', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1003,8 +1010,7 @@ end
 %
 %    \begin{macrocode}
 function callbacks.post_linebreak_filter(head, groupcode)
-  template.print('post_linebreak_filter')
-  template.callback_variable('groupcode', groupcode)
+  template.callback('post_linebreak_filter', {groupcode = groupcode})
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1012,26 +1018,29 @@ end
 %
 %    \begin{macrocode}
 function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attributelist)
-  template.print('hpack_filter')
-  template.callback_variable('groupcode', groupcode)
-  template.callback_variable('size', size)
-  template.callback_variable('packtype', packtype)
-  template.callback_variable('direction', direction)
-  template.callback_variable('attributelist', attributelist)
-  nodetree.analyze_list(head, 1)
+  local variables = {
+    groupcode = groupcode,
+    size = size,
+    packtype = packtype,
+    direction = direction,
+    attributelist = attributelist,
+  }
+  template.callback('hpack_filter', variables)
   return true
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direction, attributelist)
-  template.print('vpack_filter')
-  template.callback_variable('groupcode', groupcode)
-  template.callback_variable('size', size)
-  template.callback_variable('packtype', packtype)
-  template.callback_variable('maxdepth', maxdepth)
-  template.callback_variable('direction', direction)
-  template.callback_variable('attributelist', attributelist)
+  local variables = {
+    groupcode = groupcode,
+    size = size,
+    packtype = packtype,
+    maxdepth = maxdepth,
+    direction = direction,
+    attributelist = attributelist,
+  }
+  template.callback('vpack_filter', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1039,7 +1048,13 @@ end
 %
 %    \begin{macrocode}
 function callbacks.hpack_qualtity(incident, detail, head, first, last)
-  template.print('hpack_qualtity')
+  local variables = {
+    incident = incident,
+    detail = detail,
+    first = first,
+    last = last,
+  }
+  template.callback('hpack_qualtity', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1047,7 +1062,13 @@ end
 %
 %    \begin{macrocode}
 function callbacks.vpack_qualtity(incident, detail, head, first, last)
-  template.print('vpack_qualtity')
+  local variables = {
+    incident = incident,
+    detail = detail,
+    first = first,
+    last = last,
+  }
+  template.callback('vpack_qualtity', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1055,7 +1076,11 @@ end
 %
 %    \begin{macrocode}
 function callbacks.process_rule(head, width, height)
-  template.print('process_rule')
+  local variables = {
+    width = width,
+    height = height,
+  }
+  template.callback('process_rule', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1063,7 +1088,14 @@ end
 %
 %    \begin{macrocode}
 function callbacks.pre_output_filter(head, groupcode, size, packtype, maxdepth, direction)
-  template.print('pre_output_filter')
+  local variables = {
+    groupcode = groupcode,
+    size = size,
+    packtype = packtype,
+    maxdepth = maxdepth,
+    direction = direction,
+  }
+  template.callback('pre_output_filter', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1071,28 +1103,31 @@ end
 %
 %    \begin{macrocode}
 function callbacks.hyphenate(head, tail)
-  template.print('hyphenate')
+  template.callback('hyphenate')
   nodetree.analyze_list(head, 1)
+  nodetree.analyze_list(tail, 1)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.ligaturing(head, tail)
-  template.print('ligaturing')
+  template.callback('ligaturing')
   nodetree.analyze_list(head, 1)
+  nodetree.analyze_list(tail, 1)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.kerning(head, tail)
-  template.print('kerning')
+  template.callback('kerning')
   nodetree.analyze_list(head, 1)
+  nodetree.analyze_list(tail, 1)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.insert_local_par(local_par, location)
-  template.print('insert_local_par')
+  template.callback('insert_local_par', {location = location})
   nodetree.analyze_list(local_par, 1)
   return true
 end

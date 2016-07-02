@@ -592,6 +592,39 @@ function template.color_code(code)
 end
 %    \end{macrocode}
 %
+% \begin{verbatim}
+% local colors = {
+%     -- attributes
+%     reset = 0,
+%     clear = 0,
+%     bright = 1,
+%     dim = 2,
+%     underscore = 4,
+%     blink = 5,
+%     reverse = 7,
+%     hidden = 8,
+%
+%     -- foreground
+%     black = 30,
+%     red = 31,
+%     green = 32,
+%     yellow = 33,
+%     blue = 34,
+%     magenta = 35,
+%     cyan = 36,
+%     white = 37,
+%
+%     -- background
+%     onblack = 40,
+%     onred = 41,
+%     ongreen = 42,
+%     onyellow = 43,
+%     onblue = 44,
+%     onmagenta = 45,
+%     oncyan = 46,
+%     onwhite = 47,
+% }
+% \end{verbatim}
 %    \begin{macrocode}
 function template.color(color, mode)
   if options.color ~= 'colored' then
@@ -733,9 +766,9 @@ end
 %    \begin{macrocode}
 function template.init_node_colors()
   template.node_colors = {
-    hlist          = template.color('red'),
-    vlist          = template.color('green'),
-    rule           = template.color('yellow'),
+    hlist          = template.color('red', 'bright'),
+    vlist          = template.color('green', 'bright'),
+    rule           = template.color('blue', 'bright'),
     ins            = template.color('blue'),
     mark           = template.color('magenta'),
     adjust         = template.color('cyan'),
@@ -745,9 +778,9 @@ function template.init_node_colors()
     local_par      = template.color('blue', 'bright'),
     dir            = template.color('magenta', 'bright'),
     math           = template.color('cyan', 'bright'),
-    glue           = template.color('red'),
-    kern           = template.color('green'),
-    penalty        = template.color('yellow'),
+    glue           = template.color('magenta', 'bright'),
+    kern           = template.color('green', 'bright'),
+    penalty        = template.color('yellow', 'bright'),
     unset          = template.color('blue'),
     style          = template.color('magenta'),
     choice         = template.color('cyan'),

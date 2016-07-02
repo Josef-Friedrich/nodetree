@@ -203,17 +203,10 @@ post_linebreak_filter:
     nodetree.set_option('#1', '#2')
   }
 }
-\def\nodetreeshowoption#1{
-  \directlua{
-    tex.print(nodetree.get_option('#1'))
-  }
-}
-\def\nodetreeprocessoptions{
-  \nodetreeoption[engine]{luatex}
-  \directlua{
-    nodetree.set_default_options()
-    nodetree.register_callbacks()
-  }
+\nodetreeoption[engine]{luatex}
+\directlua{
+  nodetree.set_default_options()
+  nodetree.register_callbacks()
 }
 %    \end{macrocode}
 %
@@ -264,7 +257,7 @@ post_linebreak_filter:
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{decimalplaces}
-\define@key{NT}{decimalplaces}[]{\NT@set@option[decimal_places]{#1}}
+\define@key{NT}{decimalplaces}[]{\NT@set@option[decimalplaces]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -615,7 +608,7 @@ end
 %
 %    \begin{macrocode}
 function tpl.round(number)
-  local mult = 10^(options.decimal_places or 0)
+  local mult = 10^(options.decimalplaces or 0)
   return math.floor(number * mult + 0.5) / mult
 end
 %    \end{macrocode}
@@ -1042,6 +1035,35 @@ function nodetree.analyze_callback(head)
   tpl.print(tpl.line('short') .. '\n')
 end
 %    \end{macrocode}
+
+%
+%    \begin{macrocode}
+function base.normalize_options()
+  options.verbosity = tonumber(options.verbosity)
+  options.decimalplaces = tonumber(options.decimalplaces)
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function base.set_default_options()
+  local defaults = {
+    verbosity = 1,
+    callback = 'postlinebreak',
+    engine = 'luatex',
+    color = 'colored',
+    decimalplaces = 2,
+  }
+  if not options then
+    options = {}
+  end
+  for key, value in pairs(defaults) do
+    if not options[key] then
+      options[key] = value
+    end
+  end
+  base.normalize_options()
+end
+%    \end{macrocode}
 %
 %    \begin{macrocode}
 function base.set_option(key, value)
@@ -1049,6 +1071,7 @@ function base.set_option(key, value)
     options = {}
   end
   options[key] = value
+  base.normalize_options()
 end
 %    \end{macrocode}
 
@@ -1060,28 +1083,6 @@ function base.get_option(key)
   if options[key] then
     return options[key]
   end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function base.set_default_options()
-  local defaults = {
-    verbosity = 1,
-    callback = 'postlinebreak',
-    engine = 'luatex',
-    color = 'colored',
-    decimal_places = 2,
-  }
-  if not options then
-    options = {}
-  end
-  for key, value in pairs(defaults) do
-    if not options[key] then
-      options[key] = value
-    end
-  end
-  options.verbosity = tonumber(options.verbosity)
-  options.decimal_places = tonumber(options.decimal_places)
 end
 %    \end{macrocode}
 %

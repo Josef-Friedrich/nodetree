@@ -28,17 +28,10 @@
     nodetree.set_option('#1', '#2')
   }
 }
-\def\nodetreeshowoption#1{
-  \directlua{
-    tex.print(nodetree.get_option('#1'))
-  }
-}
-\def\nodetreeprocessoptions{
-  \nodetreeoption[engine]{luatex}
-  \directlua{
-    nodetree.set_default_options()
-    nodetree.register_callbacks()
-  }
+\nodetreeoption[engine]{luatex}
+\directlua{
+  nodetree.set_default_options()
+  nodetree.register_callbacks()
 }
 \endinput
 %%

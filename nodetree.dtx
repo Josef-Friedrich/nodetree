@@ -283,7 +283,6 @@ post_linebreak_filter:
 %
 % \subsection{The file \tt{nodetree.lua}}
 %
-%
 %    \begin{macrocode}
 local nodex = {}
 %    \end{macrocode}
@@ -298,7 +297,7 @@ local nodetree = {}
 %
 % Nodes in Lua\TeX are connected. The nodetree view distinguishs betweens
 % the |list| and |field| connections.
-
+%
 % \begin{itemize}
 %  \item |list|: Nodes, which are double connected by |next| and
 %        |previous| fields.
@@ -344,7 +343,6 @@ end
 %    \begin{macrocode}
 function nodex.subtype(n)
   local typ = node.type(n.id)
-
   local subtypes = {
 %    \end{macrocode}
 % \paragraph{hlist (0)}
@@ -584,22 +582,17 @@ function nodex.subtype(n)
 % \end{compactitem}
 %    \begin{macrocode}
   }
-
   subtypes.whatsit = node.whatsits()
-
   local out = ''
   if subtypes[typ] and subtypes[typ][n.subtype] then
     out = subtypes[typ][n.subtype]
-
     if options.verbosity > 1 then
       out = out .. tpl.type_id(n.subtype)
     end
-
     return out
   else
     return tostring(n.subtype)
   end
-
   assert(false)
 end
 %    \end{macrocode}
@@ -738,16 +731,22 @@ function tpl.color(color, mode, background)
   if options.color ~= 'colored' then
     return ''
   end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   local out = ''
   local code = ''
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   if mode == 'bright' then
     out = tpl.color_code(1)
   elseif mode == 'dim' then
     out = tpl.color_code(2)
   end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   if not background then
     if color == 'reset' then code = 0
     elseif color == 'red' then code = 31
@@ -768,9 +767,7 @@ function tpl.color(color, mode, background)
     elseif color == 'white' then code = 47
     else code = 40 end
   end
-
   return out .. tpl.color_code(code)
-
 end
 %    \end{macrocode}
 %
@@ -869,11 +866,10 @@ function tpl.branch(connection_type, connection_state, last)
   end
 end
 %    \end{macrocode}
-
+%
 %    \begin{macrocode}
 function tpl.branches(level, connection_type)
   local out = ''
-
   for i = 1, level - 1  do
     out = out .. tpl.branch('list', nodetree.state[i]['list'], false)
     out = out .. tpl.branch('field', nodetree.state[i]['field'], false)
@@ -887,7 +883,6 @@ function tpl.branches(level, connection_type)
     out = out .. tpl.branch('list', nodetree.state[level]['list'], false)
     out = out .. tpl.branch('field', nodetree.state[level]['field'], true)
   end
-
   return out
 end
 %    \end{macrocode}
@@ -903,15 +898,21 @@ end
 %    \begin{macrocode}
 function nodetree.format_field(head, field)
   local out = ''
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   if not head[field] or head[field] == 0 then
     return ''
   end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   if options.verbosity < 2 and field == 'prev' or field == 'next' or field == 'id' or field == 'attr' then
     return ''
   end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   if field == 'prev' or field == 'next' then
     out = nodex.node_id(head[field])
   elseif field == 'subtype' then
@@ -932,7 +933,9 @@ function nodetree.format_field(head, field)
   else
     out = tostring(head[field])
   end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   return tpl.key_value(field, out)
 end
 %    \end{macrocode}
@@ -952,20 +955,23 @@ end
 %
 %    \begin{macrocode}
 function nodetree.analyze_node(head, level)
-  local out = {}
   local connection_state
-
-  out = tpl.type(node.type(head.id), head.id)
-
+  local out = tpl.type(node.type(head.id), head.id)
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   if options.verbosity > 1 then
     out = out .. tpl.key_value('no', nodex.node_id(head))
   end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   local tmp = {}
   local r = {} -- recurison
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   fields = node.fields(head.id, head.subtype)
-
   for field_id, field_name in pairs(fields) do
     if field_name ~= 'next' and
       field_name ~= 'prev' and
@@ -976,21 +982,23 @@ function nodetree.analyze_node(head, level)
       tmp[#tmp + 1] = nodetree.format_field(head, field_name)
     end
   end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   if head.next then
     connection_state = 'continue'
   else
     connection_state = 'stop'
   end
-
   nodetree.set_state(level, 'list', connection_state)
   tpl.print(tpl.branches(level, 'list') .. out .. table.concat(tmp, ''))
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   local max = 0
   for _ in pairs(r) do
     max = max + 1
   end
-
   local count = 0
   for field_name, recursion_node in pairs(r) do
     count = count + 1
@@ -999,7 +1007,6 @@ function nodetree.analyze_node(head, level)
     else
       connection_state = 'continue'
     end
-
     nodetree.set_state(level, 'field', connection_state)
     tpl.print(tpl.branches(level, 'field') .. tpl.key_value(field_name))
     nodetree.analyze_list(recursion_node, level + 1)
@@ -1023,7 +1030,6 @@ function nodetree.analyze_callback(head)
   tpl.print(tpl.line('short') .. '\n')
 end
 %    \end{macrocode}
-
 %
 %    \begin{macrocode}
 function base.normalize_options()
@@ -1062,7 +1068,7 @@ function base.set_option(key, value)
   base.normalize_options()
 end
 %    \end{macrocode}
-
+%
 %    \begin{macrocode}
 function base.get_option(key)
   if not options then
@@ -1274,55 +1280,89 @@ end
 function base.get_callback_name(alias)
   if alias == 'contribute' or alias == 'contributefilter' then
     return 'contribute_filter'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'buildpage' or alias == 'buildpagefilter' then
     return 'buildpage_filter'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'preline' or alias == 'prelinebreakfilter' then
     return 'pre_linebreak_filter'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'line' or alias == 'linebreakfilter' then
     return 'linebreak_filter'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'append' or alias == 'appendtovlistfilter' then
     return 'append_to_vlist_filter'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'postline' or alias == 'postlinebreakfilter' then
     return 'post_linebreak_filter'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'hpack' or alias == 'hpackfilter' then
     return 'hpack_filter'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'vpack' or alias == 'vpackfilter' then
     return 'vpack_filter'
-  -- TODO: Fix: Unable to register callback
+%    \end{macrocode}
+% TODO: Fix: Unable to register callback
+%    \begin{macrocode}
   elseif alias == 'hpackq' or alias == 'hpackquality' then
     return 'hpack_quality'
-  -- TODO: Fix: Unable to register callback
+%    \end{macrocode}
+% TODO: Fix: Unable to register callback
+%    \begin{macrocode}
   elseif alias == 'vpackq' or alias == 'vpackquality' then
     return 'vpack_quality'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'process' or alias == 'processrule' then
     return 'process_rule'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'preout' or alias == 'preoutputfilter' then
     return 'pre_output_filter'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'hyph' or alias == 'hyphenate' then
     return 'hyphenate'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'liga' or alias == 'ligaturing' then
     return 'ligaturing'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'kern' or alias == 'kerning' then
    return 'kerning'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'insert' or alias == 'insertlocalpar' then
     return 'insert_local_par'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   elseif alias == 'mhlist' or alias == 'mlisttohlist' then
     return 'mlist_to_hlist'
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
   else
     return 'post_linebreak_filter'
   end

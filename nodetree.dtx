@@ -32,10 +32,13 @@
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage{hyperref,paralist}
+\usepackage{hyperref,paralist,fontspec}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
+
+\setmainfont{DejaVu Serif}
+\setmonofont{DejaVu Sans Mono}
 \begin{document}
 
 \providecommand*{\url}{\texttt}
@@ -51,6 +54,44 @@
 \maketitle
 
 \tableofcontents
+
+\section{Unicode characters to show the tree view}
+
+\renewcommand{\arraystretch}{1.5}
+
+The package |nodetree| uses the unicode box drawing symbols. Your
+default terminal font should contain this characters to obtain the tree
+view. Eight box drawing characters are necessary.
+
+\begin{tabular}{lll}
+Code & Character & Name \\
+U+2500 & |─| & BOX DRAWINGS LIGHT HORIZONTAL \\
+U+2502 & |│| & BOX DRAWINGS LIGHT VERTICAL \\
+U+2514 & |└| & BOX DRAWINGS LIGHT UP AND RIGHT \\
+U+251C & |├| & BOX DRAWINGS LIGHT VERTICAL AND RIGHT \\
+U+2550 & |═| & BOX DRAWINGS DOUBLE HORIZONTAL \\
+U+2551 & |║| & BOX DRAWINGS DOUBLE VERTICAL \\
+U+255A & |╚| & BOX DRAWINGS DOUBLE UP AND RIGHT \\
+U+2560 & |╠| & BOX DRAWINGS DOUBLE VERTICAL AND RIGHT \\
+\end{tabular}
+
+\subsection{\emph{light} characters}
+
+\begin{verbatim}
+│ │
+│ ├─list1
+│ └─list2
+└─list3
+\end{verbatim}
+
+\subsection{\emph{double} characters}
+
+\begin{verbatim}
+║ ║
+║ ╠═field1
+║ ╚═field2
+╚═field3
+\end{verbatim}
 
   \DocInput{nodetree.dtx}
   \pagebreak
@@ -99,35 +140,6 @@ post_linebreak_filter:
   ├─GLUE subtype: parfillskip; stretch: 65536; stretch_order: 2;
   └─GLUE subtype: rightskip;
 
-```
-
-# UTF8 Box drawing symbols
-
-## Light
-
-```
-│ │
-│ ├─┤field1: 1pt├┤field2: 1pt│
-│ └─
-└─
-```
-
-## Heavy
-
-```
-┃ ┃
-┃ ┣━┫field1: 1pt┣┫field2: 1pt┃
-┃ ┗━
-┗━
-```
-
-## Double
-
-```
-║ ║
-║ ╠═╣field1: 1pt╠╣field2: 1pt║
-║ ╚═
-╚═
 ```
 
 %</readme>

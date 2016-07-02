@@ -39,32 +39,3 @@ post_linebreak_filter:
 
 ```
 
-# UTF8 Box drawing symbols
-
-## Light
-
-```
-│ │
-│ ├─┤field1: 1pt├┤field2: 1pt│
-│ └─
-└─
-```
-
-## Heavy
-
-```
-┃ ┃
-┃ ┣━┫field1: 1pt┣┫field2: 1pt┃
-┃ ┗━
-┗━
-```
-
-## Double
-
-```
-║ ║
-║ ╠═╣field1: 1pt╠╣field2: 1pt║
-║ ╚═
-╚═
-```
-

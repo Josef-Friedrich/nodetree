@@ -599,6 +599,32 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function tpl.length(input)
+  input = tonumber(input)
+  input = input / 2^16
+  return string.format('%gpt', tpl.round(input))
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function tpl.fill(number, order, field)
+  if order ~= nil and order ~= 0 then
+    if field == 'stretch' then
+      out = '+'
+    else
+      out = '-'
+    end
+    return out .. string.format(
+      '%gfi%s', number / 2^16,
+      string.rep('l', order - 1)
+    )
+  else
+    return tpl.length(number)
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.color_code(code)
   return string.char(27) .. '[' .. tostring(code) .. 'm'
 end
@@ -688,13 +714,6 @@ function tpl.key_value(key, value)
 end
 %    \end{macrocode}
 %
-%    \begin{macrocode}
-function tpl.length(input)
-  input = tonumber(input)
-  input = input / 2^16
-  return string.format('%gpt', tpl.round(input))
-end
-%    \end{macrocode}
 %
 %    \begin{macrocode}
 function tpl.char(input)
@@ -899,14 +918,14 @@ function nodetree.format_field(head, field)
     field == 'height' or
     field == 'depth' or
     field == 'kern' or
-    field == 'stretch' or
-    field == 'shrink' or
     field == 'shift' then
     out = tpl.length(head[field])
   elseif field == 'char' then
     out = tpl.char(head[field])
   elseif field == 'glue_set' then
     out = tpl.round(head[field])
+  elseif field == 'stretch' or field == 'shrink' then
+    out = tpl.fill(head[field], head[field .. '_order'], field)
   else
     out = tostring(head[field])
   end

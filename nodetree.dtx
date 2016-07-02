@@ -52,26 +52,6 @@
 
 \tableofcontents
 
-\section{Option 'channel'}
-
-Value "term"
-
-\begin{verbatim}
-\usepackage[channel=term]{nodetree}
-\end{verbatim}
-
-Value "log"
-
-\begin{verbatim}
-\usepackage[channel=log]{nodetree}
-\end{verbatim}
-
-Value "term and log"
-
-\begin{verbatim}
-\usepackage[channel={term and log}]{nodetree}
-\end{verbatim}
-
   \DocInput{nodetree.dtx}
   \pagebreak
   \PrintChanges
@@ -248,10 +228,6 @@ post_linebreak_filter:
 }
 \DeclareStringOption[colored]{color}
 \define@key{NT}{color}[]{\NT@set@option[color]{#1}}
-%    \end{macrocode}
-%    \begin{macrocode}
-\DeclareStringOption[term and log]{channel}
-\define@key{NT}{channel}[]{\NT@set@option[channel]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -956,7 +932,6 @@ end
 function base.set_default_options()
   local defaults = {
     verbosity = 1,
-    channel = 'term',
     callback = 'postlinebreak',
     engine = 'luatex',
     color = 'colored',

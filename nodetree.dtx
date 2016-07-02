@@ -373,7 +373,7 @@ end
 function nodex.create_marker(string)
   local marker = node.new('whatsit','user_defined')
   marker.type = 115
-  marker.user_id = 123
+  marker.user_id = options.user_id
   marker.value = string
   node.write(marker)
 end
@@ -891,7 +891,7 @@ function nodetree.analyze_node(head, level)
 
   if head.id == node.id('whatsit')
     and head.subtype == node.subtype('user_defined')
-    and head.user_id == 123 then
+    and head.user_id == options.user_id then
     options.print = head.value
   end
 

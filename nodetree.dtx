@@ -1099,16 +1099,59 @@ end
 %
 %    \begin{macrocode}
 function base.get_callback_name(alias)
-  if alias == 'prelinebreak' then return 'pre_linebreak_filter'
-  elseif alias == 'linebreak' then return 'linebreak_filter'
-  elseif alias == 'postlinebreak' then return 'post_linebreak_filter'
-  elseif alias == 'hpack' then return 'hpack_filter'
-  elseif alias == 'vpack' then return 'vpack_filter'
-  elseif alias == 'hyphenate' then return 'hyphenate'
-  elseif alias == 'ligaturing' then return 'ligaturing'
-  elseif alias == 'kerning' then return 'kerning'
-  elseif alias == 'mhlist' then return 'mlist_to_hlist'
-  else return 'post_linebreak_filter'
+  if alias == 'contribute' or alias == 'contributefilter' then
+    return 'contribute_filter'
+
+  elseif alias == 'buildpage' or alias == 'buildpagefilter' then
+    return 'buildpage_filter'
+
+  elseif alias == 'preline' or alias == 'prelinebreakfilter' then
+    return 'pre_linebreak_filter'
+
+  elseif alias == 'line' or alias == 'linebreakfilter' then
+    return 'linebreak_filter'
+
+  elseif alias == 'append' or alias == 'appendtovlistfilter' then
+    return 'append_to_vlist_filter'
+
+  elseif alias == 'postline' or alias == 'postlinebreakfilter' then
+    return 'post_linebreak_filter'
+
+  elseif alias == 'hpack' or alias == 'hpackfilter' then
+    return 'hpack_filter'
+
+  elseif alias == 'vpack' or alias == 'vpackfilter' then
+    return 'vpack_filter'
+
+  elseif alias == 'hpackq' or alias == 'hpackquality' then
+    return 'hpack_quality'
+
+  elseif alias == 'vpackq' or alias == 'vpackquality' then
+    return 'vpack_quality'
+
+  elseif alias == 'process' or alias == 'processrule' then
+    return 'process_rule'
+
+  elseif alias == 'preout' or alias == 'preoutputfilter' then
+    return 'pre_output_filter'
+
+  elseif alias == 'hyph' or alias == 'hyphenate' then
+    return 'hyphenate'
+
+  elseif alias == 'liga' or alias == 'ligaturing' then
+    return 'ligaturing'
+
+  elseif alias == 'kern' or alias == 'kerning' then
+   return 'kerning'
+
+  elseif alias == 'insert' or alias == 'insertlocalpar' then
+    return 'insert_local_par'
+
+  elseif alias == 'mhlist' or alias == 'mlisttohlist' then
+    return 'mlist_to_hlist'
+
+  else
+    return 'post_linebreak_filter'
   end
 end
 %    \end{macrocode}

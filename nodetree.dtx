@@ -663,7 +663,18 @@ function template.callback_variable(variable_name, variable)
   end
 end
 %    \end{macrocode}
-
+%    \begin{macrocode}
+function template.callback(callback_name, variables)
+  template.print('\n\n')
+  template.print('Callback: ' .. callback_name)
+  for name, value in pairs(variables) do
+    if value ~= nil and value ~= '' then
+      template.print('  - ' .. name .. ': ' .. tostring(value))
+    end
+  end
+  template.print('--------------------------------')
+end
+%    \end{macrocode}
 %    \begin{macrocode}
 function template.type_id(id)
   return '[' .. tostring(id) .. ']'
@@ -1090,9 +1101,11 @@ end
 % TODO: Implement newhead as return value
 %    \begin{macrocode}
 function callbacks.mlist_to_hlist(head, display_type, need_penalties)
-  template.print('mlist_to_hlist')
-  template.callback_variable('display_type', display_type)
-  template.callback_variable('need_penalties', need_penalties)
+  local variables = {
+    display_type = display_type,
+    need_penalties = need_penalties,
+  }
+  template.callback('mlist_to_hlist', variables)
   nodetree.analyze_list(head, 1)
 end
 %    \end{macrocode}

@@ -656,7 +656,11 @@ end
 %
 %    \begin{macrocode}
 function template.key_value(key, value)
-  return template.color('yellow') .. key .. ': ' .. template.color('white') .. value .. '; ' .. template.color('reset')
+  local out = template.color('yellow') .. key .. ': '
+  if value then
+    out = out .. template.color('white') .. value .. '; '
+  end
+  return out .. template.color('reset')
 end
 %    \end{macrocode}
 %
@@ -929,7 +933,7 @@ function nodetree.analyze_node(head, level)
     end
 
     nodetree.set_state(level, 'field', connection_state)
-    template.print(template.branches(level, 'field') .. field_name .. ':')
+    template.print(template.branches(level, 'field') .. template.key_value(field_name))
     nodetree.analyze_list(recursion_node, level + 1)
   end
 

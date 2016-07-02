@@ -1027,6 +1027,28 @@ function callbacks.post_linebreak_filter(head, groupcode)
 end
 %    \end{macrocode}
 %
+%    \begin{macrocode}
+function callbacks.vpack_filter(head, groupcode, size, packtype, direction, attributelist)
+  template.print('vpack_filter')
+  if groupcode then
+    template.print('groundcode: ' .. groupcode)
+  end
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attributelist)
+  template.print('hpack_filter')
+  if groupcode then
+    template.print('groundcode: ' .. groupcode)
+  end
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+
 % \subsubsection{base}
 %
 %    \begin{macrocode}
@@ -1047,10 +1069,11 @@ end
 %
 %    \begin{macrocode}
 function base.register(cb)
+  print(cb)
   if options.engine == 'lualatex' then
-    luatexbase.add_to_callback(cb, callbacks.post_linebreak_filter, 'nodetree')
+    luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree')
   else
-    id, error = callback.register(cb, callbacks.post_linebreak_filter)
+    id, error = callback.register(cb, callbacks[cb])
   end
 end
 %    \end{macrocode}

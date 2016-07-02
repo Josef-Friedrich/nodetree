@@ -1,19 +1,7 @@
 %!TEX program = lualatex
 \documentclass{article}
-\usepackage{hyperref}
-\usepackage[callback={postlinebreak,vlist,hlist}]{nodetree}
+\usepackage[global,callback={vpack,hpack,postlinebreak}]{nodetree}
 
 \begin{document}
 Lorem ipsum dolor sit amet.
-
-
-Lorem ipsum dolor sit amet,
-
-\url{http://www.wikibooks.org}
-\href{http://www.wikibooks.org}{Wikibooks home}
-
-
-lori
-
-lori
 \end{document}

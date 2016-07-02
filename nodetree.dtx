@@ -587,6 +587,13 @@ end
 % \subsubsection{tpl}
 %
 %    \begin{macrocode}
+function tpl.round(number, decimal_places)
+  local mult = 10^(decimal_places or 0)
+  return math.floor(number * mult + 0.5) / mult
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.color_code(code)
   return string.char(27) .. '[' .. tostring(code) .. 'm'
 end
@@ -890,11 +897,12 @@ function nodetree.format_field(head, field)
     field == 'kern' or
     field == 'stretch' or
     field == 'shrink' or
-    field == 'shift'
-  then
+    field == 'shift' then
     out = tpl.length(head[field])
   elseif field == 'char' then
     out = tpl.char(head[field])
+  elseif field == 'glue_set' then
+    out = tpl.round(head[field], 2)
   else
     out = tostring(head[field])
   end

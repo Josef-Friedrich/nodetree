@@ -197,16 +197,12 @@ post_linebreak_filter:
 %    \begin{macrocode}
 \directlua{
   nodetree = require('nodetree')
+  nodetree.set_option('engine', 'luatex')
 }
 \def\nodetreeoption[#1]#2{
   \directlua{
     nodetree.set_option('#1', '#2')
   }
-}
-\nodetreeoption[engine]{luatex}
-\directlua{
-  nodetree.set_default_options()
-  nodetree.register_callbacks()
 }
 %    \end{macrocode}
 %
@@ -225,6 +221,11 @@ post_linebreak_filter:
   nodetree = require('nodetree')
   nodetree.set_option('engine', 'lualatex')
 }
+\def\nodetreeoption[#1]#2{
+  \directlua{
+    nodetree.set_option('#1', '#2')
+  }
+}
 %    \end{macrocode}
 %    \begin{macrocode}
 \RequirePackage{kvoptions}
@@ -238,26 +239,23 @@ post_linebreak_filter:
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\def\NT@set@option[#1]#2{%
-  \directlua{nodetree.set_option('#1', '#2')}%
-}
 \DeclareStringOption[colored]{color}
-\define@key{NT}{color}[]{\NT@set@option[color]{#1}}
+\define@key{NT}{color}[]{\nodetreeoption[color]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[postlinebreak]{callback}
-\define@key{NT}{callback}[]{\NT@set@option[callback]{#1}}
+\define@key{NT}{callback}[]{\nodetreeoption[callback]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{verbosity}
-\define@key{NT}{verbosity}[]{\NT@set@option[verbosity]{#1}}
+\define@key{NT}{verbosity}[]{\nodetreeoption[verbosity]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{decimalplaces}
-\define@key{NT}{decimalplaces}[]{\NT@set@option[decimalplaces]{#1}}
+\define@key{NT}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}

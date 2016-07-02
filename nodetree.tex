@@ -22,16 +22,12 @@
 %% 
 \directlua{
   nodetree = require('nodetree')
+  nodetree.set_option('engine', 'luatex')
 }
 \def\nodetreeoption[#1]#2{
   \directlua{
     nodetree.set_option('#1', '#2')
   }
-}
-\nodetreeoption[engine]{luatex}
-\directlua{
-  nodetree.set_default_options()
-  nodetree.register_callbacks()
 }
 \endinput
 %%

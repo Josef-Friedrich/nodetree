@@ -198,6 +198,7 @@ post_linebreak_filter:
 \directlua{
   nodetree = require('nodetree')
   nodetree.set_option('engine', 'luatex')
+  nodetree.register_callbacks()
 }
 \def\nodetreeoption[#1]#2{
   \directlua{
@@ -638,6 +639,61 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+tpl.node_colors = {
+  hlist = {'red', 'bright'},
+  vlist = {'green', 'bright'},
+  rule = {'blue', 'bright'},
+  ins = {'blue'},
+  mark = {'magenta'},
+  adjust = {'cyan'},
+  boundary = {'red', 'bright'},
+  disc = {'green', 'bright'},
+  whatsit = {'yellow', 'bright'},
+  local_par = {'blue', 'bright'},
+  dir = {'magenta', 'bright'},
+  math = {'cyan', 'bright'},
+  glue = {'magenta', 'bright'},
+  kern = {'green', 'bright'},
+  penalty = {'yellow', 'bright'},
+  unset = {'blue'},
+  style = {'magenta'},
+  choice = {'cyan'},
+  noad = {'red'},
+  radical = {'green'},
+  fraction = {'yellow'},
+  accent = {'blue'},
+  fence = {'magenta'},
+  math_char = {'cyan'},
+  sub_box = {'red', 'bright'},
+  sub_mlist = {'green', 'bright'},
+  math_text_char = {'yellow', 'bright'},
+  delim = {'blue', 'bright'},
+  margin_kern = {'magenta', 'bright'},
+  glyph = {'cyan', 'bright'},
+  align_record = {'red'},
+  pseudo_file = {'green'},
+  pseudo_line = {'yellow'},
+  page_insert = {'blue'},
+  split_insert = {'magenta'},
+  expr_stack = {'cyan'},
+  nested_list = {'red'},
+  span = {'green'},
+  attribute = {'yellow'},
+  glue_spec = {'magenta'},
+  attribute_list = {'cyan'},
+  temp = {'magenta'},
+  align_stack = {'red', 'bright'},
+  movement_stack = {'green', 'bright'},
+  if_stack = {'yellow', 'bright'},
+  unhyphenated = {'magenta', 'bright'},
+  hyphenated = {'cyan', 'bright'},
+  delta = {'red'},
+  passive = {'green'},
+  shape = {'yellow'},
+}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.color_code(code)
   return string.char(27) .. '[' .. tostring(code) .. 'm'
 end
@@ -734,16 +790,16 @@ function tpl.char(input)
 end
 %    \end{macrocode}
 %
-% t = type
 %    \begin{macrocode}
-function tpl.type(t, id)
-  local out = ''
-  out = tpl.type_color(t) .. string.upper(t)
-
+function tpl.type(type, id)
+  local out = tpl.color(
+    tpl.node_colors[type][1],
+    tpl.node_colors[type][2]
+    )
+    .. string.upper(type)
   if options.verbosity > 1 then
     out = out .. tpl.type_id(id)
   end
-
   return out .. tpl.color('reset')  .. ' '
 end
 %    \end{macrocode}
@@ -833,72 +889,6 @@ function tpl.branches(level, connection_type)
   end
 
   return out
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function tpl.init_node_colors()
-  tpl.node_colors = {
-    hlist          = tpl.color('red', 'bright'),
-    vlist          = tpl.color('green', 'bright'),
-    rule           = tpl.color('blue', 'bright'),
-    ins            = tpl.color('blue'),
-    mark           = tpl.color('magenta'),
-    adjust         = tpl.color('cyan'),
-    boundary       = tpl.color('red', 'bright'),
-    disc           = tpl.color('green', 'bright'),
-    whatsit        = tpl.color('yellow', 'bright'),
-    local_par      = tpl.color('blue', 'bright'),
-    dir            = tpl.color('magenta', 'bright'),
-    math           = tpl.color('cyan', 'bright'),
-    glue           = tpl.color('magenta', 'bright'),
-    kern           = tpl.color('green', 'bright'),
-    penalty        = tpl.color('yellow', 'bright'),
-    unset          = tpl.color('blue'),
-    style          = tpl.color('magenta'),
-    choice         = tpl.color('cyan'),
-    noad           = tpl.color('red'),
-    radical        = tpl.color('green'),
-    fraction       = tpl.color('yellow'),
-    accent         = tpl.color('blue'),
-    fence          = tpl.color('magenta'),
-    math_char      = tpl.color('cyan'),
-    sub_box        = tpl.color('red', 'bright'),
-    sub_mlist      = tpl.color('green', 'bright'),
-    math_text_char = tpl.color('yellow', 'bright'),
-    delim          = tpl.color('blue', 'bright'),
-    margin_kern    = tpl.color('magenta', 'bright'),
-    glyph          = tpl.color('cyan', 'bright'),
-    align_record   = tpl.color('red'),
-    pseudo_file    = tpl.color('green'),
-    pseudo_line    = tpl.color('yellow'),
-    page_insert    = tpl.color('blue'),
-    split_insert   = tpl.color('magenta'),
-    expr_stack     = tpl.color('cyan'),
-    nested_list    = tpl.color('red'),
-    span           = tpl.color('green'),
-    attribute      = tpl.color('yellow'),
-    glue_spec      = tpl.color('magenta'),
-    attribute_list = tpl.color('cyan'),
-    temp           = tpl.color('magenta'),
-    align_stack    = tpl.color('red', 'bright'),
-    movement_stack = tpl.color('green', 'bright'),
-    if_stack       = tpl.color('yellow', 'bright'),
-    unhyphenated   = tpl.color('magenta', 'bright'),
-    hyphenated     = tpl.color('cyan', 'bright'),
-    delta          = tpl.color('red'),
-    passive        = tpl.color('green'),
-    shape          = tpl.color('yellow'),
-  }
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function tpl.type_color(id)
-  if not tpl.node_colors then
-    tpl.init_node_colors()
-  end
-  return tpl.node_colors[id]
 end
 %    \end{macrocode}
 %

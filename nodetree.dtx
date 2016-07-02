@@ -722,6 +722,14 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function template.callback_variable(variable_name, variable)
+  if variable ~= nil and variable ~= '' then
+    template.print(variable_name .. ': ' .. tostring(variable))
+  end
+end
+%    \end{macrocode}
+
+%    \begin{macrocode}
 function template.type_id(id)
   return '[' .. tostring(id) .. ']'
 end
@@ -1019,9 +1027,7 @@ end
 local callbacks = {}
 function callbacks.post_linebreak_filter(head, groupcode)
   template.print('post_linebreak_filter')
-  if groupcode then
-    template.print('groundcode: ' .. groupcode)
-  end
+  template.callback_variable('groupcode', groupcode)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1030,9 +1036,11 @@ end
 %    \begin{macrocode}
 function callbacks.vpack_filter(head, groupcode, size, packtype, direction, attributelist)
   template.print('vpack_filter')
-  if groupcode then
-    template.print('groundcode: ' .. groupcode)
-  end
+  template.callback_variable('groupcode', groupcode)
+  template.callback_variable('size', size)
+  template.callback_variable('packtype', packtype)
+  template.callback_variable('direction', direction)
+  template.callback_variable('attributelist', attributelist)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1041,9 +1049,11 @@ end
 %    \begin{macrocode}
 function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attributelist)
   template.print('hpack_filter')
-  if groupcode then
-    template.print('groundcode: ' .. groupcode)
-  end
+  template.callback_variable('groupcode', groupcode)
+  template.callback_variable('size', size)
+  template.callback_variable('packtype', packtype)
+  template.callback_variable('direction', direction)
+  template.callback_variable('attributelist', attributelist)
   nodetree.analyze_list(head, 1)
   return true
 end

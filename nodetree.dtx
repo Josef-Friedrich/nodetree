@@ -883,7 +883,15 @@ function nodetree.format_field(head, field)
     out = nodex.node_id(head[field])
   elseif field == 'subtype' then
     out = nodex.subtype(head)
-  elseif field == 'width' or field == 'height' or field == 'depth' or field == 'kern' then
+  elseif
+    field == 'width' or
+    field == 'height' or
+    field == 'depth' or
+    field == 'kern' or
+    field == 'stretch' or
+    field == 'shrink' or
+    field == 'shift'
+  then
     out = tpl.length(head[field])
   elseif field == 'char' then
     out = tpl.char(head[field])

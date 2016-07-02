@@ -274,6 +274,13 @@ post_linebreak_filter:
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+\DeclareVoidOption{global}{
+  \NT@set@option[global]{true}
+  \NT@set@option[print]{start}
+}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \ProcessKeyvalOptions*
 \directlua{
   nodetree.set_default_options()
@@ -891,7 +898,7 @@ function nodetree.analyze_node(head, level)
 
   if head.id == node.id('whatsit')
     and head.subtype == node.subtype('user_defined')
-    and head.user_id == options.user_id then
+    and head.user_id == options.user_id and not options.global == 'true' then
     options.print = head.value
   end
 

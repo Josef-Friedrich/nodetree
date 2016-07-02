@@ -213,15 +213,6 @@ post_linebreak_filter:
     nodetree.register_callbacks()
   }
 }
-\def\nodetreeregister{%
-  \strut%
-  \directlua{nodetree.marker('start')}%
-}
-\def\nodetreeunregister{%
-  \directlua{nodetree.marker('stop')}%
-  \strut%
-}
-%    \end{macrocode}
 %    \end{macrocode}
 %
 % \iffalse
@@ -274,13 +265,6 @@ post_linebreak_filter:
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\DeclareVoidOption{global}{
-  \NT@set@option[global]{true}
-  \NT@set@option[print]{start}
-}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
 \ProcessKeyvalOptions*
 \directlua{
   nodetree.set_default_options()
@@ -292,21 +276,6 @@ post_linebreak_filter:
 \newcommand{\nodetreeset}[1]{\setkeys{nodetree}{#1}}
 %    \end{macrocode}
 %
-% \begin{environment}{nodetreeenv}
-%    \begin{macrocode}
-\newenvironment{nodetreeenv}{%
-  \strut%
-  \directlua{
-    nodetree.marker('start')
-  }%
-}{%
-  \directlua{
-    nodetree.marker('stop')
-  }%
-  \strut%
-}
-%    \end{macrocode}
-% \end{environment}
 % \iffalse
 %</package>
 %<*luamain>
@@ -373,16 +342,6 @@ local options = {}
 %    \begin{macrocode}
 function nodex.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function nodex.create_marker(string)
-  local marker = node.new('whatsit','user_defined')
-  marker.type = 115
-  marker.user_id = options.user_id
-  marker.value = string
-  node.write(marker)
 end
 %    \end{macrocode}
 %
@@ -850,9 +809,7 @@ end
 %
 %    \begin{macrocode}
 function template.print(text)
-  if options.print == 'start' then
-    print(text)
-  end
+  print(text)
 end
 %    \end{macrocode}
 %
@@ -903,12 +860,6 @@ end
 function nodetree.analyze_node(head, level)
   local out = {}
   local connection_state
-
-  if head.id == node.id('whatsit')
-    and head.subtype == node.subtype('user_defined')
-    and head.user_id == options.user_id and not options.global == 'true' then
-    options.print = head.value
-  end
 
   out = template.type(node.type(head.id), head.id)
 
@@ -1009,7 +960,6 @@ function base.set_default_options()
     callback = 'postlinebreak',
     engine = 'luatex',
     color = 'colored',
-    user_id = 43192,
   }
   if not options then
     options = {}

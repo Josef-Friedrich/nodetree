@@ -198,6 +198,7 @@ post_linebreak_filter:
 \directlua{
   nodetree = require('nodetree')
   nodetree.set_option('engine', 'luatex')
+  nodetree.set_default_options()
   nodetree.register_callbacks()
 }
 \def\nodetreeoption[#1]#2{
@@ -782,7 +783,6 @@ function tpl.key_value(key, value)
   return out .. tpl.color('reset')
 end
 %    \end{macrocode}
-%
 %
 %    \begin{macrocode}
 function tpl.char(input)

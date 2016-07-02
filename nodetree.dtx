@@ -626,7 +626,7 @@ end
 % }
 % \end{verbatim}
 %    \begin{macrocode}
-function template.color(color, mode)
+function template.color(color, mode, background)
   if options.color ~= 'colored' then
     return ''
   end
@@ -640,14 +640,26 @@ function template.color(color, mode)
     out = template.color_code(2)
   end
 
-  if color == 'reset' then code = 0
-  elseif color == 'red' then code = 31
-  elseif color == 'green' then code = 32
-  elseif color == 'yellow' then code = 33
-  elseif color == 'blue' then code = 34
-  elseif color == 'magenta' then code = 35
-  elseif color == 'cyan' then code = 36
-  else code = 37 end
+  if not background then
+    if color == 'reset' then code = 0
+    elseif color == 'red' then code = 31
+    elseif color == 'green' then code = 32
+    elseif color == 'yellow' then code = 33
+    elseif color == 'blue' then code = 34
+    elseif color == 'magenta' then code = 35
+    elseif color == 'cyan' then code = 36
+    else code = 37 end
+  else
+    if color == 'black' then code = 40
+    elseif color == 'red' then code = 41
+    elseif color == 'green' then code = 42
+    elseif color == 'yellow' then code = 43
+    elseif color == 'blue' then code = 44
+    elseif color == 'magenta' then code = 45
+    elseif color == 'cyan' then code = 46
+    elseif color == 'white' then code = 47
+    else code = 40 end
+  end
 
   return out .. template.color_code(code)
 
@@ -703,7 +715,9 @@ end
 %    \begin{macrocode}
 function template.callback(callback_name, variables)
   template.print('\n\n')
-  template.print('Callback: ' .. callback_name)
+  template.print('Callback: ' .. template.color('red', '', true) ..
+    callback_name .. template.color('reset')
+  )
   if variables then
     for name, value in pairs(variables) do
       if value ~= nil and value ~= '' then
@@ -711,7 +725,7 @@ function template.callback(callback_name, variables)
       end
     end
   end
-  template.print('--------------------------------')
+  template.print('-----------------------')
 end
 %    \end{macrocode}
 %    \begin{macrocode}
@@ -857,7 +871,7 @@ function nodetree.format_field(head, field)
     out = nodex.node_id(head[field])
   elseif field == 'subtype' then
     out = nodex.subtype(head)
-  elseif field == 'width' or field == 'height' or field == 'depth' then
+  elseif field == 'width' or field == 'height' or field == 'depth' or field == 'kern' then
     out = template.length(head[field])
   elseif field == 'char' then
     out = template.char(head[field])

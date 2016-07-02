@@ -269,7 +269,7 @@ local nodex = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-local template = {}
+local tpl = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -572,7 +572,7 @@ function nodex.subtype(n)
     out = subtypes[typ][n.subtype]
 
     if options.verbosity > 1 then
-      out = out .. template.type_id(n.subtype)
+      out = out .. tpl.type_id(n.subtype)
     end
 
     return out
@@ -584,10 +584,10 @@ function nodex.subtype(n)
 end
 %    \end{macrocode}
 %
-% \subsubsection{template}
+% \subsubsection{tpl}
 %
 %    \begin{macrocode}
-function template.color_code(code)
+function tpl.color_code(code)
   return string.char(27) .. '[' .. tostring(code) .. 'm'
 end
 %    \end{macrocode}
@@ -626,7 +626,7 @@ end
 % }
 % \end{verbatim}
 %    \begin{macrocode}
-function template.color(color, mode, background)
+function tpl.color(color, mode, background)
   if options.color ~= 'colored' then
     return ''
   end
@@ -635,9 +635,9 @@ function template.color(color, mode, background)
   local code = ''
 
   if mode == 'bright' then
-    out = template.color_code(1)
+    out = tpl.color_code(1)
   elseif mode == 'dim' then
-    out = template.color_code(2)
+    out = tpl.color_code(2)
   end
 
   if not background then
@@ -661,23 +661,23 @@ function template.color(color, mode, background)
     else code = 40 end
   end
 
-  return out .. template.color_code(code)
+  return out .. tpl.color_code(code)
 
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.key_value(key, value)
-  local out = template.color('yellow') .. key .. ': '
+function tpl.key_value(key, value)
+  local out = tpl.color('yellow') .. key .. ': '
   if value then
-    out = out .. template.color('white') .. value .. '; '
+    out = out .. tpl.color('white') .. value .. '; '
   end
-  return out .. template.color('reset')
+  return out .. tpl.color('reset')
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.length(input)
+function tpl.length(input)
   input = tonumber(input)
   input = input / 2^16
   input = math.floor((input * 10^2) + 0.5) / (10^2)
@@ -686,56 +686,56 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.char(input)
+function tpl.char(input)
   return string.format('%q', unicode.utf8.char(input))
 end
 %    \end{macrocode}
 %
 % t = type
 %    \begin{macrocode}
-function template.type(t, id)
+function tpl.type(t, id)
   local out = ''
-  out = template.type_color(t) .. string.upper(t)
+  out = tpl.type_color(t) .. string.upper(t)
 
   if options.verbosity > 1 then
-    out = out .. template.type_id(id)
+    out = out .. tpl.type_id(id)
   end
 
-  return out .. template.color('reset')  .. ' '
+  return out .. tpl.color('reset')  .. ' '
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.callback_variable(variable_name, variable)
+function tpl.callback_variable(variable_name, variable)
   if variable ~= nil and variable ~= '' then
-    template.print(variable_name .. ': ' .. tostring(variable))
+    tpl.print(variable_name .. ': ' .. tostring(variable))
   end
 end
 %    \end{macrocode}
 %    \begin{macrocode}
-function template.callback(callback_name, variables)
-  template.print('\n\n')
-  template.print('Callback: ' .. template.color('red', '', true) ..
-    callback_name .. template.color('reset')
+function tpl.callback(callback_name, variables)
+  tpl.print('\n\n')
+  tpl.print('Callback: ' .. tpl.color('red', '', true) ..
+    callback_name .. tpl.color('reset')
   )
   if variables then
     for name, value in pairs(variables) do
       if value ~= nil and value ~= '' then
-        template.print('  - ' .. name .. ': ' .. tostring(value))
+        tpl.print('  - ' .. name .. ': ' .. tostring(value))
       end
     end
   end
-  template.print('-----------------------')
+  tpl.print('-----------------------')
 end
 %    \end{macrocode}
 %    \begin{macrocode}
-function template.type_id(id)
+function tpl.type_id(id)
   return '[' .. tostring(id) .. ']'
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.branch(connection_type, connection_state, last)
+function tpl.branch(connection_type, connection_state, last)
   local c = connection_type
   local s = connection_state
   local l = last
@@ -760,21 +760,21 @@ end
 %    \end{macrocode}
 
 %    \begin{macrocode}
-function template.branches(level, connection_type)
+function tpl.branches(level, connection_type)
   local out = ''
 
   for i = 1, level - 1  do
-    out = out .. template.branch('list', nodetree.state[i]['list'], false)
-    out = out .. template.branch('field', nodetree.state[i]['field'], false)
+    out = out .. tpl.branch('list', nodetree.state[i]['list'], false)
+    out = out .. tpl.branch('field', nodetree.state[i]['field'], false)
   end
 %    \end{macrocode}
 % Format the last branches
 %    \begin{macrocode}
   if connection_type == 'list' then
-    out = out .. template.branch('list', nodetree.state[level]['list'], true)
+    out = out .. tpl.branch('list', nodetree.state[level]['list'], true)
   else
-    out = out .. template.branch('list', nodetree.state[level]['list'], false)
-    out = out .. template.branch('field', nodetree.state[level]['field'], true)
+    out = out .. tpl.branch('list', nodetree.state[level]['list'], false)
+    out = out .. tpl.branch('field', nodetree.state[level]['field'], true)
   end
 
   return out
@@ -782,73 +782,73 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.init_node_colors()
-  template.node_colors = {
-    hlist          = template.color('red', 'bright'),
-    vlist          = template.color('green', 'bright'),
-    rule           = template.color('blue', 'bright'),
-    ins            = template.color('blue'),
-    mark           = template.color('magenta'),
-    adjust         = template.color('cyan'),
-    boundary       = template.color('red', 'bright'),
-    disc           = template.color('green', 'bright'),
-    whatsit        = template.color('yellow', 'bright'),
-    local_par      = template.color('blue', 'bright'),
-    dir            = template.color('magenta', 'bright'),
-    math           = template.color('cyan', 'bright'),
-    glue           = template.color('magenta', 'bright'),
-    kern           = template.color('green', 'bright'),
-    penalty        = template.color('yellow', 'bright'),
-    unset          = template.color('blue'),
-    style          = template.color('magenta'),
-    choice         = template.color('cyan'),
-    noad           = template.color('red'),
-    radical        = template.color('green'),
-    fraction       = template.color('yellow'),
-    accent         = template.color('blue'),
-    fence          = template.color('magenta'),
-    math_char      = template.color('cyan'),
-    sub_box        = template.color('red', 'bright'),
-    sub_mlist      = template.color('green', 'bright'),
-    math_text_char = template.color('yellow', 'bright'),
-    delim          = template.color('blue', 'bright'),
-    margin_kern    = template.color('magenta', 'bright'),
-    glyph          = template.color('cyan', 'bright'),
-    align_record   = template.color('red'),
-    pseudo_file    = template.color('green'),
-    pseudo_line    = template.color('yellow'),
-    page_insert    = template.color('blue'),
-    split_insert   = template.color('magenta'),
-    expr_stack     = template.color('cyan'),
-    nested_list    = template.color('red'),
-    span           = template.color('green'),
-    attribute      = template.color('yellow'),
-    glue_spec      = template.color('magenta'),
-    attribute_list = template.color('cyan'),
-    temp           = template.color('magenta'),
-    align_stack    = template.color('red', 'bright'),
-    movement_stack = template.color('green', 'bright'),
-    if_stack       = template.color('yellow', 'bright'),
-    unhyphenated   = template.color('magenta', 'bright'),
-    hyphenated     = template.color('cyan', 'bright'),
-    delta          = template.color('red'),
-    passive        = template.color('green'),
-    shape          = template.color('yellow'),
+function tpl.init_node_colors()
+  tpl.node_colors = {
+    hlist          = tpl.color('red', 'bright'),
+    vlist          = tpl.color('green', 'bright'),
+    rule           = tpl.color('blue', 'bright'),
+    ins            = tpl.color('blue'),
+    mark           = tpl.color('magenta'),
+    adjust         = tpl.color('cyan'),
+    boundary       = tpl.color('red', 'bright'),
+    disc           = tpl.color('green', 'bright'),
+    whatsit        = tpl.color('yellow', 'bright'),
+    local_par      = tpl.color('blue', 'bright'),
+    dir            = tpl.color('magenta', 'bright'),
+    math           = tpl.color('cyan', 'bright'),
+    glue           = tpl.color('magenta', 'bright'),
+    kern           = tpl.color('green', 'bright'),
+    penalty        = tpl.color('yellow', 'bright'),
+    unset          = tpl.color('blue'),
+    style          = tpl.color('magenta'),
+    choice         = tpl.color('cyan'),
+    noad           = tpl.color('red'),
+    radical        = tpl.color('green'),
+    fraction       = tpl.color('yellow'),
+    accent         = tpl.color('blue'),
+    fence          = tpl.color('magenta'),
+    math_char      = tpl.color('cyan'),
+    sub_box        = tpl.color('red', 'bright'),
+    sub_mlist      = tpl.color('green', 'bright'),
+    math_text_char = tpl.color('yellow', 'bright'),
+    delim          = tpl.color('blue', 'bright'),
+    margin_kern    = tpl.color('magenta', 'bright'),
+    glyph          = tpl.color('cyan', 'bright'),
+    align_record   = tpl.color('red'),
+    pseudo_file    = tpl.color('green'),
+    pseudo_line    = tpl.color('yellow'),
+    page_insert    = tpl.color('blue'),
+    split_insert   = tpl.color('magenta'),
+    expr_stack     = tpl.color('cyan'),
+    nested_list    = tpl.color('red'),
+    span           = tpl.color('green'),
+    attribute      = tpl.color('yellow'),
+    glue_spec      = tpl.color('magenta'),
+    attribute_list = tpl.color('cyan'),
+    temp           = tpl.color('magenta'),
+    align_stack    = tpl.color('red', 'bright'),
+    movement_stack = tpl.color('green', 'bright'),
+    if_stack       = tpl.color('yellow', 'bright'),
+    unhyphenated   = tpl.color('magenta', 'bright'),
+    hyphenated     = tpl.color('cyan', 'bright'),
+    delta          = tpl.color('red'),
+    passive        = tpl.color('green'),
+    shape          = tpl.color('yellow'),
   }
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.type_color(id)
-  if not template.node_colors then
-    template.init_node_colors()
+function tpl.type_color(id)
+  if not tpl.node_colors then
+    tpl.init_node_colors()
   end
-  return template.node_colors[id]
+  return tpl.node_colors[id]
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function template.print(text)
+function tpl.print(text)
   print(text)
 end
 %    \end{macrocode}
@@ -872,14 +872,14 @@ function nodetree.format_field(head, field)
   elseif field == 'subtype' then
     out = nodex.subtype(head)
   elseif field == 'width' or field == 'height' or field == 'depth' or field == 'kern' then
-    out = template.length(head[field])
+    out = tpl.length(head[field])
   elseif field == 'char' then
-    out = template.char(head[field])
+    out = tpl.char(head[field])
   else
     out = tostring(head[field])
   end
 
-  return template.key_value(field, out)
+  return tpl.key_value(field, out)
 end
 %    \end{macrocode}
 %
@@ -901,10 +901,10 @@ function nodetree.analyze_node(head, level)
   local out = {}
   local connection_state
 
-  out = template.type(node.type(head.id), head.id)
+  out = tpl.type(node.type(head.id), head.id)
 
   if options.verbosity > 1 then
-    out = out .. template.key_value('no', nodex.node_id(head))
+    out = out .. tpl.key_value('no', nodex.node_id(head))
   end
 
   local tmp = {}
@@ -930,7 +930,7 @@ function nodetree.analyze_node(head, level)
   end
 
   nodetree.set_state(level, 'list', connection_state)
-  template.print(template.branches(level, 'list') .. out .. table.concat(tmp, ''))
+  tpl.print(tpl.branches(level, 'list') .. out .. table.concat(tmp, ''))
 
   local max = 0
   for _ in pairs(r) do
@@ -947,7 +947,7 @@ function nodetree.analyze_node(head, level)
     end
 
     nodetree.set_state(level, 'field', connection_state)
-    template.print(template.branches(level, 'field') .. template.key_value(field_name))
+    tpl.print(tpl.branches(level, 'field') .. tpl.key_value(field_name))
     nodetree.analyze_list(recursion_node, level + 1)
   end
 
@@ -965,8 +965,8 @@ end
 %
 %    \begin{macrocode}
 function nodetree.analyze(head)
-  template.print('\n')
-  template.print(base.get_callback() .. ':\n│')
+  tpl.print('\n')
+  tpl.print(base.get_callback() .. ':\n│')
   nodetree.analyze_list(head, 1)
   return head
 end
@@ -1018,21 +1018,21 @@ local callbacks = {}
 %
 %    \begin{macrocode}
 function callbacks.contribute_filter(extrainfo)
-  template.callback('contribute_filter', {extrainfo = extrainfo})
+  tpl.callback('contribute_filter', {extrainfo = extrainfo})
   return true
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.buildpage_filter(extrainfo)
-  template.callback('buildpage_filter', {extrainfo = extrainfo})
+  tpl.callback('buildpage_filter', {extrainfo = extrainfo})
   return true
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.pre_linebreak_filter(head, groupcode)
-  template.callback('pre_linebreak_filter', {groupcode = groupcode})
+  tpl.callback('pre_linebreak_filter', {groupcode = groupcode})
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1040,7 +1040,7 @@ end
 %
 %    \begin{macrocode}
 function callbacks.linebreak_filter(head, is_display)
-  template.callback('linebreak_filter', {is_display = is_display})
+  tpl.callback('linebreak_filter', {is_display = is_display})
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1054,7 +1054,7 @@ function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrore
     prevdepth = prevdepth,
     mirrored = mirrored,
   }
-  template.callback('append_to_vlist_filter', variables)
+  tpl.callback('append_to_vlist_filter', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1062,7 +1062,7 @@ end
 %
 %    \begin{macrocode}
 function callbacks.post_linebreak_filter(head, groupcode)
-  template.callback('post_linebreak_filter', {groupcode = groupcode})
+  tpl.callback('post_linebreak_filter', {groupcode = groupcode})
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1077,7 +1077,7 @@ function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attr
     direction = direction,
     attributelist = attributelist,
   }
-  template.callback('hpack_filter', variables)
+  tpl.callback('hpack_filter', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1093,7 +1093,7 @@ function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direc
     direction = direction,
     attributelist = attributelist,
   }
-  template.callback('vpack_filter', variables)
+  tpl.callback('vpack_filter', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1108,7 +1108,7 @@ function callbacks.hpack_qualtity(incident, detail, head, first, last)
     first = first,
     last = last,
   }
-  template.callback('hpack_qualtity', variables)
+  tpl.callback('hpack_qualtity', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1123,7 +1123,7 @@ function callbacks.vpack_qualtity(incident, detail, head, first, last)
     first = first,
     last = last,
   }
-  template.callback('vpack_qualtity', variables)
+  tpl.callback('vpack_qualtity', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1135,7 +1135,7 @@ function callbacks.process_rule(head, width, height)
     width = width,
     height = height,
   }
-  template.callback('process_rule', variables)
+  tpl.callback('process_rule', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1150,7 +1150,7 @@ function callbacks.pre_output_filter(head, groupcode, size, packtype, maxdepth, 
     maxdepth = maxdepth,
     direction = direction,
   }
-  template.callback('pre_output_filter', variables)
+  tpl.callback('pre_output_filter', variables)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -1158,37 +1158,37 @@ end
 %
 %    \begin{macrocode}
 function callbacks.hyphenate(head, tail)
-  template.callback('hyphenate')
-  template.print('head:')
+  tpl.callback('hyphenate')
+  tpl.print('head:')
   nodetree.analyze_list(head, 1)
-  template.print('tail:')
+  tpl.print('tail:')
   nodetree.analyze_list(tail, 1)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.ligaturing(head, tail)
-  template.callback('ligaturing')
-  template.print('head:')
+  tpl.callback('ligaturing')
+  tpl.print('head:')
   nodetree.analyze_list(head, 1)
-  template.print('tail:')
+  tpl.print('tail:')
   nodetree.analyze_list(tail, 1)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.kerning(head, tail)
-  template.callback('kerning')
-  template.print('head:')
+  tpl.callback('kerning')
+  tpl.print('head:')
   nodetree.analyze_list(head, 1)
-  template.print('tail:')
+  tpl.print('tail:')
   nodetree.analyze_list(tail, 1)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.insert_local_par(local_par, location)
-  template.callback('insert_local_par', {location = location})
+  tpl.callback('insert_local_par', {location = location})
   nodetree.analyze_list(local_par, 1)
   return true
 end
@@ -1201,7 +1201,7 @@ function callbacks.mlist_to_hlist(head, display_type, need_penalties)
     display_type = display_type,
     need_penalties = need_penalties,
   }
-  template.callback('mlist_to_hlist', variables)
+  tpl.callback('mlist_to_hlist', variables)
   nodetree.analyze_list(head, 1)
 end
 %    \end{macrocode}

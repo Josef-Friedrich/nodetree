@@ -964,15 +964,6 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function nodetree.analyze(head)
-  tpl.print('\n')
-  tpl.print(base.get_callback() .. ':\n│')
-  nodetree.analyze_list(head, 1)
-  return head
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
 function base.set_option(key, value)
   if not options then
     options = {}

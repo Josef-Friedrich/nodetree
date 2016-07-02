@@ -1060,27 +1060,6 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function base.set_option(key, value)
-  if not options then
-    options = {}
-  end
-  options[key] = value
-  base.normalize_options()
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function base.get_option(key)
-  if not options then
-    options = {}
-  end
-  if options[key] then
-    return options[key]
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
 local callbacks = {}
 %    \end{macrocode}
 %
@@ -1275,6 +1254,27 @@ end
 %    \end{macrocode}
 %
 % \subsubsection{base}
+%
+%    \begin{macrocode}
+function base.set_option(key, value)
+  if not options then
+    options = {}
+  end
+  options[key] = value
+  base.normalize_options()
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function base.get_option(key)
+  if not options then
+    options = {}
+  end
+  if options[key] then
+    return options[key]
+  end
+end
+%    \end{macrocode}
 %
 %    \begin{macrocode}
 function base.get_callback_name(alias)

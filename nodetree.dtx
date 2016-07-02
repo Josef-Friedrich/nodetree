@@ -241,6 +241,11 @@ post_linebreak_filter:
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+\DeclareStringOption[1]{decimalplaces}
+\define@key{NT}{decimalplaces}[]{\NT@set@option[decimal_places]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \ProcessKeyvalOptions*
 \directlua{
   nodetree.set_default_options()
@@ -587,8 +592,8 @@ end
 % \subsubsection{tpl}
 %
 %    \begin{macrocode}
-function tpl.round(number, decimal_places)
-  local mult = 10^(decimal_places or 0)
+function tpl.round(number)
+  local mult = 10^(options.decimal_places or 0)
   return math.floor(number * mult + 0.5) / mult
 end
 %    \end{macrocode}
@@ -687,8 +692,7 @@ end
 function tpl.length(input)
   input = tonumber(input)
   input = input / 2^16
-  input = math.floor((input * 10^2) + 0.5) / (10^2)
-  return string.format('%gpt', input)
+  return string.format('%gpt', tpl.round(input))
 end
 %    \end{macrocode}
 %
@@ -902,7 +906,7 @@ function nodetree.format_field(head, field)
   elseif field == 'char' then
     out = tpl.char(head[field])
   elseif field == 'glue_set' then
-    out = tpl.round(head[field], 2)
+    out = tpl.round(head[field])
   else
     out = tostring(head[field])
   end
@@ -1025,6 +1029,7 @@ function base.set_default_options()
     callback = 'postlinebreak',
     engine = 'luatex',
     color = 'colored',
+    decimal_places = 2,
   }
   if not options then
     options = {}
@@ -1035,6 +1040,7 @@ function base.set_default_options()
     end
   end
   options.verbosity = tonumber(options.verbosity)
+  options.decimal_places = tonumber(options.decimal_places)
 end
 %    \end{macrocode}
 %

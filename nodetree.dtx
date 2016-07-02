@@ -1260,7 +1260,6 @@ end
 %
 %    \begin{macrocode}
 function base.register(cb)
-  print(cb)
   if options.engine == 'lualatex' then
     luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree')
   else

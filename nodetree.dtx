@@ -1087,11 +1087,13 @@ function callbacks.insert_local_par(local_par, location)
 end
 %    \end{macrocode}
 %
+% TODO: Implement newhead as return value
 %    \begin{macrocode}
 function callbacks.mlist_to_hlist(head, display_type, need_penalties)
   template.print('mlist_to_hlist')
+  template.callback_variable('display_type', display_type)
+  template.callback_variable('need_penalties', need_penalties)
   nodetree.analyze_list(head, 1)
-  return true
 end
 %    \end{macrocode}
 %

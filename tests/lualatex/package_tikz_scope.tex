@@ -1,0 +1,21 @@
+%!TEX program = lualatex
+\documentclass[12pt]{article}
+\usepackage{tikz}
+\usepackage[callback=preout]{nodetree}
+
+\begin{document}
+
+\begin{tikzpicture}[ultra thick]
+	\begin{scope}[red]
+		\draw (0mm,10mm) -- (10mm,10mm);
+		\draw (0mm,8mm) -- (10mm,8mm);
+	\end{scope}
+	\draw (0mm,6mm) -- (10mm,6mm);
+	\begin{scope}[green]
+		\draw (0mm,4mm) -- (10mm,4mm);
+		\draw (0mm,2mm) -- (10mm,2mm);
+		\draw[blue] (0mm,0mm) -- (10mm,0mm);
+	\end{scope}
+\end{tikzpicture}
+
+\end{document}

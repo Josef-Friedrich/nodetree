@@ -995,6 +995,7 @@ function callbacks.linebreak_filter(head, is_display)
 end
 %    \end{macrocode}
 %
+% TODO: Fix return values, page output
 %    \begin{macrocode}
 function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrored)
   local variables = {
@@ -1026,6 +1027,7 @@ function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attr
     attributelist = attributelist,
   }
   template.callback('hpack_filter', variables)
+  nodetree.analyze_list(head, 1)
   return true
 end
 %    \end{macrocode}
@@ -1046,6 +1048,7 @@ function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direc
 end
 %    \end{macrocode}
 %
+% TODO: Fix registration
 %    \begin{macrocode}
 function callbacks.hpack_qualtity(incident, detail, head, first, last)
   local variables = {
@@ -1060,6 +1063,7 @@ function callbacks.hpack_qualtity(incident, detail, head, first, last)
 end
 %    \end{macrocode}
 %
+% TODO: Fix registration
 %    \begin{macrocode}
 function callbacks.vpack_qualtity(incident, detail, head, first, last)
   local variables = {
@@ -1104,7 +1108,9 @@ end
 %    \begin{macrocode}
 function callbacks.hyphenate(head, tail)
   template.callback('hyphenate')
+  template.print('head:')
   nodetree.analyze_list(head, 1)
+  template.print('tail:')
   nodetree.analyze_list(tail, 1)
 end
 %    \end{macrocode}
@@ -1112,7 +1118,9 @@ end
 %    \begin{macrocode}
 function callbacks.ligaturing(head, tail)
   template.callback('ligaturing')
+  template.print('head:')
   nodetree.analyze_list(head, 1)
+  template.print('tail:')
   nodetree.analyze_list(tail, 1)
 end
 %    \end{macrocode}
@@ -1120,7 +1128,9 @@ end
 %    \begin{macrocode}
 function callbacks.kerning(head, tail)
   template.callback('kerning')
+  template.print('head:')
   nodetree.analyze_list(head, 1)
+  template.print('tail:')
   nodetree.analyze_list(tail, 1)
 end
 %    \end{macrocode}
@@ -1172,10 +1182,10 @@ function base.get_callback_name(alias)
 
   elseif alias == 'vpack' or alias == 'vpackfilter' then
     return 'vpack_filter'
-
+  -- TODO: Fix: Unable to register callback
   elseif alias == 'hpackq' or alias == 'hpackquality' then
     return 'hpack_quality'
-
+  -- TODO: Fix: Unable to register callback
   elseif alias == 'vpackq' or alias == 'vpackquality' then
     return 'vpack_quality'
 

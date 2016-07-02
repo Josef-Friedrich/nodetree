@@ -292,7 +292,7 @@ local tpl = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-local nodetree = {}
+local tree = {}
 %    \end{macrocode}
 %
 % Nodes in Lua\TeX are connected. The nodetree view distinguishs betweens
@@ -305,7 +305,7 @@ local nodetree = {}
 %        |previous| fields, e. g. |head|, |pre|.
 % \end{itemize}
 %
-% The lua table named |nodetree| holds states values for the present nodetree
+% The lua table named |tree.state| holds states values for the present nodetree
 % item.
 % \begin{verbatim}
 %  nodetree:
@@ -317,7 +317,7 @@ local nodetree = {}
 %      - field: stop
 % \end{verbatim}
 %    \begin{macrocode}
-nodetree.state = {}
+tree.state = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -871,17 +871,17 @@ end
 function tpl.branches(level, connection_type)
   local out = ''
   for i = 1, level - 1  do
-    out = out .. tpl.branch('list', nodetree.state[i]['list'], false)
-    out = out .. tpl.branch('field', nodetree.state[i]['field'], false)
+    out = out .. tpl.branch('list', tree.state[i]['list'], false)
+    out = out .. tpl.branch('field', tree.state[i]['field'], false)
   end
 %    \end{macrocode}
 % Format the last branches
 %    \begin{macrocode}
   if connection_type == 'list' then
-    out = out .. tpl.branch('list', nodetree.state[level]['list'], true)
+    out = out .. tpl.branch('list', tree.state[level]['list'], true)
   else
-    out = out .. tpl.branch('list', nodetree.state[level]['list'], false)
-    out = out .. tpl.branch('field', nodetree.state[level]['field'], true)
+    out = out .. tpl.branch('list', tree.state[level]['list'], false)
+    out = out .. tpl.branch('field', tree.state[level]['field'], true)
   end
   return out
 end
@@ -893,10 +893,10 @@ function tpl.print(text)
 end
 %    \end{macrocode}
 %
-% \subsubsection{nodetree}
+% \subsubsection{|tree| - Build the node tree}
 %
 %    \begin{macrocode}
-function nodetree.format_field(head, field)
+function tree.format_field(head, field)
   local out = ''
 %    \end{macrocode}
 %
@@ -945,16 +945,16 @@ end
 % |connection_state| is a string, which can be either |continue| or
 % |stop|.
 %    \begin{macrocode}
-function nodetree.set_state(level, connection_type, connection_state)
-  if not nodetree.state[level] then
-    nodetree.state[level] = {}
+function tree.set_state(level, connection_type, connection_state)
+  if not tree.state[level] then
+    tree.state[level] = {}
   end
-  nodetree.state[level][connection_type] = connection_state
+  tree.state[level][connection_type] = connection_state
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function nodetree.analyze_node(head, level)
+function tree.analyze_node(head, level)
   local connection_state
   local out = tpl.type(node.type(head.id), head.id)
 %    \end{macrocode}
@@ -979,7 +979,7 @@ function nodetree.analyze_node(head, level)
       node.is_node(head[field_name]) then
       r[field_name] = head[field_name]
     else
-      tmp[#tmp + 1] = nodetree.format_field(head, field_name)
+      tmp[#tmp + 1] = tree.format_field(head, field_name)
     end
   end
 %    \end{macrocode}
@@ -990,7 +990,7 @@ function nodetree.analyze_node(head, level)
   else
     connection_state = 'stop'
   end
-  nodetree.set_state(level, 'list', connection_state)
+  tree.set_state(level, 'list', connection_state)
   tpl.print(tpl.branches(level, 'list') .. out .. table.concat(tmp, ''))
 %    \end{macrocode}
 %
@@ -1007,26 +1007,26 @@ function nodetree.analyze_node(head, level)
     else
       connection_state = 'continue'
     end
-    nodetree.set_state(level, 'field', connection_state)
+    tree.set_state(level, 'field', connection_state)
     tpl.print(tpl.branches(level, 'field') .. tpl.key_value(field_name))
-    nodetree.analyze_list(recursion_node, level + 1)
+    tree.analyze_list(recursion_node, level + 1)
   end
 
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function nodetree.analyze_list(head, level)
+function tree.analyze_list(head, level)
   while head do
-    nodetree.analyze_node(head, level)
+    tree.analyze_node(head, level)
     head = head.next
   end
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function nodetree.analyze_callback(head)
-  nodetree.analyze_list(head, 1)
+function tree.analyze_callback(head)
+  tree.analyze_list(head, 1)
   tpl.print(tpl.line('short') .. '\n')
 end
 %    \end{macrocode}
@@ -1080,7 +1080,7 @@ end
 %    \begin{macrocode}
 function callbacks.pre_linebreak_filter(head, groupcode)
   tpl.callback('pre_linebreak_filter', {groupcode = groupcode})
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1088,7 +1088,7 @@ end
 %    \begin{macrocode}
 function callbacks.linebreak_filter(head, is_display)
   tpl.callback('linebreak_filter', {is_display = is_display})
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1102,7 +1102,7 @@ function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrore
     mirrored = mirrored,
   }
   tpl.callback('append_to_vlist_filter', variables)
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1110,7 +1110,7 @@ end
 %    \begin{macrocode}
 function callbacks.post_linebreak_filter(head, groupcode)
   tpl.callback('post_linebreak_filter', {groupcode = groupcode})
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1125,7 +1125,7 @@ function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attr
     attributelist = attributelist,
   }
   tpl.callback('hpack_filter', variables)
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1141,7 +1141,7 @@ function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direc
     attributelist = attributelist,
   }
   tpl.callback('vpack_filter', variables)
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1156,7 +1156,7 @@ function callbacks.hpack_qualtity(incident, detail, head, first, last)
     last = last,
   }
   tpl.callback('hpack_qualtity', variables)
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1171,7 +1171,7 @@ function callbacks.vpack_qualtity(incident, detail, head, first, last)
     last = last,
   }
   tpl.callback('vpack_qualtity', variables)
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1183,7 +1183,7 @@ function callbacks.process_rule(head, width, height)
     height = height,
   }
   tpl.callback('process_rule', variables)
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1198,7 +1198,7 @@ function callbacks.pre_output_filter(head, groupcode, size, packtype, maxdepth, 
     direction = direction,
   }
   tpl.callback('pre_output_filter', variables)
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1207,9 +1207,9 @@ end
 function callbacks.hyphenate(head, tail)
   tpl.callback('hyphenate')
   tpl.print('head:')
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   tpl.print('tail:')
-  nodetree.analyze_callback(tail)
+  tree.analyze_callback(tail)
 end
 %    \end{macrocode}
 %
@@ -1217,9 +1217,9 @@ end
 function callbacks.ligaturing(head, tail)
   tpl.callback('ligaturing')
   tpl.print('head:')
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   tpl.print('tail:')
-  nodetree.analyze_callback(tail)
+  tree.analyze_callback(tail)
 end
 %    \end{macrocode}
 %
@@ -1227,16 +1227,16 @@ end
 function callbacks.kerning(head, tail)
   tpl.callback('kerning')
   tpl.print('head:')
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
   tpl.print('tail:')
-  nodetree.analyze_callback(tail)
+  tree.analyze_callback(tail)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.insert_local_par(local_par, location)
   tpl.callback('insert_local_par', {location = location})
-  nodetree.analyze_callback(local_par)
+  tree.analyze_callback(local_par)
   return true
 end
 %    \end{macrocode}
@@ -1249,7 +1249,7 @@ function callbacks.mlist_to_hlist(head, display_type, need_penalties)
     need_penalties = need_penalties,
   }
   tpl.callback('mlist_to_hlist', variables)
-  nodetree.analyze_callback(head)
+  tree.analyze_callback(head)
 end
 %    \end{macrocode}
 %
@@ -1418,7 +1418,7 @@ end
 %
 %    \begin{macrocode}
 function base.analyze(head)
-  nodetree.analyze_list(head, 1)
+  tree.analyze_list(head, 1)
 end
 %    \end{macrocode}
 %

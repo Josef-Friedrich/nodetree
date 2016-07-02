@@ -947,25 +947,53 @@ function base.set_default_options()
   options.verbosity = tonumber(options.verbosity)
 end
 %    \end{macrocode}
-
+%
 %    \begin{macrocode}
 local callbacks = {}
-function callbacks.post_linebreak_filter(head, groupcode)
-  template.print('post_linebreak_filter')
-  template.callback_variable('groupcode', groupcode)
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.contribute_filter(extrainfo)
+  template.print('contribute_filter')
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.buildpage_filter(extrainfo)
+  template.print('buildpage_filter')
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.pre_linebreak_filter(head, groupcode)
+  template.print('pre_linebreak_filter')
   nodetree.analyze_list(head, 1)
   return true
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function callbacks.vpack_filter(head, groupcode, size, packtype, direction, attributelist)
-  template.print('vpack_filter')
+function callbacks.linebreak_filter(head, is_display)
+  template.print('linebreak_filter')
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrored)
+  template.print('append_to_vlist_filter')
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.post_linebreak_filter(head, groupcode)
+  template.print('post_linebreak_filter')
   template.callback_variable('groupcode', groupcode)
-  template.callback_variable('size', size)
-  template.callback_variable('packtype', packtype)
-  template.callback_variable('direction', direction)
-  template.callback_variable('attributelist', attributelist)
   nodetree.analyze_list(head, 1)
   return true
 end
@@ -983,7 +1011,90 @@ function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attr
   return true
 end
 %    \end{macrocode}
-
+%
+%    \begin{macrocode}
+function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direction, attributelist)
+  template.print('vpack_filter')
+  template.callback_variable('groupcode', groupcode)
+  template.callback_variable('size', size)
+  template.callback_variable('packtype', packtype)
+  template.callback_variable('maxdepth', maxdepth)
+  template.callback_variable('direction', direction)
+  template.callback_variable('attributelist', attributelist)
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.hpack_qualtity(incident, detail, head, first, last)
+  template.print('hpack_qualtity')
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.vpack_qualtity(incident, detail, head, first, last)
+  template.print('vpack_qualtity')
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.process_rule(head, width, height)
+  template.print('process_rule')
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.pre_output_filter(head, groupcode, size, packtype, maxdepth, direction)
+  template.print('pre_output_filter')
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.hyphenate(head, tail)
+  template.print('hyphenate')
+  nodetree.analyze_list(head, 1)
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.ligaturing(head, tail)
+  template.print('ligaturing')
+  nodetree.analyze_list(head, 1)
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.kerning(head, tail)
+  template.print('kerning')
+  nodetree.analyze_list(head, 1)
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.insert_local_par(local_par, location)
+  template.print('insert_local_par')
+  nodetree.analyze_list(local_par, 1)
+  return true
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function callbacks.mlist_to_hlist(head, display_type, need_penalties)
+  template.print('mlist_to_hlist')
+  nodetree.analyze_list(head, 1)
+  return true
+end
+%    \end{macrocode}
+%
 % \subsubsection{base}
 %
 %    \begin{macrocode}

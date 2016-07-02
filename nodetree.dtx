@@ -32,7 +32,7 @@
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage{hyperref,paralist,fontspec}
+\usepackage{hyperref,paralist,fontspec,graphicx}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -52,6 +52,9 @@
 \date{\fileversion~from \filedate}
 
 \maketitle
+
+\noindent
+\includegraphics[width=\linewidth]{graphics/nodetree}
 
 \tableofcontents
 
@@ -102,6 +105,9 @@ U+2560 & |╠| & BOX DRAWINGS DOUBLE VERTICAL AND RIGHT \\
 ║ ╚═field2
 ╚═field3
 \end{verbatim}
+
+\noindent
+\includegraphics[width=\linewidth]{graphics/mhlist}
 
   \DocInput{nodetree.dtx}
   \pagebreak

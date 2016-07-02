@@ -712,6 +712,17 @@ function tpl.callback_variable(variable_name, variable)
   end
 end
 %    \end{macrocode}
+%
+%    \begin{macrocode}
+function tpl.line(length)
+  if length == 'long' then
+    return '------------------------------------------'
+  else
+    return '-----------------------'
+  end
+end
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 function tpl.callback(callback_name, variables)
   tpl.print('\n\n')
@@ -725,9 +736,10 @@ function tpl.callback(callback_name, variables)
       end
     end
   end
-  tpl.print('-----------------------')
+  tpl.print(tpl.line('long'))
 end
 %    \end{macrocode}
+%
 %    \begin{macrocode}
 function tpl.type_id(id)
   return '[' .. tostring(id) .. ']'
@@ -964,6 +976,13 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function nodetree.analyze_callback(head)
+  nodetree.analyze_list(head, 1)
+  tpl.print(tpl.line('short') .. '\n')
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function base.set_option(key, value)
   if not options then
     options = {}
@@ -1024,7 +1043,7 @@ end
 %    \begin{macrocode}
 function callbacks.pre_linebreak_filter(head, groupcode)
   tpl.callback('pre_linebreak_filter', {groupcode = groupcode})
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1032,7 +1051,7 @@ end
 %    \begin{macrocode}
 function callbacks.linebreak_filter(head, is_display)
   tpl.callback('linebreak_filter', {is_display = is_display})
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1046,7 +1065,7 @@ function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrore
     mirrored = mirrored,
   }
   tpl.callback('append_to_vlist_filter', variables)
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1054,7 +1073,7 @@ end
 %    \begin{macrocode}
 function callbacks.post_linebreak_filter(head, groupcode)
   tpl.callback('post_linebreak_filter', {groupcode = groupcode})
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1069,7 +1088,7 @@ function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attr
     attributelist = attributelist,
   }
   tpl.callback('hpack_filter', variables)
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1085,7 +1104,7 @@ function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direc
     attributelist = attributelist,
   }
   tpl.callback('vpack_filter', variables)
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1100,7 +1119,7 @@ function callbacks.hpack_qualtity(incident, detail, head, first, last)
     last = last,
   }
   tpl.callback('hpack_qualtity', variables)
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1115,7 +1134,7 @@ function callbacks.vpack_qualtity(incident, detail, head, first, last)
     last = last,
   }
   tpl.callback('vpack_qualtity', variables)
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1127,7 +1146,7 @@ function callbacks.process_rule(head, width, height)
     height = height,
   }
   tpl.callback('process_rule', variables)
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1142,7 +1161,7 @@ function callbacks.pre_output_filter(head, groupcode, size, packtype, maxdepth, 
     direction = direction,
   }
   tpl.callback('pre_output_filter', variables)
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   return true
 end
 %    \end{macrocode}
@@ -1151,9 +1170,9 @@ end
 function callbacks.hyphenate(head, tail)
   tpl.callback('hyphenate')
   tpl.print('head:')
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   tpl.print('tail:')
-  nodetree.analyze_list(tail, 1)
+  nodetree.analyze_callback(tail)
 end
 %    \end{macrocode}
 %
@@ -1161,9 +1180,9 @@ end
 function callbacks.ligaturing(head, tail)
   tpl.callback('ligaturing')
   tpl.print('head:')
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   tpl.print('tail:')
-  nodetree.analyze_list(tail, 1)
+  nodetree.analyze_callback(tail)
 end
 %    \end{macrocode}
 %
@@ -1171,16 +1190,16 @@ end
 function callbacks.kerning(head, tail)
   tpl.callback('kerning')
   tpl.print('head:')
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
   tpl.print('tail:')
-  nodetree.analyze_list(tail, 1)
+  nodetree.analyze_callback(tail)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function callbacks.insert_local_par(local_par, location)
   tpl.callback('insert_local_par', {location = location})
-  nodetree.analyze_list(local_par, 1)
+  nodetree.analyze_callback(local_par)
   return true
 end
 %    \end{macrocode}
@@ -1193,7 +1212,7 @@ function callbacks.mlist_to_hlist(head, display_type, need_penalties)
     need_penalties = need_penalties,
   }
   tpl.callback('mlist_to_hlist', variables)
-  nodetree.analyze_list(head, 1)
+  nodetree.analyze_callback(head)
 end
 %    \end{macrocode}
 %

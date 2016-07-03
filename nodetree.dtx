@@ -240,11 +240,22 @@ post_linebreak_filter:
   nodetree = require('nodetree')
   nodetree.set_option('engine', 'luatex')
   nodetree.set_default_options()
-  nodetree.register_callbacks()
 }
 \def\nodetreeoption[#1]#2{
   \directlua{
     nodetree.set_option('#1', '#2')
+  }
+}
+\def\nodetreeregister#1{
+  \directlua{
+    nodetree.set_option('callback', '#1')
+    nodetree.register_callbacks()
+  }
+}
+\def\nodetreeunregister#1{
+  \directlua{
+    nodetree.set_option('callback', '#1')
+    nodetree.unregister_callbacks()
   }
 }
 %    \end{macrocode}
@@ -260,16 +271,12 @@ post_linebreak_filter:
 % \subsection{The file \tt{nodetree.sty}}
 %
 %    \begin{macrocode}
+\input{nodetree.tex}
 \directlua{
-  nodetree = require('nodetree')
   nodetree.set_option('engine', 'lualatex')
 }
-\def\nodetreeoption[#1]#2{
-  \directlua{
-    nodetree.set_option('#1', '#2')
-  }
-}
 %    \end{macrocode}
+%
 %    \begin{macrocode}
 \RequirePackage{kvoptions}
 %    \end{macrocode}

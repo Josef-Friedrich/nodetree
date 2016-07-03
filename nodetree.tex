@@ -24,11 +24,22 @@
   nodetree = require('nodetree')
   nodetree.set_option('engine', 'luatex')
   nodetree.set_default_options()
-  nodetree.register_callbacks()
 }
 \def\nodetreeoption[#1]#2{
   \directlua{
     nodetree.set_option('#1', '#2')
+  }
+}
+\def\nodetreeregister#1{
+  \directlua{
+    nodetree.set_option('callback', '#1')
+    nodetree.register_callbacks()
+  }
+}
+\def\nodetreeunregister#1{
+  \directlua{
+    nodetree.set_option('callback', '#1')
+    nodetree.unregister_callbacks()
   }
 }
 \endinput

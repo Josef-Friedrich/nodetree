@@ -1023,53 +1023,14 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tree.analyze_node(head, level)
-  local connection_state
-  local out = tpl.type(node.type(head.id), head.id)
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-  if options.verbosity > 1 then
-    out = out .. tpl.key_value('no', nodex.node_id(head))
-  end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-  local tmp = {}
-  local r = {} -- recurison
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-  fields = node.fields(head.id, head.subtype)
-  for field_id, field_name in pairs(fields) do
-    if field_name ~= 'next' and
-      field_name ~= 'prev' and
-      field_name ~= 'attr' and
-      node.is_node(head[field_name]) then
-      r[field_name] = head[field_name]
-    else
-      tmp[#tmp + 1] = tree.format_field(head, field_name)
-    end
-  end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-  if head.next then
-    connection_state = 'continue'
-  else
-    connection_state = 'stop'
-  end
-  tree.set_state(level, 'list', connection_state)
-  tpl.print(tpl.branches(level, 'list') .. out .. table.concat(tmp, ''))
-%    \end{macrocode}
-%
-%    \begin{macrocode}
+function tree.analyze_fields(fields, level)
   local max = 0
-  for _ in pairs(r) do
+  local connection_state = ''
+  for _ in pairs(fields) do
     max = max + 1
   end
   local count = 0
-  for field_name, recursion_node in pairs(r) do
+  for field_name, recursion_node in pairs(fields) do
     count = count + 1
     if count == max then
       connection_state = 'stop'
@@ -1080,7 +1041,43 @@ function tree.analyze_node(head, level)
     tpl.print(tpl.branches(level, 'field') .. tpl.key_value(field_name))
     tree.analyze_list(recursion_node, level + 1)
   end
-
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function tree.analyze_node(head, level)
+  local connection_state
+  local out = ''
+  if head.next then
+    connection_state = 'continue'
+  else
+    connection_state = 'stop'
+  end
+  tree.set_state(level, 'list', connection_state)
+  out = tpl.branches(level, 'list')
+    .. tpl.type(node.type(head.id), head.id)
+  if options.verbosity > 1 then
+    out = out .. tpl.key_value('no', nodex.node_id(head))
+  end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+  local fields = {}
+  for field_id, field_name in pairs(node.fields(head.id, head.subtype)) do
+    if field_name ~= 'next' and
+      field_name ~= 'prev' and
+      field_name ~= 'attr' and
+      node.is_node(head[field_name]) then
+      fields[field_name] = head[field_name]
+    else
+      out = out .. tree.format_field(head, field_name)
+    end
+  end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+  tpl.print(out)
+  tree.analyze_fields(fields, level)
 end
 %    \end{macrocode}
 %

@@ -37,7 +37,6 @@
 \CodelineIndex
 \RecordChanges
 
-\setmainfont{DejaVu Serif}
 \setmonofont{DejaVu Sans Mono}
 
 \def\nodetreelua#1{\texttt{\scantokens{\catcode`\_=12\relax#1}}}
@@ -74,7 +73,27 @@ similar to the UNIX |tree| command. The package |nodetree| doesn‘t
 change the rendered document. The tree view can only be seen when using
 a terminal to generate the document.
 
-\section{Callbacks}
+\section{Usage}
+
+\subsection{Debug node lists on the Lua side}
+
+\begin{verbatim}
+\input{nodetree.tex}
+
+\directlua{
+
+local test = function (head)
+  nodetree.analyze(head)
+end
+
+callback.register('post_linebreak_filter', test)}
+
+Lorem ipsum dolor.
+
+\bye
+\end{verbatim}
+
+\subsection{Option \texttt{callback}}
 
 \newcommand{\nodetreecallback}[3]{
   \nodetreelua{#1} & \nodetreelua{#2} & \nodetreelua{#3} \\
@@ -1487,6 +1506,7 @@ end
 %
 %    \begin{macrocode}
 function base.analyze(head)
+  tpl.print('\n')
   tree.analyze_list(head, 1)
 end
 %    \end{macrocode}

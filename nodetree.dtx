@@ -241,17 +241,31 @@ post_linebreak_filter:
   nodetree.set_option('engine', 'luatex')
   nodetree.set_default_options()
 }
+%    \end{macrocode}
+%
+% \begin{macro}{\nodetreeoption}
+%    \begin{macrocode}
 \def\nodetreeoption[#1]#2{
   \directlua{
     nodetree.set_option('#1', '#2')
   }
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\nodetreeregister}
+%    \begin{macrocode}
 \def\nodetreeregister#1{
   \directlua{
     nodetree.set_option('callback', '#1')
     nodetree.register_callbacks()
   }
 }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\nodetreeunregister}
+%    \begin{macrocode}
 \def\nodetreeunregister#1{
   \directlua{
     nodetree.set_option('callback', '#1')
@@ -259,6 +273,7 @@ post_linebreak_filter:
   }
 }
 %    \end{macrocode}
+% \end{macro}
 %
 % \iffalse
 %</tex>
@@ -316,9 +331,11 @@ post_linebreak_filter:
 }
 %    \end{macrocode}
 %
+% \begin{macro}{\nodetreeset}
 %    \begin{macrocode}
 \newcommand{\nodetreeset}[1]{\setkeys{nodetree}{#1}}
 %    \end{macrocode}
+% \end{macro}
 %
 % \iffalse
 %</package>

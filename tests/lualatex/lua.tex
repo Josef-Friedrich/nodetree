@@ -1,0 +1,17 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{nodetree}
+
+\begin{document}
+
+\directlua{
+
+local test = function (head)
+  nodetree.analyze(head)
+end
+
+luatexbase.add_to_callback('post_linebreak_filter', test, 'test')
+}
+
+Lorem ipsum dolor.
+\end{document}

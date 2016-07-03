@@ -77,20 +77,39 @@ a terminal to generate the document.
 
 \subsection{Debug node lists on the Lua side}
 
+\subsubsection{\TeX}
+
 \begin{verbatim}
 \input{nodetree.tex}
 
 \directlua{
-
-local test = function (head)
-  nodetree.analyze(head)
-end
-
-callback.register('post_linebreak_filter', test)}
+  local test = function (head)
+    nodetree.analyze(head)
+  end
+  callback.register('post_linebreak_filter', test)
+}
 
 Lorem ipsum dolor.
-
 \bye
+\end{verbatim}
+
+\subsubsection{\LaTeX}
+
+\begin{verbatim}
+\documentclass{article}
+\usepackage{nodetree}
+
+\begin{document}
+
+\directlua{
+  local test = function (head)
+    nodetree.analyze(head)
+  end
+  luatexbase.add_to_callback('post_linebreak_filter', test, 'test')
+}
+
+Lorem ipsum dolor.
+\end{document}
 \end{verbatim}
 
 \subsection{Option \texttt{callback}}

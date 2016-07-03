@@ -76,6 +76,34 @@ similar to the UNIX |tree| command. The package |nodetree| doesn‘t
 change the rendered document. The tree view can only be seen when using
 a terminal to generate the document.
 
+\section{Callbacks}
+
+\newcommand{\tmpcallback}[3]{
+  \lua{#1} & \lua{#2} & \lua{#3} \\
+}
+
+\noindent
+\begin{tabular}{lll}
+\textbf{Alias 1} & \textbf{Alias 2} & \textbf{Callback} \\
+\tmpcallback{contribute}{contributefilter}{contribute_filter}
+\tmpcallback{buildpage}{buildpagefilter}{buildpage_filter}
+\tmpcallback{preline}{prelinebreakfilter}{pre_linebreak_filter}
+\tmpcallback{line}{linebreakfilter}{linebreak_filter}
+\tmpcallback{append}{appendtovlistfilter}{append_to_vlist_filter}
+\tmpcallback{postline}{postlinebreakfilter}{post_linebreak_filter}
+\tmpcallback{hpack}{hpackfilter}{hpack_filter}
+\tmpcallback{vpack}{vpackfilter}{vpack_filter}
+\tmpcallback{hpackq}{hpackquality}{hpack_quality}
+\tmpcallback{vpackq}{vpackquality}{vpack_quality}
+\tmpcallback{process}{processrule}{process_rule}
+\tmpcallback{preout}{preoutputfilter}{pre_output_filter}
+\tmpcallback{hyph}{hyphenate}{hyphenate}
+\tmpcallback{liga}{ligaturing}{ligaturing}
+\tmpcallback{kern}{kerning}{kerning}
+\tmpcallback{insert}{insertlocalpar}{insert_local_par}
+\tmpcallback{mhlist}{mlisttohlist}{mlist_to_hlist}
+\end{tabular}
+
 \section{Unicode characters to show the tree view}
 
 \renewcommand{\arraystretch}{1.5}

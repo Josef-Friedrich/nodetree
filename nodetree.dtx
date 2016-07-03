@@ -976,7 +976,12 @@ function tree.format_field(head, field)
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-  if options.verbosity < 2 and field == 'prev' or field == 'next' or field == 'id' or field == 'attr' then
+  if options.verbosity < 2 and
+    field == 'prev' or
+    field == 'next' or
+    field == 'id'
+    or field == 'attr'
+  then
     return ''
   end
 %    \end{macrocode}

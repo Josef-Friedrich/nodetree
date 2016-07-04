@@ -138,14 +138,55 @@ Lorem ipsum dolor.
 \end{document}
 \end{verbatim}
 
-\section{Options}
-\DescribeMacro{\nodetreeoption}
-\DescribeMacro{\nodetreeset}
+%-----------------------------------------------------------------------
+%
+%-----------------------------------------------------------------------
 
-\subsection{Option \texttt{callback}}
+\section{Macros}
+
+%%
+% \nodetreeregister
+%%
+
+\subsection{\cmd{\nodetreeregister}}
 
 \DescribeMacro{\nodetreeregister}
+\cmd{\nodetreeregister}\marg{callbacks}:
+
+%%
+% \nodetreeunregister
+%%
+
+\subsection{\cmd{\nodetreeunregister}}
+
 \DescribeMacro{\nodetreeunregister}
+\cmd{\nodetreeunregister}\marg{callbacks}:
+
+%%
+% \nodetreeoption
+%%
+
+\subsection{\cmd{\nodetreeoption}}
+
+\DescribeMacro{\nodetreeoption}
+\cmd{\nodetreeoption}\oarg{option}\marg{value}:
+
+%%
+% \nodetreeset
+%%
+
+\subsection{\cmd{\nodetreeset}}
+
+\DescribeMacro{\nodetreeset}
+\cmd{\nodetreeset}\marg{kv-options}:
+
+%-----------------------------------------------------------------------
+%
+%-----------------------------------------------------------------------
+
+\section{Options}
+
+\subsection{Option \texttt{callback}}
 
 \newcommand{\nodetreecallback}[3]{
   \nodetreelua{#1} & \nodetreelua{#2} & \nodetreelua{#3} \\

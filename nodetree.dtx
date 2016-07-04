@@ -32,7 +32,13 @@
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage{hyperref,paralist,fontspec,graphicx}
+\usepackage{paralist,fontspec,graphicx}
+\usepackage[
+  colorlinks=true,
+  linkcolor=red,
+  filecolor=red,
+  urlcolor=red,
+]{hyperref}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -40,6 +46,8 @@
 \setmonofont{DejaVu Sans Mono}
 
 \def\nodetreelua#1{\texttt{\scantokens{\catcode`\_=12\relax#1}}}
+
+\def\secref#1{(\rightarrow\ \ref{#1})}
 
 \begin{document}
 
@@ -151,7 +159,9 @@ Lorem ipsum dolor.
 \subsection{\cmd{\nodetreeregister}}
 
 \DescribeMacro{\nodetreeregister}
-\cmd{\nodetreeregister}\marg{callbacks}:
+\cmd{\nodetreeregister}\marg{callbacks}: The argument \marg{callbacks}
+takes a comma separated list of callback aliases as described in
+\secref{sec:option-callback}.
 
 %%
 % \nodetreeunregister
@@ -160,7 +170,9 @@ Lorem ipsum dolor.
 \subsection{\cmd{\nodetreeunregister}}
 
 \DescribeMacro{\nodetreeunregister}
-\cmd{\nodetreeunregister}\marg{callbacks}:
+\cmd{\nodetreeunregister}\marg{callbacks}: The argument \marg{callbacks}
+takes a comma separated list of callback aliases as described in
+\secref{sec:option-callback}.
 
 %%
 % \nodetreeoption
@@ -169,7 +181,7 @@ Lorem ipsum dolor.
 \subsection{\cmd{\nodetreeoption}}
 
 \DescribeMacro{\nodetreeoption}
-\cmd{\nodetreeoption}\oarg{option}\marg{value}:
+\cmd{\nodetreeoption}\oarg{option}\marg{value}: \secref{sec:options}
 
 %%
 % \nodetreeset
@@ -185,8 +197,10 @@ Lorem ipsum dolor.
 %-----------------------------------------------------------------------
 
 \section{Options}
+\label{sec:options}
 
 \subsection{Option \texttt{callback}}
+\label{sec:option-callback}
 
 \newcommand{\nodetreecallback}[3]{
   \nodetreelua{#1} & \nodetreelua{#2} & \nodetreelua{#3} \\

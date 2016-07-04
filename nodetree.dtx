@@ -955,9 +955,9 @@ function tpl.branch(connection_type, connection_state, last)
   local s = connection_state
   local l = last
   if c == 'list' and s == 'stop' and l == false then
-    return ' '
+    return '  '
   elseif c == 'field' and s == 'stop' and l == false then
-    return ' '
+    return '  '
   elseif c == 'list' and s == 'continue' and l == false then
     return '│ '
   elseif c == 'field' and s == 'continue' and l == false then

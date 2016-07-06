@@ -202,9 +202,22 @@ takes a comma separated list of callback aliases as described in
 \subsection{Option \texttt{callback}}
 \label{sec:option-callback}
 
+The option |callback| is the most important setting of the package. You
+have to specify one alias to select the |callback|. Because of the
+underscores the callback name contains it can not set by its technical
+name (\rightarrow{} Figure \ref{fig:callback}).
+
+This macros process callback options:
+\cmd{\nodetreeregister}\marg{callbacks},
+\cmd{\nodetreeunregister}\marg{callbacks},
+\cmd{\nodetreeset}\marg{callback=<callbacks>} and
+\cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}.
+
 \newcommand{\nodetreecallback}[3]{
   \nodetreelua{#1} & \nodetreelua{#2} & \nodetreelua{#3} \\
 }
+
+\begin{figure}
 
 \noindent
 \begin{tabular}{lll}
@@ -227,6 +240,10 @@ takes a comma separated list of callback aliases as described in
 \nodetreecallback{insert}{insertlocalpar}{insert_local_par}
 \nodetreecallback{mhlist}{mlisttohlist}{mlist_to_hlist}
 \end{tabular}
+
+\caption{The callback aliases}
+\label{fig:callback}
+\end{figure}
 
 \subsection{Option \texttt{verbosity}}
 

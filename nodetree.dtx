@@ -32,7 +32,7 @@
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage{paralist,fontspec,graphicx}
+\usepackage{paralist,fontspec,graphicx,fancyvrb}
 \usepackage[
   colorlinks=true,
   linkcolor=red,
@@ -48,6 +48,14 @@
 \def\nodetreelua#1{\texttt{\scantokens{\catcode`\_=12\relax#1}}}
 
 \def\secref#1{(\rightarrow\ \ref{#1})}
+
+\DefineVerbatimEnvironment{code}{Verbatim}
+{
+  frame=single,
+  fontsize=\footnotesize,
+  numbers=left,
+  numbersep=2mm,
+}
 
 \begin{document}
 
@@ -87,24 +95,24 @@ The package |nodetree| can be used both with Lua\TeX and Lua\LaTeX. You
 have to use both engines in a text console. Run |luatex luatex-test.tex|
 for example to list the nodes using Lua\TeX.
 
-\begin{verbatim}
+\begin{code}
 \input{nodetree.tex}
 \nodetreeregister{linefilter}
 
 Lorem ipsum dolor.
 \bye
-\end{verbatim}
+\end{code}
 
 Or run |lualatex lualatex-test.tex| to show a node tree using Lua\LaTeX.
 
-\begin{verbatim}
+\begin{code}
 \documentclass{article}
 \usepackage[callback=linefilter]{nodetree}
 
 \begin{document}
 Lorem ipsum dolor.
 \end{document}
-\end{verbatim}
+\end{code}
 
 \subsection{Debug nodes inside Lua code}
 
@@ -112,7 +120,7 @@ Use the Lua function |nodetree.analyze(head)| to debug nodes inside your
 Lua code. The following code snippet demonstrates the usage in Lua\TeX.
 |head| is the current node.
 
-\begin{verbatim}
+\begin{code}
 \input{nodetree.tex}
 
 \directlua{
@@ -124,12 +132,12 @@ Lua code. The following code snippet demonstrates the usage in Lua\TeX.
 
 Lorem ipsum dolor.
 \bye
-\end{verbatim}
+\end{code}
 
 This example illustrates how the function has to be applied in
 Lua\LaTeX.
 
-\begin{verbatim}
+\begin{code}
 \documentclass{article}
 \usepackage{nodetree}
 
@@ -144,7 +152,7 @@ Lua\LaTeX.
 
 Lorem ipsum dolor.
 \end{document}
-\end{verbatim}
+\end{code}
 
 %-----------------------------------------------------------------------
 %
@@ -212,6 +220,29 @@ This macros process callback options:
 \cmd{\nodetreeunregister}\marg{callbacks},
 \cmd{\nodetreeset}\marg{callback=<callbacks>} and
 \cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}.
+
+Use commas to specify mulitple callbacks. Avoid using whitespaces:
+
+\begin{code}
+\nodetreeregister{preline,line,postline}
+\end{code}
+
+Wrap your callback aliases in curly braces for the macro |\nodetreeset|:
+
+\begin{code}
+\nodetreeset{callback={preline,line,postline}}
+\end{code}
+
+The same applies for the macro |\usepackage|:
+
+\begin{code}
+\usepackage{callback={preline,line,postline}}
+\end{code}
+
+%%
+%
+%%
+
 
 \newcommand{\nodetreecallback}[3]{
   \nodetreelua{#1} & \nodetreelua{#2} & \nodetreelua{#3} \\
@@ -288,21 +319,21 @@ U+2560 & |╠| & BOX DRAWINGS DOUBLE VERTICAL AND RIGHT \\
 
 For |list| connections \emph{light} characters are shown.
 
-\begin{verbatim}
+\begin{code}
 │ │
 │ ├─list1
 │ └─list2
 └─list3
-\end{verbatim}
+\end{code}
 
 |field| connections are visialized by \emph{Double} characters.
 
-\begin{verbatim}
+\begin{code}
 ║ ║
 ║ ╠═field1
 ║ ╚═field2
 ╚═field3
-\end{verbatim}
+\end{code}
 
 
 \section{Example tree views}
@@ -539,7 +570,7 @@ local tree = {}
 % The lua table named |tree.state| holds state values for the current
 % tree item.
 %
-% \begin{verbatim}
+% \begin{code}
 %  tree.state:
 %    - 1:
 %      - list: continue
@@ -547,7 +578,7 @@ local tree = {}
 %    - 2:
 %      - list: continue
 %      - field: stop
-% \end{verbatim}
+% \end{code}
 %    \begin{macrocode}
 tree.state = {}
 %    \end{macrocode}
@@ -567,9 +598,9 @@ local options = {}
 % \subsubsection{nodex --- Extend the node library}
 %
 % Get the node id form, e. g.:
-% \begin{verbatim}
+% \begin{code}
 % <node    nil <    172 >    nil : hlist 2>
-% \end{verbatim}
+% \end{code}
 %    \begin{macrocode}
 function nodex.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
@@ -929,7 +960,7 @@ function tpl.color_code(code)
 end
 %    \end{macrocode}
 %
-% \begin{verbatim}
+% \begin{code}
 % local colors = {
 %     -- attributes
 %     reset = 0,
@@ -961,7 +992,7 @@ end
 %     oncyan = 46,
 %     onwhite = 47,
 % }
-% \end{verbatim}
+% \end{code}
 %    \begin{macrocode}
 function tpl.color(color, mode, background)
   if options.color ~= 'colored' then

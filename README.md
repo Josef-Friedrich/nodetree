@@ -1,6 +1,6 @@
 # nodetree
 
-Inspired by a [gist of Patrick Gundlach](https://gist.github.com/pgundlach/556247).
+Inspired by a [gist from Patrick Gundlach](https://gist.github.com/pgundlach/556247).
 
 `nodetree` displays some debug informations of the node list in the
 terminal, when you render a Latex document.

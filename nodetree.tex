@@ -1,0 +1,47 @@
+%%
+%% This is file `nodetree.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% nodetree.dtx  (with options: `tex')
+%% 
+%% This is a generated file.
+%% 
+%% Copyright (C) 2016 by Josef Friedrich <josef@friedrich.rocks>
+%% ----------------------------------------------------------------------
+%% This work may be distributed and/or modified under the conditions of
+%% the LaTeX Project Public License, either version 1.3c of this license
+%% or (at your option) any later version. The latest version of this
+%% license is in:
+%% 
+%%   http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2008/05/05 or later.
+%% 
+\directlua{
+  nodetree = require('nodetree')
+  nodetree.set_option('engine', 'luatex')
+  nodetree.set_default_options()
+}
+\def\nodetreeoption[#1]#2{
+  \directlua{
+    nodetree.set_option('#1', '#2')
+  }
+}
+\def\nodetreeregister#1{
+  \directlua{
+    nodetree.set_option('callback', '#1')
+    nodetree.register_callbacks()
+  }
+}
+\def\nodetreeunregister#1{
+  \directlua{
+    nodetree.set_option('callback', '#1')
+    nodetree.unregister_callbacks()
+  }
+}
+\endinput
+%%
+%% End of file `nodetree.tex'.

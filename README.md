@@ -5,6 +5,8 @@ Inspired by a [gist from Patrick Gundlach](https://gist.github.com/pgundlach/556
 `nodetree` displays some debug informations of the node list in the
 terminal, when you render a Latex document.
 
+![Nodes of the package name](graphics/ligatures.png)
+
 ```
 post_linebreak_filter:
 │

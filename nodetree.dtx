@@ -70,7 +70,7 @@
 \maketitle
 
 \noindent
-\includegraphics[width=\linewidth]{graphics/nodetree}
+\includegraphics[width=\linewidth]{graphics/packagename}
 
 \newpage
 
@@ -413,7 +413,7 @@ For |list| connections \emph{light} characters are shown.
 \section{Example tree views}
 
 \noindent
-\includegraphics[width=\linewidth]{graphics/mhlist}
+\includegraphics[width=\linewidth]{graphics/math}
 
   \DocInput{nodetree.dtx}
   \pagebreak
@@ -429,6 +429,8 @@ Inspired by a [gist from Patrick Gundlach](https://gist.github.com/pgundlach/556
 
 `nodetree` displays some debug informations of the node list in the
 terminal, when you render a Latex document.
+
+![Nodes of the package name](graphics/ligatures.png)
 
 ```
 post_linebreak_filter:
@@ -1230,7 +1232,7 @@ end
 %
 %    \begin{macrocode}
 function tpl.print(text)
-  print(text)
+  print('  ' .. text)
 end
 %    \end{macrocode}
 %

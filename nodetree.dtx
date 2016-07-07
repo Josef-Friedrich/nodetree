@@ -1249,6 +1249,20 @@ function tree.format_field(head, field)
 %
 %    \begin{macrocode}
   if options.verbosity < 2 and
+    -- glyph
+    field == 'font' or
+    field == 'left' or
+    field == 'right' or
+    field == 'uchyph' or
+    -- hlist
+    field == 'dir' or
+    field == 'glue_order' or
+    field == 'glue_sign' or
+    field == 'glue_set' or
+    -- glue
+    field == 'stretch_order' then
+    return ''
+  elseif options.verbosity < 3 and
     field == 'prev' or
     field == 'next' or
     field == 'id'

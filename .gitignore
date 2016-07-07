@@ -14,3 +14,5 @@
 *.ind
 *.fls
 *.toc
+*.tar.gz
+nodetree.tex

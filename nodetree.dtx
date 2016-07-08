@@ -489,9 +489,39 @@ or manually:
 
 # Examples
 
+## The node list of the package name
+
+```latex
+\documentclass{article}
+\usepackage{nodetree}
+\begin{document}
+nodetree
+\end{document}
+```
+
 ![Nodes of the package name](graphics/packagename.png)
 
+## The node list of a mathematical formula
+
+```latex
+\documentclass{article}
+\usepackage[callback={mhlist}]{nodetree}
+\begin{document}
+\[\left(a\right)\left[\frac{b}{a}\right]=a\,\]
+\end{document}
+```
+
 ![Nodes of the package name](graphics/math.png)
+
+## The node list of the word 'Office'
+
+```latex
+\documentclass{article}
+\usepackage{nodetree}
+\begin{document}
+Office
+\end{document}
+```
 
 ![Nodes of the package name](graphics/ligatures.png)
 

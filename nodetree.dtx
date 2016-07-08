@@ -49,6 +49,11 @@
 
 \def\secref#1{(\rightarrow\ \ref{#1})}
 
+\newcommand{\tmpgraphics}[1]{
+  \noindent
+  \includegraphics[scale=0.4]{graphics/#1}
+}
+
 \DefineVerbatimEnvironment{code}{Verbatim}
 {
   frame=single,
@@ -407,13 +412,66 @@ For |list| connections \emph{light} characters are shown.
 \end{code}
 
 %-----------------------------------------------------------------------
-%
+% Examples
 %-----------------------------------------------------------------------
 
-\section{Example tree views}
+\newpage
 
-\noindent
-\includegraphics[width=\linewidth]{graphics/math}
+\section{Examples}
+
+%%
+% packagename
+%%
+
+\subsection{The node list of the package name}
+
+\begin{code}
+\documentclass{article}
+\usepackage{nodetree}
+\begin{document}
+nodetree
+\end{document}
+\end{code}
+
+\tmpgraphics{packagename}
+
+%%
+% math
+%%
+
+\newpage
+
+\subsection{The node list of a mathematical formula}
+
+\begin{code}
+\documentclass{article}
+\usepackage[callback={mhlist}]{nodetree}
+\begin{document}
+\[\left(a\right)\left[\frac{b}{a}\right]=a\,\]
+\end{document}
+\end{code}
+
+\tmpgraphics{math}
+
+%%
+% ligatures
+%%
+
+\newpage
+
+\subsection{The node list of the word \emph{Office}}
+
+The characters \emph{ffi} are deeply nested in a discretionary node.
+
+\begin{code}
+\documentclass{article}
+\usepackage{nodetree}
+\begin{document}
+Office
+\end{document}
+\end{code}
+
+\tmpgraphics{ligatures}
 
   \DocInput{nodetree.dtx}
   \pagebreak
@@ -514,6 +572,8 @@ nodetree
 ![Nodes of the package name](graphics/math.png)
 
 ## The node list of the word 'Office'
+
+The characters 'ffi' are deeply nested in a discretionary node.
 
 ```latex
 \documentclass{article}

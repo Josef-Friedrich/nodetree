@@ -90,6 +90,8 @@ nodetree
 
 ## The node list of the word 'Office'
 
+The characters 'ffi' are deeply nested in a discretionary node.
+
 ```latex
 \documentclass{article}
 \usepackage{nodetree}

@@ -298,8 +298,8 @@ The same applies for the macro |\usepackage|:
 \nodetreecallback{postline}{postlinebreakfilter}{post_linebreak_filter}
 \nodetreecallback{hpack}{hpackfilter}{hpack_filter}
 \nodetreecallback{vpack}{vpackfilter}{vpack_filter}
-%\nodetreecallback{hpackq}{hpackquality}{hpack_quality}
-%\nodetreecallback{vpackq}{vpackquality}{vpack_quality}
+\nodetreecallback{hpackq}{hpackquality}{hpack_quality}
+\nodetreecallback{vpackq}{vpackquality}{vpack_quality}
 \nodetreecallback{process}{processrule}{process_rule}
 \nodetreecallback{preout}{preoutputfilter}{pre_output_filter}
 \nodetreecallback{hyph}{hyphenate}{hyphenate}
@@ -498,8 +498,6 @@ Office
 \begin{compactitem}
 \item The callback alias |mhlist| deletes the output of mathematical
 formulas in the rendered PDF file.
-
-\item The callback aliases |hpackq| and |vpackq| are not implemented.
 \end{compactitem}
 
 %-----------------------------------------------------------------------
@@ -1629,31 +1627,29 @@ end
 %
 % TODO: Fix registration
 %    \begin{macrocode}
-function callbacks.hpack_qualtity(incident, detail, head, first, last)
+function callbacks.hpack_quality(incident, detail, head, first, last)
   local variables = {
     incident = incident,
     detail = detail,
     first = first,
     last = last,
   }
-  tpl.callback('hpack_qualtity', variables)
+  tpl.callback('hpack_quality', variables)
   tree.analyze_callback(head)
-  return true
 end
 %    \end{macrocode}
 %
 % TODO: Fix registration
 %    \begin{macrocode}
-function callbacks.vpack_qualtity(incident, detail, head, first, last)
+function callbacks.vpack_quality(incident, detail, head, first, last)
   local variables = {
     incident = incident,
     detail = detail,
     first = first,
     last = last,
   }
-  tpl.callback('vpack_qualtity', variables)
+  tpl.callback('vpack_quality', variables)
   tree.analyze_callback(head)
-  return true
 end
 %    \end{macrocode}
 %

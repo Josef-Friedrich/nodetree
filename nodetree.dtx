@@ -338,6 +338,69 @@ package.
 \end{code}
 
 %%
+% unit
+%%
+
+\subsection{Option \texttt{unit}}
+
+The option |unit| sets the length unit to display all length values of
+the nodes. The default option for |unit| is |pt|. See figure
+\ref{fig:fixed-units} and \ref{fig:relative-units} for possible values.
+
+\begin{figure}
+\begin{tabular}{lp{10cm}}
+\textbf{Unit} &
+\textbf{Description} \\
+
+pt &
+Point 1/72.27 inch. The conversion to metric units, to two decimal
+places, is 1 point = 2.85 mm = 28.45 cm. \\
+
+pc &
+Pica, 12 pt \\
+
+in &
+Inch, 72.27 pt \\
+
+bp &
+Big point, 1/72 inch. This length is the definition of a point in
+PostScript and many desktop publishing systems. \\
+
+cm &
+Centimeter \\
+
+mm &
+Millimeter \\
+
+dd &
+Didot point, 1.07 pt \\
+
+cc &
+Cicero, 12 dd \\
+
+sp &
+Scaled point, 1/65536 pt \\
+\end{tabular}
+\caption{Fixed units}
+\label{fig:fixed-units}
+\end{figure}
+
+\begin{figure}
+\begin{tabular}{lp{10cm}}
+\textbf{Unit} &
+\textbf{Description} \\
+
+ex &
+x-height of the current font \\
+
+em &
+Width of the capital letter M \\
+\end{tabular}
+\caption{Relative units}
+\label{fig:relative-units}
+\end{figure}
+
+%%
 % decimalplaces
 %%
 
@@ -739,6 +802,11 @@ Office
 %    \begin{macrocode}
 \DeclareStringOption[colored]{color}
 \define@key{NT}{color}[]{\nodetreeoption[color]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[1]{unit}
+\define@key{NT}{unit}[]{\nodetreeoption[unit]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}

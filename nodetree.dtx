@@ -1418,7 +1418,6 @@ function tree.format_field(head, field)
     field == 'prev' or
     field == 'next' or
     field == 'id'
-    or field == 'attr'
   then
     return ''
   end
@@ -1509,7 +1508,6 @@ function tree.analyze_node(head, level)
   for field_id, field_name in pairs(node.fields(head.id, head.subtype)) do
     if field_name ~= 'next' and
       field_name ~= 'prev' and
-      field_name ~= 'attr' and
       node.is_node(head[field_name]) then
       fields[field_name] = head[field_name]
     else

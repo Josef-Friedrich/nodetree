@@ -1613,7 +1613,7 @@ function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direc
     groupcode = groupcode,
     size = size,
     packtype = packtype,
-    maxdepth = maxdepth,
+    maxdepth = tpl.length(maxdepth),
     direction = direction,
     attributelist = attributelist,
   }

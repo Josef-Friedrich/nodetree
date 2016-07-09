@@ -1102,8 +1102,8 @@ end
 %    \begin{macrocode}
 function tpl.length(input)
   input = tonumber(input)
-  input = input / 2^16
-  return string.format('%gpt', tpl.round(input))
+  input = input / tex.sp('1' .. options.dim)
+  return string.format('%g%s', tpl.round(input), options.dim)
 end
 %    \end{macrocode}
 %
@@ -1745,6 +1745,7 @@ function base.set_default_options()
     engine = 'luatex',
     color = 'colored',
     decimalplaces = 2,
+    dim = 'pt',
   }
   if not options then
     options = {}

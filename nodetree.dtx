@@ -554,17 +554,6 @@ Office
 \tmpgraphics{ligatures}
 
 %-----------------------------------------------------------------------
-% Known issues
-%-----------------------------------------------------------------------
-
-\section{Known issues}
-
-\begin{compactitem}
-\item The callback alias |mhlist| deletes the output of mathematical
-formulas in the rendered PDF file.
-\end{compactitem}
-
-%-----------------------------------------------------------------------
 % Index
 %-----------------------------------------------------------------------
 
@@ -1783,7 +1772,6 @@ function callbacks.insert_local_par(local_par, location)
 end
 %    \end{macrocode}
 %
-% TODO: Implement newhead as return value
 %    \begin{macrocode}
 function callbacks.mlist_to_hlist(head, display_type, need_penalties)
   local variables = {
@@ -1792,6 +1780,7 @@ function callbacks.mlist_to_hlist(head, display_type, need_penalties)
   }
   tpl.callback('mlist_to_hlist', variables)
   tree.analyze_callback(head)
+  return node.mlist_to_hlist(head, display_type, need_penalties)
 end
 %    \end{macrocode}
 %

@@ -780,6 +780,11 @@ Office
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+\DeclareStringOption[term]{channel}
+\define@key{NT}{channel}[]{\nodetreeoption[channel]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \DeclareStringOption[postlinebreak]{callback}
 \define@key{NT}{callback}[]{\nodetreeoption[callback]{#1}}
 %    \end{macrocode}
@@ -1802,6 +1807,7 @@ function base.set_default_options()
     color = 'colored',
     decimalplaces = 2,
     unit = 'pt',
+    channel = 'term',
   }
   if not options then
     options = {}

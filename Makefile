@@ -35,7 +35,7 @@ testluatex:
 ctan:
 	rm -rf $(jobname)
 	mkdir $(jobname)
-	cp -f README.md $(jobname)/README
+	cp -f README.md $(jobname)/
 	cp -f $(jobname).ins $(jobname)/
 	cp -f $(jobname).dtx $(jobname)/
 	cp -f $(jobname).pdf $(jobname)/

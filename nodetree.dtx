@@ -1445,7 +1445,15 @@ end
 %
 %    \begin{macrocode}
 function tpl.print(text)
-  print('  ' .. text)
+
+  if options.channel == 'log' then
+    if not log then
+      log = io.open(tex.jobname .. '_nodetree.log', 'a')
+    end
+    log:write(text, '\n')
+  else
+    print('  ' .. text)
+  end
 end
 %    \end{macrocode}
 %

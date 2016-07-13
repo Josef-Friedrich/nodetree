@@ -1,5 +1,5 @@
 
-![Nodes of the package name](graphics/packagename.png)
+![nodetree](graphics/packagename.png)
 
 # Abstract
 
@@ -74,7 +74,7 @@ nodetree
 \end{document}
 ```
 
-![Nodes of the package name](graphics/packagename.png)
+![nodetree](graphics/packagename.png)
 
 ## The node list of a mathematical formula
 
@@ -86,7 +86,7 @@ nodetree
 \end{document}
 ```
 
-![Nodes of the package name](graphics/math.png)
+![nodetree](graphics/math.png)
 
 ## The node list of the word 'Office'
 
@@ -100,5 +100,5 @@ Office
 \end{document}
 ```
 
-![Nodes of the package name](graphics/ligatures.png)
+![nodetree](graphics/ligatures.png)
 

@@ -28,7 +28,7 @@
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<package>\ProvidesPackage{nodetree}
 %<*package>
-    [2016/07/07 Package to visualize node lists in a tree view]
+    [2016/07/13 Package to visualize node lists in a tree view]
 %</package>
 %<*driver>
 \documentclass{ltxdoc}
@@ -566,7 +566,7 @@ Office
 %</driver>
 %<*readme>
 
-![Nodes of the package name](graphics/packagename.png)
+![nodetree](graphics/packagename.png)
 
 # Abstract
 
@@ -641,7 +641,7 @@ nodetree
 \end{document}
 ```
 
-![Nodes of the package name](graphics/packagename.png)
+![nodetree](graphics/packagename.png)
 
 ## The node list of a mathematical formula
 
@@ -653,7 +653,7 @@ nodetree
 \end{document}
 ```
 
-![Nodes of the package name](graphics/math.png)
+![nodetree](graphics/math.png)
 
 ## The node list of the word 'Office'
 
@@ -667,7 +667,7 @@ Office
 \end{document}
 ```
 
-![Nodes of the package name](graphics/ligatures.png)
+![nodetree](graphics/ligatures.png)
 
 %</readme>
 % \fi
@@ -693,6 +693,7 @@ Office
 %
 % \changes{v0.1}{2015/06/16}{Converted to DTX file}
 % \changes{v1.0}{2016/07/07}{Inital release}
+% \changes{v1.1}{2016/07/13}{Fix the registration of same callbacks}
 %
 % \DoNotIndex{\newcommand,\newenvironment,\def,\directlua}
 %
@@ -777,6 +778,11 @@ Office
   family=NT,
   prefix=NT@
 }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[term]{channel}
+\define@key{NT}{channel}[]{\nodetreeoption[channel]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -1440,7 +1446,15 @@ end
 %
 %    \begin{macrocode}
 function tpl.print(text)
-  print('  ' .. text)
+
+  if options.channel == 'log' then
+    if not log then
+      log = io.open(tex.jobname .. '_nodetree.log', 'a')
+    end
+    log:write(text, '\n')
+  else
+    print('  ' .. text)
+  end
 end
 %    \end{macrocode}
 %
@@ -1802,6 +1816,7 @@ function base.set_default_options()
     color = 'colored',
     decimalplaces = 2,
     unit = 'pt',
+    channel = 'term',
   }
   if not options then
     options = {}

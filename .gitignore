@@ -20,4 +20,5 @@ nodetree.tex
 *.bcf
 *.blg
 *.run.xml
-
+*.tar
+nodetree/*

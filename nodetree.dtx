@@ -1177,6 +1177,16 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function tpl.whitespace()
+  if options.channel == 'tex' then
+    return '\\ '
+  else
+    return ' '
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.length(input)
   input = tonumber(input)
   input = input / tex.sp('1' .. options.unit)
@@ -1370,15 +1380,15 @@ end
 %
 %    \begin{macrocode}
 function tpl.type(type, id)
-  local out = tpl.color(
-    tpl.node_colors[type][1],
-    tpl.node_colors[type][2]
-    )
-    .. string.upper(type)
+  local out = string.upper(type)
   if options.verbosity > 1 then
     out = out .. tpl.type_id(id)
   end
-  return out .. tpl.color('reset')  .. ' '
+  return tpl.colored_string(
+    out .. tpl.whitespace(),
+    tpl.node_colors[type][1],
+    tpl.node_colors[type][2]
+  )
 end
 %    \end{macrocode}
 %
@@ -1428,18 +1438,14 @@ function tpl.branch(connection_type, connection_state, last)
   local c = connection_type
   local s = connection_state
   local l = last
-  local whitespace = ' '
-  if options.channel == 'tex' then
-    whitespace = '\\ '
-  end
   if c == 'list' and s == 'stop' and l == false then
-    return whitespace .. whitespace
+    return tpl.whitespace() .. tpl.whitespace()
   elseif c == 'field' and s == 'stop' and l == false then
-    return whitespace .. whitespace
+    return tpl.whitespace() .. tpl.whitespace()
   elseif c == 'list' and s == 'continue' and l == false then
-    return '│' .. whitespace
+    return '│' .. tpl.whitespace()
   elseif c == 'field' and s == 'continue' and l == false then
-    return '║' .. whitespace
+    return '║' .. tpl.whitespace()
   elseif c == 'list' and s == 'continue' and l == true then
     return '├─'
   elseif c == 'field' and s == 'continue' and l == true then

@@ -1411,6 +1411,14 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function tpl.node_end()
+  if options.channel == 'tex' then
+    return '\\newline'
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.callback(callback_name, variables)
   tpl.print('\n\n')
   tpl.print('Callback: ' .. tpl.color('red', '', true) ..
@@ -1622,7 +1630,7 @@ function tree.analyze_node(head, level)
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-  tpl.print(out)
+  tpl.print(out .. tpl.node_end())
   tree.analyze_fields(fields, level)
 end
 %    \end{macrocode}

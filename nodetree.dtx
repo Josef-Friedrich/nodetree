@@ -842,8 +842,10 @@ Office
   \tiny%
   \setmonofont{DejaVu Sans Mono}%
   \ttfamily%
-  \noindent%
-  \baselineskip 0pt%
+  \setlength{\parindent}{0pt}%
+  \setlength{\baselineskip}{-4pt}%
+  \setlength{\parsep}{0pt}%
+  \setlength{\parskip}{-2pt}%
 }{}
 %    \end{macrocode}
 % \end{environment}
@@ -1181,6 +1183,12 @@ end
 % \subsubsection{tpl --- Template function}
 %
 %    \begin{macrocode}
+function tpl.underscore(string)
+  return string.gsub(string, '_', '\\_')
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.round(number)
   local mult = 10^(options.decimalplaces or 0)
   return math.floor(number * mult + 0.5) / mult
@@ -1191,7 +1199,7 @@ end
 function tpl.whitespace(count)
   local whitespace, out = '', ''
   if options.channel == 'tex' then
-    whitespace = '\\space'
+    whitespace = '\\hspace{1em}'
   else
     whitespace = ' '
   end
@@ -1382,6 +1390,9 @@ end
 %
 %    \begin{macrocode}
 function tpl.key_value(key, value)
+  if options.channel == 'tex' then
+    key = tpl.underscore(key)
+  end
   local out = tpl.colored_string(key .. ':', 'yellow')
   if value then
     out = out .. ' ' .. value .. '; '
@@ -1399,7 +1410,13 @@ end
 %
 %    \begin{macrocode}
 function tpl.type(type, id)
-  local out = string.upper(type)
+  local out = ''
+  if options.channel == 'tex' then
+    out = tpl.underscore(type)
+  else
+    out = type
+  end
+  out = string.upper(out)
   if options.verbosity > 1 then
     out = out .. tpl.type_id(id)
   end
@@ -1439,7 +1456,7 @@ end
 function tpl.node_end(count)
   local line_end, out = '', ''
   if options.channel == 'tex' then
-    line_end = '\\newline\n'
+    line_end = '\\par\n'
   else
     line_end = '\n'
   end

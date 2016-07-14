@@ -1401,9 +1401,20 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function tpl.color_tex(color, mode, background)
+  if not mode then mode = '' end
+  return 'NT' .. color .. mode
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.colored_string(string, color, mode, background)
   if options.channel == 'tex' then
-    return '\\textcolor{' .. color .. '}{' .. string .. '}'
+    return '\\textcolor{' ..
+      tpl.color_tex(color, mode, background) ..
+      '}{' ..
+      string ..
+      '}'
   else
    return tpl.color(color, mode, background) .. string .. tpl.color('reset')
   end

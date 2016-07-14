@@ -838,15 +838,21 @@ Office
 %
 % \begin{environment}{nodetreeexample}
 %    \begin{macrocode}
+\newsavebox{\nodetreebox}
 \newenvironment{nodetreeexample}{%
   \tiny%
   \setmonofont{DejaVu Sans Mono}%
   \ttfamily%
   \setlength{\parindent}{0pt}%
-  \setlength{\baselineskip}{-4pt}%
-  \setlength{\parsep}{0pt}%
-  \setlength{\parskip}{-2pt}%
-}{}
+  \setlength{\parskip}{-4pt}%
+  \begin{lrbox}{\nodetreebox}%
+  \begin{minipage}{\textwidth}%
+  \color{white}
+}{%
+  \end{minipage}%
+  \end{lrbox}%
+  \colorbox{black}{\usebox{\nodetreebox}}%
+}
 %    \end{macrocode}
 % \end{environment}
 %

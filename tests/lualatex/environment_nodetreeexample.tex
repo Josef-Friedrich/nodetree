@@ -1,24 +1,21 @@
 %!TEX program = lualatex
 \documentclass{article}
-\usepackage[callback=preout]{nodetree}
+\usepackage[callback=]{nodetree}
 \usepackage{xcolor}
 \usepackage{fontspec}
 
 \begin{document}
-\tiny
-\setmonofont{DejaVu Sans Mono}
-\ttfamily
-  ├─\textcolor{magenta}{GLUE[12]\ }\textcolor{yellow}{no:} 460; \textcolor{yellow}{subtype:} baselineskip[2]; \textcolor{yellow}{width:} 5.17pt; \newline
-  └─\textcolor{red}{HLIST[0]\ }\textcolor{yellow}{no:} 365; \textcolor{yellow}{subtype:} line[1]; \textcolor{yellow}{width:} 345pt; \textcolor{yellow}{height:} 6.83pt; \textcolor{yellow}{prev:} 460; \newline
-  \ \ ╚═\textcolor{yellow}{head:}
-  \ \ \ \ ├─\textcolor{red}{HLIST[0]\ }\textcolor{yellow}{no:} 305; \textcolor{yellow}{subtype:} indent[3]; \textcolor{yellow}{width:} 15pt; \textcolor{yellow}{prev:} 410; \newline
-  \ \ \ \ ├─\textcolor{cyan}{GLYPH[29]\ }\textcolor{yellow}{no:} 416; \textcolor{yellow}{char:} "L"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 6.25pt; \textcolor{yellow}{height:} 6.83pt; \textcolor{yellow}{prev:} 305; \newline
-  \ \ \ \ ├─\textcolor{cyan}{GLYPH[29]\ }\textcolor{yellow}{no:} 422; \textcolor{yellow}{char:} "o"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 5pt; \textcolor{yellow}{height:} 4.31pt; \textcolor{yellow}{prev:} 416; \newline
-  \ \ \ \ ├─\textcolor{cyan}{GLYPH[29]\ }\textcolor{yellow}{no:} 428; \textcolor{yellow}{char:} "r"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 3.92pt; \textcolor{yellow}{height:} 4.31pt; \textcolor{yellow}{prev:} 422; \newline
-  \ \ \ \ ├─\textcolor{cyan}{GLYPH[29]\ }\textcolor{yellow}{no:} 434; \textcolor{yellow}{char:} "e"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 4.44pt; \textcolor{yellow}{height:} 4.31pt; \textcolor{yellow}{prev:} 428; \newline
-  \ \ \ \ ├─\textcolor{cyan}{GLYPH[29]\ }\textcolor{yellow}{no:} 440; \textcolor{yellow}{char:} "m"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 8.33pt; \textcolor{yellow}{height:} 4.31pt; \textcolor{yellow}{prev:} 434; \newline
-  \ \ \ \ ├─\textcolor{yellow}{PENALTY[14]\ }\textcolor{yellow}{no:} 374; \textcolor{yellow}{penalty:} 10000; \textcolor{yellow}{prev:} 440; \newline
-  \ \ \ \ ├─\textcolor{magenta}{GLUE[12]\ }\textcolor{yellow}{no:} 314; \textcolor{yellow}{subtype:} parfillskip[15]; \textcolor{yellow}{stretch:} +1fil; \textcolor{yellow}{prev:} 374; \newline
-  \ \ \ \ └─\textcolor{magenta}{GLUE[12]\ }\textcolor{yellow}{no:} 453; \textcolor{yellow}{subtype:} rightskip[9]; \textcolor{yellow}{prev:} 314; \newline
+\begin{nodetreeexample}
+  \space\space╚═\textcolor{yellow}{head:}\newline
+  \space\space\space\space├─\textcolor{red}{HLIST[0]\space}\textcolor{yellow}{no:} 305; \textcolor{yellow}{subtype:} indent[3]; \textcolor{yellow}{width:} 15pt; \textcolor{yellow}{prev:} 410; \newline
+  \space\space\space\space├─\textcolor{cyan}{GLYPH[29]\space}\textcolor{yellow}{no:} 416; \textcolor{yellow}{char:} "L"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 6.25pt; \textcolor{yellow}{height:} 6.83pt; \textcolor{yellow}{prev:} 305; \newline
+  \space\space\space\space├─\textcolor{cyan}{GLYPH[29]\space}\textcolor{yellow}{no:} 422; \textcolor{yellow}{char:} "o"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 5pt; \textcolor{yellow}{height:} 4.31pt; \textcolor{yellow}{prev:} 416; \newline
+  \space\space\space\space├─\textcolor{cyan}{GLYPH[29]\space}\textcolor{yellow}{no:} 428; \textcolor{yellow}{char:} "r"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 3.92pt; \textcolor{yellow}{height:} 4.31pt; \textcolor{yellow}{prev:} 422; \newline
+  \space\space\space\space├─\textcolor{cyan}{GLYPH[29]\space}\textcolor{yellow}{no:} 434; \textcolor{yellow}{char:} "e"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 4.44pt; \textcolor{yellow}{height:} 4.31pt; \textcolor{yellow}{prev:} 428; \newline
+  \space\space\space\space├─\textcolor{cyan}{GLYPH[29]\space}\textcolor{yellow}{no:} 440; \textcolor{yellow}{char:} "m"; \textcolor{yellow}{font:} 15; \textcolor{yellow}{width:} 8.33pt; \textcolor{yellow}{height:} 4.31pt; \textcolor{yellow}{prev:} 434; \newline
+  \space\space\space\space├─\textcolor{yellow}{PENALTY[14]\space}\textcolor{yellow}{no:} 374; \textcolor{yellow}{penalty:} 10000; \textcolor{yellow}{prev:} 440; \newline
+  \space\space\space\space├─\textcolor{magenta}{GLUE[12]\space}\textcolor{yellow}{no:} 314; \textcolor{yellow}{subtype:} parfillskip[15]; \textcolor{yellow}{stretch:} +1fil; \textcolor{yellow}{prev:} 374; \newline
+  \space\space\space\space└─\textcolor{magenta}{GLUE[12]\space}\textcolor{yellow}{no:} 453; \textcolor{yellow}{subtype:} rightskip[9]; \textcolor{yellow}{prev:} 314; \newline
 
+\end{nodetreeexample}
 \end{document}

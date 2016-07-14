@@ -835,7 +835,18 @@ Office
 %    \begin{macrocode}
 \newcommand{\nodetreeset}[1]{\setkeys{nodetree}{#1}}
 %    \end{macrocode}
-% \end{macro}
+%
+% \begin{environment}{nodetreeexample}
+%    \begin{macrocode}
+\newenvironment{nodetreeexample}{%
+  \tiny%
+  \setmonofont{DejaVu Sans Mono}%
+  \ttfamily%
+  \noindent%
+  \baselineskip 0pt%
+}{}
+%    \end{macrocode}
+% \end{environment}
 %
 % \iffalse
 %</package>
@@ -1177,12 +1188,20 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tpl.whitespace()
+function tpl.whitespace(count)
+  local whitespace, out = '', ''
   if options.channel == 'tex' then
-    return '\\ '
+    whitespace = '\\space'
   else
-    return ' '
+    whitespace = ' '
   end
+  if not count then
+    count = 1
+  end
+  for i = 1, count do
+    out = out .. whitespace
+  end
+  return out
 end
 %    \end{macrocode}
 %
@@ -1395,39 +1414,66 @@ end
 %    \begin{macrocode}
 function tpl.callback_variable(variable_name, variable)
   if variable ~= nil and variable ~= '' then
-    tpl.print(variable_name .. ': ' .. tostring(variable))
+    tpl.print(
+      variable_name .. ': ' ..
+      tostring(variable) ..
+      tpl.node_end()
+    )
   end
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function tpl.line(length)
+  local out = ''
   if length == 'long' then
-    return '------------------------------------------'
+    out = '------------------------------------------'
   else
-    return '-----------------------'
+    out = '-----------------------'
   end
+    return out .. tpl.node_end()
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tpl.node_end()
+function tpl.node_end(count)
+  local line_end, out = '', ''
   if options.channel == 'tex' then
-    return '\\newline'
+    line_end = '\\newline\n'
+  else
+    line_end = '\n'
   end
+  if not count then
+    count = 1
+  end
+  for i = 1, count do
+    out = out .. line_end
+  end
+  return out
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function tpl.callback(callback_name, variables)
-  tpl.print('\n\n')
-  tpl.print('Callback: ' .. tpl.color('red', '', true) ..
-    callback_name .. tpl.color('reset')
+  tpl.print(
+    tpl.node_end(2) ..
+    tpl.whitespace(2) ..
+    'Callback: ' ..
+    tpl.color('red', '', true) ..
+    callback_name ..
+    tpl.color('reset') ..
+    tpl.node_end()
   )
   if variables then
     for name, value in pairs(variables) do
       if value ~= nil and value ~= '' then
-        tpl.print('  - ' .. name .. ': ' .. tostring(value))
+        tpl.print(
+          '  - ' ..
+          name ..
+          ': ' ..
+          tostring(value) ..
+          tpl.node_end()
+        )
       end
     end
   end
@@ -1447,9 +1493,9 @@ function tpl.branch(connection_type, connection_state, last)
   local s = connection_state
   local l = last
   if c == 'list' and s == 'stop' and l == false then
-    return tpl.whitespace() .. tpl.whitespace()
+    return tpl.whitespace(2)
   elseif c == 'field' and s == 'stop' and l == false then
-    return tpl.whitespace() .. tpl.whitespace()
+    return tpl.whitespace(2)
   elseif c == 'list' and s == 'continue' and l == false then
     return '│' .. tpl.whitespace()
   elseif c == 'field' and s == 'continue' and l == false then
@@ -1492,9 +1538,9 @@ function tpl.print(text)
     if not log then
       log = io.open(tex.jobname .. '_nodetree.log', 'a')
     end
-    log:write(text, '\n')
+    log:write(text)
   else
-    print('  ' .. text)
+    io.write('  ' .. text)
   end
 end
 %    \end{macrocode}
@@ -1593,7 +1639,7 @@ function tree.analyze_fields(fields, level)
       connection_state = 'continue'
     end
     tree.set_state(level, 'field', connection_state)
-    tpl.print(tpl.branches(level, 'field') .. tpl.key_value(field_name))
+    tpl.print(tpl.branches(level, 'field') .. tpl.key_value(field_name) .. tpl.node_end())
     tree.analyze_list(recursion_node, level + 1)
   end
 end
@@ -1647,7 +1693,7 @@ end
 %    \begin{macrocode}
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
-  tpl.print(tpl.line('short') .. '\n')
+  tpl.print(tpl.line('short') .. tpl.node_end())
 end
 %    \end{macrocode}
 %
@@ -2034,7 +2080,7 @@ end
 %
 %    \begin{macrocode}
 function base.analyze(head)
-  tpl.print('\n')
+  tpl.print(tpl.node_end())
   tree.analyze_list(head, 1)
 end
 %    \end{macrocode}

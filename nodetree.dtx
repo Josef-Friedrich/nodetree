@@ -75,8 +75,7 @@
 
 \maketitle
 
-\noindent
-\includegraphics[width=\linewidth]{graphics/packagename}
+\tmpexample{packagename}
 
 \newpage
 
@@ -518,15 +517,7 @@ For |list| connections \emph{light} characters are shown.
 
 \subsection{The node list of the package name}
 
-\begin{code}
-\documentclass{article}
-\usepackage{nodetree}
-\begin{document}
-nodetree
-\end{document}
-\end{code}
-
-\tmpgraphics{packagename}
+\tmpverbexample{packagename}
 
 %%
 % math
@@ -536,15 +527,7 @@ nodetree
 
 \subsection{The node list of a mathematical formula}
 
-\begin{code}
-\documentclass{article}
-\usepackage[callback={mhlist}]{nodetree}
-\begin{document}
-\[\left(a\right)\left[\frac{b}{a}\right]=a\,\]
-\end{document}
-\end{code}
-
-\tmpgraphics{math}
+\tmpverbexample{math}
 
 %%
 % ligatures
@@ -556,15 +539,7 @@ nodetree
 
 The characters \emph{ffi} are deeply nested in a discretionary node.
 
-\begin{code}
-\documentclass{article}
-\usepackage{nodetree}
-\begin{document}
-Office
-\end{document}
-\end{code}
-
-\tmpgraphics{ligatures}
+\tmpverbexample{ligatures}
 
 %-----------------------------------------------------------------------
 % Index
@@ -1446,7 +1421,13 @@ end
 %
 %    \begin{macrocode}
 function tpl.char(input)
-  return string.format('%q', unicode.utf8.char(input))
+  local format
+  if options.channel == 'tex' then
+    format = '\\luaescapestring{%q}'
+  else
+    format = '%q'
+  end
+  return string.format(format, unicode.utf8.char(input))
 end
 %    \end{macrocode}
 %

@@ -86,11 +86,7 @@
 
 \maketitle
 
-<<<<<<< HEAD
-\tmpverbexample{packagename}
-=======
 \tmpexample{packagename}
->>>>>>> 0981b09013911644e853f0bfbf446007f1463a00
 
 \newpage
 
@@ -526,12 +522,6 @@ For |list| connections \emph{light} characters are shown.
 
 \section{Examples}
 
-%\tmpverbexample{ligatures}
-
-\begin{nodetreeexample}
-\input{00hlist1line_nodetree.tex}
-\end{nodetreeexample}
-
 %%
 % packagename
 %%
@@ -561,6 +551,21 @@ For |list| connections \emph{light} characters are shown.
 The characters \emph{ffi} are deeply nested in a discretionary node.
 
 \tmpverbexample{ligatures}
+
+
+\subsection{Node types}
+
+\subsubsection{00hlist1line}
+
+\tmpverbexample{00hlist1line}
+
+\subsubsection{00hlist2box}
+
+\tmpverbexample{00hlist2box}
+
+\subsubsection{00hlist3indent}
+
+\tmpverbexample{00hlist3indent}
 
 %-----------------------------------------------------------------------
 % Index
@@ -833,6 +838,29 @@ Office
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\NT@ansi@terminalapp}
+%    \begin{macrocode}
+\def\NT@ansi@terminalapp{%
+\definecolor{NTblack}{RGB}{0,0,0}%
+\definecolor{NTred}{RGB}{194,54,33}%
+\definecolor{NTgreen}{RGB}{37,188,36}%
+\definecolor{NTyellow}{RGB}{173,173,39}%
+\definecolor{NTblue}{RGB}{73,46,225}%
+\definecolor{NTmagenta}{RGB}{211,56,211}%
+\definecolor{NTcyan}{RGB}{51,187,200}%
+\definecolor{NTgray}{RGB}{203,204,205}%
+\definecolor{NTblackbright}{RGB}{129,131,131}%
+\definecolor{NTredbright}{RGB}{252,57,31}%
+\definecolor{NTgreenbright}{RGB}{49,231,34}%
+\definecolor{NTyellowbright}{RGB}{234,236,35}%
+\definecolor{NTbluebright}{RGB}{88,51,255}%
+\definecolor{NTmagentabright}{RGB}{249,53,248}%
+\definecolor{NTcyanbright}{RGB}{20,240,240}%
+\definecolor{NTgraybright}{RGB}{233,235,235}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{environment}{nodetreeexample}
 %    \begin{macrocode}
 \newsavebox{\nodetreebox}
@@ -842,26 +870,15 @@ Office
   \ttfamily%
   \begin{lrbox}{\nodetreebox}%
   \begin{minipage}{\textwidth}%
-  \definecolor{NTblack}{RGB}{0,0,0}%
-  \definecolor{NTred}{RGB}{194,54,33}%
-  \definecolor{NTgreen}{RGB}{37,188,36}%
-  \definecolor{NTyellow}{RGB}{173,173,39}%
-  \definecolor{NTblue}{RGB}{73,46,225}%
-  \definecolor{NTmagenta}{RGB}{211,56,211}%
-  \definecolor{NTcyan}{RGB}{51,187,200}%
-  \definecolor{NTgray}{RGB}{203,204,205}%
-  \definecolor{NTblackbright}{RGB}{129,131,131}%
-  \definecolor{NTredbright}{RGB}{252,57,31}%
-  \definecolor{NTgreenbright}{RGB}{49,231,34}%
-  \definecolor{NTyellowbright}{RGB}{234,236,35}%
-  \definecolor{NTbluebright}{RGB}{88,51,255}%
-  \definecolor{NTmagentabright}{RGB}{249,53,248}%
-  \definecolor{NTcyanbright}{RGB}{20,240,240}%
-  \definecolor{NTgraybright}{RGB}{233,235,235}%
+  \NT@ansi@terminalapp%
+  \let\NT@c\textcolor%
+  \def\NT@w{\hspace{0.5em}}
   \color{white}%
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{-0.7pt}%
+  \makeatletter%
 }{%
+  \makeatother%
   \end{minipage}%
   \end{lrbox}%
   \colorbox{black}{\usebox{\nodetreebox}}%
@@ -1214,6 +1231,16 @@ function tpl.underscore(string)
   end
 end
 %    \end{macrocode}
+
+%    \begin{macrocode}
+function tpl.escape(string)
+  if options.channel == 'tex' then
+    return string.gsub(string, [[\]], [[\string\]])
+  else
+    return string
+  end
+end
+%    \end{macrocode}
 %
 %    \begin{macrocode}
 function tpl.round(number)
@@ -1226,7 +1253,7 @@ end
 function tpl.whitespace(count)
   local whitespace, out = '', ''
   if options.channel == 'tex' then
-    whitespace = '\\hspace{1em}'
+    whitespace = '\\NT@w'
   else
     whitespace = ' '
   end
@@ -1415,7 +1442,7 @@ end
 %    \begin{macrocode}
 function tpl.colored_string(string, color, mode, background)
   if options.channel == 'tex' then
-    return '\\textcolor{' ..
+    return '\\NT@c{' ..
       tpl.color_tex(color, mode, background) ..
       '}{' ..
       string ..
@@ -1442,13 +1469,11 @@ end
 %
 %    \begin{macrocode}
 function tpl.char(input)
-  local format
+  input = string.format('%q', unicode.utf8.char(input))
   if options.channel == 'tex' then
-    format = '\\luaescapestring{%q}'
-  else
-    format = '%q'
+    input = tpl.escape(input)
   end
-  return string.format(format, unicode.utf8.char(input))
+  return input
 end
 %    \end{macrocode}
 %
@@ -1508,7 +1533,8 @@ end
 %
 %    \begin{macrocode}
 function tpl.line_begin()
-  return tpl.whitespace(2)
+  return ''
+  -- return tpl.whitespace(2)
 end
 %    \end{macrocode}
 %
@@ -1529,7 +1555,6 @@ end
 function tpl.callback(callback_name, variables)
   tpl.print(
     tpl.line_end(2) ..
-    tpl.whitespace(2) ..
     'Callback: ' ..
     tpl.colored_string(tpl.underscore(callback_name), 'red', '', true) ..
     tpl.line_end()
@@ -1538,9 +1563,8 @@ function tpl.callback(callback_name, variables)
     for name, value in pairs(variables) do
       if value ~= nil and value ~= '' then
         tpl.print(
-          tpl.whitespace(2) ..
           '- ' ..
-          name ..
+          tpl.underscore(name) ..
           ': ' ..
           tostring(value) ..
           tpl.line_end()

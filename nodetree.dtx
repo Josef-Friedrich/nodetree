@@ -1206,7 +1206,11 @@ end
 %
 %    \begin{macrocode}
 function tpl.underscore(string)
-  return string.gsub(string, '_', '\\_')
+  if options.channel == 'tex' then
+    return string.gsub(string, '_', '\\_')
+  else
+    return string
+  end
 end
 %    \end{macrocode}
 %
@@ -1465,9 +1469,9 @@ end
 function tpl.callback_variable(variable_name, variable)
   if variable ~= nil and variable ~= '' then
     tpl.print(
-      variable_name .. ': ' ..
+      tpl.underscore(variable_name) .. ': ' ..
       tostring(variable) ..
-      tpl.node_end()
+      tpl.line_end()
     )
   end
 end
@@ -1481,23 +1485,34 @@ function tpl.line(length)
   else
     out = '-----------------------'
   end
-    return out .. tpl.node_end()
+    return out .. tpl.line_end()
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tpl.node_end(count)
-  local line_end, out = '', ''
+function tpl.new_line()
   if options.channel == 'tex' then
-    line_end = '\\par\n'
+    return '\\par\n'
   else
-    line_end = '\n'
+    return '\n'
   end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function tpl.line_begin()
+  return tpl.whitespace(2)
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function tpl.line_end(count)
+  local out = ''
   if not count then
     count = 1
   end
   for i = 1, count do
-    out = out .. line_end
+    out = out .. tpl.new_line()
   end
   return out
 end
@@ -1506,23 +1521,22 @@ end
 %    \begin{macrocode}
 function tpl.callback(callback_name, variables)
   tpl.print(
-    tpl.node_end(2) ..
+    tpl.line_end(2) ..
     tpl.whitespace(2) ..
     'Callback: ' ..
-    tpl.color('red', '', true) ..
-    callback_name ..
-    tpl.color('reset') ..
-    tpl.node_end()
+    tpl.colored_string(tpl.underscore(callback_name), 'red', '', true) ..
+    tpl.line_end()
   )
   if variables then
     for name, value in pairs(variables) do
       if value ~= nil and value ~= '' then
         tpl.print(
-          '  - ' ..
+          tpl.whitespace(2) ..
+          '- ' ..
           name ..
           ': ' ..
           tostring(value) ..
-          tpl.node_end()
+          tpl.line_end()
         )
       end
     end
@@ -1590,7 +1604,7 @@ function tpl.print(text)
     end
     log:write(text)
   else
-    io.write('  ' .. text)
+    io.write(text)
   end
 end
 %    \end{macrocode}
@@ -1689,7 +1703,7 @@ function tree.analyze_fields(fields, level)
       connection_state = 'continue'
     end
     tree.set_state(level, 'field', connection_state)
-    tpl.print(tpl.branches(level, 'field') .. tpl.key_value(field_name) .. tpl.node_end())
+    tpl.print(tpl.line_begin() .. tpl.branches(level, 'field') .. tpl.key_value(field_name) .. tpl.line_end())
     tree.analyze_list(recursion_node, level + 1)
   end
 end
@@ -1726,7 +1740,7 @@ function tree.analyze_node(head, level)
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-  tpl.print(out .. tpl.node_end())
+  tpl.print(tpl.line_begin() .. out .. tpl.line_end())
   tree.analyze_fields(fields, level)
 end
 %    \end{macrocode}
@@ -1743,7 +1757,7 @@ end
 %    \begin{macrocode}
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
-  tpl.print(tpl.line('short') .. tpl.node_end())
+  tpl.print(tpl.line('short') .. tpl.line_end())
 end
 %    \end{macrocode}
 %
@@ -2130,7 +2144,7 @@ end
 %
 %    \begin{macrocode}
 function base.analyze(head)
-  tpl.print(tpl.node_end())
+  tpl.print(tpl.line_end())
   tree.analyze_list(head, 1)
 end
 %    \end{macrocode}

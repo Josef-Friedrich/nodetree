@@ -784,7 +784,7 @@ Office
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\RequirePackage{kvoptions,xcolor}
+\RequirePackage{kvoptions,xcolor,mdframed}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -909,13 +909,10 @@ Office
 
 % \begin{environment}{nodetreeexample}
 %    \begin{macrocode}
-\newsavebox{\nodetreebox}
 \newenvironment{nodetreeexample}{%
   \tiny%
   \setmonofont{DejaVu Sans Mono}%
   \ttfamily%
-  \begin{lrbox}{\nodetreebox}%
-  \begin{minipage}{\linewidth}%
   \NT@ansi@smyck%
   \let\NT@c\textcolor%
   \def\NT@w{\hspace{0.5em}}
@@ -924,12 +921,12 @@ Office
   \setlength{\parskip}{-0.85pt}%
   \makeatletter%
 }{%
-  \end{minipage}%
-  \end{lrbox}%
-  \NT@ansi@smyck%
-  \colorbox{NTblack}{\usebox{\nodetreebox}}%
   \makeatother
 }
+\makeatletter
+\NT@ansi@smyck
+\surroundwithmdframed[linecolor=black,backgroundcolor=NTblack,fontcolor=white]{nodetreeexample}
+\makeatother
 %    \end{macrocode}
 % \end{environment}
 %

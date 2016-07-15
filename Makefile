@@ -14,6 +14,10 @@ install:
 	./clean.sh install
 
 doc:
+	cd examples
+	find examples -name "*_nodetree.tex" -exec lualatex {} \;
+	find examples -name "*.tex" -exec lualatex {} \;
+	cd ..
 	lualatex $(jobname).dtx
 	makeindex -s gglo.ist -o $(jobname).gls $(jobname).glo
 	makeindex -s gind.ist -o $(jobname).ind $(jobname).idx

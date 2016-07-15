@@ -887,7 +887,7 @@ Office
 % \begin{macro}{\NT@ansi@smyck}
 %    \begin{macrocode}
 \def\NT@ansi@smyck{
-\definecolor{NTblack}{HTML}{000000}%
+\definecolor{NTblack}{HTML}{212121}%
 \definecolor{NTred}{HTML}{C75646}%
 \definecolor{NTgreen}{HTML}{8EB33B}%
 \definecolor{NTyellow}{HTML}{D0B03C}%
@@ -915,19 +915,20 @@ Office
   \setmonofont{DejaVu Sans Mono}%
   \ttfamily%
   \begin{lrbox}{\nodetreebox}%
-  \begin{minipage}{\textwidth}%
+  \begin{minipage}{\linewidth}%
   \NT@ansi@smyck%
   \let\NT@c\textcolor%
   \def\NT@w{\hspace{0.5em}}
   \color{white}%
   \setlength{\parindent}{0pt}%
-  \setlength{\parskip}{-0.7pt}%
+  \setlength{\parskip}{-0.85pt}%
   \makeatletter%
 }{%
-  \makeatother%
   \end{minipage}%
   \end{lrbox}%
-  \colorbox{black}{\usebox{\nodetreebox}}%
+  \NT@ansi@smyck%
+  \colorbox{NTblack}{\usebox{\nodetreebox}}%
+  \makeatother
 }
 %    \end{macrocode}
 % \end{environment}

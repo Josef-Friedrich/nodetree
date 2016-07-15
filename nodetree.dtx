@@ -784,7 +784,7 @@ Office
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\RequirePackage{kvoptions}
+\RequirePackage{kvoptions,xcolor}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -868,26 +868,41 @@ Office
 \definecolor{NTred}{RGB}{205,0,0}%
 \definecolor{NTgreen}{RGB}{0,205,0}%
 \definecolor{NTyellow}{RGB}{205,205,0}%
-\definecolor{NTblue}{RGB}{205,0,205}%
-\definecolor{NTmagenta}{RGB}{0,205,205}%
-\definecolor{NTcyan}{RGB}{229,229,229}%
-\definecolor{NTgray}{RGB}{203,204,205}%
-\definecolor{NTblackbright}{RGB}{129,131,131}%
-\definecolor{NTredbright}{RGB}{252,57,31}%
-\definecolor{NTgreenbright}{RGB}{49,231,34}%
-\definecolor{NTyellowbright}{RGB}{234,236,35}%
-\definecolor{NTbluebright}{RGB}{88,51,255}%
-\definecolor{NTmagentabright}{RGB}{249,53,248}%
-\definecolor{NTcyanbright}{RGB}{20,240,240}%
-\definecolor{NTgraybright}{RGB}{233,235,235}%
-%127,127,127
-%255,0,0
-%0,255,0
-%255,255,0
-%92,92,255
-%255,0,255
-%0,255,255
-%255,255,255
+\definecolor{NTblue}{RGB}{0,0,238}%
+\definecolor{NTmagenta}{RGB}{205,0,205}%
+\definecolor{NTcyan}{RGB}{0,205,205}%
+\definecolor{NTgray}{RGB}{229,229,229}%
+\definecolor{NTblackbright}{RGB}{127,127,127}%
+\definecolor{NTredbright}{RGB}{255,0,0}%
+\definecolor{NTgreenbright}{RGB}{0,255,0}%
+\definecolor{NTyellowbright}{RGB}{255,255,0}%
+\definecolor{NTbluebright}{RGB}{92,92,255}%
+\definecolor{NTmagentabright}{RGB}{255,0,255}%
+\definecolor{NTcyanbright}{RGB}{0,255,255}%
+\definecolor{NTgraybright}{RGB}{255,255,255}%
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\NT@ansi@smyck}
+%    \begin{macrocode}
+\def\NT@ansi@smyck{
+\definecolor{NTblack}{HTML}{000000}%
+\definecolor{NTred}{HTML}{C75646}%
+\definecolor{NTgreen}{HTML}{8EB33B}%
+\definecolor{NTyellow}{HTML}{D0B03C}%
+\definecolor{NTblue}{HTML}{72B3CC}%
+\definecolor{NTmagenta}{HTML}{C8A0D1}%
+\definecolor{NTcyan}{HTML}{218693}%
+\definecolor{NTgray}{HTML}{B0B0B0}%
+\definecolor{NTblackbright}{HTML}{5D5D5D}%
+\definecolor{NTredbright}{HTML}{E09690}%
+\definecolor{NTgreenbright}{HTML}{CDEE69}%
+\definecolor{NTyellowbright}{HTML}{FFE377}%
+\definecolor{NTbluebright}{HTML}{9CD9F0}%
+\definecolor{NTmagentabright}{HTML}{FBB1F9}%
+\definecolor{NTcyanbright}{HTML}{77DFD8}%
+\definecolor{NTgraybright}{HTML}{F7F7F7}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -901,7 +916,7 @@ Office
   \ttfamily%
   \begin{lrbox}{\nodetreebox}%
   \begin{minipage}{\textwidth}%
-  \NT@ansi@terminalapp%
+  \NT@ansi@smyck%
   \let\NT@c\textcolor%
   \def\NT@w{\hspace{0.5em}}
   \color{white}%

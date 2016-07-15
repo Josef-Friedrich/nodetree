@@ -22,3 +22,5 @@ nodetree.tex
 *.run.xml
 *.tar
 nodetree/*
+*_nodetree.tex
+*_nodetree.log

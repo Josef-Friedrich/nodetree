@@ -39,7 +39,7 @@
   filecolor=red,
   urlcolor=red,
 ]{hyperref}
-%\usepackage{nodetree}
+\usepackage[callback={}]{nodetree}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -835,6 +835,7 @@ Office
 %    \begin{macrocode}
 \newcommand{\nodetreeset}[1]{\setkeys{nodetree}{#1}}
 %    \end{macrocode}
+% \end{macro}
 %
 % \begin{environment}{nodetreeexample}
 %    \begin{macrocode}
@@ -931,6 +932,10 @@ local base = {}
 %
 %    \begin{macrocode}
 local options = {}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+local output_file = {}
 %    \end{macrocode}
 %
 % \subsubsection{nodex --- Extend the node library}
@@ -1598,11 +1603,8 @@ end
 %
 %    \begin{macrocode}
 function tpl.print(text)
-  if options.channel == 'log' then
-    if not log then
-      log = io.open(tex.jobname .. '_nodetree.log', 'a')
-    end
-    log:write(text)
+  if options.channel == 'log' or options.channel == 'tex' then
+    output_file:write(text)
   else
     io.write(text)
   end
@@ -2107,6 +2109,9 @@ end
 %
 %    \begin{macrocode}
 function base.register_callbacks()
+  if options.channel == 'log' or options.channel == 'tex' then
+    output_file = io.open(tex.jobname .. '_nodetree.' .. options.channel, 'a')
+  end
   for alias in string.gmatch(options.callback, '([^,]+)') do
     base.register(base.get_callback_name(alias))
   end

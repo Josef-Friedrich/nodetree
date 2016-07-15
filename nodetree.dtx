@@ -55,6 +55,17 @@
   \includegraphics[scale=0.4]{graphics/#1}
 }
 
+\newcommand{\tmpexample}[1]{
+\begin{nodetreeexample}
+\input{#1_nodetree.tex}
+\end{nodetreeexample}
+}
+
+\newcommand{\tmpverbexample}[1]{
+\VerbatimInput[frame=single,fontsize=\footnotesize]{examples/#1.tex}
+\tmpexample{#1}
+}
+
 \DefineVerbatimEnvironment{code}{Verbatim}
 {
   frame=single,
@@ -75,8 +86,7 @@
 
 \maketitle
 
-\noindent
-\includegraphics[width=\linewidth]{graphics/packagename}
+\tmpverbexample{packagename}
 
 \newpage
 
@@ -511,6 +521,12 @@ For |list| connections \emph{light} characters are shown.
 \newpage
 
 \section{Examples}
+
+%\tmpverbexample{ligatures}
+
+\begin{nodetreeexample}
+\input{00hlist1line_nodetree.tex}
+\end{nodetreeexample}
 
 %%
 % packagename

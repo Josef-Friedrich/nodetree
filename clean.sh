@@ -7,10 +7,10 @@ _install() {
 }
 
 CLEAN='
-EXT="aux fdb_latexmk glo gls fls ilg ind idx log out pdf synctex.gz tar.gz toc"
+EXT=".aux .fdb_latexmk .glo .gls .fls .ilg .ind .idx .log .out .pdf .synctex.gz .tar.gz .toc _nodetree.tex _nodetree.log"
 
 _remove() {
-	find . -iname "*.$1" -not -path "./.git*" -exec rm -f {} \;
+	find . -iname "*$1" -not -path "./.git*" -exec rm -f {} \;
 }
 
 for i in $EXT; do

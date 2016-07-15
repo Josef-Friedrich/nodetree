@@ -15,7 +15,12 @@ _remove() {
 
 for i in $EXT; do
 	_remove $i
-done'
+done
+
+rm -f nodetree.lua
+rm -f nodetree.sty
+rm -f nodetree.tex
+'
 
 if [ "$1" = 'install' ]; then
 	_install 'pre-commit' "#! /bin/sh $CLEAN"

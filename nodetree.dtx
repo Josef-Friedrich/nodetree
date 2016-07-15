@@ -62,7 +62,7 @@
 }
 
 \newcommand{\tmpverbexample}[1]{
-\VerbatimInput[frame=single,fontsize=\footnotesize]{examples/#1.tex}
+\VerbatimInput[frame=single,fontsize=\footnotesize,firstline=4]{examples/#1.tex}
 \tmpexample{#1}
 }
 
@@ -552,20 +552,44 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 
 \tmpverbexample{ligatures}
 
+%-----------------------------------------------------------------------
+% Node types
+%-----------------------------------------------------------------------
 
 \subsection{Node types}
 
-\subsubsection{00hlist1line}
+\newcommand{\tmpnodetypesub}[4]{
+  \subsubsection{Type: #1(#2) Subtype: #3(#4)}
+  \tmpverbexample{#2#1#4#3}
+}
 
-\tmpverbexample{00hlist1line}
+\newcommand{\tmpnodetype}[2]{
+  \subsubsection{Type: #1(#2)}
+  \tmpverbexample{#2#1}
+}
 
-\subsubsection{00hlist2box}
-
-\tmpverbexample{00hlist2box}
-
-\subsubsection{00hlist3indent}
-
-\tmpverbexample{00hlist3indent}
+\tmpnodetypesub{hlist}{0}{line}{1}
+\tmpnodetypesub{hlist}{0}{box}{2}
+\tmpnodetypesub{hlist}{0}{indent}{3}
+\tmpnodetype{vlist}{1}
+\tmpnodetype{rule}{2}
+\tmpnodetypesub{disc}{7}{discretionary}{0}
+\tmpnodetypesub{disc}{7}{regular}{3}
+\tmpnodetypesub{whatsit}{8}{pdfaction}{22}
+\tmpnodetypesub{whatsit}{8}{pdfcolorstack}{28}
+\tmpnodetypesub{glue}{12}{baselineskip}{2}
+\tmpnodetypesub{glue}{12}{parskip}{3}
+\tmpnodetypesub{glue}{12}{spaceskip}{13}
+\tmpnodetypesub{glue}{12}{leaders}{100}
+\tmpnodetypesub{glue}{12}{cleaders}{101}
+\tmpnodetypesub{glue}{12}{xleaders}{102}
+\tmpnodetypesub{kern}{13}{userkern}{0}
+\tmpnodetypesub{kern}{13}{fontkern}{1}
+\tmpnodetypesub{kern}{13}{accentkern}{2}
+\tmpnodetypesub{kern}{13}{italiccorrection}{3}
+\tmpnodetype{glyph}{29}
+\tmpnodetype{attribute}{38}
+\tmpnodetype{attributelist}{40}
 
 %-----------------------------------------------------------------------
 % Index
@@ -1722,7 +1746,7 @@ function tree.format_field(head, field)
   if field == 'prev' or field == 'next' then
     out = nodex.node_id(head[field])
   elseif field == 'subtype' then
-    out = nodex.subtype(head)
+    out = tpl.underscore(nodex.subtype(head))
   elseif
     field == 'width' or
     field == 'height' or

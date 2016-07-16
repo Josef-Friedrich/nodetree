@@ -39,7 +39,7 @@
   filecolor=red,
   urlcolor=red,
 ]{hyperref}
-\usepackage[callback={}]{nodetree}
+\usepackage[documentationmode]{nodetree}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -810,7 +810,7 @@ Office
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\RequirePackage{kvoptions,xcolor,mdframed}
+\RequirePackage{kvoptions}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -850,6 +850,17 @@ Office
 \define@key{NT}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
 %    \end{macrocode}
 %
+
+%    \begin{macrocode}
+\newif\ifdocumentationmode%
+\documentationmodefalse%
+\DeclareVoidOption{documentationmode}{%
+  \RequirePackage{xcolor,mdframed}%
+  \nodetreeoption[callback]{}%
+  \documentationmodetrue%
+}
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 \ProcessKeyvalOptions*
 \directlua{
@@ -866,6 +877,7 @@ Office
 %
 % \begin{macro}{\NT@ansi@terminalapp}
 %    \begin{macrocode}
+\ifdocumentationmode
 \def\NT@ansi@terminalapp{%
 \definecolor{NTblack}{RGB}{0,0,0}%
 \definecolor{NTred}{RGB}{194,54,33}%
@@ -953,6 +965,7 @@ Office
 \NT@ansi@smyck
 \surroundwithmdframed[linecolor=black,backgroundcolor=NTblack,fontcolor=white]{nodetreeexample}
 \makeatother
+\fi
 %    \end{macrocode}
 % \end{environment}
 %

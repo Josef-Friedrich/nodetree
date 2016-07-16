@@ -849,8 +849,8 @@ Office
 \DeclareStringOption[1]{decimalplaces}
 \define@key{NT}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
 %    \end{macrocode}
-% Never load “heavy” packages like |mdframed| in default debug mode. The
-% are way to slow.
+% Never load “heavy” packages like |mdframed| in default debug mode.
+% They are way to slow.
 %    \begin{macrocode}
 \newif\ifdocumentationmode%
 \documentationmodefalse%
@@ -879,8 +879,8 @@ Office
 %    \begin{macrocode}
 \ifdocumentationmode
 \ExplSyntaxOn
-\def\NT@theme#1{
-  \str_case:nn{#1}{
+\newcommand{\nodetreetheme}[2][dark]{
+  \str_case:nn{#2}{
     {terminalapp}{
       \definecolor{NTblack}{RGB}{0,0,0}
       \definecolor{NTred}{RGB}{194,54,33}
@@ -936,6 +936,8 @@ Office
       \definecolor{NTgraybright}{HTML}{F7F7F7}
     }
   }
+  \definecolor{NTbackground}{named}{NTblack}
+  \definecolor{NTfont}{named}{NTgraybright}
 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -943,24 +945,25 @@ Office
 %
 % \begin{environment}{nodetreeexample}
 %    \begin{macrocode}
-\newenvironment{nodetreeexample}{%
+\nodetreetheme{smyck}
+\newenvironment{nodetreeexample}{
+  \begin{mdframed}[
+    linecolor=black,
+    backgroundcolor=NTbackground,
+    fontcolor=NTfont,
+  ]%
   \tiny%
   \setmonofont{DejaVu Sans Mono}%
   \ttfamily%
-  \NT@theme{smyck}%
   \let\NT@c\textcolor%
   \def\NT@w{\hspace{0.5em}}
-  \color{white}%
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{-0.85pt}%
   \makeatletter%
-}{%
-  \makeatother
+}{
+  \makeatother%
+  \end{mdframed}%
 }
-\makeatletter
-\NT@theme{smyck}
-\surroundwithmdframed[linecolor=black,backgroundcolor=NTblack,fontcolor=white]{nodetreeexample}
-\makeatother
 \fi
 %    \end{macrocode}
 % \end{environment}

@@ -39,7 +39,7 @@
   filecolor=red,
   urlcolor=red,
 ]{hyperref}
-\usepackage[documentationmode]{nodetree}
+\usepackage[theme=xterm,thememode=light,documentationmode]{nodetree}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -849,6 +849,8 @@ Office
 \DeclareStringOption[1]{decimalplaces}
 \define@key{NT}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
 %    \end{macrocode}
+%
+%
 % Never load “heavy” packages like |mdframed| in default debug mode.
 % They are way to slow.
 %    \begin{macrocode}
@@ -859,6 +861,14 @@ Office
   \nodetreeoption[callback]{}%
   \documentationmodetrue%
 }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[smyck]{theme}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[dark]{thememode}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -880,7 +890,7 @@ Office
 \ifdocumentationmode
 \ExplSyntaxOn
 \newcommand{\nodetreetheme}[2][dark]{
-  \str_case:nn{#2}{
+  \str_case_x:nn{#2}{
     {terminalapp}{
       \definecolor{NTblack}{RGB}{0,0,0}
       \definecolor{NTred}{RGB}{194,54,33}
@@ -936,7 +946,7 @@ Office
       \definecolor{NTgraybright}{HTML}{F7F7F7}
     }
   }
-  \str_case:nn{#1}{
+  \str_case_x:nn{#1}{
     {dark}{
       \definecolor{NTbackground}{named}{NTblack}
       \definecolor{NTfont}{named}{NTgraybright}
@@ -954,7 +964,7 @@ Office
 % \begin{environment}{nodetreeexample}
 %    \begin{macrocode}
 \newenvironment{nodetreeexample}{
-  \nodetreetheme[light]{smyck}
+  \nodetreetheme[\NT@thememode]{\NT@theme}
   \begin{mdframed}[
     linecolor=black,
     backgroundcolor=NTbackground,

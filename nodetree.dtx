@@ -936,8 +936,16 @@ Office
       \definecolor{NTgraybright}{HTML}{F7F7F7}
     }
   }
-  \definecolor{NTbackground}{named}{NTblack}
-  \definecolor{NTfont}{named}{NTgraybright}
+  \str_case:nn{#1}{
+    {dark}{
+      \definecolor{NTbackground}{named}{NTblack}
+      \definecolor{NTfont}{named}{NTgraybright}
+    }
+    {light}{
+      \definecolor{NTbackground}{named}{NTgraybright}
+      \definecolor{NTfont}{named}{NTblack}
+    }
+  }
 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -945,13 +953,14 @@ Office
 %
 % \begin{environment}{nodetreeexample}
 %    \begin{macrocode}
-\nodetreetheme{smyck}
 \newenvironment{nodetreeexample}{
+  \nodetreetheme[light]{smyck}
   \begin{mdframed}[
     linecolor=black,
     backgroundcolor=NTbackground,
     fontcolor=NTfont,
   ]%
+  \bfseries%
   \tiny%
   \setmonofont{DejaVu Sans Mono}%
   \ttfamily%

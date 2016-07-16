@@ -39,7 +39,7 @@
   filecolor=red,
   urlcolor=red,
 ]{hyperref}
-\usepackage[theme=xterm,thememode=light,documentationmode]{nodetree}
+\usepackage[theme=monokaisoda,thememode=dark,documentationmode]{nodetree}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -448,6 +448,34 @@ If |decimalplaces| is set to |0| only integer values are shown.
 \begin{code}
 ├─GLYPH char: "a"; width: 5pt; height: 4pt;
 \end{code}
+
+%%
+% theme
+%%
+
+\subsection{Option \texttt{theme}}
+
+\begin{nodetreeexample}[theme=terminalapp]
+\input{minimal_nodetree.tex}
+\end{nodetreeexample}
+
+\begin{nodetreeexample}[theme=smyck]
+\input{minimal_nodetree.tex}
+\end{nodetreeexample}
+
+%%
+% thememode
+%%
+
+\subsection{Option \texttt{thememode}}
+
+\begin{nodetreeexample}[thememode=dark]
+\input{minimal_nodetree.tex}
+\end{nodetreeexample}
+
+\begin{nodetreeexample}[thememode=light]
+\input{minimal_nodetree.tex}
+\end{nodetreeexample}
 
 %-----------------------------------------------------------------------
 % Visual tree structure
@@ -945,6 +973,42 @@ Office
       \definecolor{NTcyanbright}{HTML}{77DFD8}
       \definecolor{NTgraybright}{HTML}{F7F7F7}
     }
+    {molokai}{
+      \definecolor{NTblack}{HTML}{212121}
+      \definecolor{NTred}{HTML}{fa2573}
+      \definecolor{NTgreen}{HTML}{98e123}
+      \definecolor{NTyellow}{HTML}{dfd460}
+      \definecolor{NTblue}{HTML}{1080d0}
+      \definecolor{NTmagenta}{HTML}{8700ff}
+      \definecolor{NTcyan}{HTML}{43a8d0}
+      \definecolor{NTgray}{HTML}{bbbbbb}
+      \definecolor{NTblackbright}{HTML}{555555}
+      \definecolor{NTredbright}{HTML}{f6669d}
+      \definecolor{NTgreenbright}{HTML}{b1e05f}
+      \definecolor{NTyellowbright}{HTML}{fff26d}
+      \definecolor{NTbluebright}{HTML}{00afff}
+      \definecolor{NTmagentabright}{HTML}{af87ff}
+      \definecolor{NTcyanbright}{HTML}{51ceff}
+      \definecolor{NTgraybright}{HTML}{ffffff}
+    }
+    {monokaisoda}{
+      \definecolor{NTblack}{HTML}{1a1a1a}
+      \definecolor{NTred}{HTML}{f4005f}
+      \definecolor{NTgreen}{HTML}{98e024}
+      \definecolor{NTyellow}{HTML}{fa8419}
+      \definecolor{NTblue}{HTML}{9d65ff}
+      \definecolor{NTmagenta}{HTML}{f4005f}
+      \definecolor{NTcyan}{HTML}{58d1eb}
+      \definecolor{NTgray}{HTML}{c4c5b5}
+      \definecolor{NTblackbright}{HTML}{625e4c}
+      \definecolor{NTredbright}{HTML}{f4005f}
+      \definecolor{NTgreenbright}{HTML}{98e024}
+      \definecolor{NTyellowbright}{HTML}{e0d561}
+      \definecolor{NTbluebright}{HTML}{9d65ff}
+      \definecolor{NTmagentabright}{HTML}{f4005f}
+      \definecolor{NTcyanbright}{HTML}{58d1eb}
+      \definecolor{NTgraybright}{HTML}{f6f6ef}
+    }
   }
   \str_case_x:nn{#1}{
     {dark}{
@@ -963,7 +1027,8 @@ Office
 %
 % \begin{environment}{nodetreeexample}
 %    \begin{macrocode}
-\newenvironment{nodetreeexample}{
+\newenvironment{nodetreeexample}[1][]{
+  \setkeys{NT}{#1}
   \nodetreetheme[\NT@thememode]{\NT@theme}
   \begin{mdframed}[
     linecolor=black,

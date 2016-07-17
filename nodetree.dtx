@@ -467,6 +467,8 @@ If |decimalplaces| is set to |0| only integer values are shown.
 \nodetreeterminalemulator[thememode=dark]{minimal}
 \nodetreeterminalemulator[thememode=light]{minimal}
 
+\nodetreeset{theme=monokaisoda,thememode=dark}
+
 %-----------------------------------------------------------------------
 % Visual tree structure
 %-----------------------------------------------------------------------
@@ -868,6 +870,13 @@ Office
 \define@key{NT}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
 %    \end{macrocode}
 %
+%    \begin{macrocode}
+\DeclareStringOption[smyck]{theme}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[dark]{thememode}
+%    \end{macrocode}
 %
 % Never load “heavy” packages like |mdframed| in default debug mode.
 % They are way to slow.
@@ -882,15 +891,7 @@ Office
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\DeclareStringOption[smyck]{theme}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\DeclareStringOption[dark]{thememode}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\ProcessKeyvalOptions*
+\ProcessKeyvalOptions{NT}
 \directlua{
   nodetree.set_default_options()
   nodetree.register_callbacks()
@@ -899,7 +900,9 @@ Office
 %
 % \begin{macro}{\nodetreeset}
 %    \begin{macrocode}
-\newcommand{\nodetreeset}[1]{\setkeys{nodetree}{#1}}
+\newcommand{\nodetreeset}[1]{%
+  \setkeys{NT}{#1}%
+}
 %    \end{macrocode}
 % \end{macro}
 % Begin of the documentation mode.
@@ -1056,17 +1059,9 @@ Office
 %    \begin{macrocode}
 \newcommand{\nodetreeterminalemulator}[2][]{
   \setkeys{NT}{#1}
-  \NT@define@colors
-  \begin{mdframed}[
-    linecolor=black,
-    backgroundcolor=NTbackground,
-    fontcolor=NTfont,
-  ]%
-  \NT@font@setup
-  \makeatletter%
+  \begin{nodetreeexample}
   \input{#2_nodetree.tex}
-  \makeatother%
-  \end{mdframed}%
+  \end{nodetreeexample}
 }
 %    \end{macrocode}
 % \end{macro}

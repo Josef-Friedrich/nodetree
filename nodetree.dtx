@@ -1693,7 +1693,7 @@ function tpl.callback_variable(variable_name, variable)
     tpl.print(
       tpl.underscore(variable_name) .. ': ' ..
       tostring(variable) ..
-      tpl.line_end()
+      tpl.new_line()
     )
   end
 end
@@ -1707,7 +1707,7 @@ function tpl.line(length)
   else
     out = '-----------------------'
   end
-    return out .. tpl.line_end()
+    return out .. tpl.new_line()
 end
 %    \end{macrocode}
 %
@@ -1733,7 +1733,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tpl.new_line()
+function tpl.new_line_character()
   if options.channel == 'tex' then
     return '\\par\n'
   else
@@ -1743,13 +1743,13 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tpl.line_end(count)
+function tpl.new_line(count)
   local out = ''
   if not count then
     count = 1
   end
   for i = 1, count do
-    out = out .. tpl.new_line()
+    out = out .. tpl.new_line_character()
   end
   return out
 end
@@ -1758,10 +1758,10 @@ end
 %    \begin{macrocode}
 function tpl.callback(callback_name, variables)
   tpl.print(
-    tpl.line_end(2) ..
+    tpl.new_line(2) ..
     'Callback: ' ..
     tpl.colored_string(tpl.underscore(callback_name), 'red', '', true) ..
-    tpl.line_end()
+    tpl.new_line()
   )
   if variables then
     for name, value in pairs(variables) do
@@ -1771,7 +1771,7 @@ function tpl.callback(callback_name, variables)
           tpl.underscore(name) ..
           ': ' ..
           tostring(value) ..
-          tpl.line_end()
+          tpl.new_line()
         )
       end
     end
@@ -1940,7 +1940,7 @@ function tree.analyze_fields(fields, level)
       tpl.branches(level, 'field') ..
       tpl.key_value(field_name) ..
       tpl.node_end() ..
-      tpl.line_end()
+      tpl.new_line()
     )
     tree.analyze_list(recursion_node, level + 1)
   end
@@ -1982,7 +1982,7 @@ function tree.analyze_node(head, level)
     tpl.node_begin() ..
     out ..
     tpl.node_end() ..
-    tpl.line_end()
+    tpl.new_line()
   )
   tree.analyze_fields(fields, level)
 end
@@ -2000,7 +2000,7 @@ end
 %    \begin{macrocode}
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
-  tpl.print(tpl.line('short') .. tpl.line_end())
+  tpl.print(tpl.line('short') .. tpl.new_line())
 end
 %    \end{macrocode}
 %
@@ -2390,7 +2390,7 @@ end
 %
 %    \begin{macrocode}
 function base.analyze(head)
-  tpl.print(tpl.line_end())
+  tpl.print(tpl.new_line())
   tree.analyze_list(head, 1)
 end
 %    \end{macrocode}

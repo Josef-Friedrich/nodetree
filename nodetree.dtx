@@ -455,8 +455,27 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \subsection{Option \texttt{theme}}
 
+terminalapp
+
 \nodetreeterminalemulator[theme=terminalapp]{minimal}
+
+xterm
+
+\nodetreeterminalemulator[theme=xterm]{minimal}
+
+smyck
+
 \nodetreeterminalemulator[theme=smyck]{minimal}
+
+molokai
+
+\nodetreeterminalemulator[theme=molokai]{minimal}
+
+monokaisoda
+
+\nodetreeterminalemulator[theme=monokaisoda]{minimal}
+
+\nodetreereset
 
 %%
 % thememode
@@ -464,14 +483,23 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \subsection{Option \texttt{thememode}}
 
+dark
+
 \nodetreeterminalemulator[thememode=dark]{minimal}
+
+light
+
 \nodetreeterminalemulator[thememode=light]{minimal}
+
+\nodetreereset
 
 %%
 % font
 %%
 
 \subsection{Option \texttt{font}}
+
+\nodetreeset{fontsize=\small}
 
 FreeMono
 
@@ -489,16 +517,23 @@ Ubuntu Mono
 
 \nodetreeterminalemulator[font={Ubuntu Mono}]{minimal}
 
+\nodetreereset
+
 %%
 % fontsize
 %%
 
 \subsection{Option \texttt{fontsize}}
 
+\string\small
+
 \nodetreeterminalemulator[fontsize=\small]{minimal}
+
+\string\tiny
+
 \nodetreeterminalemulator[fontsize=\tiny]{minimal}
 
-\nodetreeset{theme=monokaisoda,thememode=dark,fontsize=\tiny}
+\nodetreereset
 
 %-----------------------------------------------------------------------
 % Visual tree structure
@@ -1066,6 +1101,14 @@ Office
   \def\NT@w{\hspace{0.5em}}
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{-0.9pt}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\nodetreereset}
+%    \begin{macrocode}
+\def\nodetreereset{
+  \nodetreeset{theme=monokaisoda,thememode=dark,font={Ubuntu Mono},fontsize=\tiny}
 }
 %    \end{macrocode}
 % \end{macro}

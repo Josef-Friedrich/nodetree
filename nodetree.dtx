@@ -1711,6 +1711,27 @@ function tpl.line(length)
 end
 %    \end{macrocode}
 %
+%
+%    \begin{macrocode}
+function tpl.node_begin()
+  if options.channel == 'tex' then
+    return '\\mbox{'
+  else
+    return ''
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function tpl.node_end()
+  if options.channel == 'tex' then
+    return '}'
+  else
+    return ''
+  end
+end
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 function tpl.new_line()
   if options.channel == 'tex' then
@@ -1718,13 +1739,6 @@ function tpl.new_line()
   else
     return '\n'
   end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function tpl.line_begin()
-  return ''
-  -- return tpl.whitespace(2)
 end
 %    \end{macrocode}
 %
@@ -1921,7 +1935,13 @@ function tree.analyze_fields(fields, level)
       connection_state = 'continue'
     end
     tree.set_state(level, 'field', connection_state)
-    tpl.print(tpl.line_begin() .. tpl.branches(level, 'field') .. tpl.key_value(field_name) .. tpl.line_end())
+    tpl.print(
+      tpl.node_begin() ..
+      tpl.branches(level, 'field') ..
+      tpl.key_value(field_name) ..
+      tpl.node_end() ..
+      tpl.line_end()
+    )
     tree.analyze_list(recursion_node, level + 1)
   end
 end
@@ -1958,7 +1978,12 @@ function tree.analyze_node(head, level)
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-  tpl.print(tpl.line_begin() .. out .. tpl.line_end())
+  tpl.print(
+    tpl.node_begin() ..
+    out ..
+    tpl.node_end() ..
+    tpl.line_end()
+  )
   tree.analyze_fields(fields, level)
 end
 %    \end{macrocode}

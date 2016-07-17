@@ -455,13 +455,8 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \subsection{Option \texttt{theme}}
 
-\begin{nodetreeexample}[theme=terminalapp]
-\input{minimal_nodetree.tex}
-\end{nodetreeexample}
-
-\begin{nodetreeexample}[theme=smyck]
-\input{minimal_nodetree.tex}
-\end{nodetreeexample}
+\nodetreeterminalemulator[theme=terminalapp]{minimal}
+\nodetreeterminalemulator[theme=smyck]{minimal}
 
 %%
 % thememode
@@ -469,13 +464,8 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \subsection{Option \texttt{thememode}}
 
-\begin{nodetreeexample}[thememode=dark]
-\input{minimal_nodetree.tex}
-\end{nodetreeexample}
-
-\begin{nodetreeexample}[thememode=light]
-\input{minimal_nodetree.tex}
-\end{nodetreeexample}
+\nodetreeterminalemulator[thememode=dark]{minimal}
+\nodetreeterminalemulator[thememode=light]{minimal}
 
 %-----------------------------------------------------------------------
 % Visual tree structure
@@ -912,13 +902,16 @@ Office
 \newcommand{\nodetreeset}[1]{\setkeys{nodetree}{#1}}
 %    \end{macrocode}
 % \end{macro}
+% Begin of the documentation mode.
+%    \begin{macrocode}
+\ifdocumentationmode
+%    \end{macrocode}
 %
 % \begin{macro}{\NT@theme}
 %    \begin{macrocode}
-\ifdocumentationmode
 \ExplSyntaxOn
-\newcommand{\nodetreetheme}[2][dark]{
-  \str_case_x:nn{#2}{
+\def\NT@define@colors{
+  \str_case_x:nn{\NT@theme}{
     {terminalapp}{
       \definecolor{NTblack}{RGB}{0,0,0}
       \definecolor{NTred}{RGB}{194,54,33}
@@ -1010,7 +1003,7 @@ Office
       \definecolor{NTgraybright}{HTML}{f6f6ef}
     }
   }
-  \str_case_x:nn{#1}{
+  \str_case_x:nn{\NT@thememode}{
     {dark}{
       \definecolor{NTbackground}{named}{NTblack}
       \definecolor{NTfont}{named}{NTgraybright}
@@ -1025,32 +1018,63 @@ Office
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{environment}{nodetreeexample}
+% \begin{macro}{\NT@font@setup}
 %    \begin{macrocode}
-\newenvironment{nodetreeexample}[1][]{
-  \setkeys{NT}{#1}
-  \nodetreetheme[\NT@thememode]{\NT@theme}
-  \begin{mdframed}[
-    linecolor=black,
-    backgroundcolor=NTbackground,
-    fontcolor=NTfont,
-  ]%
+\def\NT@font@setup{
   \bfseries%
-  \tiny%
+  \footnotesize%
   \setmonofont{DejaVu Sans Mono}%
   \ttfamily%
   \let\NT@c\textcolor%
   \def\NT@w{\hspace{0.5em}}
   \setlength{\parindent}{0pt}%
-  \setlength{\parskip}{-0.85pt}%
+  \setlength{\parskip}{-0.9pt}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{environment}{nodetreeexample}
+%    \begin{macrocode}
+\newenvironment{nodetreeexample}[1][]{
+  \setkeys{NT}{#1}
+  \NT@define@colors
+  \begin{mdframed}[
+    linecolor=black,
+    backgroundcolor=NTbackground,
+    fontcolor=NTfont,
+  ]%
+  \NT@font@setup
   \makeatletter%
 }{
   \makeatother%
   \end{mdframed}%
 }
-\fi
 %    \end{macrocode}
 % \end{environment}
+%
+% \begin{macro}{\nodetreetermemulator}
+%    \begin{macrocode}
+\newcommand{\nodetreeterminalemulator}[2][]{
+  \setkeys{NT}{#1}
+  \NT@define@colors
+  \begin{mdframed}[
+    linecolor=black,
+    backgroundcolor=NTbackground,
+    fontcolor=NTfont,
+  ]%
+  \NT@font@setup
+  \makeatletter%
+  \input{#2_nodetree.tex}
+  \makeatother%
+  \end{mdframed}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% End of the documentation mode.
+%    \begin{macrocode}
+\fi
+%    \end{macrocode}
 %
 % \iffalse
 %</package>

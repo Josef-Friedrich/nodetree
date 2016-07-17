@@ -836,7 +836,7 @@ Office
 %    \begin{macrocode}
 \SetupKeyvalOptions{
   family=NT,
-  prefix=NT@
+  prefix=NTK@
 }
 %    \end{macrocode}
 %
@@ -910,11 +910,11 @@ Office
 \ifdocumentationmode
 %    \end{macrocode}
 %
-% \begin{macro}{\NT@theme}
+% \begin{macro}{\NT@colors}
 %    \begin{macrocode}
 \ExplSyntaxOn
-\def\NT@define@colors{
-  \str_case_x:nn{\NT@theme}{
+\def\NT@colors{
+  \str_case_x:nn{\NTK@theme}{
     {terminalapp}{
       \definecolor{NTblack}{RGB}{0,0,0}
       \definecolor{NTred}{RGB}{194,54,33}
@@ -1006,7 +1006,7 @@ Office
       \definecolor{NTgraybright}{HTML}{f6f6ef}
     }
   }
-  \str_case_x:nn{\NT@thememode}{
+  \str_case_x:nn{\NTK@thememode}{
     {dark}{
       \definecolor{NTbackground}{named}{NTblack}
       \definecolor{NTfont}{named}{NTgraybright}
@@ -1021,9 +1021,9 @@ Office
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\NT@font@setup}
+% \begin{macro}{\NT@fonts}
 %    \begin{macrocode}
-\def\NT@font@setup{
+\def\NT@fonts{
   \bfseries%
   \footnotesize%
   \setmonofont{DejaVu Sans Mono}%
@@ -1040,13 +1040,13 @@ Office
 %    \begin{macrocode}
 \newenvironment{nodetreeexample}[1][]{
   \setkeys{NT}{#1}
-  \NT@define@colors
+  \NT@colors
   \begin{mdframed}[
     linecolor=black,
     backgroundcolor=NTbackground,
     fontcolor=NTfont,
   ]%
-  \NT@font@setup
+  \NT@fonts
   \makeatletter%
 }{
   \makeatother%

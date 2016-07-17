@@ -467,7 +467,42 @@ If |decimalplaces| is set to |0| only integer values are shown.
 \nodetreeterminalemulator[thememode=dark]{minimal}
 \nodetreeterminalemulator[thememode=light]{minimal}
 
-\nodetreeset{theme=monokaisoda,thememode=dark}
+%%
+% font
+%%
+
+\subsection{Option \texttt{font}}
+
+FreeMono
+
+\nodetreeterminalemulator[font=FreeMono]{minimal}
+
+Liberation Mono
+
+\nodetreeterminalemulator[font={Liberation Mono}]{minimal}
+
+Tlwg Mono
+
+\nodetreeterminalemulator[font={Tlwg Mono}]{minimal}
+
+DejaVu Sans Mono
+
+\nodetreeterminalemulator[font={DejaVu Sans Mono}]{minimal}
+
+Ubuntu Mono
+
+\nodetreeterminalemulator[font={Ubuntu Mono}]{minimal}
+
+%%
+% fontsize
+%%
+
+\subsection{Option \texttt{fontsize}}
+
+\nodetreeterminalemulator[fontsize=\small]{minimal}
+\nodetreeterminalemulator[fontsize=\tiny]{minimal}
+
+\nodetreeset{theme=monokaisoda,thememode=dark,fontsize=\tiny}
 
 %-----------------------------------------------------------------------
 % Visual tree structure
@@ -538,8 +573,6 @@ For |list| connections \emph{light} characters are shown.
 % Examples
 %-----------------------------------------------------------------------
 
-\newpage
-
 \section{Examples}
 
 %%
@@ -554,8 +587,6 @@ For |list| connections \emph{light} characters are shown.
 % math
 %%
 
-\newpage
-
 \subsection{The node list of a mathematical formula}
 
 \tmpverbexample{math}
@@ -563,8 +594,6 @@ For |list| connections \emph{light} characters are shown.
 %%
 % ligatures
 %%
-
-\newpage
 
 \subsection{The node list of the word \emph{Office}}
 
@@ -878,6 +907,15 @@ Office
 \DeclareStringOption[dark]{thememode}
 %    \end{macrocode}
 %
+%    \begin{macrocode}
+\DeclareStringOption[Ubuntu Mono]{font}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[\footnotesize]{fontsize}
+%    \end{macrocode}
+%
+
 % Never load “heavy” packages like |mdframed| in default debug mode.
 % They are way to slow.
 %    \begin{macrocode}
@@ -1025,8 +1063,8 @@ Office
 %    \begin{macrocode}
 \def\NT@fonts{
   \bfseries%
-  \footnotesize%
-  \setmonofont{DejaVu Sans Mono}%
+  \NTK@fontsize%
+  \setmonofont{\NTK@font}%
   \ttfamily%
   \let\NT@c\textcolor%
   \def\NT@w{\hspace{0.5em}}

@@ -15,7 +15,33 @@
      \Email{josef@friedrich.rocks}}
 \maketitle
 
-\section{Über nodes}
+\section{Über das Paket}
+
+Mit dem \Package{nodetree} lässt sich DIE zentrale interne Datenstruktur
+von Lua\TeX{} --- die \texttt{nodes} --- visualisieren. Das Paket wählt
+dafür eine Baumansicht, wie sie auch vom den UNIX-Kommandozeilen-Befehl
+\texttt{tree} verwendet wird.
+
+\section{Über \texttt{nodes}}
+
+Die Verarbeitung einer Quelltextdatei Lua\TeX{} in ein druckreifes PDF-%
+Dokument erfolgt --- stark vereinfacht --- in drei Schritten:
+
+\begin{enumerate}
+\item Lua\TeX{} ersetzt alle Makros in nicht mehr weiter zu
+expandierende \texttt{token}.
+
+\item Lua\TeX{} berechnet aus diesen \texttt{token} die genaue Anordung
+der grafischen bzw. typografischen Elemente im Dokument. Zur Speicherung
+der Berechungen in unzähligen Zwischenschritten nutzt Lua\TeX{} als
+Datenformat \texttt{nodes}. Am Ende dieser vielen Berechnungen ist ein
+riesiger \texttt{node}-Baum entstanden. Die einzelnen \texttt{nodes}
+wurden zu Zweigen und Ästen verkettet und diese wiederum zu einem
+baumähnlichen Gebilde.
+
+\item Ein Treiber generiert aus diesem \texttt{node}-Baum das gewünschte
+Dokumentenformat, beispielsweise eine PDF-Datei.
+\end{enumerate}
 
 \section{Alternativen zu nodetree}
 

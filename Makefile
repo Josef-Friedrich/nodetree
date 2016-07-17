@@ -16,16 +16,16 @@ install:
 doc: docexamples docpdf
 
 docpdf:
-	lualatex $(jobname).dtx
+	lualatex --shell-escape $(jobname).dtx
 	makeindex -s gglo.ist -o $(jobname).gls $(jobname).glo
 	makeindex -s gind.ist -o $(jobname).ind $(jobname).idx
-	lualatex $(jobname).dtx
+	lualatex --shell-escape $(jobname).dtx
 	mkdir -p $(texmf)/doc
 	cp $(jobname).pdf $(texmf)/doc
 
 docexamples:
 	find . -name "*_nodetree.tex" -exec rm -f {} \;
-	find examples -name "*.tex" -exec lualatex {} \;
+	#find examples -name "*.tex" -exec lualatex {} \;
 
 clean:
 	./clean.sh

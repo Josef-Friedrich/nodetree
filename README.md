@@ -1,5 +1,5 @@
 
-![nodetree](graphics/packagename.png)
+![nodetree](https://raw.githubusercontent.com/Josef-Friedrich/nodetree/master/graphics/packagename.png)
 
 # Abstract
 
@@ -86,7 +86,7 @@ nodetree
 \end{document}
 ```
 
-![nodetree](graphics/math.png)
+![nodetree](https://raw.githubusercontent.com/Josef-Friedrich/nodetree/master/graphics/math.png)
 
 ## The node list of the word 'Office'
 
@@ -100,5 +100,5 @@ Office
 \end{document}
 ```
 
-![nodetree](graphics/ligatures.png)
+![nodetree](https://raw.githubusercontent.com/Josef-Friedrich/nodetree/master/graphics/ligatures.png)
 

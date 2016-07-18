@@ -36,7 +36,6 @@ ctan: install doc
 	rm -rf $(jobname)
 	mkdir $(jobname)
 	cp -f README.md $(jobname)/
-	sed -i '.bak' 's#(graphics/#(https://raw.githubusercontent.com/Josef-Friedrich/nodetree/master/graphics/#' $(jobname)/README.md
 	rm -f $(jobname)/README.md.bak
 	cp -f $(jobname).ins $(jobname)/
 	cp -f $(jobname).dtx $(jobname)/

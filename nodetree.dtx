@@ -1114,8 +1114,6 @@ Office
   \NTK@fontsize%
   \setmonofont{\NTK@font}%
   \ttfamily%
-  \let\NT@c\textcolor%
-  \def\NT@w{\hspace{0.5em}}
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{-0.9pt}%
 }
@@ -1141,9 +1139,7 @@ Office
     fontcolor=NTfont,
   ]%
   \NT@fonts
-  \makeatletter%
 }{
-  \makeatother%
   \end{mdframed}%
 }
 %    \end{macrocode}
@@ -1532,7 +1528,7 @@ end
 function tpl.whitespace(count)
   local whitespace, out = '', ''
   if options.channel == 'tex' then
-    whitespace = '\\NT@w'
+    whitespace = '\\hspace{0.5em}'
   else
     whitespace = ' '
   end
@@ -1721,7 +1717,7 @@ end
 %    \begin{macrocode}
 function tpl.colored_string(string, color, mode, background)
   if options.channel == 'tex' then
-    return '\\NT@c{' ..
+    return '\\textcolor{' ..
       tpl.color_tex(color, mode, background) ..
       '}{' ..
       string ..

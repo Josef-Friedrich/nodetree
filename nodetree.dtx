@@ -467,46 +467,40 @@ If |decimalplaces| is set to |0| only integer values are shown.
 \end{code}
 
 %%
-% theme
+% theme and thememode
 %%
 
-\subsection{Option \texttt{theme}}
+\subsection{Option \texttt{theme} and \texttt{thememode}}
+
+bw
+
+\nodetreeterminalemulator[theme=bwdark,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=bwlight,thememode=light]{minimal}
 
 terminalapp
 
-\nodetreeterminalemulator[theme=terminalapp]{minimal}
+\nodetreeterminalemulator[theme=terminalapp,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=terminalapp,thememode=light]{minimal}
 
 xterm
 
-\nodetreeterminalemulator[theme=xterm]{minimal}
+\nodetreeterminalemulator[theme=xterm,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=xterm,thememode=light]{minimal}
 
 smyck
 
-\nodetreeterminalemulator[theme=smyck]{minimal}
+\nodetreeterminalemulator[theme=smyck,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=smyck,thememode=light]{minimal}
 
 molokai
 
-\nodetreeterminalemulator[theme=molokai]{minimal}
+\nodetreeterminalemulator[theme=molokai,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=molokai,thememode=light]{minimal}
 
 monokaisoda
 
-\nodetreeterminalemulator[theme=monokaisoda]{minimal}
-
-\nodetreereset
-
-%%
-% thememode
-%%
-
-\subsection{Option \texttt{thememode}}
-
-dark
-
-\nodetreeterminalemulator[thememode=dark]{minimal}
-
-light
-
-\nodetreeterminalemulator[thememode=light]{minimal}
+\nodetreeterminalemulator[theme=monokaisoda,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=monokaisoda,thememode=light]{minimal}
 
 \nodetreereset
 
@@ -1001,6 +995,42 @@ Office
 \ExplSyntaxOn
 \def\NT@colors{
   \str_case_x:nn{\NTK@theme}{
+    {bwdark}{
+      \definecolor{NTblack}{gray}{0}
+      \definecolor{NTred}{gray}{1}
+      \definecolor{NTgreen}{gray}{1}
+      \definecolor{NTyellow}{gray}{1}
+      \definecolor{NTblue}{gray}{1}
+      \definecolor{NTmagenta}{gray}{1}
+      \definecolor{NTcyan}{gray}{1}
+      \definecolor{NTgray}{gray}{1}
+      \definecolor{NTblackbright}{gray}{0}
+      \definecolor{NTredbright}{gray}{1}
+      \definecolor{NTgreenbright}{gray}{1}
+      \definecolor{NTyellowbright}{gray}{1}
+      \definecolor{NTbluebright}{gray}{1}
+      \definecolor{NTmagentabright}{gray}{1}
+      \definecolor{NTcyanbright}{gray}{1}
+      \definecolor{NTgraybright}{gray}{1}
+    }
+    {bwlight}{
+      \definecolor{NTblack}{gray}{0}
+      \definecolor{NTred}{gray}{0}
+      \definecolor{NTgreen}{gray}{0}
+      \definecolor{NTyellow}{gray}{0}
+      \definecolor{NTblue}{gray}{0}
+      \definecolor{NTmagenta}{gray}{0}
+      \definecolor{NTcyan}{gray}{0}
+      \definecolor{NTgray}{gray}{1}
+      \definecolor{NTblackbright}{gray}{0}
+      \definecolor{NTredbright}{gray}{0}
+      \definecolor{NTgreenbright}{gray}{0}
+      \definecolor{NTyellowbright}{gray}{0}
+      \definecolor{NTbluebright}{gray}{0}
+      \definecolor{NTmagentabright}{gray}{0}
+      \definecolor{NTcyanbright}{gray}{0}
+      \definecolor{NTgraybright}{gray}{1}
+    }
     {terminalapp}{
       \definecolor{NTblack}{RGB}{0,0,0}
       \definecolor{NTred}{RGB}{194,54,33}

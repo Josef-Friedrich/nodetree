@@ -55,9 +55,15 @@
   \includegraphics[scale=0.4]{graphics/#1}
 }
 
+\newcommand{\tmpexample}[1]{
+\begin{nodetreeexample}
+\input{#1_nodetree.tex}
+\end{nodetreeexample}
+}
+
 \newcommand{\tmpverbexample}[1]{
 \VerbatimInput[frame=single,fontsize=\footnotesize,firstline=4]{examples/#1.tex}
-\nodetreeterminalemulator{#1}
+\tmpexample{#1}
 }
 
 \DefineVerbatimEnvironment{code}{Verbatim}
@@ -80,7 +86,7 @@
 
 \maketitle
 
-\nodetreeterminalemulator{packagename}
+\tmpexample{packagename}
 
 \newpage
 
@@ -1147,7 +1153,6 @@ Office
 %    \begin{macrocode}
 \newcommand{\nodetreeterminalemulator}[2][]{
   \setkeys{NT}{#1}
-  \directlua{nodetree.compile_examples('#2')}
   \begin{nodetreeexample}
   \input{#2_nodetree.tex}
   \end{nodetreeexample}
@@ -2468,16 +2473,6 @@ function base.execute()
     luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'nodetree')
   else
     id, error = callback.register(c, callbacks.post_linebreak_filter)
-  end
-end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-function base.compile_examples(example_file)
-  local compile_file = 'examples/' .. example_file .. '.tex'
-  local f = io.open(example_file .. '_nodtree.tex', 'r')
-  if f == nil then
-    os.execute('lualatex ' .. compile_file)
   end
 end
 %    \end{macrocode}

@@ -1819,13 +1819,17 @@ end
 %
 %    \begin{macrocode}
 function tpl.table_inline(o)
+  local tex_escape = ''
+  if options.channel == 'tex' then
+    tex_escape = '\\'
+  end
   if type(o) == 'table' then
-     local s = '{ '
+     local s = tex_escape .. '{ '
      for k,v in pairs(o) do
         if type(k) ~= 'number' then k = '"'..k..'"' end
         s = s .. '['..k..'] = ' .. tpl.table_inline(v) .. ', '
      end
-     return s .. '} '
+     return s .. tex_escape .. '} '
   else
      return tostring(o)
   end
@@ -1833,11 +1837,14 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tpl.key_value(key, value)
+function tpl.key_value(key, value, color)
+  if type(color) ~= 'string' then
+    color = 'yellow'
+  end
   if options.channel == 'tex' then
     key = tpl.underscore(key)
   end
-  local out = tpl.colored_string(key .. ':', 'yellow')
+  local out = tpl.colored_string(key .. ':', color)
   if value then
     out = out .. ' ' .. value .. '; '
   end
@@ -1997,6 +2004,7 @@ function tpl.branch(connection_type, connection_state, last)
   elseif c == 'field' and s == 'stop' and l == true then
     return '╚═'
   end
+  return ''
 end
 %    \end{macrocode}
 %
@@ -2095,6 +2103,25 @@ function tree.format_field(head, field)
   return tpl.key_value(field, out)
 end
 %    \end{macrocode}
+% Attributes are key/value number pairs. They are printed as an inline
+% list. The attribute |0| with the value |0| is skipped because this
+% attribute is in every node by default.
+%    \begin{macrocode}
+function tree.format_attributes(head)
+  if not head then
+    return ''
+  end
+  local out = ''
+  local attr = head.next
+  while attr do
+    if attr.number ~= 0 or (attr.number == 0 and attr.value ~= 0) then
+      out = out .. tostring(attr.number) .. '=' .. tostring(attr.value) .. ' '
+    end
+    attr = attr.next
+  end
+  return out
+end
+%    \end{macrocode}
 %
 % |level| is a integer beginning with 1. The variable |connection_type|
 % is a string, which can be either |list| or |field|. The variable
@@ -2153,12 +2180,17 @@ function tree.analyze_node(head, level)
     out = out .. tpl.key_value('no', nodex.node_id(head))
   end
 %    \end{macrocode}
-%
+% We store the attributes output to append it to the field list.
+%    \begin{macrocode}
+  local attributes
+%    \end{macrocode}
+% We store fields which are nodes for later treatment.
 %    \begin{macrocode}
   local fields = {}
   for field_id, field_name in pairs(node.fields(head.id, head.subtype)) do
-    if field_name ~= 'next' and
-      field_name ~= 'prev' and
+    if field_name == 'attr' then
+      attributes = tree.format_attributes(head.attr)
+    elseif field_name ~= 'next' and      field_name ~= 'prev' and
       node.is_node(head[field_name]) then
       fields[field_name] = head[field_name]
     else
@@ -2166,13 +2198,21 @@ function tree.analyze_node(head, level)
     end
   end
 %    \end{macrocode}
+% Append the attributes output if available
+%    \begin{macrocode}
+  if attributes ~= '' then
+    out = out .. tpl.key_value('attr', attributes, 'blue')
+  end
+%    \end{macrocode}
 %
 %    \begin{macrocode}
   local property = node.getproperty(head)
   if property then
-    out = out .. tpl.new_line() ..
+    out = out .. tpl.new_line_character() ..
       tpl.branches(level, 'field') ..
-      'properties: ' .. tpl.table_inline(property)
+      '  ' ..
+      tpl.colored_string('properties:', 'blue') .. ' ' ..
+      tpl.table_inline(property)
   end
 %    \end{macrocode}
 %

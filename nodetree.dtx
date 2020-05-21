@@ -2021,9 +2021,10 @@ end
 function tree.format_field(head, field)
   local out = ''
 %    \end{macrocode}
-%
+% Character "0" should be printed in a tree, because in TeX fonts the
+% 0 slot usually has a symbol.
 %    \begin{macrocode}
-  if not head[field] or head[field] == 0 then
+  if not head[field] or (head[field] == 0 and field ~= "char") then
     return ''
   end
 %    \end{macrocode}

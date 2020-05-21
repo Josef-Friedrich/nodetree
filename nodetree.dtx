@@ -1818,6 +1818,21 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function tpl.table_inline(o)
+  if type(o) == 'table' then
+     local s = '{ '
+     for k,v in pairs(o) do
+        if type(k) ~= 'number' then k = '"'..k..'"' end
+        s = s .. '['..k..'] = ' .. tpl.table_inline(v) .. ', '
+     end
+     return s .. '} '
+  else
+     return tostring(o)
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.key_value(key, value)
   if options.channel == 'tex' then
     key = tpl.underscore(key)
@@ -2149,6 +2164,15 @@ function tree.analyze_node(head, level)
     else
       out = out .. tree.format_field(head, field_name)
     end
+  end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+  local property = node.getproperty(head)
+  if property then
+    out = out .. tpl.new_line() ..
+      tpl.branches(level, 'field') ..
+      'properties: ' .. tpl.table_inline(property)
   end
 %    \end{macrocode}
 %

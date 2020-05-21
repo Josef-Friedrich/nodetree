@@ -39,7 +39,7 @@
   filecolor=red,
   urlcolor=red,
 ]{hyperref}
-\usepackage[theme=molokai,thememode=light,documentationmode]{nodetree}
+\usepackage[theme=molokai,thememode=dark,documentationmode]{nodetree}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -2206,23 +2206,30 @@ function tree.analyze_node(head, level)
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-  local property = node.getproperty(head)
-  if property then
-    out = out .. tpl.new_line_character() ..
-      tpl.branches(level, 'field') ..
-      '  ' ..
-      tpl.colored_string('properties:', 'blue') .. ' ' ..
-      tpl.table_inline(property)
-  end
-%    \end{macrocode}
-%
-%    \begin{macrocode}
   tpl.print(
     tpl.node_begin() ..
     out ..
     tpl.node_end() ..
     tpl.new_line()
   )
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+  local property = node.getproperty(head)
+  if property then
+    tpl.print(
+      tpl.node_begin() ..
+      tpl.branches(level, 'field') ..
+      '  ' ..
+      tpl.colored_string('properties:', 'blue') .. ' ' ..
+      tpl.table_inline(property) ..
+      tpl.node_end() ..
+      tpl.new_line()
+    )
+  end
+%    \end{macrocode}
+
+%    \begin{macrocode}
   tree.analyze_fields(fields, level)
 end
 %    \end{macrocode}

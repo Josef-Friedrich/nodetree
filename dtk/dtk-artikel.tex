@@ -2,10 +2,7 @@
 \documentclass[ngerman]{dtk}
 \ifluatex\else
   \usepackage[utf8]{inputenc}
-  %\usepackage[latin9]{inputenc}
 \fi
-
-\addbibresource{beispiel.bib}
 
 \let\File\texttt
 \let\Package\texttt
@@ -18,94 +15,38 @@
      \Email{josef@friedrich.rocks}}
 \maketitle
 
-\section{Makros}
+\section{Über das Paket}
 
-\begin{verbatim}
-\DeclareUrlCommand\File{\urlstyle{tt}}
-\providecommand\Package[1]{\texttt{#1}}
-\providecommand\Program[1]{\texttt{#1}}
-\providecommand\Command[1]{\texttt{#1}}
-\providecommand\Macro[1]{\texttt{\#1}}
-\providecommand\Environment[1]{\texttt{#1}}
-\let\Email\url
-\end{verbatim}
+Mit dem \Package{nodetree} lässt sich DIE zentrale interne Datenstruktur
+von Lua\TeX{} --- die \texttt{nodes} --- visualisieren. Das Paket wählt
+dafür eine Baumansicht, wie sie auch vom den UNIX-Kommandozeilen-Befehl
+\texttt{tree} verwendet wird.
 
-Die Dateien \File{*.clo} beinhalten die Klassenoptionen und
-werden nur fortgeschrieben, wenn etwas Neues einzufügen ist. Das Paket
-\Package{dtk} sollte nur um wichtige Pakete ergänzt werden, die für den Inhalt
-des Manuskripts wichtig sind. Das Programm \Program{lualatex} sollte bevorzugt
-zum Übersetzen eingesetzt werden. Macros wie \Macro{texttt} müssen nicht mit
-dem Backslash angegeben werden, der wird automatisch gesetzt. Es folgen
-Beispiele mit Listings in nummerierter und in nichtnummerierter Art:
+\section{Über \texttt{nodes}}
 
-\begin{lstlisting}[style=number]
-\begin{itemize}
-\item ...
-\end{itemize}
-\end{lstlisting}
-
-\begin{lstlisting}[style=noNumber]
-\begin{description}
-\item ...
-\end{description}
-\end{lstlisting}
-
-\textsf{Ubuntu} wird in serifenloser Schrift gesetzt.
-Weitere Informationen für Autoren findet man im DTK-Wiki:
-\url{http://projekte.dante.de/DanteFAQ/WebHome}.
-
-\section{Listen}
-
-\begin{itemize}
-\item Bei \Environment{itemize} werden
-die Elemente durch Punkte und andere Symbole gekennzeichnet.
-\item Listen kann man auch verschachteln:
-  \begin{itemize}
-  \item Die maximale Schachtelungstiefe ist~4.~\cite{voss:2012}
-  \item
-  Bezeichnung und Ein\-rückung der Elemente
-  wechseln automatisch.
-  \end{itemize}
-\item usw.
-\end{itemize}
+Die Verarbeitung einer Quelltextdatei Lua\TeX{} in ein druckreifes PDF-%
+Dokument erfolgt --- stark vereinfacht --- in drei Schritten:
 
 \begin{enumerate}
-\item Bei \Environment{enumerate} werden
-die Elemente mit Ziffern oder Buchstaben numeriert.
-\item Die Numerierung erfolgt automatisch.~\cite{pakin:2008}
-\item Listen kann man auch
-verschachteln:
-  \begin{enumerate}
-  \item Die maximale Schachtelungstiefe
-  ist~4.
-  \item Bezeichnung und Ein\-rückung der Elemente
-  wechseln automatisch.
-  \end{enumerate}
-\item usw.
+\item Lua\TeX{} ersetzt alle Makros in nicht mehr weiter zu
+expandierende \texttt{token}.
+
+\item Lua\TeX{} berechnet aus diesen \texttt{token} die genaue Anordung
+der grafischen bzw. typografischen Elemente im Dokument. Zur Speicherung
+der Berechungen in unzähligen Zwischenschritten nutzt Lua\TeX{} als
+Datenformat \texttt{nodes}. Am Ende dieser vielen Berechnungen ist ein
+riesiger \texttt{node}-Baum entstanden. Die einzelnen \texttt{nodes}
+wurden zu Zweigen und Ästen verkettet und diese wiederum zu einem
+baumähnlichen Gebilde.
+
+\item Ein Treiber generiert aus diesem \texttt{node}-Baum das gewünschte
+Dokumentenformat, beispielsweise eine PDF-Datei.
 \end{enumerate}
 
-\begin{description}
-\item[Gelse:]
-   ein kleines Tier, das
-   östlich des Semmering Touristen verjagt.
-\item[Gemse:]
-   ein großes Tier, das
-   westlich des Semmering von Touristen verjagt wird.
-\item[G"urteltier:]
-   ein mittelgroßes Tier, das
-   hier nur wegen der Länge seines Namens vorkommt.
-\end{description}
+\section{Alternativen zu nodetree}
 
-\section{Bibliografie}
-Die folgende Bibliografie hat nur einen
-Demonstrationscharakter.
+Das Script viznodelist.lua
 
-\begin{lstlisting}[style=number]
-\printbibliography
-\end{lstlisting}
-
-\nocite{*}
-\printbibliography
-
+https://gist.github.com/pgundlach/556247
 \end{document}
 

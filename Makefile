@@ -13,13 +13,19 @@ install:
 	cp -f $(jobname).lua $(installdir)
 	./clean.sh install
 
-doc:
+doc: docexamples docpdf
+
+docpdf:
 	lualatex $(jobname).dtx
 	makeindex -s gglo.ist -o $(jobname).gls $(jobname).glo
 	makeindex -s gind.ist -o $(jobname).ind $(jobname).idx
 	lualatex $(jobname).dtx
 	mkdir -p $(texmf)/doc
 	cp $(jobname).pdf $(texmf)/doc
+
+docexamples:
+	find . -name "*_nodetree.tex" -exec rm -f {} \;
+	find examples -name "*.tex" -exec lualatex {} \;
 
 clean:
 	./clean.sh

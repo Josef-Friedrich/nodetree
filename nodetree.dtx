@@ -39,7 +39,7 @@
   filecolor=red,
   urlcolor=red,
 ]{hyperref}
-%\usepackage{nodetree}
+\usepackage[theme=monokaisoda,thememode=dark,documentationmode]{nodetree}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -51,6 +51,17 @@
 \newcommand{\tmpgraphics}[1]{
   \noindent
   \includegraphics[scale=0.4]{graphics/#1}
+}
+
+\newcommand{\tmpexample}[1]{
+\begin{nodetreeexample}
+\input{#1_nodetree.tex}
+\end{nodetreeexample}
+}
+
+\newcommand{\tmpverbexample}[1]{
+\VerbatimInput[frame=single,fontsize=\footnotesize,firstline=4]{examples/#1.tex}
+\tmpexample{#1}
 }
 
 \DefineVerbatimEnvironment{code}{Verbatim}
@@ -73,8 +84,7 @@
 
 \maketitle
 
-\noindent
-\includegraphics[width=\linewidth]{graphics/packagename}
+\tmpexample{packagename}
 
 \newpage
 
@@ -312,14 +322,39 @@ The same applies for the macro |\usepackage|:
 \end{figure}
 
 %%
-% verbosity
+% channel
 %%
+
+\subsection{Option \texttt{channel}}
+\label{sec:option-channel}
+
+You can select the debug output channel with this option. The default
+value for the option |channel| is |term| which displays the node tree in
+the current terminal. Specify |log| and the package creates a log file
+named |jobname_nodetree.log|. |jobname| is the name of your file you
+want to debug.
+
+%%
+% verbosity
+%
 
 \subsection{Option \texttt{verbosity}}
 
 Higher integer values result in a more verbose output. The default value
 for this options is |1|. At the moment only verbosity level |2| is
 implemented.
+
+1
+
+\nodetreeterminalemulator{option_verbosity-1}
+
+2
+
+\nodetreeterminalemulator{option_verbosity-2}
+
+3
+
+\nodetreeterminalemulator{option_verbosity-3}
 
 %%
 % color
@@ -398,6 +433,11 @@ Width of the capital letter M \\
 \label{fig:relative-units}
 \end{figure}
 
+
+\nodetreeterminalemulator{option_unit-pt}
+\nodetreeterminalemulator{option_unit-sp}
+\nodetreeterminalemulator{option_unit-cm}
+
 %%
 % decimalplaces
 %%
@@ -422,6 +462,86 @@ If |decimalplaces| is set to |0| only integer values are shown.
 \begin{code}
 ├─GLYPH char: "a"; width: 5pt; height: 4pt;
 \end{code}
+
+%%
+% theme and thememode
+%%
+
+\subsection{Option \texttt{theme} and \texttt{thememode}}
+
+bw
+
+\nodetreeterminalemulator[theme=bwdark,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=bwlight,thememode=light]{minimal}
+
+terminalapp
+
+\nodetreeterminalemulator[theme=terminalapp,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=terminalapp,thememode=light]{minimal}
+
+xterm
+
+\nodetreeterminalemulator[theme=xterm,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=xterm,thememode=light]{minimal}
+
+smyck
+
+\nodetreeterminalemulator[theme=smyck,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=smyck,thememode=light]{minimal}
+
+molokai
+
+\nodetreeterminalemulator[theme=molokai,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=molokai,thememode=light]{minimal}
+
+monokaisoda
+
+\nodetreeterminalemulator[theme=monokaisoda,thememode=dark]{minimal}
+\nodetreeterminalemulator[theme=monokaisoda,thememode=light]{minimal}
+
+\nodetreereset
+
+%%
+% font
+%%
+
+\subsection{Option \texttt{font}}
+
+\nodetreeset{fontsize=\small}
+
+FreeMono
+
+\nodetreeterminalemulator[font=FreeMono]{minimal}
+
+Liberation Mono
+
+\nodetreeterminalemulator[font={Liberation Mono}]{minimal}
+
+DejaVu Sans Mono
+
+\nodetreeterminalemulator[font={DejaVu Sans Mono}]{minimal}
+
+Ubuntu Mono
+
+\nodetreeterminalemulator[font={Ubuntu Mono}]{minimal}
+
+\nodetreereset
+
+%%
+% fontsize
+%%
+
+\subsection{Option \texttt{fontsize}}
+
+\string\small
+
+\nodetreeterminalemulator[fontsize=\small]{minimal}
+
+\string\tiny
+
+\nodetreeterminalemulator[fontsize=\tiny]{minimal}
+
+\nodetreereset
 
 %-----------------------------------------------------------------------
 % Visual tree structure
@@ -492,8 +612,6 @@ For |list| connections \emph{light} characters are shown.
 % Examples
 %-----------------------------------------------------------------------
 
-\newpage
-
 \section{Examples}
 
 %%
@@ -502,53 +620,66 @@ For |list| connections \emph{light} characters are shown.
 
 \subsection{The node list of the package name}
 
-\begin{code}
-\documentclass{article}
-\usepackage{nodetree}
-\begin{document}
-nodetree
-\end{document}
-\end{code}
-
-\tmpgraphics{packagename}
+\tmpverbexample{packagename}
 
 %%
 % math
 %%
 
-\newpage
-
 \subsection{The node list of a mathematical formula}
 
-\begin{code}
-\documentclass{article}
-\usepackage[callback={mhlist}]{nodetree}
-\begin{document}
-\[\left(a\right)\left[\frac{b}{a}\right]=a\,\]
-\end{document}
-\end{code}
-
-\tmpgraphics{math}
+\tmpverbexample{math}
 
 %%
 % ligatures
 %%
 
-\newpage
-
 \subsection{The node list of the word \emph{Office}}
 
 The characters \emph{ffi} are deeply nested in a discretionary node.
 
-\begin{code}
-\documentclass{article}
-\usepackage{nodetree}
-\begin{document}
-Office
-\end{document}
-\end{code}
+\tmpverbexample{ligatures}
 
-\tmpgraphics{ligatures}
+%-----------------------------------------------------------------------
+% Node types
+%-----------------------------------------------------------------------
+
+\subsection{Node types}
+
+\newcommand{\tmpnodetypesub}[4]{
+  \subsubsection{Type: #1(#2) Subtype: #3(#4)}
+  \tmpverbexample{#2#1#4#3}
+}
+
+\newcommand{\tmpnodetype}[2]{
+  \subsubsection{Type: #1(#2)}
+  \tmpverbexample{#2#1}
+}
+
+\tmpnodetypesub{hlist}{0}{line}{1}
+\tmpnodetypesub{hlist}{0}{box}{2}
+\tmpnodetypesub{hlist}{0}{indent}{3}
+\tmpnodetype{vlist}{1}
+\tmpnodetype{rule}{2}
+\tmpnodetype{mark}{4}
+\tmpnodetypesub{disc}{7}{discretionary}{0}
+\tmpnodetypesub{disc}{7}{regular}{3}
+\tmpnodetypesub{whatsit}{8}{pdfaction}{22}
+\tmpnodetypesub{whatsit}{8}{pdfcolorstack}{28}
+\tmpnodetypesub{glue}{12}{baselineskip}{2}
+\tmpnodetypesub{glue}{12}{parskip}{3}
+\tmpnodetypesub{glue}{12}{spaceskip}{13}
+\tmpnodetypesub{glue}{12}{leaders}{100}
+\tmpnodetypesub{glue}{12}{cleaders}{101}
+\tmpnodetypesub{glue}{12}{xleaders}{102}
+\tmpnodetypesub{kern}{13}{userkern}{0}
+\tmpnodetypesub{kern}{13}{fontkern}{1}
+\tmpnodetypesub{kern}{13}{accentkern}{2}
+\tmpnodetypesub{kern}{13}{italiccorrection}{3}
+\tmpnodetype{penalty}{14}
+\tmpnodetype{glyph}{29}
+\tmpnodetype{attribute}{38}
+\tmpnodetype{attributelist}{40}
 
 %-----------------------------------------------------------------------
 % Index
@@ -822,7 +953,7 @@ make ctan
 %    \begin{macrocode}
 \SetupKeyvalOptions{
   family=NT,
-  prefix=NT@
+  prefix=NTK@
 }
 %    \end{macrocode}
 %
@@ -857,7 +988,36 @@ make ctan
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\ProcessKeyvalOptions*
+\DeclareStringOption[smyck]{theme}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[dark]{thememode}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[Ubuntu Mono]{font}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[\footnotesize]{fontsize}
+%    \end{macrocode}
+%
+
+% Never load “heavy” packages like |mdframed| in default debug mode.
+% They are way to slow.
+%    \begin{macrocode}
+\newif\ifdocumentationmode%
+\documentationmodefalse%
+\DeclareVoidOption{documentationmode}{%
+  \RequirePackage{xcolor,mdframed,expl3}%
+  \nodetreeoption[callback]{}%
+  \documentationmodetrue%
+}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\ProcessKeyvalOptions{NT}
 \directlua{
   nodetree.register_callbacks()
 }
@@ -865,9 +1025,216 @@ make ctan
 %
 % \begin{macro}{\nodetreeset}
 %    \begin{macrocode}
-\newcommand{\nodetreeset}[1]{\setkeys{nodetree}{#1}}
+\newcommand{\nodetreeset}[1]{%
+  \setkeys{NT}{#1}%
+}
 %    \end{macrocode}
 % \end{macro}
+% Begin of the documentation mode.
+%    \begin{macrocode}
+\ifdocumentationmode
+%    \end{macrocode}
+%
+% \begin{macro}{\NT@colors}
+%    \begin{macrocode}
+\ExplSyntaxOn
+\def\NT@colors{
+  \str_case_e:nn{\NTK@theme}{
+    {bwdark}{
+      \definecolor{NTblack}{gray}{0}
+      \definecolor{NTred}{gray}{1}
+      \definecolor{NTgreen}{gray}{1}
+      \definecolor{NTyellow}{gray}{1}
+      \definecolor{NTblue}{gray}{1}
+      \definecolor{NTmagenta}{gray}{1}
+      \definecolor{NTcyan}{gray}{1}
+      \definecolor{NTgray}{gray}{1}
+      \definecolor{NTblackbright}{gray}{0}
+      \definecolor{NTredbright}{gray}{1}
+      \definecolor{NTgreenbright}{gray}{1}
+      \definecolor{NTyellowbright}{gray}{1}
+      \definecolor{NTbluebright}{gray}{1}
+      \definecolor{NTmagentabright}{gray}{1}
+      \definecolor{NTcyanbright}{gray}{1}
+      \definecolor{NTgraybright}{gray}{1}
+    }
+    {bwlight}{
+      \definecolor{NTblack}{gray}{0}
+      \definecolor{NTred}{gray}{0}
+      \definecolor{NTgreen}{gray}{0}
+      \definecolor{NTyellow}{gray}{0}
+      \definecolor{NTblue}{gray}{0}
+      \definecolor{NTmagenta}{gray}{0}
+      \definecolor{NTcyan}{gray}{0}
+      \definecolor{NTgray}{gray}{1}
+      \definecolor{NTblackbright}{gray}{0}
+      \definecolor{NTredbright}{gray}{0}
+      \definecolor{NTgreenbright}{gray}{0}
+      \definecolor{NTyellowbright}{gray}{0}
+      \definecolor{NTbluebright}{gray}{0}
+      \definecolor{NTmagentabright}{gray}{0}
+      \definecolor{NTcyanbright}{gray}{0}
+      \definecolor{NTgraybright}{gray}{1}
+    }
+    {terminalapp}{
+      \definecolor{NTblack}{RGB}{0,0,0}
+      \definecolor{NTred}{RGB}{194,54,33}
+      \definecolor{NTgreen}{RGB}{37,188,36}
+      \definecolor{NTyellow}{RGB}{173,173,39}
+      \definecolor{NTblue}{RGB}{73,46,225}
+      \definecolor{NTmagenta}{RGB}{211,56,211}
+      \definecolor{NTcyan}{RGB}{51,187,200}
+      \definecolor{NTgray}{RGB}{203,204,205}
+      \definecolor{NTblackbright}{RGB}{129,131,131}
+      \definecolor{NTredbright}{RGB}{252,57,31}
+      \definecolor{NTgreenbright}{RGB}{49,231,34}
+      \definecolor{NTyellowbright}{RGB}{234,236,35}
+      \definecolor{NTbluebright}{RGB}{88,51,255}
+      \definecolor{NTmagentabright}{RGB}{249,53,248}
+      \definecolor{NTcyanbright}{RGB}{20,240,240}
+      \definecolor{NTgraybright}{RGB}{233,235,235}
+    }
+    {xterm}{
+      \definecolor{NTblack}{RGB}{0,0,0}
+      \definecolor{NTred}{RGB}{205,0,0}
+      \definecolor{NTgreen}{RGB}{0,205,0}
+      \definecolor{NTyellow}{RGB}{205,205,0}
+      \definecolor{NTblue}{RGB}{0,0,238}
+      \definecolor{NTmagenta}{RGB}{205,0,205}
+      \definecolor{NTcyan}{RGB}{0,205,205}
+      \definecolor{NTgray}{RGB}{229,229,229}
+      \definecolor{NTblackbright}{RGB}{127,127,127}
+      \definecolor{NTredbright}{RGB}{255,0,0}
+      \definecolor{NTgreenbright}{RGB}{0,255,0}
+      \definecolor{NTyellowbright}{RGB}{255,255,0}
+      \definecolor{NTbluebright}{RGB}{92,92,255}
+      \definecolor{NTmagentabright}{RGB}{255,0,255}
+      \definecolor{NTcyanbright}{RGB}{0,255,255}
+      \definecolor{NTgraybright}{RGB}{255,255,255}
+    }
+    {smyck}{
+      \definecolor{NTblack}{HTML}{212121}
+      \definecolor{NTred}{HTML}{C75646}
+      \definecolor{NTgreen}{HTML}{8EB33B}
+      \definecolor{NTyellow}{HTML}{D0B03C}
+      \definecolor{NTblue}{HTML}{72B3CC}
+      \definecolor{NTmagenta}{HTML}{C8A0D1}
+      \definecolor{NTcyan}{HTML}{218693}
+      \definecolor{NTgray}{HTML}{B0B0B0}
+      \definecolor{NTblackbright}{HTML}{5D5D5D}
+      \definecolor{NTredbright}{HTML}{E09690}
+      \definecolor{NTgreenbright}{HTML}{CDEE69}
+      \definecolor{NTyellowbright}{HTML}{FFE377}
+      \definecolor{NTbluebright}{HTML}{9CD9F0}
+      \definecolor{NTmagentabright}{HTML}{FBB1F9}
+      \definecolor{NTcyanbright}{HTML}{77DFD8}
+      \definecolor{NTgraybright}{HTML}{F7F7F7}
+    }
+    {molokai}{
+      \definecolor{NTblack}{HTML}{212121}
+      \definecolor{NTred}{HTML}{fa2573}
+      \definecolor{NTgreen}{HTML}{98e123}
+      \definecolor{NTyellow}{HTML}{dfd460}
+      \definecolor{NTblue}{HTML}{1080d0}
+      \definecolor{NTmagenta}{HTML}{8700ff}
+      \definecolor{NTcyan}{HTML}{43a8d0}
+      \definecolor{NTgray}{HTML}{bbbbbb}
+      \definecolor{NTblackbright}{HTML}{555555}
+      \definecolor{NTredbright}{HTML}{f6669d}
+      \definecolor{NTgreenbright}{HTML}{b1e05f}
+      \definecolor{NTyellowbright}{HTML}{fff26d}
+      \definecolor{NTbluebright}{HTML}{00afff}
+      \definecolor{NTmagentabright}{HTML}{af87ff}
+      \definecolor{NTcyanbright}{HTML}{51ceff}
+      \definecolor{NTgraybright}{HTML}{ffffff}
+    }
+    {monokaisoda}{
+      \definecolor{NTblack}{HTML}{1a1a1a}
+      \definecolor{NTred}{HTML}{f4005f}
+      \definecolor{NTgreen}{HTML}{98e024}
+      \definecolor{NTyellow}{HTML}{fa8419}
+      \definecolor{NTblue}{HTML}{9d65ff}
+      \definecolor{NTmagenta}{HTML}{f4005f}
+      \definecolor{NTcyan}{HTML}{58d1eb}
+      \definecolor{NTgray}{HTML}{c4c5b5}
+      \definecolor{NTblackbright}{HTML}{625e4c}
+      \definecolor{NTredbright}{HTML}{f4005f}
+      \definecolor{NTgreenbright}{HTML}{98e024}
+      \definecolor{NTyellowbright}{HTML}{e0d561}
+      \definecolor{NTbluebright}{HTML}{9d65ff}
+      \definecolor{NTmagentabright}{HTML}{f4005f}
+      \definecolor{NTcyanbright}{HTML}{58d1eb}
+      \definecolor{NTgraybright}{HTML}{f6f6ef}
+    }
+  }
+  \str_case_e:nn{\NTK@thememode}{
+    {dark}{
+      \definecolor{NTbackground}{named}{NTblack}
+      \definecolor{NTfont}{named}{NTgraybright}
+    }
+    {light}{
+      \definecolor{NTbackground}{named}{NTgraybright}
+      \definecolor{NTfont}{named}{NTblack}
+    }
+  }
+}
+\ExplSyntaxOff
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\NT@fonts}
+%    \begin{macrocode}
+\def\NT@fonts{
+  \bfseries%
+  \NTK@fontsize%
+  \setmonofont{\NTK@font}%
+  \ttfamily%
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{-0.9pt}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\nodetreereset}
+%    \begin{macrocode}
+\def\nodetreereset{
+  \nodetreeset{theme=monokaisoda,thememode=dark,font={Ubuntu Mono},fontsize=\tiny}
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{environment}{nodetreeexample}
+%    \begin{macrocode}
+\newenvironment{nodetreeexample}[1][]{
+  \setkeys{NT}{#1}
+  \NT@colors
+  \begin{mdframed}[
+    linecolor=black,
+    backgroundcolor=NTbackground,
+    fontcolor=NTfont,
+  ]%
+  \NT@fonts
+}{
+  \end{mdframed}%
+}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{macro}{\nodetreetermemulator}
+%    \begin{macrocode}
+\newcommand{\nodetreeterminalemulator}[2][]{
+  \setkeys{NT}{#1}
+  \begin{nodetreeexample}
+  \input{#2_nodetree.tex}
+  \end{nodetreeexample}
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% End of the documentation mode.
+%    \begin{macrocode}
+\fi
+%    \end{macrocode}
 %
 % \iffalse
 %</package>
@@ -940,6 +1307,10 @@ local base = {}
 %
 %    \begin{macrocode}
 local options = {}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+local output_file = {}
 %    \end{macrocode}
 %
 % \subsubsection{nodex --- Extend the node library}
@@ -1214,9 +1585,47 @@ end
 % \subsubsection{tpl --- Template function}
 %
 %    \begin{macrocode}
+function tpl.underscore(string)
+  if options.channel == 'tex' then
+    return string.gsub(string, '_', '\\_')
+  else
+    return string
+  end
+end
+%    \end{macrocode}
+
+%    \begin{macrocode}
+function tpl.escape(string)
+  if options.channel == 'tex' then
+    return string.gsub(string, [[\]], [[\string\]])
+  else
+    return string
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.round(number)
   local mult = 10^(options.decimalplaces or 0)
   return math.floor(number * mult + 0.5) / mult
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function tpl.whitespace(count)
+  local whitespace, out = '', ''
+  if options.channel == 'tex' then
+    whitespace = '\\hspace{0.5em}'
+  else
+    whitespace = ' '
+  end
+  if not count then
+    count = 1
+  end
+  for i = 1, count do
+    out = out .. whitespace
+  end
+  return out
 end
 %    \end{macrocode}
 %
@@ -1386,63 +1795,156 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tpl.key_value(key, value)
-  local out = tpl.color('yellow') .. key .. ': '
-  if value then
-    out = out .. tpl.color('white') .. value .. '; '
-  end
-  return out .. tpl.color('reset')
+function tpl.color_tex(color, mode, background)
+  if not mode then mode = '' end
+  return 'NT' .. color .. mode
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function tpl.colored_string(string, color, mode, background)
+  if options.channel == 'tex' then
+    return '\\textcolor{' ..
+      tpl.color_tex(color, mode, background) ..
+      '}{' ..
+      string ..
+      '}'
+  else
+   return tpl.color(color, mode, background) .. string .. tpl.color('reset')
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function tpl.key_value(key, value)
+  if options.channel == 'tex' then
+    key = tpl.underscore(key)
+  end
+  local out = tpl.colored_string(key .. ':', 'yellow')
+  if value then
+    out = out .. ' ' .. value .. '; '
+  end
+  return out
+end
+
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.char(input)
-  return string.format('%q', unicode.utf8.char(input))
+  input = string.format('%q', unicode.utf8.char(input))
+  if options.channel == 'tex' then
+    input = tpl.escape(input)
+  end
+  return input
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function tpl.type(type, id)
-  local out = tpl.color(
-    tpl.node_colors[type][1],
-    tpl.node_colors[type][2]
-    )
-    .. string.upper(type)
+  local out = ''
+  if options.channel == 'tex' then
+    out = tpl.underscore(type)
+  else
+    out = type
+  end
+  out = string.upper(out)
   if options.verbosity > 1 then
     out = out .. tpl.type_id(id)
   end
-  return out .. tpl.color('reset')  .. ' '
+  return tpl.colored_string(
+    out .. tpl.whitespace(),
+    tpl.node_colors[type][1],
+    tpl.node_colors[type][2]
+  )
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function tpl.callback_variable(variable_name, variable)
   if variable ~= nil and variable ~= '' then
-    tpl.print(variable_name .. ': ' .. tostring(variable))
+    tpl.print(
+      tpl.underscore(variable_name) .. ': ' ..
+      tostring(variable) ..
+      tpl.new_line()
+    )
   end
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 function tpl.line(length)
+  local out = ''
   if length == 'long' then
-    return '------------------------------------------'
+    out = '------------------------------------------'
   else
-    return '-----------------------'
+    out = '-----------------------'
+  end
+    return out .. tpl.new_line()
+end
+%    \end{macrocode}
+%
+%
+%    \begin{macrocode}
+function tpl.node_begin()
+  if options.channel == 'tex' then
+    return '\\mbox{'
+  else
+    return ''
   end
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+function tpl.node_end()
+  if options.channel == 'tex' then
+    return '}'
+  else
+    return ''
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function tpl.new_line_character()
+  if options.channel == 'tex' then
+    return '\\par\n'
+  else
+    return '\n'
+  end
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function tpl.new_line(count)
+  local out = ''
+  if not count then
+    count = 1
+  end
+  for i = 1, count do
+    out = out .. tpl.new_line_character()
+  end
+  return out
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function tpl.callback(callback_name, variables)
-  tpl.print('\n\n')
-  tpl.print('Callback: ' .. tpl.color('red', '', true) ..
-    callback_name .. tpl.color('reset')
+  tpl.print(
+    tpl.new_line(2) ..
+    'Callback: ' ..
+    tpl.colored_string(tpl.underscore(callback_name), 'red', '', true) ..
+    tpl.new_line()
   )
   if variables then
     for name, value in pairs(variables) do
       if value ~= nil and value ~= '' then
-        tpl.print('  - ' .. name .. ': ' .. tostring(value))
+        tpl.print(
+          '- ' ..
+          tpl.underscore(name) ..
+          ': ' ..
+          tostring(value) ..
+          tpl.new_line()
+        )
       end
     end
   end
@@ -1462,13 +1964,13 @@ function tpl.branch(connection_type, connection_state, last)
   local s = connection_state
   local l = last
   if c == 'list' and s == 'stop' and l == false then
-    return '  '
+    return tpl.whitespace(2)
   elseif c == 'field' and s == 'stop' and l == false then
-    return '  '
+    return tpl.whitespace(2)
   elseif c == 'list' and s == 'continue' and l == false then
-    return '│ '
+    return '│' .. tpl.whitespace()
   elseif c == 'field' and s == 'continue' and l == false then
-    return '║ '
+    return '║' .. tpl.whitespace()
   elseif c == 'list' and s == 'continue' and l == true then
     return '├─'
   elseif c == 'field' and s == 'continue' and l == true then
@@ -1503,14 +2005,10 @@ end
 %
 %    \begin{macrocode}
 function tpl.print(text)
-
-  if options.channel == 'log' then
-    if not log then
-      log = io.open(tex.jobname .. '_nodetree.log', 'a')
-    end
-    log:write(text, '\n')
+  if options.channel == 'log' or options.channel == 'tex' then
+    output_file:write(text)
   else
-    print('  ' .. text)
+    io.write(text)
   end
 end
 %    \end{macrocode}
@@ -1556,7 +2054,7 @@ function tree.format_field(head, field)
   if field == 'prev' or field == 'next' then
     out = nodex.node_id(head[field])
   elseif field == 'subtype' then
-    out = nodex.subtype(head)
+    out = tpl.underscore(nodex.subtype(head))
   elseif
     field == 'width' or
     field == 'height' or
@@ -1609,7 +2107,13 @@ function tree.analyze_fields(fields, level)
       connection_state = 'continue'
     end
     tree.set_state(level, 'field', connection_state)
-    tpl.print(tpl.branches(level, 'field') .. tpl.key_value(field_name))
+    tpl.print(
+      tpl.node_begin() ..
+      tpl.branches(level, 'field') ..
+      tpl.key_value(field_name) ..
+      tpl.node_end() ..
+      tpl.new_line()
+    )
     tree.analyze_list(recursion_node, level + 1)
   end
 end
@@ -1646,7 +2150,12 @@ function tree.analyze_node(head, level)
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-  tpl.print(out)
+  tpl.print(
+    tpl.node_begin() ..
+    out ..
+    tpl.node_end() ..
+    tpl.new_line()
+  )
   tree.analyze_fields(fields, level)
 end
 %    \end{macrocode}
@@ -1663,7 +2172,7 @@ end
 %    \begin{macrocode}
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
-  tpl.print(tpl.line('short') .. '\n')
+  tpl.print(tpl.line('short') .. tpl.new_line())
 end
 %    \end{macrocode}
 %
@@ -1948,12 +2457,12 @@ function base.get_callback_name(alias)
   elseif alias == 'vpack' or alias == 'vpackfilter' then
     return 'vpack_filter'
 %    \end{macrocode}
-% TODO: Fix: Unable to register callback
+%
 %    \begin{macrocode}
   elseif alias == 'hpackq' or alias == 'hpackquality' then
     return 'hpack_quality'
 %    \end{macrocode}
-% TODO: Fix: Unable to register callback
+%
 %    \begin{macrocode}
   elseif alias == 'vpackq' or alias == 'vpackquality' then
     return 'vpack_quality'
@@ -2013,6 +2522,9 @@ end
 %
 %    \begin{macrocode}
 function base.register_callbacks()
+  if options.channel == 'log' or options.channel == 'tex' then
+    output_file = io.open(tex.jobname .. '_nodetree.' .. options.channel, 'a')
+  end
   for alias in string.gmatch(options.callback, '([^,]+)') do
     base.register(base.get_callback_name(alias))
   end
@@ -2050,7 +2562,7 @@ end
 %
 %    \begin{macrocode}
 function base.analyze(head)
-  tpl.print('\n')
+  tpl.print(tpl.new_line())
   tree.analyze_list(head, 1)
 end
 %    \end{macrocode}

@@ -994,7 +994,7 @@ Office
 %    \begin{macrocode}
 \ExplSyntaxOn
 \def\NT@colors{
-  \str_case_x:nn{\NTK@theme}{
+  \str_case_e:nn{\NTK@theme}{
     {bwdark}{
       \definecolor{NTblack}{gray}{0}
       \definecolor{NTred}{gray}{1}
@@ -1122,7 +1122,7 @@ Office
       \definecolor{NTgraybright}{HTML}{f6f6ef}
     }
   }
-  \str_case_x:nn{\NTK@thememode}{
+  \str_case_e:nn{\NTK@thememode}{
     {dark}{
       \definecolor{NTbackground}{named}{NTblack}
       \definecolor{NTfont}{named}{NTgraybright}

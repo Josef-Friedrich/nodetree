@@ -1,0 +1,14 @@
+%!TEX program = luatex
+
+\directlua{
+local nodetree = require('nodetree')
+
+local test = function (head)
+  nodetree.analyze(head)
+end
+
+callback.register('post_linebreak_filter', test)}
+
+Lorem ipsum dolor.
+
+\bye

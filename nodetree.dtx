@@ -149,9 +149,8 @@ Lua code. The following code snippet demonstrates the usage in Lua\TeX{}.
 |head| is the current node.
 
 \begin{code}
-\input{nodetree.tex}
-
 \directlua{
+  local nodetree = require('nodetree')
   local test = function (head)
     nodetree.analyze(head)
   end
@@ -717,7 +716,6 @@ Office
 \directlua{
   nodetree = require('nodetree')
   nodetree.set_option('engine', 'luatex')
-  nodetree.set_default_options()
 }
 %    \end{macrocode}
 %
@@ -814,7 +812,6 @@ Office
 %    \begin{macrocode}
 \ProcessKeyvalOptions*
 \directlua{
-  nodetree.set_default_options()
   nodetree.register_callbacks()
 }
 %    \end{macrocode}
@@ -1997,6 +1994,10 @@ function base.analyze(head)
   tpl.print('\n')
   tree.analyze_list(head, 1)
 end
+%    \end{macrocode}
+% Set the default options.
+%    \begin{macrocode}
+base.set_default_options()
 %    \end{macrocode}
 %
 %    \begin{macrocode}

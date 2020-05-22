@@ -44,6 +44,15 @@
 \CodelineIndex
 \RecordChanges
 
+\usepackage{minted}
+\usemintedstyle{colorful}
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=gray!3]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+\setminted{
+  breaklines=true,
+  fontsize=\footnotesize,
+}
+
 \def\nodetreelua#1{\texttt{\scantokens{\catcode`\_=12\relax#1}}}
 
 \def\secref#1{(\rightarrow\ \ref{#1})}
@@ -52,6 +61,7 @@
   \noindent
   \includegraphics[scale=0.4]{graphics/#1}
 }
+
 
 \newcommand{\TmpExample}[1]{
 \begin{nodetreeexample}
@@ -135,13 +145,13 @@ The package |nodetree| can be used both with Lua\TeX{} and Lua\LaTeX{}.
 You have to use both engines in a text console. Run for example
 |luatex luatex-test.tex| to list the nodes using Lua\TeX{}.
 
-\begin{code}
+\begin{minted}{latex}
 \input{nodetree.tex}
 \nodetreeregister{postline}
 
 Lorem ipsum dolor.
 \bye
-\end{code}
+\end{minted}
 
 Or run |lualatex lualatex-test.tex| to show a node tree using
 Lua\LaTeX{}. In Lua\LaTeX{} you can omit |\nodetreeregister{postline}|.
@@ -149,14 +159,14 @@ Lua\LaTeX{}. In Lua\LaTeX{} you can omit |\nodetreeregister{postline}|.
 |post_linebreak_filter|. If you don’t want debug the
 |post_linebreak_filter| use |\nodetreeunregister{postline}|.
 
-\begin{code}
+\begin{minted}{latex}
 \documentclass{article}
 \usepackage{nodetree}
 
 \begin{document}
 Lorem ipsum dolor.
 \end{document}
-\end{code}
+\end{minted}
 
 %%
 % inside Lua code
@@ -168,8 +178,8 @@ Use the Lua function |nodetree.analyze(head)| to debug nodes inside your
 Lua code. The following code snippet demonstrates the usage in Lua\TeX{}.
 |head| is the current node.
 
-\begin{code}
-\directlua{
+\begin{minted}{tex}
+  \directlua{
   local nodetree = require('nodetree')
   local test = function (head)
     nodetree.analyze(head)
@@ -179,12 +189,12 @@ Lua code. The following code snippet demonstrates the usage in Lua\TeX{}.
 
 Lorem ipsum dolor.
 \bye
-\end{code}
+\end{minted}
 
 This example illustrates how the function has to be applied in
 Lua\LaTeX{}.
 
-\begin{code}
+\begin{minted}{latex}
 \documentclass{article}
 \usepackage{nodetree}
 
@@ -199,7 +209,7 @@ Lua\LaTeX{}.
 
 Lorem ipsum dolor.
 \end{document}
-\end{code}
+\end{minted}
 
 %-----------------------------------------------------------------------
 % Macros

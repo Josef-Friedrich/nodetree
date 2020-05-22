@@ -1,0 +1,22 @@
+%!TEX program = luatex
+
+\directlua{
+local nodetree = require('nodetree')
+
+local rule1 = node.new('rule')
+rule1.width  = 20 * 65536
+rule1.height = 10 * 65536
+rule1.depth  = 10 * 65536
+
+local rule2 = node.copy(rule1)
+
+rule1.next = rule2
+rule2.prev = rule1
+
+vbox = node.vpack(rule1)
+nodetree.print(vbox)
+
+nodetree.print(vbox, { verbosity = 2, unit = 'cm' })
+}
+
+\bye

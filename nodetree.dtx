@@ -583,36 +583,48 @@ The package |nodetree| uses the unicode box drawing symbols. Your
 default terminal font should contain this characters to obtain the tree
 view. Eight box drawing characters are necessary.
 
+
+{
+\fontspec{DejaVu Sans Mono}
 \noindent
 \begin{tabular}{lcl}
 \textbf{Code} & \textbf{Character} & \textbf{Name} \\
-U+2500 & |─| & BOX DRAWINGS LIGHT HORIZONTAL \\
-U+2502 & |│| & BOX DRAWINGS LIGHT VERTICAL \\
-U+2514 & |└| & BOX DRAWINGS LIGHT UP AND RIGHT \\
-U+251C & |├| & BOX DRAWINGS LIGHT VERTICAL AND RIGHT \\
-U+2550 & |═| & BOX DRAWINGS DOUBLE HORIZONTAL \\
-U+2551 & |║| & BOX DRAWINGS DOUBLE VERTICAL \\
-U+255A & |╚| & BOX DRAWINGS DOUBLE UP AND RIGHT \\
-U+2560 & |╠| & BOX DRAWINGS DOUBLE VERTICAL AND RIGHT \\
+U+2500 & ─ & BOX DRAWINGS LIGHT HORIZONTAL \\
+U+2502 & │ & BOX DRAWINGS LIGHT VERTICAL \\
+U+2514 & └ & BOX DRAWINGS LIGHT UP AND RIGHT \\
+U+251C & ├ & BOX DRAWINGS LIGHT VERTICAL AND RIGHT \\
+U+2550 & ═ & BOX DRAWINGS DOUBLE HORIZONTAL \\
+U+2551 & ║ & BOX DRAWINGS DOUBLE VERTICAL \\
+U+255A & ╚ & BOX DRAWINGS DOUBLE UP AND RIGHT \\
+U+2560 & ╠ & BOX DRAWINGS DOUBLE VERTICAL AND RIGHT \\
 \end{tabular}
+}
 
+\noindent
 For |list| connections \emph{light} characters are shown.
 
+{
+\setmonofont{DejaVu Sans Mono}
 \begin{code}
 │ │
 │ ├─list1
 │ └─list2
 └─list3
 \end{code}
+}
 
+\noindent
 |field| connections are visialized by \emph{Double} characters.
 
+{
+\setmonofont{DejaVu Sans Mono}
 \begin{code}
 ║ ║
 ║ ╠═field1
 ║ ╚═field2
 ╚═field3
 \end{code}
+}
 
 %-----------------------------------------------------------------------
 % Examples

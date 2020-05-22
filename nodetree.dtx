@@ -70,6 +70,16 @@
   fontsize=\footnotesize,
 }
 
+\newcommand{\TmpLuaFunction}[1]{
+  \marginpar{%
+    \raggedleft%
+    \MacroFont%
+    \texttt{%
+      \scantokens{\catcode`\_=12\relax#1}%
+    }%
+  }%
+}
+
 \begin{document}
 
 \providecommand*{\url}{\texttt}
@@ -1317,6 +1327,7 @@ local output_file = {}
 %
 % \subsubsection{nodex --- Extend the node library}
 %
+% \TmpLuaFunction{node_id}
 % Get the node id form, e. g.:
 % \begin{code}
 % <node    nil <    172 >    nil : hlist 2>
@@ -1327,6 +1338,7 @@ function nodex.node_id(n)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{subtype}
 %    \begin{macrocode}
 function nodex.subtype(n)
   local typ = node.type(n.id)
@@ -1586,6 +1598,7 @@ end
 %
 % \subsubsection{tpl --- Template function}
 %
+% \TmpLuaFunction{underscore}
 %    \begin{macrocode}
 function tpl.underscore(string)
   if options.channel == 'tex' then
@@ -1595,7 +1608,8 @@ function tpl.underscore(string)
   end
 end
 %    \end{macrocode}
-
+%
+% \TmpLuaFunction{escape}
 %    \begin{macrocode}
 function tpl.escape(string)
   if options.channel == 'tex' then
@@ -1613,6 +1627,7 @@ function tpl.round(number)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{whitespace}
 %    \begin{macrocode}
 function tpl.whitespace(count)
   local whitespace, out = '', ''
@@ -1639,6 +1654,7 @@ function tpl.length(input)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{fill}
 %    \begin{macrocode}
 function tpl.fill(number, order, field)
   if order ~= nil and order ~= 0 then
@@ -1657,6 +1673,7 @@ function tpl.fill(number, order, field)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{node_colors}
 %    \begin{macrocode}
 tpl.node_colors = {
   hlist = {'red', 'bright'},
@@ -1712,12 +1729,14 @@ tpl.node_colors = {
 }
 %    \end{macrocode}
 %
+% \TmpLuaFunction{color_code}
 %    \begin{macrocode}
 function tpl.color_code(code)
   return string.char(27) .. '[' .. tostring(code) .. 'm'
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{color}
 % \begin{code}
 % local colors = {
 %     -- attributes
@@ -1796,6 +1815,7 @@ function tpl.color(color, mode, background)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{color_tex}
 %    \begin{macrocode}
 function tpl.color_tex(color, mode, background)
   if not mode then mode = '' end
@@ -1803,6 +1823,7 @@ function tpl.color_tex(color, mode, background)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{colored_string}
 %    \begin{macrocode}
 function tpl.colored_string(string, color, mode, background)
   if options.channel == 'tex' then
@@ -1817,6 +1838,7 @@ function tpl.colored_string(string, color, mode, background)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{table_inline}
 %    \begin{macrocode}
 function tpl.table_inline(o)
   local tex_escape = ''
@@ -1836,6 +1858,7 @@ function tpl.table_inline(o)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{key_value}
 %    \begin{macrocode}
 function tpl.key_value(key, value, color)
   if type(color) ~= 'string' then
@@ -1853,6 +1876,7 @@ end
 
 %    \end{macrocode}
 %
+% \TmpLuaFunction{char}
 %    \begin{macrocode}
 function tpl.char(input)
   input = string.format('%q', unicode.utf8.char(input))
@@ -1863,6 +1887,7 @@ function tpl.char(input)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{type}
 %    \begin{macrocode}
 function tpl.type(type, id)
   local out = ''
@@ -1883,6 +1908,7 @@ function tpl.type(type, id)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{callback_variable}
 %    \begin{macrocode}
 function tpl.callback_variable(variable_name, variable)
   if variable ~= nil and variable ~= '' then
@@ -1895,6 +1921,7 @@ function tpl.callback_variable(variable_name, variable)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{line}
 %    \begin{macrocode}
 function tpl.line(length)
   local out = ''
@@ -1907,7 +1934,7 @@ function tpl.line(length)
 end
 %    \end{macrocode}
 %
-%
+% \TmpLuaFunction{node_begin}
 %    \begin{macrocode}
 function tpl.node_begin()
   if options.channel == 'tex' then
@@ -1918,6 +1945,7 @@ function tpl.node_begin()
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{node_end}
 %    \begin{macrocode}
 function tpl.node_end()
   if options.channel == 'tex' then
@@ -1928,6 +1956,7 @@ function tpl.node_end()
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{new_line_character}
 %    \begin{macrocode}
 function tpl.new_line_character()
   if options.channel == 'tex' then
@@ -1938,6 +1967,7 @@ function tpl.new_line_character()
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{new_line}
 %    \begin{macrocode}
 function tpl.new_line(count)
   local out = ''
@@ -1951,6 +1981,7 @@ function tpl.new_line(count)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{callback}
 %    \begin{macrocode}
 function tpl.callback(callback_name, variables)
   tpl.print(
@@ -1976,12 +2007,14 @@ function tpl.callback(callback_name, variables)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{type_id}
 %    \begin{macrocode}
 function tpl.type_id(id)
   return '[' .. tostring(id) .. ']'
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{branch}
 %    \begin{macrocode}
 function tpl.branch(connection_type, connection_state, last)
   local c = connection_type
@@ -2008,6 +2041,7 @@ function tpl.branch(connection_type, connection_state, last)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{branches}
 %    \begin{macrocode}
 function tpl.branches(level, connection_type)
   local out = ''
@@ -2028,6 +2062,7 @@ function tpl.branches(level, connection_type)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{print}
 %    \begin{macrocode}
 function tpl.print(text)
   if options.channel == 'log' or options.channel == 'tex' then
@@ -2040,6 +2075,7 @@ end
 %
 % \subsubsection{tree --- Build the node tree}
 %
+% \TmpLuaFunction{format_field}
 %    \begin{macrocode}
 function tree.format_field(head, field)
   local out = ''
@@ -2103,6 +2139,8 @@ function tree.format_field(head, field)
   return tpl.key_value(field, out)
 end
 %    \end{macrocode}
+%
+% \TmpLuaFunction{format_attributes}
 % Attributes are key/value number pairs. They are printed as an inline
 % list. The attribute |0| with the value |0| is skipped because this
 % attribute is in every node by default.
@@ -2123,6 +2161,7 @@ function tree.format_attributes(head)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{format_attributes}
 % |level| is a integer beginning with 1. The variable |connection_type|
 % is a string, which can be either |list| or |field|. The variable
 % |connection_state| is a string, which can be either |continue| or
@@ -2136,6 +2175,7 @@ function tree.set_state(level, connection_type, connection_state)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{analyze_fields}
 %    \begin{macrocode}
 function tree.analyze_fields(fields, level)
   local max = 0
@@ -2164,6 +2204,7 @@ function tree.analyze_fields(fields, level)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{analyze_node}
 %    \begin{macrocode}
 function tree.analyze_node(head, level)
   local connection_state
@@ -2228,12 +2269,13 @@ function tree.analyze_node(head, level)
     )
   end
 %    \end{macrocode}
-
+%
 %    \begin{macrocode}
   tree.analyze_fields(fields, level)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{analyze_list}
 %    \begin{macrocode}
 function tree.analyze_list(head, level)
   while head do
@@ -2243,6 +2285,7 @@ function tree.analyze_list(head, level)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{analyze_callback}
 %    \begin{macrocode}
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
@@ -2252,6 +2295,7 @@ end
 %
 % \subsubsection{callbacks --- Callback wrapper}
 %
+% \TmpLuaFunction{contribute_filter}
 %    \begin{macrocode}
 function callbacks.contribute_filter(extrainfo)
   tpl.callback('contribute_filter', {extrainfo = extrainfo})
@@ -2259,6 +2303,7 @@ function callbacks.contribute_filter(extrainfo)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{buildpage_filter}
 %    \begin{macrocode}
 function callbacks.buildpage_filter(extrainfo)
   tpl.callback('buildpage_filter', {extrainfo = extrainfo})
@@ -2266,6 +2311,7 @@ function callbacks.buildpage_filter(extrainfo)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{pre_linebreak_filter}
 %    \begin{macrocode}
 function callbacks.pre_linebreak_filter(head, groupcode)
   tpl.callback('pre_linebreak_filter', {groupcode = groupcode})
@@ -2274,6 +2320,7 @@ function callbacks.pre_linebreak_filter(head, groupcode)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{linebreak_filter}
 %    \begin{macrocode}
 function callbacks.linebreak_filter(head, is_display)
   tpl.callback('linebreak_filter', {is_display = is_display})
@@ -2282,6 +2329,7 @@ function callbacks.linebreak_filter(head, is_display)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{append_to_vlist_filter}
 % TODO: Fix return values, page output
 %    \begin{macrocode}
 function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrored)
@@ -2296,6 +2344,7 @@ function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrore
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{post_linebreak_filter}
 %    \begin{macrocode}
 function callbacks.post_linebreak_filter(head, groupcode)
   tpl.callback('post_linebreak_filter', {groupcode = groupcode})
@@ -2304,6 +2353,7 @@ function callbacks.post_linebreak_filter(head, groupcode)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{hpack_filter}
 %    \begin{macrocode}
 function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attributelist)
   local variables = {
@@ -2319,6 +2369,7 @@ function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attr
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{vpack_filter}
 %    \begin{macrocode}
 function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direction, attributelist)
   local variables = {
@@ -2335,6 +2386,7 @@ function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direc
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{hpack_quality}
 %    \begin{macrocode}
 function callbacks.hpack_quality(incident, detail, head, first, last)
   local variables = {
@@ -2348,6 +2400,7 @@ function callbacks.hpack_quality(incident, detail, head, first, last)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{vpack_quality}
 %    \begin{macrocode}
 function callbacks.vpack_quality(incident, detail, head, first, last)
   local variables = {
@@ -2361,6 +2414,7 @@ function callbacks.vpack_quality(incident, detail, head, first, last)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{process_rule}
 %    \begin{macrocode}
 function callbacks.process_rule(head, width, height)
   local variables = {
@@ -2373,6 +2427,7 @@ function callbacks.process_rule(head, width, height)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{pre_output_filter}
 %    \begin{macrocode}
 function callbacks.pre_output_filter(head, groupcode, size, packtype, maxdepth, direction)
   local variables = {
@@ -2388,6 +2443,7 @@ function callbacks.pre_output_filter(head, groupcode, size, packtype, maxdepth, 
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{hyphenate}
 %    \begin{macrocode}
 function callbacks.hyphenate(head, tail)
   tpl.callback('hyphenate')
@@ -2398,6 +2454,7 @@ function callbacks.hyphenate(head, tail)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{}
 %    \begin{macrocode}
 function callbacks.ligaturing(head, tail)
   tpl.callback('ligaturing')
@@ -2408,6 +2465,7 @@ function callbacks.ligaturing(head, tail)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{kerning}
 %    \begin{macrocode}
 function callbacks.kerning(head, tail)
   tpl.callback('kerning')
@@ -2418,6 +2476,7 @@ function callbacks.kerning(head, tail)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{insert_local_par}
 %    \begin{macrocode}
 function callbacks.insert_local_par(local_par, location)
   tpl.callback('insert_local_par', {location = location})
@@ -2426,6 +2485,7 @@ function callbacks.insert_local_par(local_par, location)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{mlist_to_hlist}
 %    \begin{macrocode}
 function callbacks.mlist_to_hlist(head, display_type, need_penalties)
   local variables = {
@@ -2440,6 +2500,7 @@ end
 %
 % \subsubsection{base --- Exported base functions}
 %
+% \TmpLuaFunction{normalize_options}
 %    \begin{macrocode}
 function base.normalize_options()
   options.verbosity = tonumber(options.verbosity)
@@ -2447,6 +2508,7 @@ function base.normalize_options()
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{set_default_options}
 %    \begin{macrocode}
 function base.set_default_options()
   local defaults = {
@@ -2470,6 +2532,7 @@ function base.set_default_options()
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{set_option}
 %    \begin{macrocode}
 function base.set_option(key, value)
   if not options then
@@ -2480,6 +2543,7 @@ function base.set_option(key, value)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{get_option}
 %    \begin{macrocode}
 function base.get_option(key)
   if not options then
@@ -2491,6 +2555,7 @@ function base.get_option(key)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{get_callback_name}
 %    \begin{macrocode}
 function base.get_callback_name(alias)
   if alias == 'contribute' or alias == 'contributefilter' then
@@ -2584,6 +2649,7 @@ function base.get_callback_name(alias)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{register}
 %    \begin{macrocode}
 function base.register(cb)
   if options.engine == 'lualatex' then
@@ -2594,6 +2660,7 @@ function base.register(cb)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{register_callbacks}
 %    \begin{macrocode}
 function base.register_callbacks()
   if options.channel == 'log' or options.channel == 'tex' then
@@ -2605,6 +2672,7 @@ function base.register_callbacks()
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{unregister}
 %    \begin{macrocode}
 function base.unregister(cb)
   if options.engine == 'lualatex' then
@@ -2615,6 +2683,7 @@ function base.unregister(cb)
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{unregister_callbacks}
 %    \begin{macrocode}
 function base.unregister_callbacks()
   for alias in string.gmatch(options.callback, '([^,]+)') do
@@ -2623,6 +2692,7 @@ function base.unregister_callbacks()
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{get_callback}
 %    \begin{macrocode}
 function base.execute()
   local c = base.get_callback()
@@ -2634,6 +2704,7 @@ function base.execute()
 end
 %    \end{macrocode}
 %
+% \TmpLuaFunction{analyze}
 %    \begin{macrocode}
 function base.analyze(head)
   tpl.print(tpl.new_line())

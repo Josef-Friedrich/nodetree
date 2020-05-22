@@ -1382,7 +1382,7 @@ local callbacks = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-local base = {}
+local export = {}
 %    \end{macrocode}
 % The default options
 %    \begin{macrocode}
@@ -2574,11 +2574,11 @@ function callbacks.mlist_to_hlist(head, display_type, need_penalties)
 end
 %    \end{macrocode}
 %
-% \subsubsection{base --- Exported base functions}
+% \subsubsection{export --- Exported functions}
 %
 % \TmpLuaFunction{set_option} Set a single option.
 %    \begin{macrocode}
-function base.set_option(key, value)
+function export.set_option(key, value)
   if not options then
     options = {}
   end
@@ -2593,19 +2593,19 @@ end
 % \TmpLuaFunction{set_options} Set multiple options by specifing
 % a table.
 %    \begin{macrocode}
-function base.set_options(opts)
+function export.set_options(opts)
   if not options then
     options = {}
   end
   for key, value in pairs(opts) do
-    base.set_option(key, value)
+    export.set_option(key, value)
   end
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{get_option} Get one option by specifing the key.
 %    \begin{macrocode}
-function base.get_option(key)
+function export.get_option(key)
   if not options then
     options = {}
   end
@@ -2617,7 +2617,7 @@ end
 %
 % \TmpLuaFunction{get_callback_name}
 %    \begin{macrocode}
-function base.get_callback_name(alias)
+function export.get_callback_name(alias)
   if alias == 'contribute' or alias == 'contributefilter' then
     return 'contribute_filter'
 %    \end{macrocode}
@@ -2711,7 +2711,7 @@ end
 %
 % \TmpLuaFunction{register}
 %    \begin{macrocode}
-function base.register(cb)
+function export.register(cb)
   if options.engine == 'lualatex' then
     luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree')
   else
@@ -2722,19 +2722,19 @@ end
 %
 % \TmpLuaFunction{register_callbacks}
 %    \begin{macrocode}
-function base.register_callbacks()
+function export.register_callbacks()
   if options.channel == 'log' or options.channel == 'tex' then
     output_file = io.open(tex.jobname .. '_nodetree.' .. options.channel, 'a')
   end
   for alias in string.gmatch(options.callback, '([^,]+)') do
-    base.register(base.get_callback_name(alias))
+    export.register(export.get_callback_name(alias))
   end
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{unregister}
 %    \begin{macrocode}
-function base.unregister(cb)
+function export.unregister(cb)
   if options.engine == 'lualatex' then
     luatexbase.remove_from_callback(cb, 'nodetree')
   else
@@ -2745,17 +2745,17 @@ end
 %
 % \TmpLuaFunction{unregister_callbacks}
 %    \begin{macrocode}
-function base.unregister_callbacks()
+function export.unregister_callbacks()
   for alias in string.gmatch(options.callback, '([^,]+)') do
-    base.unregister(base.get_callback_name(alias))
+    export.unregister(export.get_callback_name(alias))
   end
 end
 %    \end{macrocode}
 %
-% \TmpLuaFunction{get_callback}
+% \TmpLuaFunction{execute}
 %    \begin{macrocode}
-function base.execute()
-  local c = base.get_callback()
+function export.execute()
+  local c = export.get_callback()
   if options.engine == 'lualatex' then
     luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'nodetree')
   else
@@ -2766,7 +2766,7 @@ end
 %
 % \TmpLuaFunction{analyze}
 %    \begin{macrocode}
-function base.analyze(head)
+function export.analyze(head)
   template.print(template.new_line())
   tree.analyze_list(head, 1)
 end
@@ -2774,9 +2774,9 @@ end
 %
 % \TmpLuaFunction{print}
 %    \begin{macrocode}
-function base.print(head, opts)
+function export.print(head, opts)
   if opts and type(opts) == 'table' then
-    base.set_options(opts)
+    export.set_options(opts)
   end
   template.print(template.new_line())
   tree.analyze_list(head, 1)
@@ -2784,7 +2784,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-return base
+return export
 %    \end{macrocode}
 % \iffalse
 %</luamain>

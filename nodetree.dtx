@@ -1090,7 +1090,7 @@ make ctan
 \newif\ifdocumentationmode%
 \documentationmodefalse%
 \DeclareVoidOption{documentationmode}{%
-  \RequirePackage{xcolor,mdframed,expl3}%
+  \RequirePackage{xcolor,mdframed,expl3,xparse}%
   \nodetreeoption[callback]{}%
   \documentationmodetrue%
 }
@@ -1311,6 +1311,14 @@ make ctan
 %    \end{macrocode}
 % \end{macro}
 %
+%    \begin{macrocode}
+\NewDocumentEnvironment { nodetreeShow } { +b } {
+  \directlua{
+    nodetree.compile_include('\luaescapestring{\unexpanded{#1}}')
+  }
+}{}
+%    \end{macrocode}
+%
 % End of the documentation mode.
 %    \begin{macrocode}
 \fi
@@ -1381,7 +1389,13 @@ local tree = {}
 %    \begin{macrocode}
 tree.state = {}
 %    \end{macrocode}
-%
+% A counter for the compiled TeX examples. Some TeX code snippets
+% a written into file, wrapped with some TeX boilerplate code.
+% This written files are compiled.
+%    \begin{macrocode}
+local example_counter = 0
+%    \end{macrocode}
+% Table to bundle all callback wrapper functions.
 %    \begin{macrocode}
 local callbacks = {}
 %    \end{macrocode}
@@ -1401,9 +1415,9 @@ local options = {
   channel = 'term',
 }
 %    \end{macrocode}
-%
+% File descriptor
 %    \begin{macrocode}
-local output_file = {}
+local output_file
 %    \end{macrocode}
 %
 % \subsubsection{node\_extended --- Extend the node library}
@@ -2765,6 +2779,25 @@ function export.execute()
   else
     id, error = callback.register(c, callbacks.post_linebreak_filter)
   end
+end
+%    \end{macrocode}
+%
+% \TmpLuaFunction{compile_include}
+%    \begin{macrocode}
+function export.compile_include(tex_markup)
+  example_counter = example_counter + 1
+  local filename_tex = tex.jobname .. '_' .. example_counter .. '_nodetree.tex'
+  output_file = io.open(filename_tex, 'w')
+  local prefix = '%!TEX program = lualatex\n' ..
+                 '\\documentclass{article}\n' ..
+                 '\\usepackage[channel=tex]{nodetree}\n' ..
+                 '\\begin{document}\n'
+  local suffix = '\n\\end{document}'
+  output_file:write(prefix .. tex_markup .. suffix)
+  output_file:close()
+  local status, error = os.spawn({ 'lualatex', filename_tex })
+  print(status)
+  print(error)
 end
 %    \end{macrocode}
 %

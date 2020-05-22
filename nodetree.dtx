@@ -1288,11 +1288,11 @@ if not modules then modules = { } end modules ['nodetree'] = {
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-local nodex = {}
+local node_extended = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-local tpl = {}
+local template = {}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -1341,7 +1341,7 @@ local options = {}
 local output_file = {}
 %    \end{macrocode}
 %
-% \subsubsection{nodex --- Extend the node library}
+% \subsubsection{node\_extended --- Extend the node library}
 %
 % \TmpLuaFunction{node_id}
 % Get the node id form, e. g.:
@@ -1349,14 +1349,14 @@ local output_file = {}
 % <node    nil <    172 >    nil : hlist 2>
 % \end{code}
 %    \begin{macrocode}
-function nodex.node_id(n)
+function node_extended.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{subtype}
 %    \begin{macrocode}
-function nodex.subtype(n)
+function node_extended.subtype(n)
   local typ = node.type(n.id)
   local subtypes = {
 %    \end{macrocode}
@@ -1602,7 +1602,7 @@ function nodex.subtype(n)
   if subtypes[typ] and subtypes[typ][n.subtype] then
     out = subtypes[typ][n.subtype]
     if options.verbosity > 1 then
-      out = out .. tpl.type_id(n.subtype)
+      out = out .. template.type_id(n.subtype)
     end
     return out
   else
@@ -1612,11 +1612,11 @@ function nodex.subtype(n)
 end
 %    \end{macrocode}
 %
-% \subsubsection{tpl --- Template function}
+% \subsubsection{template --- Template function}
 %
 % \TmpLuaFunction{underscore}
 %    \begin{macrocode}
-function tpl.underscore(string)
+function template.underscore(string)
   if options.channel == 'tex' then
     return string.gsub(string, '_', '\\_')
   else
@@ -1627,7 +1627,7 @@ end
 %
 % \TmpLuaFunction{escape}
 %    \begin{macrocode}
-function tpl.escape(string)
+function template.escape(string)
   if options.channel == 'tex' then
     return string.gsub(string, [[\]], [[\string\]])
   else
@@ -1637,7 +1637,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tpl.round(number)
+function template.round(number)
   local mult = 10^(options.decimalplaces or 0)
   return math.floor(number * mult + 0.5) / mult
 end
@@ -1645,7 +1645,7 @@ end
 %
 % \TmpLuaFunction{whitespace}
 %    \begin{macrocode}
-function tpl.whitespace(count)
+function template.whitespace(count)
   local whitespace, out = '', ''
   if options.channel == 'tex' then
     whitespace = '\\hspace{0.5em}'
@@ -1663,16 +1663,16 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function tpl.length(input)
+function template.length(input)
   input = tonumber(input)
   input = input / tex.sp('1' .. options.unit)
-  return string.format('%g%s', tpl.round(input), options.unit)
+  return string.format('%g%s', template.round(input), options.unit)
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{fill}
 %    \begin{macrocode}
-function tpl.fill(number, order, field)
+function template.fill(number, order, field)
   if order ~= nil and order ~= 0 then
     if field == 'stretch' then
       out = '+'
@@ -1684,14 +1684,14 @@ function tpl.fill(number, order, field)
       string.rep('l', order - 1)
     )
   else
-    return tpl.length(number)
+    return template.length(number)
   end
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{node_colors}
 %    \begin{macrocode}
-tpl.node_colors = {
+template.node_colors = {
   hlist = {'red', 'bright'},
   vlist = {'green', 'bright'},
   rule = {'blue', 'bright'},
@@ -1747,7 +1747,7 @@ tpl.node_colors = {
 %
 % \TmpLuaFunction{color_code}
 %    \begin{macrocode}
-function tpl.color_code(code)
+function template.color_code(code)
   return string.char(27) .. '[' .. tostring(code) .. 'm'
 end
 %    \end{macrocode}
@@ -1787,7 +1787,7 @@ end
 % }
 % \end{code}
 %    \begin{macrocode}
-function tpl.color(color, mode, background)
+function template.color(color, mode, background)
   if options.color ~= 'colored' then
     return ''
   end
@@ -1800,9 +1800,9 @@ function tpl.color(color, mode, background)
 %
 %    \begin{macrocode}
   if mode == 'bright' then
-    out = tpl.color_code(1)
+    out = template.color_code(1)
   elseif mode == 'dim' then
-    out = tpl.color_code(2)
+    out = template.color_code(2)
   end
 %    \end{macrocode}
 %
@@ -1827,13 +1827,13 @@ function tpl.color(color, mode, background)
     elseif color == 'white' then code = 47
     else code = 40 end
   end
-  return out .. tpl.color_code(code)
+  return out .. template.color_code(code)
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{color_tex}
 %    \begin{macrocode}
-function tpl.color_tex(color, mode, background)
+function template.color_tex(color, mode, background)
   if not mode then mode = '' end
   return 'NT' .. color .. mode
 end
@@ -1841,22 +1841,22 @@ end
 %
 % \TmpLuaFunction{colored_string}
 %    \begin{macrocode}
-function tpl.colored_string(string, color, mode, background)
+function template.colored_string(string, color, mode, background)
   if options.channel == 'tex' then
     return '\\textcolor{' ..
-      tpl.color_tex(color, mode, background) ..
+      template.color_tex(color, mode, background) ..
       '}{' ..
       string ..
       '}'
   else
-   return tpl.color(color, mode, background) .. string .. tpl.color('reset')
+   return template.color(color, mode, background) .. string .. template.color('reset')
   end
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{table_inline}
 %    \begin{macrocode}
-function tpl.table_inline(o)
+function template.table_inline(o)
   local tex_escape = ''
   if options.channel == 'tex' then
     tex_escape = '\\'
@@ -1865,7 +1865,7 @@ function tpl.table_inline(o)
      local s = tex_escape .. '{ '
      for k,v in pairs(o) do
         if type(k) ~= 'number' then k = '"'..k..'"' end
-        s = s .. '['..k..'] = ' .. tpl.table_inline(v) .. ', '
+        s = s .. '['..k..'] = ' .. template.table_inline(v) .. ', '
      end
      return s .. tex_escape .. '} '
   else
@@ -1876,14 +1876,14 @@ end
 %
 % \TmpLuaFunction{key_value}
 %    \begin{macrocode}
-function tpl.key_value(key, value, color)
+function template.key_value(key, value, color)
   if type(color) ~= 'string' then
     color = 'yellow'
   end
   if options.channel == 'tex' then
-    key = tpl.underscore(key)
+    key = template.underscore(key)
   end
-  local out = tpl.colored_string(key .. ':', color)
+  local out = template.colored_string(key .. ':', color)
   if value then
     out = out .. ' ' .. value .. '; '
   end
@@ -1894,10 +1894,10 @@ end
 %
 % \TmpLuaFunction{char}
 %    \begin{macrocode}
-function tpl.char(input)
+function template.char(input)
   input = string.format('%q', unicode.utf8.char(input))
   if options.channel == 'tex' then
-    input = tpl.escape(input)
+    input = template.escape(input)
   end
   return input
 end
@@ -1905,33 +1905,33 @@ end
 %
 % \TmpLuaFunction{type}
 %    \begin{macrocode}
-function tpl.type(type, id)
+function template.type(type, id)
   local out = ''
   if options.channel == 'tex' then
-    out = tpl.underscore(type)
+    out = template.underscore(type)
   else
     out = type
   end
   out = string.upper(out)
   if options.verbosity > 1 then
-    out = out .. tpl.type_id(id)
+    out = out .. template.type_id(id)
   end
-  return tpl.colored_string(
-    out .. tpl.whitespace(),
-    tpl.node_colors[type][1],
-    tpl.node_colors[type][2]
+  return template.colored_string(
+    out .. template.whitespace(),
+    template.node_colors[type][1],
+    template.node_colors[type][2]
   )
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{callback_variable}
 %    \begin{macrocode}
-function tpl.callback_variable(variable_name, variable)
+function template.callback_variable(variable_name, variable)
   if variable ~= nil and variable ~= '' then
-    tpl.print(
-      tpl.underscore(variable_name) .. ': ' ..
+    template.print(
+      template.underscore(variable_name) .. ': ' ..
       tostring(variable) ..
-      tpl.new_line()
+      template.new_line()
     )
   end
 end
@@ -1939,20 +1939,20 @@ end
 %
 % \TmpLuaFunction{line}
 %    \begin{macrocode}
-function tpl.line(length)
+function template.line(length)
   local out = ''
   if length == 'long' then
     out = '------------------------------------------'
   else
     out = '-----------------------'
   end
-    return out .. tpl.new_line()
+    return out .. template.new_line()
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{node_begin}
 %    \begin{macrocode}
-function tpl.node_begin()
+function template.node_begin()
   if options.channel == 'tex' then
     return '\\mbox{'
   else
@@ -1963,7 +1963,7 @@ end
 %
 % \TmpLuaFunction{node_end}
 %    \begin{macrocode}
-function tpl.node_end()
+function template.node_end()
   if options.channel == 'tex' then
     return '}'
   else
@@ -1974,7 +1974,7 @@ end
 %
 % \TmpLuaFunction{new_line_character}
 %    \begin{macrocode}
-function tpl.new_line_character()
+function template.new_line_character()
   if options.channel == 'tex' then
     return '\\par\n'
   else
@@ -1985,13 +1985,13 @@ end
 %
 % \TmpLuaFunction{new_line}
 %    \begin{macrocode}
-function tpl.new_line(count)
+function template.new_line(count)
   local out = ''
   if not count then
     count = 1
   end
   for i = 1, count do
-    out = out .. tpl.new_line_character()
+    out = out .. template.new_line_character()
   end
   return out
 end
@@ -1999,51 +1999,51 @@ end
 %
 % \TmpLuaFunction{callback}
 %    \begin{macrocode}
-function tpl.callback(callback_name, variables)
-  tpl.print(
-    tpl.new_line(2) ..
+function template.callback(callback_name, variables)
+  template.print(
+    template.new_line(2) ..
     'Callback: ' ..
-    tpl.colored_string(tpl.underscore(callback_name), 'red', '', true) ..
-    tpl.new_line()
+    template.colored_string(template.underscore(callback_name), 'red', '', true) ..
+    template.new_line()
   )
   if variables then
     for name, value in pairs(variables) do
       if value ~= nil and value ~= '' then
-        tpl.print(
+        template.print(
           '- ' ..
-          tpl.underscore(name) ..
+          template.underscore(name) ..
           ': ' ..
           tostring(value) ..
-          tpl.new_line()
+          template.new_line()
         )
       end
     end
   end
-  tpl.print(tpl.line('long'))
+  template.print(template.line('long'))
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{type_id}
 %    \begin{macrocode}
-function tpl.type_id(id)
+function template.type_id(id)
   return '[' .. tostring(id) .. ']'
 end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{branch}
 %    \begin{macrocode}
-function tpl.branch(connection_type, connection_state, last)
+function template.branch(connection_type, connection_state, last)
   local c = connection_type
   local s = connection_state
   local l = last
   if c == 'list' and s == 'stop' and l == false then
-    return tpl.whitespace(2)
+    return template.whitespace(2)
   elseif c == 'field' and s == 'stop' and l == false then
-    return tpl.whitespace(2)
+    return template.whitespace(2)
   elseif c == 'list' and s == 'continue' and l == false then
-    return '│' .. tpl.whitespace()
+    return '│' .. template.whitespace()
   elseif c == 'field' and s == 'continue' and l == false then
-    return '║' .. tpl.whitespace()
+    return '║' .. template.whitespace()
   elseif c == 'list' and s == 'continue' and l == true then
     return '├─'
   elseif c == 'field' and s == 'continue' and l == true then
@@ -2059,20 +2059,20 @@ end
 %
 % \TmpLuaFunction{branches}
 %    \begin{macrocode}
-function tpl.branches(level, connection_type)
+function template.branches(level, connection_type)
   local out = ''
   for i = 1, level - 1  do
-    out = out .. tpl.branch('list', tree.state[i]['list'], false)
-    out = out .. tpl.branch('field', tree.state[i]['field'], false)
+    out = out .. template.branch('list', tree.state[i]['list'], false)
+    out = out .. template.branch('field', tree.state[i]['field'], false)
   end
 %    \end{macrocode}
 % Format the last branches
 %    \begin{macrocode}
   if connection_type == 'list' then
-    out = out .. tpl.branch('list', tree.state[level]['list'], true)
+    out = out .. template.branch('list', tree.state[level]['list'], true)
   else
-    out = out .. tpl.branch('list', tree.state[level]['list'], false)
-    out = out .. tpl.branch('field', tree.state[level]['field'], true)
+    out = out .. template.branch('list', tree.state[level]['list'], false)
+    out = out .. template.branch('field', tree.state[level]['field'], true)
   end
   return out
 end
@@ -2080,7 +2080,7 @@ end
 %
 % \TmpLuaFunction{print}
 %    \begin{macrocode}
-function tpl.print(text)
+function template.print(text)
   if options.channel == 'log' or options.channel == 'tex' then
     output_file:write(text)
   else
@@ -2130,29 +2130,29 @@ function tree.format_field(head, field)
 %
 %    \begin{macrocode}
   if field == 'prev' or field == 'next' then
-    out = nodex.node_id(head[field])
+    out = node_extended.node_id(head[field])
   elseif field == 'subtype' then
-    out = tpl.underscore(nodex.subtype(head))
+    out = template.underscore(node_extended.subtype(head))
   elseif
     field == 'width' or
     field == 'height' or
     field == 'depth' or
     field == 'kern' or
     field == 'shift' then
-    out = tpl.length(head[field])
+    out = template.length(head[field])
   elseif field == 'char' then
-    out = tpl.char(head[field])
+    out = template.char(head[field])
   elseif field == 'glue_set' then
-    out = tpl.round(head[field])
+    out = template.round(head[field])
   elseif field == 'stretch' or field == 'shrink' then
-    out = tpl.fill(head[field], head[field .. '_order'], field)
+    out = template.fill(head[field], head[field .. '_order'], field)
   else
     out = tostring(head[field])
   end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-  return tpl.key_value(field, out)
+  return template.key_value(field, out)
 end
 %    \end{macrocode}
 %
@@ -2208,12 +2208,12 @@ function tree.analyze_fields(fields, level)
       connection_state = 'continue'
     end
     tree.set_state(level, 'field', connection_state)
-    tpl.print(
-      tpl.node_begin() ..
-      tpl.branches(level, 'field') ..
-      tpl.key_value(field_name) ..
-      tpl.node_end() ..
-      tpl.new_line()
+    template.print(
+      template.node_begin() ..
+      template.branches(level, 'field') ..
+      template.key_value(field_name) ..
+      template.node_end() ..
+      template.new_line()
     )
     tree.analyze_list(recursion_node, level + 1)
   end
@@ -2231,10 +2231,10 @@ function tree.analyze_node(head, level)
     connection_state = 'stop'
   end
   tree.set_state(level, 'list', connection_state)
-  out = tpl.branches(level, 'list')
-    .. tpl.type(node.type(head.id), head.id)
+  out = template.branches(level, 'list')
+    .. template.type(node.type(head.id), head.id)
   if options.verbosity > 1 then
-    out = out .. tpl.key_value('no', nodex.node_id(head))
+    out = out .. template.key_value('no', node_extended.node_id(head))
   end
 %    \end{macrocode}
 % We store the attributes output to append it to the field list.
@@ -2258,30 +2258,30 @@ function tree.analyze_node(head, level)
 % Append the attributes output if available
 %    \begin{macrocode}
   if attributes ~= '' then
-    out = out .. tpl.key_value('attr', attributes, 'blue')
+    out = out .. template.key_value('attr', attributes, 'blue')
   end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-  tpl.print(
-    tpl.node_begin() ..
+  template.print(
+    template.node_begin() ..
     out ..
-    tpl.node_end() ..
-    tpl.new_line()
+    template.node_end() ..
+    template.new_line()
   )
 %    \end{macrocode}
 %
 %    \begin{macrocode}
   local property = node.getproperty(head)
   if property then
-    tpl.print(
-      tpl.node_begin() ..
-      tpl.branches(level, 'field') ..
+    template.print(
+      template.node_begin() ..
+      template.branches(level, 'field') ..
       '  ' ..
-      tpl.colored_string('properties:', 'blue') .. ' ' ..
-      tpl.table_inline(property) ..
-      tpl.node_end() ..
-      tpl.new_line()
+      template.colored_string('properties:', 'blue') .. ' ' ..
+      template.table_inline(property) ..
+      template.node_end() ..
+      template.new_line()
     )
   end
 %    \end{macrocode}
@@ -2305,7 +2305,7 @@ end
 %    \begin{macrocode}
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
-  tpl.print(tpl.line('short') .. tpl.new_line())
+  template.print(template.line('short') .. template.new_line())
 end
 %    \end{macrocode}
 %
@@ -2314,7 +2314,7 @@ end
 % \TmpLuaFunction{contribute_filter}
 %    \begin{macrocode}
 function callbacks.contribute_filter(extrainfo)
-  tpl.callback('contribute_filter', {extrainfo = extrainfo})
+  template.callback('contribute_filter', {extrainfo = extrainfo})
   return true
 end
 %    \end{macrocode}
@@ -2322,7 +2322,7 @@ end
 % \TmpLuaFunction{buildpage_filter}
 %    \begin{macrocode}
 function callbacks.buildpage_filter(extrainfo)
-  tpl.callback('buildpage_filter', {extrainfo = extrainfo})
+  template.callback('buildpage_filter', {extrainfo = extrainfo})
   return true
 end
 %    \end{macrocode}
@@ -2330,7 +2330,7 @@ end
 % \TmpLuaFunction{pre_linebreak_filter}
 %    \begin{macrocode}
 function callbacks.pre_linebreak_filter(head, groupcode)
-  tpl.callback('pre_linebreak_filter', {groupcode = groupcode})
+  template.callback('pre_linebreak_filter', {groupcode = groupcode})
   tree.analyze_callback(head)
   return true
 end
@@ -2339,7 +2339,7 @@ end
 % \TmpLuaFunction{linebreak_filter}
 %    \begin{macrocode}
 function callbacks.linebreak_filter(head, is_display)
-  tpl.callback('linebreak_filter', {is_display = is_display})
+  template.callback('linebreak_filter', {is_display = is_display})
   tree.analyze_callback(head)
   return true
 end
@@ -2354,7 +2354,7 @@ function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrore
     prevdepth = prevdepth,
     mirrored = mirrored,
   }
-  tpl.callback('append_to_vlist_filter', variables)
+  template.callback('append_to_vlist_filter', variables)
   tree.analyze_callback(head)
   return true
 end
@@ -2363,7 +2363,7 @@ end
 % \TmpLuaFunction{post_linebreak_filter}
 %    \begin{macrocode}
 function callbacks.post_linebreak_filter(head, groupcode)
-  tpl.callback('post_linebreak_filter', {groupcode = groupcode})
+  template.callback('post_linebreak_filter', {groupcode = groupcode})
   tree.analyze_callback(head)
   return true
 end
@@ -2379,7 +2379,7 @@ function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attr
     direction = direction,
     attributelist = attributelist,
   }
-  tpl.callback('hpack_filter', variables)
+  template.callback('hpack_filter', variables)
   tree.analyze_callback(head)
   return true
 end
@@ -2392,11 +2392,11 @@ function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direc
     groupcode = groupcode,
     size = size,
     packtype = packtype,
-    maxdepth = tpl.length(maxdepth),
+    maxdepth = template.length(maxdepth),
     direction = direction,
     attributelist = attributelist,
   }
-  tpl.callback('vpack_filter', variables)
+  template.callback('vpack_filter', variables)
   tree.analyze_callback(head)
   return true
 end
@@ -2411,7 +2411,7 @@ function callbacks.hpack_quality(incident, detail, head, first, last)
     first = first,
     last = last,
   }
-  tpl.callback('hpack_quality', variables)
+  template.callback('hpack_quality', variables)
   tree.analyze_callback(head)
 end
 %    \end{macrocode}
@@ -2425,7 +2425,7 @@ function callbacks.vpack_quality(incident, detail, head, first, last)
     first = first,
     last = last,
   }
-  tpl.callback('vpack_quality', variables)
+  template.callback('vpack_quality', variables)
   tree.analyze_callback(head)
 end
 %    \end{macrocode}
@@ -2437,7 +2437,7 @@ function callbacks.process_rule(head, width, height)
     width = width,
     height = height,
   }
-  tpl.callback('process_rule', variables)
+  template.callback('process_rule', variables)
   tree.analyze_callback(head)
   return true
 end
@@ -2453,7 +2453,7 @@ function callbacks.pre_output_filter(head, groupcode, size, packtype, maxdepth, 
     maxdepth = maxdepth,
     direction = direction,
   }
-  tpl.callback('pre_output_filter', variables)
+  template.callback('pre_output_filter', variables)
   tree.analyze_callback(head)
   return true
 end
@@ -2462,10 +2462,10 @@ end
 % \TmpLuaFunction{hyphenate}
 %    \begin{macrocode}
 function callbacks.hyphenate(head, tail)
-  tpl.callback('hyphenate')
-  tpl.print('head:')
+  template.callback('hyphenate')
+  template.print('head:')
   tree.analyze_callback(head)
-  tpl.print('tail:')
+  template.print('tail:')
   tree.analyze_callback(tail)
 end
 %    \end{macrocode}
@@ -2473,10 +2473,10 @@ end
 % \TmpLuaFunction{}
 %    \begin{macrocode}
 function callbacks.ligaturing(head, tail)
-  tpl.callback('ligaturing')
-  tpl.print('head:')
+  template.callback('ligaturing')
+  template.print('head:')
   tree.analyze_callback(head)
-  tpl.print('tail:')
+  template.print('tail:')
   tree.analyze_callback(tail)
 end
 %    \end{macrocode}
@@ -2484,10 +2484,10 @@ end
 % \TmpLuaFunction{kerning}
 %    \begin{macrocode}
 function callbacks.kerning(head, tail)
-  tpl.callback('kerning')
-  tpl.print('head:')
+  template.callback('kerning')
+  template.print('head:')
   tree.analyze_callback(head)
-  tpl.print('tail:')
+  template.print('tail:')
   tree.analyze_callback(tail)
 end
 %    \end{macrocode}
@@ -2495,7 +2495,7 @@ end
 % \TmpLuaFunction{insert_local_par}
 %    \begin{macrocode}
 function callbacks.insert_local_par(local_par, location)
-  tpl.callback('insert_local_par', {location = location})
+  template.callback('insert_local_par', {location = location})
   tree.analyze_callback(local_par)
   return true
 end
@@ -2508,7 +2508,7 @@ function callbacks.mlist_to_hlist(head, display_type, need_penalties)
     display_type = display_type,
     need_penalties = need_penalties,
   }
-  tpl.callback('mlist_to_hlist', variables)
+  template.callback('mlist_to_hlist', variables)
   tree.analyze_callback(head)
   return node.mlist_to_hlist(head, display_type, need_penalties)
 end
@@ -2723,7 +2723,7 @@ end
 % \TmpLuaFunction{analyze}
 %    \begin{macrocode}
 function base.analyze(head)
-  tpl.print(tpl.new_line())
+  template.print(template.new_line())
   tree.analyze_list(head, 1)
 end
 %    \end{macrocode}

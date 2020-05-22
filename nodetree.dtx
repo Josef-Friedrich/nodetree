@@ -1384,9 +1384,17 @@ local callbacks = {}
 %    \begin{macrocode}
 local base = {}
 %    \end{macrocode}
-%
+% The default options
 %    \begin{macrocode}
-local options = {}
+local options = {
+  verbosity = 1,
+  callback = 'postlinebreak',
+  engine = 'luatex',
+  color = 'colored',
+  decimalplaces = 2,
+  unit = 'pt',
+  channel = 'term',
+}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -2568,55 +2576,34 @@ end
 %
 % \subsubsection{base --- Exported base functions}
 %
-% \TmpLuaFunction{normalize_options}
+% \TmpLuaFunction{set_option} Set a single option.
 %    \begin{macrocode}
-function base.normalize_options()
-  options.verbosity = tonumber(options.verbosity)
-  options.decimalplaces = tonumber(options.decimalplaces)
+function base.set_option(key, value)
+  if not options then
+    options = {}
+  end
+  if key == 'verbosity' or key == 'decimalplaces' then
+    options[key] = tonumber(value)
+  else
+    options[key] = value
+  end
 end
 %    \end{macrocode}
 %
-% \TmpLuaFunction{set_options}
+% \TmpLuaFunction{set_options} Set multiple options by specifing
+% a table.
 %    \begin{macrocode}
 function base.set_options(opts)
   if not options then
     options = {}
   end
   for key, value in pairs(opts) do
-    options[key] = value
+    base.set_option(key, value)
   end
-  base.normalize_options()
 end
 %    \end{macrocode}
 %
-% \TmpLuaFunction{set_default_options}
-%    \begin{macrocode}
-function base.set_default_options()
-  local defaults = {
-    verbosity = 1,
-    callback = 'postlinebreak',
-    engine = 'luatex',
-    color = 'colored',
-    decimalplaces = 2,
-    unit = 'pt',
-    channel = 'term',
-  }
-  base.set_options(defaults)
-end
-%    \end{macrocode}
-%
-% \TmpLuaFunction{set_option}
-%    \begin{macrocode}
-function base.set_option(key, value)
-  if not options then
-    options = {}
-  end
-  options[key] = value
-  base.normalize_options()
-end
-%    \end{macrocode}
-%
-% \TmpLuaFunction{get_option}
+% \TmpLuaFunction{get_option} Get one option by specifing the key.
 %    \begin{macrocode}
 function base.get_option(key)
   if not options then
@@ -2794,10 +2781,6 @@ function base.print(head, opts)
   template.print(template.new_line())
   tree.analyze_list(head, 1)
 end
-%    \end{macrocode}
-% Set the default options.
-%    \begin{macrocode}
-base.set_default_options()
 %    \end{macrocode}
 %
 %    \begin{macrocode}

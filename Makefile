@@ -25,7 +25,7 @@ docpdf:
 
 docexamples:
 	find . -name "*_nodetree.tex" -exec rm -f {} \;
-	find examples -name "*.tex" -exec lualatex {} \;
+	find examples -name "*.tex" -exec latexmk -latex=lualatex -cd {} \;
 
 clean:
 	./clean.sh

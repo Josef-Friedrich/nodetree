@@ -65,7 +65,7 @@
 
 \newcommand{\TmpExample}[1]{
 \begin{nodetreeexample}
-\input{#1_nodetree.tex}
+\input{examples/#1_nodetree.tex}
 \end{nodetreeexample}
 }
 
@@ -105,7 +105,7 @@
 \maketitle
 
 \begin{nodetreeexample}[fontsize=\footnotesize]
-\input{packagename_nodetree.tex}
+\input{examples/packagename_nodetree.tex}
 \end{nodetreeexample}
 
 \newpage
@@ -368,15 +368,15 @@ implemented.
 
 \subsubsection{Example \texttt{verbosity=1}}
 
-\nodetreeterminalemulator{option_verbosity-1}
+\nodetreeterminalemulator{examples/option_verbosity-1}
 
 \subsubsection{Example \texttt{verbosity=2}}
 
-\nodetreeterminalemulator{option_verbosity-2}
+\nodetreeterminalemulator{examples/option_verbosity-2}
 
 \subsubsection{Example \texttt{verbosity=3}}
 
-\nodetreeterminalemulator{option_verbosity-3}
+\nodetreeterminalemulator{examples/option_verbosity-3}
 
 %%
 % color
@@ -456,9 +456,9 @@ Width of the capital letter M \\
 \end{figure}
 
 
-\nodetreeterminalemulator{option_unit-pt}
-\nodetreeterminalemulator{option_unit-sp}
-\nodetreeterminalemulator{option_unit-cm}
+\nodetreeterminalemulator{examples/option_unit-pt}
+\nodetreeterminalemulator{examples/option_unit-sp}
+\nodetreeterminalemulator{examples/option_unit-cm}
 
 %%
 % decimalplaces
@@ -491,7 +491,7 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \newcommand{\TmpExampleTheme}[2]{
   \subsubsection{Example \texttt{theme=#1} \texttt{thememode=#2}}
-  \nodetreeterminalemulator[theme=#1,thememode=#2]{minimal}
+  \nodetreeterminalemulator[theme=#1,thememode=#2]{examples/minimal}
 }
 
 \subsection{Option \texttt{theme} and \texttt{thememode}}
@@ -532,7 +532,7 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \newcommand{\TmpExampleFont}[1]{
   \subsubsection{Example \texttt{font=\{#1\}}}
-  \nodetreeterminalemulator[font={#1}]{minimal}
+  \nodetreeterminalemulator[font={#1}]{examples/minimal}
 }
 
 \TmpExampleFont{FreeMono}
@@ -551,11 +551,11 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \string\small
 
-\nodetreeterminalemulator[fontsize=\small]{minimal}
+\nodetreeterminalemulator[fontsize=\small]{examples/minimal}
 
 \string\tiny
 
-\nodetreeterminalemulator[fontsize=\tiny]{minimal}
+\nodetreeterminalemulator[fontsize=\tiny]{examples/minimal}
 
 \nodetreereset
 

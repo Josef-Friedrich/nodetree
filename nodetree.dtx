@@ -356,15 +356,15 @@ Higher integer values result in a more verbose output. The default value
 for this options is |1|. At the moment only verbosity level |2| is
 implemented.
 
-1
+\subsubsection{Example \texttt{verbosity=1}}
 
 \nodetreeterminalemulator{option_verbosity-1}
 
-2
+\subsubsection{Example \texttt{verbosity=2}}
 
 \nodetreeterminalemulator{option_verbosity-2}
 
-3
+\subsubsection{Example \texttt{verbosity=3}}
 
 \nodetreeterminalemulator{option_verbosity-3}
 
@@ -479,37 +479,36 @@ If |decimalplaces| is set to |0| only integer values are shown.
 % theme and thememode
 %%
 
+\newcommand{\TmpExampleTheme}[2]{
+  \subsubsection{Example \texttt{theme=#1} \texttt{thememode=#2}}
+  \nodetreeterminalemulator[theme=#1,thememode=#2]{minimal}
+}
+
 \subsection{Option \texttt{theme} and \texttt{thememode}}
 
-bw
+% bw
+\TmpExampleTheme{bwdark}{dark}
+\TmpExampleTheme{bwlight}{light}
 
-\nodetreeterminalemulator[theme=bwdark,thememode=dark]{minimal}
-\nodetreeterminalemulator[theme=bwlight,thememode=light]{minimal}
+% terminalapp
+\TmpExampleTheme{terminalapp}{dark}
+\TmpExampleTheme{terminalapp}{light}
 
-terminalapp
+% xterm
+\TmpExampleTheme{xterm}{dark}
+\TmpExampleTheme{xterm}{light}
 
-\nodetreeterminalemulator[theme=terminalapp,thememode=dark]{minimal}
-\nodetreeterminalemulator[theme=terminalapp,thememode=light]{minimal}
+% smyck
+\TmpExampleTheme{smyck}{dark}
+\TmpExampleTheme{smyck}{light}
 
-xterm
+% molokai
+\TmpExampleTheme{molokai}{dark}
+\TmpExampleTheme{molokai}{light}
 
-\nodetreeterminalemulator[theme=xterm,thememode=dark]{minimal}
-\nodetreeterminalemulator[theme=xterm,thememode=light]{minimal}
-
-smyck
-
-\nodetreeterminalemulator[theme=smyck,thememode=dark]{minimal}
-\nodetreeterminalemulator[theme=smyck,thememode=light]{minimal}
-
-molokai
-
-\nodetreeterminalemulator[theme=molokai,thememode=dark]{minimal}
-\nodetreeterminalemulator[theme=molokai,thememode=light]{minimal}
-
-monokaisoda
-
-\nodetreeterminalemulator[theme=monokaisoda,thememode=dark]{minimal}
-\nodetreeterminalemulator[theme=monokaisoda,thememode=light]{minimal}
+% monokaisoda
+\TmpExampleTheme{monokaisoda}{dark}
+\TmpExampleTheme{monokaisoda}{light}
 
 \nodetreereset
 
@@ -521,21 +520,16 @@ monokaisoda
 
 \nodetreeset{fontsize=\small}
 
-FreeMono
+\newcommand{\TmpExampleFont}[1]{
+  \subsubsection{Example \texttt{font=\{#1\}}}
+  \nodetreeterminalemulator[font={#1}]{minimal}
+}
 
-\nodetreeterminalemulator[font=FreeMono]{minimal}
+\TmpExampleFont{FreeMono}
+\TmpExampleFont{Liberation Mono}
+\TmpExampleFont{DejaVu Sans Mono}
+\TmpExampleFont{Ubuntu Mono}
 
-Liberation Mono
-
-\nodetreeterminalemulator[font={Liberation Mono}]{minimal}
-
-DejaVu Sans Mono
-
-\nodetreeterminalemulator[font={DejaVu Sans Mono}]{minimal}
-
-Ubuntu Mono
-
-\nodetreeterminalemulator[font={Ubuntu Mono}]{minimal}
 
 \nodetreereset
 

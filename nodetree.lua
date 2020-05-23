@@ -322,7 +322,7 @@ end
 ---
 function template.underscore(string)
   if options.channel == 'tex' then
-    return string.gsub(string, '_', '\_')
+    return string.gsub(string, '_', '\\_')
   else
     return string
   end

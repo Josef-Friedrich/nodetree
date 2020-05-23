@@ -1450,6 +1450,27 @@ function node_extended.subtype(n)
       [5] = 'cell',
       [6] = 'equation',
       [7] = 'equationnumber',
+      [8] = 'math',
+      [9] = 'mathchar',
+      [10] = 'hextensible',
+      [11] = 'vextensible',
+      [12] = 'hdelimiter',
+      [13] = 'vdelimiter',
+      [14] = 'overdelimiter',
+      [15] = 'underdelimiter',
+      [16] = 'numerator',
+      [17] = 'denominator',
+      [18] = 'limits',
+      [19] = 'fraction',
+      [20] = 'nucleus',
+      [21] = 'sup',
+      [22] = 'sub',
+      [23] = 'degree',
+      [24] = 'scripts',
+      [25] = 'over',
+      [26] = 'under',
+      [27] = 'accent',
+      [28] = 'radical',
     },
 %    \end{macrocode}
 % \paragraph{vlist (1)}
@@ -1463,11 +1484,16 @@ function node_extended.subtype(n)
 % \paragraph{rule (2)}
 %    \begin{macrocode}
     rule = {
-      [0] = 'unknown',
+      [0] = 'normal',
       [1] = 'box',
       [2] = 'image',
       [3] = 'empty',
       [4] = 'user',
+      [5] = 'over',
+      [6] = 'under',
+      [7] = 'fraction',
+      [8] = 'radical',
+      [9] = 'outline',
     },
 %    \end{macrocode}
 %
@@ -1522,6 +1548,7 @@ function node_extended.subtype(n)
       [1] = 'endmath',
     },
 %    \end{macrocode}
+%
 % \paragraph{glue (12)}
 %    \begin{macrocode}
     glue = {
@@ -1560,6 +1587,21 @@ function node_extended.subtype(n)
       [1] = 'userkern',
       [2] = 'accentkern',
       [3] = 'italiccorrection',
+    },
+%    \end{macrocode}
+%
+% \paragraph{penalty (14)}
+%    \begin{macrocode}
+    penalty = {
+      [0] = 'userpenalty',
+      [1] = 'linebreakpenalty',
+      [2] = 'linepenalty',
+      [3] = 'wordpenalty',
+      [4] = 'finalpenalty',
+      [5] = 'noadpenalty',
+      [6] = 'beforedisplaypenalty',
+      [7] = 'afterdisplaypenalty',
+      [8] = 'equationnumberpenalty',
     },
 %    \end{macrocode}
 %
@@ -1625,6 +1667,7 @@ function node_extended.subtype(n)
       [1] = 'left',
       [2] = 'middle',
       [3] = 'right',
+      [4] = 'no',
     },
 %    \end{macrocode}
 %
@@ -1638,6 +1681,14 @@ function node_extended.subtype(n)
 % \item delim (27)
 % \item margin\_kern (28)
 % \end{compactitem}
+%
+% \paragraph{margin\_kern (28)}
+%    \begin{macrocode}
+    margin_kern = {
+      [0] = 'left',
+      [1] = 'right',
+    },
+%    \end{macrocode}
 %
 % \paragraph{glyph (29)}
 %    \begin{macrocode}

@@ -17,7 +17,6 @@ for i in $EXT; do
 	_remove $i
 done
 
-rm -f nodetree.lua
 rm -f nodetree.sty
 rm -f nodetree.tex
 '

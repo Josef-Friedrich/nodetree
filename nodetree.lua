@@ -472,7 +472,7 @@ function template.color_code(code)
   return string.char(27) .. '[' .. tostring(code) .. 'm'
 end
 
----
+--
 -- \href{https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters}
 -- {SGR (Select Graphic Rendition) Parameters}
 

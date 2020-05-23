@@ -13,9 +13,9 @@ install:
 	cp -f $(jobname).lua $(installdir)
 	./clean.sh install
 
-doc: docexamples docpdf
+doc: doc_examples doc_pdf
 
-docpdf:
+doc_pdf:
 	lualatex --shell-escape $(jobname).dtx
 	makeindex -s gglo.ist -o $(jobname).gls $(jobname).glo
 	makeindex -s gind.ist -o $(jobname).ind $(jobname).idx
@@ -23,19 +23,22 @@ docpdf:
 	mkdir -p $(texmf)/doc
 	cp $(jobname).pdf $(texmf)/doc
 
-docexamples:
+doc_examples:
 	find . -name "*_nodetree.tex" -exec rm -f {} \;
 	find examples -name "*.tex" -exec latexmk -latex=lualatex -cd {} \;
+
+doc_lua:
+	ldoc .
 
 clean:
 	./clean.sh
 
-test: testluatex testlualatex
+test: test_luatex test_lualatex
 
-testlualatex:
+test_lualatex:
 	find tests/lualatex -name "*.tex" -exec lualatex {} \;
 
-testluatex:
+test_luatex:
 	find tests/luatex -name "*.tex" -exec luatex {} \;
 
 ctan: install doc
@@ -49,4 +52,4 @@ ctan: install doc
 	tar cvfz $(jobname).tar.gz $(jobname)
 	rm -rf $(jobname)
 
-.PHONY: all install doc clean test ctan testlualatex testluatex
+.PHONY: all install doc clean test ctan test_lualatex test_luatex doc_lua

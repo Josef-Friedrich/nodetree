@@ -1,4 +1,3 @@
-
 ![nodetree](https://raw.githubusercontent.com/Josef-Friedrich/nodetree/master/graphics/packagename.png)
 
 # Abstract
@@ -150,4 +149,3 @@ git tag v1.4
 make
 make ctan
 ```
-

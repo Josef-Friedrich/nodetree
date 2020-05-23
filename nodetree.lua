@@ -33,15 +33,15 @@ local tree = {}
 
 -- |tree.state|:
 -- \begin{itemize}
--- \item |1| (level):
+-- * |1| (level):
 -- \begin{itemize}
--- \item |list|: |continue|
--- \item |field|: |stop|
+-- * |list|: |continue|
+-- * |field|: |stop|
 -- \end{itemize}
--- \item |2|:
+-- * |2|:
 -- \begin{itemize}
--- \item |list|: |continue|
--- \item |field|: |stop|
+-- * |list|: |continue|
+-- * |field|: |stop|
 -- \end{itemize}
 -- \end{itemize}
 tree.state = {}
@@ -66,7 +66,7 @@ local options = {
 -- File descriptor
 local output_file
 
--- \subsubsection{node\_extended --- Extend the node library}
+-- \subsubsection{node_extended --- Extend the node library}
 
 ---
 -- Get the ID of a node. We have to convert the node into a string and
@@ -77,264 +77,231 @@ function node_extended.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
 end
 
+--- A table of all node subtype names.
+-- __Nodes without subtypes:__
+-- * `ins` (3)
+-- * `mark` (4)
+-- * `whatsit` (8)
+-- * `local_par` (9)
+-- * `dir` (10)
+-- * `penalty` (14)
+-- * `unset` (15)
+-- * `style` (16)
+-- * `choice` (17)
+-- * `fraction` (20)
+-- * `math_char` (23)
+-- * `sub_box` (24)
+-- * `sub_mlist` (25)
+-- * `math_text_char` (26)
+-- * `delim` (27)
+-- * `margin_kern` (28)
+-- * `align_record` (30)
+-- * `pseudo_file` (31)
+-- * `pseudo_line` (32)
+-- * `page_insert` (33)
+-- * `split_insert` (34)
+-- * `expr_stack` (35)
+-- * `nested_list` (36)
+-- * `span` (37)
+-- * `attribute` (38)
+-- * `glue_spec` (39)
+-- * `attribute_list` (40)
+-- * `temp` (41)
+-- * `align_stack` (42)
+-- * `movement_stack` (43)
+-- * `if_stack` (44)
+-- * `unhyphenated` (45)
+-- * `hyphenated` (46)
+-- * `delta` (47)
+-- * `passive` (48)
+-- * `shape` (49)
+local subtypes = {
+  -- hlist (0)
+  hlist = {
+    [0] = 'unknown',
+    [1] = 'line',
+    [2] = 'box',
+    [3] = 'indent',
+    [4] = 'alignment',
+    [5] = 'cell',
+    [6] = 'equation',
+    [7] = 'equationnumber',
+    [8] = 'math',
+    [9] = 'mathchar',
+    [10] = 'hextensible',
+    [11] = 'vextensible',
+    [12] = 'hdelimiter',
+    [13] = 'vdelimiter',
+    [14] = 'overdelimiter',
+    [15] = 'underdelimiter',
+    [16] = 'numerator',
+    [17] = 'denominator',
+    [18] = 'limits',
+    [19] = 'fraction',
+    [20] = 'nucleus',
+    [21] = 'sup',
+    [22] = 'sub',
+    [23] = 'degree',
+    [24] = 'scripts',
+    [25] = 'over',
+    [26] = 'under',
+    [27] = 'accent',
+    [28] = 'radical',
+  },
+  -- vlist (1)
+  vlist = {
+    [0] = 'unknown',
+    [4] = 'alignment',
+    [5] = 'cell',
+  },
+  -- rule (2)
+  rule = {
+    [0] = 'normal',
+    [1] = 'box',
+    [2] = 'image',
+    [3] = 'empty',
+    [4] = 'user',
+    [5] = 'over',
+    [6] = 'under',
+    [7] = 'fraction',
+    [8] = 'radical',
+    [9] = 'outline',
+  },
+  -- adjust (5)
+  adjust = {
+    [0] = 'normal',
+    [1] = 'pre',
+  },
+  -- boundary (6)
+  boundary = {
+    [0] = 'cancel',
+    [1] = 'user',
+    [2] = 'protrusion',
+    [3] = 'word',
+  },
+  -- disc (7)
+  disc  = {
+    [0] = 'discretionary',
+    [1] = 'explicit',
+    [2] = 'automatic',
+    [3] = 'regular',
+    [4] = 'first',
+    [5] = 'second',
+  },
+  -- math (11)
+  math = {
+    [0] = 'beginmath',
+    [1] = 'endmath',
+  },
+  -- glue (12)
+  glue = {
+    [0]   = 'userskip',
+    [1]   = 'lineskip',
+    [2]   = 'baselineskip',
+    [3]   = 'parskip',
+    [4]   = 'abovedisplayskip',
+    [5]   = 'belowdisplayskip',
+    [6]   = 'abovedisplayshortskip',
+    [7]   = 'belowdisplayshortskip',
+    [8]   = 'leftskip',
+    [9]   = 'rightskip',
+    [10]  = 'topskip',
+    [11]  = 'splittopskip',
+    [12]  = 'tabskip',
+    [13]  = 'spaceskip',
+    [14]  = 'xspaceskip',
+    [15]  = 'parfillskip',
+    [16]  = 'mathskip',
+    [17]  = 'thinmuskip',
+    [18]  = 'medmuskip',
+    [19]  = 'thickmuskip',
+    [98]  = 'conditionalmathskip',
+    [99]  = 'muglue',
+    [100] = 'leaders',
+    [101] = 'cleaders',
+    [102] = 'xleaders',
+    [103] = 'gleaders',
+  },
+  -- kern (13)
+  kern = {
+    [0] = 'fontkern',
+    [1] = 'userkern',
+    [2] = 'accentkern',
+    [3] = 'italiccorrection',
+  },
+  -- penalty (14)
+  penalty = {
+    [0] = 'userpenalty',
+    [1] = 'linebreakpenalty',
+    [2] = 'linepenalty',
+    [3] = 'wordpenalty',
+    [4] = 'finalpenalty',
+    [5] = 'noadpenalty',
+    [6] = 'beforedisplaypenalty',
+    [7] = 'afterdisplaypenalty',
+    [8] = 'equationnumberpenalty',
+  },
+  -- noad (18)
+  noad = {
+    [0] = 'ord',
+    [1] = 'opdisplaylimits',
+    [2] = 'oplimits',
+    [3] = 'opnolimits',
+    [4] = 'bin',
+    [5] = 'rel',
+    [6] = 'open',
+    [7] = 'close',
+    [8] = 'punct',
+    [9] = 'inner',
+    [10] = 'under',
+    [11] = 'over',
+    [12] = 'vcenter',
+  },
+  -- radical (19)
+  radical = {
+    [0] = 'radical',
+    [1] = 'uradical',
+    [2] = 'uroot',
+    [3] = 'uunderdelimiter',
+    [4] = 'uoverdelimiter',
+    [5] = 'udelimiterunder',
+    [6] = 'udelimiterover',
+  },
+  -- accent (21)
+  accent = {
+    [0] = 'bothflexible',
+    [1] = 'fixedtop',
+    [2] = 'fixedbottom',
+    [3] = 'fixedboth',
+  },
+  -- fence (22)
+  fence = {
+    [0] = 'unset',
+    [1] = 'left',
+    [2] = 'middle',
+    [3] = 'right',
+    [4] = 'no',
+  },
+  -- margin_kern (28)
+  margin_kern = {
+    [0] = 'left',
+    [1] = 'right',
+  },
+  -- glyph (29)
+  glyph = {
+    [0] = 'character',
+    [1] = 'ligature',
+    [2] = 'ghost',
+    [3] = 'left',
+    [4] = 'right',
+  },
+}
+subtypes.whatsit = node.whatsits()
+
 ---
 function node_extended.subtype(n)
   local typ = node.type(n.id)
-  local subtypes = {
--- \paragraph{hlist (0)}
-    hlist = {
-      [0] = 'unknown',
-      [1] = 'line',
-      [2] = 'box',
-      [3] = 'indent',
-      [4] = 'alignment',
-      [5] = 'cell',
-      [6] = 'equation',
-      [7] = 'equationnumber',
-      [8] = 'math',
-      [9] = 'mathchar',
-      [10] = 'hextensible',
-      [11] = 'vextensible',
-      [12] = 'hdelimiter',
-      [13] = 'vdelimiter',
-      [14] = 'overdelimiter',
-      [15] = 'underdelimiter',
-      [16] = 'numerator',
-      [17] = 'denominator',
-      [18] = 'limits',
-      [19] = 'fraction',
-      [20] = 'nucleus',
-      [21] = 'sup',
-      [22] = 'sub',
-      [23] = 'degree',
-      [24] = 'scripts',
-      [25] = 'over',
-      [26] = 'under',
-      [27] = 'accent',
-      [28] = 'radical',
-    },
--- \paragraph{vlist (1)}
-    vlist = {
-      [0] = 'unknown',
-      [4] = 'alignment',
-      [5] = 'cell',
-    },
--- \paragraph{rule (2)}
-    rule = {
-      [0] = 'normal',
-      [1] = 'box',
-      [2] = 'image',
-      [3] = 'empty',
-      [4] = 'user',
-      [5] = 'over',
-      [6] = 'under',
-      [7] = 'fraction',
-      [8] = 'radical',
-      [9] = 'outline',
-    },
 
--- \noindent
--- Nodes without subtypes:
--- \begin{compactitem}
--- \item ins (3)
--- \item mark (4)
--- \end{compactitem}
--- \paragraph{adjust (5)}
-    adjust = {
-      [0] = 'normal',
-      [1] = 'pre',
-    },
--- \paragraph{boundary (6)}
-    boundary = {
-      [0] = 'cancel',
-      [1] = 'user',
-      [2] = 'protrusion',
-      [3] = 'word',
-    },
--- \paragraph{disc (7)}
-    disc  = {
-      [0] = 'discretionary',
-      [1] = 'explicit',
-      [2] = 'automatic',
-      [3] = 'regular',
-      [4] = 'first',
-      [5] = 'second',
-    },
-
--- \noindent
--- Nodes without subtypes:
--- \begin{compactitem}
--- \item whatsit (8)
--- \item local\_par (9)
--- \item dir (10)
--- \end{compactitem}
-
--- \paragraph{math (11)}
-    math = {
-      [0] = 'beginmath',
-      [1] = 'endmath',
-    },
-
--- \paragraph{glue (12)}
-    glue = {
-      [0]   = 'userskip',
-      [1]   = 'lineskip',
-      [2]   = 'baselineskip',
-      [3]   = 'parskip',
-      [4]   = 'abovedisplayskip',
-      [5]   = 'belowdisplayskip',
-      [6]   = 'abovedisplayshortskip',
-      [7]   = 'belowdisplayshortskip',
-      [8]   = 'leftskip',
-      [9]   = 'rightskip',
-      [10]  = 'topskip',
-      [11]  = 'splittopskip',
-      [12]  = 'tabskip',
-      [13]  = 'spaceskip',
-      [14]  = 'xspaceskip',
-      [15]  = 'parfillskip',
-      [16]  = 'mathskip',
-      [17]  = 'thinmuskip',
-      [18]  = 'medmuskip',
-      [19]  = 'thickmuskip',
-      [98]  = 'conditionalmathskip',
-      [99]  = 'muglue',
-      [100] = 'leaders',
-      [101] = 'cleaders',
-      [102] = 'xleaders',
-      [103] = 'gleaders',
-    },
--- \paragraph{kern (13)}
-    kern = {
-      [0] = 'fontkern',
-      [1] = 'userkern',
-      [2] = 'accentkern',
-      [3] = 'italiccorrection',
-    },
-
--- \paragraph{penalty (14)}
-    penalty = {
-      [0] = 'userpenalty',
-      [1] = 'linebreakpenalty',
-      [2] = 'linepenalty',
-      [3] = 'wordpenalty',
-      [4] = 'finalpenalty',
-      [5] = 'noadpenalty',
-      [6] = 'beforedisplaypenalty',
-      [7] = 'afterdisplaypenalty',
-      [8] = 'equationnumberpenalty',
-    },
-
--- \noindent
--- Nodes without subtypes:
--- \begin{compactitem}
--- \item penalty (14)
--- \item unset (15)
--- \item style (16)
--- \item choice (17)
--- \end{compactitem}
-
--- \paragraph{noad (18)}
-    noad = {
-      [0] = 'ord',
-      [1] = 'opdisplaylimits',
-      [2] = 'oplimits',
-      [3] = 'opnolimits',
-      [4] = 'bin',
-      [5] = 'rel',
-      [6] = 'open',
-      [7] = 'close',
-      [8] = 'punct',
-      [9] = 'inner',
-      [10] = 'under',
-      [11] = 'over',
-      [12] = 'vcenter',
-    },
--- \paragraph{radical (19)}
-    radical = {
-      [0] = 'radical',
-      [1] = 'uradical',
-      [2] = 'uroot',
-      [3] = 'uunderdelimiter',
-      [4] = 'uoverdelimiter',
-      [5] = 'udelimiterunder',
-      [6] = 'udelimiterover',
-    },
-
--- \noindent
--- Nodes without subtypes:
--- \begin{compactitem}
--- \item fraction (20)
--- \end{compactitem}
-
--- \paragraph{accent (21)}
-    accent = {
-      [0] = 'bothflexible',
-      [1] = 'fixedtop',
-      [2] = 'fixedbottom',
-      [3] = 'fixedboth',
-    },
--- \paragraph{fence (22)}
-    fence = {
-      [0] = 'unset',
-      [1] = 'left',
-      [2] = 'middle',
-      [3] = 'right',
-      [4] = 'no',
-    },
-
--- \noindent
--- Nodes without subtypes:
--- \begin{compactitem}
--- \item math\_char (23)
--- \item sub\_box (24)
--- \item sub\_mlist (25)
--- \item math\_text\_char (26)
--- \item delim (27)
--- \item margin\_kern (28)
--- \end{compactitem}
-
--- \paragraph{margin\_kern (28)}
-    margin_kern = {
-      [0] = 'left',
-      [1] = 'right',
-    },
-
--- \paragraph{glyph (29)}
-    glyph = {
-      [0] = 'character',
-      [1] = 'ligature',
-      [2] = 'ghost',
-      [3] = 'left',
-      [4] = 'right',
-    },
-
--- \noindent
--- Nodes without subtypes:
--- \begin{compactitem}
--- \item align\_record (30)
--- \item pseudo\_file (31)
--- \item pseudo\_line (32)
--- \item page\_insert (33)
--- \item split\_insert (34)
--- \item expr\_stack (35)
--- \item nested\_list (36)
--- \item span (37)
--- \item attribute (38)
--- \item glue\_spec (39)
--- \item attribute\_list (40)
--- \item temp (41)
--- \item align\_stack (42)
--- \item movement\_stack (43)
--- \item if\_stack (44)
--- \item unhyphenated (45)
--- \item hyphenated (46)
--- \item delta (47)
--- \item passive (48)
--- \item shape (49)
--- \end{compactitem}
-  }
-  subtypes.whatsit = node.whatsits()
   local out = ''
   if subtypes[typ] and subtypes[typ][n.subtype] then
     out = subtypes[typ][n.subtype]
@@ -353,7 +320,7 @@ end
 ---
 function template.underscore(string)
   if options.channel == 'tex' then
-    return string.gsub(string, '_', '\\_')
+    return string.gsub(string, '_', '\_')
   else
     return string
   end

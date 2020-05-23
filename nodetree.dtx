@@ -1374,18 +1374,22 @@ local tree = {}
 %        |previous| fields, e. g. |head|, |pre|.
 % \end{itemize}
 %
-% The lua table named |tree.state| holds state values for the current
+% The lua table named |tree.state| holds state values of the current
 % tree item.
 %
-% \begin{code}
-%  tree.state:
-%    - 1:
-%      - list: continue
-%      - field: stop
-%    - 2:
-%      - list: continue
-%      - field: stop
-% \end{code}
+% |tree.state|:
+% \begin{itemize}
+% \item |1| (level):
+% \begin{itemize}
+% \item |list|: |continue|
+% \item |field|: |stop|
+% \end{itemize}
+% \item |2|:
+% \begin{itemize}
+% \item |list|: |continue|
+% \item |field|: |stop|
+% \end{itemize}
+% \end{itemize}
 %    \begin{macrocode}
 tree.state = {}
 %    \end{macrocode}
@@ -1423,10 +1427,10 @@ local output_file
 % \subsubsection{node\_extended --- Extend the node library}
 %
 % \TmpLuaFunction{node_id}
-% Get the node id form, e. g.:
-% \begin{code}
-% <node    nil <    172 >    nil : hlist 2>
-% \end{code}
+% Get the ID of a node. We have to convert the node into a string and
+% than have to extract the ID from this string using a regular
+% expression. If you convert a node into a string it looks like:
+% |<node    nil <    172 >    nil : hlist 2>|.
 %    \begin{macrocode}
 function node_extended.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
@@ -1883,39 +1887,48 @@ end
 %    \end{macrocode}
 %
 % \TmpLuaFunction{color}
-% \begin{code}
-% local colors = {
-%     -- attributes
-%     reset = 0,
-%     clear = 0,
-%     bright = 1,
-%     dim = 2,
-%     underscore = 4,
-%     blink = 5,
-%     reverse = 7,
-%     hidden = 8,
+% \href{https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters}
+% {SGR (Select Graphic Rendition) Parameters}
 %
-%     -- foreground
-%     black = 30,
-%     red = 31,
-%     green = 32,
-%     yellow = 33,
-%     blue = 34,
-%     magenta = 35,
-%     cyan = 36,
-%     white = 37,
+% \paragraph{attributes}
 %
-%     -- background
-%     onblack = 40,
-%     onred = 41,
-%     ongreen = 42,
-%     onyellow = 43,
-%     onblue = 44,
-%     onmagenta = 45,
-%     oncyan = 46,
-%     onwhite = 47,
-% }
-% \end{code}
+% \begin{tabular}{ll}
+% reset & 0 \\
+% clear & 0 \\
+% bright & 1 \\
+% dim & 2 \\
+% underscore & 4 \\
+% blink & 5 \\
+% reverse & 7 \\
+% hidden & 8 \\
+% \end{tabular}
+%
+% \paragraph{foreground}
+%
+% \begin{tabular}{ll}
+% black & 30 \\
+% red & 31 \\
+% green & 32 \\
+% yellow & 33 \\
+% blue & 34 \\
+% magenta & 35 \\
+% cyan & 36 \\
+% white & 37 \\
+% \end{tabular}
+%
+% \paragraph{background}
+%
+% \begin{tabular}{ll}
+% onblack & 40 \\
+% onred & 41 \\
+% ongreen & 42 \\
+% onyellow & 43 \\
+% onblue & 44 \\
+% onmagenta & 45 \\
+% oncyan & 46 \\
+% onwhite & 47 \\
+% \end{tabular}
+%
 %    \begin{macrocode}
 function template.color(color, mode, background)
   if options.color ~= 'colored' then

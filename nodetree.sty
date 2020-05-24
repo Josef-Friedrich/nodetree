@@ -1,0 +1,246 @@
+%%
+%% This is file `nodetree.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% nodetree.dtx  (with options: `package')
+%% 
+%% This is a generated file.
+%% 
+%% Copyright (C) 2016-2020 by Josef Friedrich <josef@friedrich.rocks>
+%% ----------------------------------------------------------------------
+%% This work may be distributed and/or modified under the conditions of
+%% the LaTeX Project Public License, either version 1.3c of this license
+%% or (at your option) any later version. The latest version of this
+%% license is in:
+%% 
+%%   http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2008/05/05 or later.
+%% 
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{nodetree}
+    [2016/07/18 v1.2 Visualize node lists in a tree view]
+\input{nodetree}
+\directlua{
+  nodetree.set_option('engine', 'lualatex')
+}
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{
+  family=NT,
+  prefix=NTK@
+}
+\DeclareStringOption[term]{channel}
+\define@key{NT}{channel}[]{\nodetreeoption[channel]{#1}}
+\DeclareStringOption[postlinebreak]{callback}
+\define@key{NT}{callback}[]{\nodetreeoption[callback]{#1}}
+\DeclareStringOption[1]{verbosity}
+\define@key{NT}{verbosity}[]{\nodetreeoption[verbosity]{#1}}
+\DeclareStringOption[colored]{color}
+\define@key{NT}{color}[]{\nodetreeoption[color]{#1}}
+\DeclareStringOption[1]{unit}
+\define@key{NT}{unit}[]{\nodetreeoption[unit]{#1}}
+\DeclareStringOption[1]{decimalplaces}
+\define@key{NT}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
+\DeclareStringOption[smyck]{theme}
+\DeclareStringOption[dark]{thememode}
+\DeclareStringOption[Ubuntu Mono]{font}
+\DeclareStringOption[\footnotesize]{fontsize}
+
+\newif\ifdocumentationmode%
+\documentationmodefalse%
+\DeclareVoidOption{documentationmode}{%
+  \RequirePackage{xcolor,mdframed,expl3,xparse}%
+  \nodetreeoption[callback]{}%
+  \documentationmodetrue%
+}
+\ProcessKeyvalOptions{NT}
+\directlua{
+  nodetree.register_callbacks()
+}
+\newcommand{\nodetreeset}[1]{%
+  \setkeys{NT}{#1}%
+}
+\ifdocumentationmode
+\ExplSyntaxOn
+\def\NT@colors{
+  \str_case_e:nn{\NTK@theme}{
+    {bwdark}{
+      \definecolor{NTblack}{gray}{0}
+      \definecolor{NTred}{gray}{1}
+      \definecolor{NTgreen}{gray}{1}
+      \definecolor{NTyellow}{gray}{1}
+      \definecolor{NTblue}{gray}{1}
+      \definecolor{NTmagenta}{gray}{1}
+      \definecolor{NTcyan}{gray}{1}
+      \definecolor{NTgray}{gray}{1}
+      \definecolor{NTblackbright}{gray}{0}
+      \definecolor{NTredbright}{gray}{1}
+      \definecolor{NTgreenbright}{gray}{1}
+      \definecolor{NTyellowbright}{gray}{1}
+      \definecolor{NTbluebright}{gray}{1}
+      \definecolor{NTmagentabright}{gray}{1}
+      \definecolor{NTcyanbright}{gray}{1}
+      \definecolor{NTgraybright}{gray}{1}
+    }
+    {bwlight}{
+      \definecolor{NTblack}{gray}{0}
+      \definecolor{NTred}{gray}{0}
+      \definecolor{NTgreen}{gray}{0}
+      \definecolor{NTyellow}{gray}{0}
+      \definecolor{NTblue}{gray}{0}
+      \definecolor{NTmagenta}{gray}{0}
+      \definecolor{NTcyan}{gray}{0}
+      \definecolor{NTgray}{gray}{1}
+      \definecolor{NTblackbright}{gray}{0}
+      \definecolor{NTredbright}{gray}{0}
+      \definecolor{NTgreenbright}{gray}{0}
+      \definecolor{NTyellowbright}{gray}{0}
+      \definecolor{NTbluebright}{gray}{0}
+      \definecolor{NTmagentabright}{gray}{0}
+      \definecolor{NTcyanbright}{gray}{0}
+      \definecolor{NTgraybright}{gray}{1}
+    }
+    {terminalapp}{
+      \definecolor{NTblack}{RGB}{0,0,0}
+      \definecolor{NTred}{RGB}{194,54,33}
+      \definecolor{NTgreen}{RGB}{37,188,36}
+      \definecolor{NTyellow}{RGB}{173,173,39}
+      \definecolor{NTblue}{RGB}{73,46,225}
+      \definecolor{NTmagenta}{RGB}{211,56,211}
+      \definecolor{NTcyan}{RGB}{51,187,200}
+      \definecolor{NTgray}{RGB}{203,204,205}
+      \definecolor{NTblackbright}{RGB}{129,131,131}
+      \definecolor{NTredbright}{RGB}{252,57,31}
+      \definecolor{NTgreenbright}{RGB}{49,231,34}
+      \definecolor{NTyellowbright}{RGB}{234,236,35}
+      \definecolor{NTbluebright}{RGB}{88,51,255}
+      \definecolor{NTmagentabright}{RGB}{249,53,248}
+      \definecolor{NTcyanbright}{RGB}{20,240,240}
+      \definecolor{NTgraybright}{RGB}{233,235,235}
+    }
+    {xterm}{
+      \definecolor{NTblack}{RGB}{0,0,0}
+      \definecolor{NTred}{RGB}{205,0,0}
+      \definecolor{NTgreen}{RGB}{0,205,0}
+      \definecolor{NTyellow}{RGB}{205,205,0}
+      \definecolor{NTblue}{RGB}{0,0,238}
+      \definecolor{NTmagenta}{RGB}{205,0,205}
+      \definecolor{NTcyan}{RGB}{0,205,205}
+      \definecolor{NTgray}{RGB}{229,229,229}
+      \definecolor{NTblackbright}{RGB}{127,127,127}
+      \definecolor{NTredbright}{RGB}{255,0,0}
+      \definecolor{NTgreenbright}{RGB}{0,255,0}
+      \definecolor{NTyellowbright}{RGB}{255,255,0}
+      \definecolor{NTbluebright}{RGB}{92,92,255}
+      \definecolor{NTmagentabright}{RGB}{255,0,255}
+      \definecolor{NTcyanbright}{RGB}{0,255,255}
+      \definecolor{NTgraybright}{RGB}{255,255,255}
+    }
+    {smyck}{
+      \definecolor{NTblack}{HTML}{212121}
+      \definecolor{NTred}{HTML}{C75646}
+      \definecolor{NTgreen}{HTML}{8EB33B}
+      \definecolor{NTyellow}{HTML}{D0B03C}
+      \definecolor{NTblue}{HTML}{72B3CC}
+      \definecolor{NTmagenta}{HTML}{C8A0D1}
+      \definecolor{NTcyan}{HTML}{218693}
+      \definecolor{NTgray}{HTML}{B0B0B0}
+      \definecolor{NTblackbright}{HTML}{5D5D5D}
+      \definecolor{NTredbright}{HTML}{E09690}
+      \definecolor{NTgreenbright}{HTML}{CDEE69}
+      \definecolor{NTyellowbright}{HTML}{FFE377}
+      \definecolor{NTbluebright}{HTML}{9CD9F0}
+      \definecolor{NTmagentabright}{HTML}{FBB1F9}
+      \definecolor{NTcyanbright}{HTML}{77DFD8}
+      \definecolor{NTgraybright}{HTML}{F7F7F7}
+    }
+    {molokai}{
+      \definecolor{NTblack}{HTML}{212121}
+      \definecolor{NTred}{HTML}{fa2573}
+      \definecolor{NTgreen}{HTML}{98e123}
+      \definecolor{NTyellow}{HTML}{dfd460}
+      \definecolor{NTblue}{HTML}{1080d0}
+      \definecolor{NTmagenta}{HTML}{8700ff}
+      \definecolor{NTcyan}{HTML}{43a8d0}
+      \definecolor{NTgray}{HTML}{bbbbbb}
+      \definecolor{NTblackbright}{HTML}{555555}
+      \definecolor{NTredbright}{HTML}{f6669d}
+      \definecolor{NTgreenbright}{HTML}{b1e05f}
+      \definecolor{NTyellowbright}{HTML}{fff26d}
+      \definecolor{NTbluebright}{HTML}{00afff}
+      \definecolor{NTmagentabright}{HTML}{af87ff}
+      \definecolor{NTcyanbright}{HTML}{51ceff}
+      \definecolor{NTgraybright}{HTML}{ffffff}
+    }
+    {monokaisoda}{
+      \definecolor{NTblack}{HTML}{1a1a1a}
+      \definecolor{NTred}{HTML}{f4005f}
+      \definecolor{NTgreen}{HTML}{98e024}
+      \definecolor{NTyellow}{HTML}{fa8419}
+      \definecolor{NTblue}{HTML}{9d65ff}
+      \definecolor{NTmagenta}{HTML}{f4005f}
+      \definecolor{NTcyan}{HTML}{58d1eb}
+      \definecolor{NTgray}{HTML}{c4c5b5}
+      \definecolor{NTblackbright}{HTML}{625e4c}
+      \definecolor{NTredbright}{HTML}{f4005f}
+      \definecolor{NTgreenbright}{HTML}{98e024}
+      \definecolor{NTyellowbright}{HTML}{e0d561}
+      \definecolor{NTbluebright}{HTML}{9d65ff}
+      \definecolor{NTmagentabright}{HTML}{f4005f}
+      \definecolor{NTcyanbright}{HTML}{58d1eb}
+      \definecolor{NTgraybright}{HTML}{f6f6ef}
+    }
+  }
+  \str_case_e:nn{\NTK@thememode}{
+    {dark}{
+      \definecolor{NTbackground}{named}{NTblack}
+      \definecolor{NTfont}{named}{NTgraybright}
+    }
+    {light}{
+      \definecolor{NTbackground}{named}{NTgraybright}
+      \definecolor{NTfont}{named}{NTblack}
+    }
+  }
+}
+\ExplSyntaxOff
+\def\NT@fonts{
+  \bfseries%
+  \NTK@fontsize%
+  \setmonofont{\NTK@font}%
+  \ttfamily%
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{-0.9pt}%
+}
+\def\nodetreereset{
+  \nodetreeset{theme=monokaisoda,thememode=dark,font={Ubuntu Mono},fontsize=\tiny}
+}
+\newenvironment{nodetreeexample}[1][]{
+  \setkeys{NT}{#1}
+  \NT@colors
+  \begin{mdframed}[
+    linecolor=black,
+    backgroundcolor=NTbackground,
+    fontcolor=NTfont,
+  ]%
+  \NT@fonts
+}{
+  \end{mdframed}%
+}
+\newcommand{\nodetreeterminalemulator}[2][]{
+  \setkeys{NT}{#1}
+  \begin{nodetreeexample}
+  \input{#2.nttex}
+  \end{nodetreeexample}
+}
+\NewDocumentEnvironment { nodetreeShow } { +b } {
+  \directlua{
+    nodetree.compile_include('\luaescapestring{\unexpanded{#1}}')
+  }
+}{}
+\fi
+\endinput
+%%
+%% End of file `nodetree.sty'.

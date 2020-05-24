@@ -5,7 +5,6 @@
 *.fdb_latexmk
 *.synctex.gz
 *.out
-*.sty
 *.glo
 *.gls
 *.idx

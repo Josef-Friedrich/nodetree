@@ -6,3 +6,4 @@ backtick_references=true
 file='nodetree.lua'
 dir='docs'
 all=true
+new_type('node', 'A node')

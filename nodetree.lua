@@ -72,6 +72,8 @@ local output_file
 -- node into a string it looks like: `<node    nil <    172 >    nil :
 -- hlist 2>`.
 --
+-- @tparam node n A node.
+--
 -- @treturn string
 function node_extended.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
@@ -785,6 +787,9 @@ end
 -- @section tree
 
 ---
+-- @tparam node head
+-- @tparam string field
+--
 -- @treturn string
 function tree.format_field(head, field)
   local out = ''
@@ -845,6 +850,8 @@ end
 -- list. The attribute `0` with the value `0` is skipped because this
 -- attribute is in every node by default.
 --
+-- @tparam node head
+--
 -- @treturn string
 function tree.format_attributes(head)
   if not head then
@@ -862,10 +869,11 @@ function tree.format_attributes(head)
 end
 
 ---
--- `level` is a integer beginning with 1. The variable `connection_type`
--- is a string, which can be either `list` or `field`. The variable
--- `connection_state` is a string, which can be either `continue` or
--- `stop`.
+-- @tparam number level `level` is a integer beginning with 1.
+-- @tparam number connection_type The variable `connection_type`
+--   is a string, which can be either `list` or `field`.
+-- @tparam connection_state `connection_state` is a string, which can
+--   be either `continue` or `stop`.
 function tree.set_state(level, connection_type, connection_state)
   if not tree.state[level] then
     tree.state[level] = {}
@@ -874,6 +882,8 @@ function tree.set_state(level, connection_type, connection_state)
 end
 
 ---
+-- @tparam table fields
+-- @tparam number level
 function tree.analyze_fields(fields, level)
   local max = 0
   local connection_state = ''
@@ -901,6 +911,8 @@ function tree.analyze_fields(fields, level)
 end
 
 ---
+-- @tparam node head
+-- @tparam number level
 function tree.analyze_node(head, level)
   local connection_state
   local out = ''
@@ -958,6 +970,8 @@ function tree.analyze_node(head, level)
 end
 
 ---
+-- @tparam node head
+-- @tparam number level
 function tree.analyze_list(head, level)
   while head do
     tree.analyze_node(head, level)
@@ -966,6 +980,7 @@ function tree.analyze_list(head, level)
 end
 
 ---
+-- @tparam node head
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
   template.print(template.line('short') .. template.new_line())

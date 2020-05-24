@@ -243,49 +243,48 @@ template.node_colors = {
   shape = {'yellow'},
 }
 
+---
+-- [SGR (Select Graphic Rendition) Parameters](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters)
 --
--- \href{https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters}
--- {SGR (Select Graphic Rendition) Parameters}
-
--- \paragraph{attributes}
-
--- \begin{tabular}{ll}
--- reset & 0 \\
--- clear & 0 \\
--- bright & 1 \\
--- dim & 2 \\
--- underscore & 4 \\
--- blink & 5 \\
--- reverse & 7 \\
--- hidden & 8 \\
--- \end{tabular}
-
--- \paragraph{foreground}
-
--- \begin{tabular}{ll}
--- black & 30 \\
--- red & 31 \\
--- green & 32 \\
--- yellow & 33 \\
--- blue & 34 \\
--- magenta & 35 \\
--- cyan & 36 \\
--- white & 37 \\
--- \end{tabular}
-
--- \paragraph{background}
-
--- \begin{tabular}{ll}
--- onblack & 40 \\
--- onred & 41 \\
--- ongreen & 42 \\
--- onyellow & 43 \\
--- onblue & 44 \\
--- onmagenta & 45 \\
--- oncyan & 46 \\
--- onwhite & 47 \\
--- \end{tabular}
-
+-- __attributes__
+--
+-- | color      |code|
+-- |------------|----|
+-- | reset      |  0 |
+-- | clear      |  0 |
+-- | bright     |  1 |
+-- | dim        |  2 |
+-- | underscore |  4 |
+-- | blink      |  5 |
+-- | reverse    |  7 |
+-- | hidden     |  8 |
+--
+-- __foreground__
+--
+-- | color      |code|
+-- |------------|----|
+-- | black      | 30 |
+-- | red        | 31 |
+-- | green      | 32 |
+-- | yellow     | 33 |
+-- | blue       | 34 |
+-- | magenta    | 35 |
+-- | cyan       | 36 |
+-- | white      | 37 |
+--
+-- __background__
+--
+-- | color      |code|
+-- |------------|----|
+-- | onblack    | 40 |
+-- | onred      | 41 |
+-- | ongreen    | 42 |
+-- | onyellow   | 43 |
+-- | onblue     | 44 |
+-- | onmagenta  | 45 |
+-- | oncyan     | 46 |
+-- | onwhite    | 47 |
+--
 -- @treturn string
 function template.color(color, mode, background)
   if options.color ~= 'colored' then

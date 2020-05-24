@@ -1,6 +1,17 @@
---- Nodetree uses [LDoc](https://github.com/stevedonovan/ldoc) for the
+--- The nodetree package.
+--
+-- Nodetree uses [LDoc](https://github.com/stevedonovan/ldoc) for the
 --  source code documentation. The supported tags are described on in
 --  the [wiki](https://github.com/stevedonovan/LDoc/wiki).
+--
+-- Nodes in LuaTeX are connected. The nodetree view distinguishs
+-- between the `list` and `field` connections.
+--
+-- * `list`: Nodes, which are double connected by `next` and
+--   `previous` fields.
+-- * `field`: Connections to nodes by other fields than `next` and
+--   `previous` fields, e. g. `head`, `pre`.
+-- @module nodetree
 
 if not modules then modules = { } end modules ['nodetree'] = {
   version   = '1.2',
@@ -10,46 +21,12 @@ if not modules then modules = { } end modules ['nodetree'] = {
   license   = 'The LaTeX Project Public License Version 1.3c 2008-05-04'
 }
 
-local node_extended = {}
-
-local template = {}
-
-local tree = {}
-
--- Nodes in Lua\TeX{} are connected. The nodetree view distinguishs
--- between the `list` and `field` connections.
-
--- \begin{itemize}
---  \item `list`: Nodes, which are double connected by `next` and
---        `previous` fields.
---  \item `field`: Connections to nodes by other fields than `next` and
---        `previous` fields, e. g. `head`, `pre`.
--- \end{itemize}
-
--- The lua table named `tree.state` holds state values of the current
--- tree item.
-
--- `tree.state`:
--- \begin{itemize}
--- * `1` (level):
--- \begin{itemize}
--- * `list`: `continue`
--- * `field`: `stop`
--- \end{itemize}
--- * `2`:
--- \begin{itemize}
--- * `list`: `continue`
--- * `field`: `stop`
--- \end{itemize}
--- \end{itemize}
-tree.state = {}
--- A counter for the compiled TeX examples. Some TeX code snippets
+--- A counter for the compiled TeX examples. Some TeX code snippets
 -- a written into file, wrapped with some TeX boilerplate code.
 -- This written files are compiled.
 local example_counter = 0
 
-local export = {}
--- The default options
+--- The default options
 local options = {
   verbosity = 1,
   callback = 'postlinebreak',
@@ -59,8 +36,23 @@ local options = {
   unit = 'pt',
   channel = 'term',
 }
--- File descriptor
+
+--- File descriptor
 local output_file
+
+--- The lua table named `tree_state` holds state values of the current
+-- tree item.
+--
+-- `tree_state`:
+--
+-- * `1` (level):
+--   * `list`: `continue`
+--   * `field`: `stop`
+-- * `2`:
+--   * `list`: `continue`
+--   * `field`: `stop`
+-- @table
+local tree_state = {}
 
 --- Format functions.
 --
@@ -175,6 +167,8 @@ local format = {
 
 --- Template functions.
 -- @section template
+
+local template = {}
 
 ---
 -- @treturn string
@@ -489,15 +483,15 @@ end
 function template.branches(level, connection_type)
   local out = ''
   for i = 1, level - 1  do
-    out = out .. template.branch('list', tree.state[i]['list'], false)
-    out = out .. template.branch('field', tree.state[i]['field'], false)
+    out = out .. template.branch('list', tree_state[i]['list'], false)
+    out = out .. template.branch('field', tree_state[i]['field'], false)
   end
 -- Format the last branches
   if connection_type == 'list' then
-    out = out .. template.branch('list', tree.state[level]['list'], true)
+    out = out .. template.branch('list', tree_state[level]['list'], true)
   else
-    out = out .. template.branch('list', tree.state[level]['list'], false)
-    out = out .. template.branch('field', tree.state[level]['field'], true)
+    out = out .. template.branch('list', tree_state[level]['list'], false)
+    out = out .. template.branch('field', tree_state[level]['field'], true)
   end
   return out
 end
@@ -515,6 +509,8 @@ end
 
 --- Extend the node library
 -- @section node_extended
+
+local node_extended = {}
 
 --- Get the ID of a node.
 --
@@ -779,6 +775,8 @@ end
 --- Build the node tree.
 -- @section tree
 
+local tree = {}
+
 ---
 -- @tparam node head
 -- @tparam string field
@@ -868,10 +866,10 @@ end
 -- @tparam connection_state `connection_state` is a string, which can
 --   be either `continue` or `stop`.
 function tree.set_state(level, connection_type, connection_state)
-  if not tree.state[level] then
-    tree.state[level] = {}
+  if not tree_state[level] then
+    tree_state[level] = {}
   end
-  tree.state[level][connection_type] = connection_state
+  tree_state[level][connection_type] = connection_state
 end
 
 ---
@@ -1213,6 +1211,8 @@ local callbacks = {
 
 --- Exported functions.
 -- @section export
+
+local export = {}
 
 ---
 function export.set_option(key, value)

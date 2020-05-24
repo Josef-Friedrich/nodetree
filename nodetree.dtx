@@ -65,7 +65,7 @@
 
 \newcommand{\TmpExample}[1]{
 \begin{nodetreeexample}
-\input{examples/#1_nodetree.tex}
+\input{examples/#1.nttex}
 \end{nodetreeexample}
 }
 
@@ -105,7 +105,7 @@
 \maketitle
 
 \begin{nodetreeexample}[fontsize=\footnotesize]
-\input{examples/packagename_nodetree.tex}
+\input{examples/packagename.nttex}
 \end{nodetreeexample}
 
 \newpage
@@ -1150,7 +1150,7 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 \newcommand{\nodetreeterminalemulator}[2][]{
   \setkeys{NT}{#1}
   \begin{nodetreeexample}
-  \input{#2_nodetree.tex}
+  \input{#2.nttex}
   \end{nodetreeexample}
 }
 %    \end{macrocode}

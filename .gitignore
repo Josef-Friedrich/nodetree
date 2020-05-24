@@ -24,3 +24,6 @@ nodetree/*
 *_nodetree.tex
 *_nodetree.log
 _minted*
+*.nttex
+*.ntlog
+_nodetree*

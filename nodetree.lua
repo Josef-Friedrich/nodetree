@@ -1317,7 +1317,12 @@ end
 ---
 function export.register_callbacks()
   if options.channel == 'log' or options.channel == 'tex' then
-    output_file = io.open(tex.jobname .. '_nodetree.' .. options.channel, 'a')
+    -- nt = nodetree
+    -- jobname.nttex
+    -- jobname.ntlog
+    local file_name = tex.jobname .. '.nt' .. options.channel
+    io.open(file_name, 'w'):close() -- Clear former content
+    output_file = io.open(file_name, 'a')
   end
   for alias in string.gmatch(options.callback, '([^,]+)') do
     export.register(export.get_callback_name(alias))
@@ -1350,11 +1355,22 @@ function export.execute()
   end
 end
 
----
+--- Compile a TeX snippet.
+--
+-- Write some TeX snippets into a temporary LaTeX file, compile this
+-- file using `latexmk` and read the generated `*.nttex` file and
+-- return its content.
+--
+-- @tparam string tex_markup
+--
+-- @treturn string
 function export.compile_include(tex_markup)
+  local parent_path = lfs.currentdir() .. '/' .. '_nodetree-' .. tex.jobname
+  lfs.mkdir(parent_path)
   example_counter = example_counter + 1
-  local filename_tex = tex.jobname .. '_' .. example_counter .. '_nodetree.tex'
-  output_file = io.open(filename_tex, 'w')
+  local filename_tex = example_counter .. '.tex'
+  local absolute_path_tex = parent_path .. '/' .. filename_tex
+  output_file = io.open(absolute_path_tex, 'w')
   local prefix = '%!TEX program = lualatex\n' ..
                  '\\documentclass{article}\n' ..
                  '\\usepackage[channel=tex]{nodetree}\n' ..
@@ -1362,12 +1378,16 @@ function export.compile_include(tex_markup)
   local suffix = '\n\\end{document}'
   output_file:write(prefix .. tex_markup .. suffix)
   output_file:close()
-  local status, error = os.spawn({ 'lualatex', filename_tex })
-  print(status)
-  print(error)
+  local status, error = os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
+
+  local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'rb'))
+  local include_content = include_file:read("*all")
+  include_file:close()
+  print(include_content)
 end
 
 ---
+-- @tparam node head
 function export.analyze(head)
   template.print(format.new_line())
   tree.analyze_list(head, 1)

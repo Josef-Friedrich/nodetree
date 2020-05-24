@@ -17,29 +17,29 @@ local template = {}
 local tree = {}
 
 -- Nodes in Lua\TeX{} are connected. The nodetree view distinguishs
--- between the |list| and |field| connections.
+-- between the `list` and `field` connections.
 
 -- \begin{itemize}
---  \item |list|: Nodes, which are double connected by |next| and
---        |previous| fields.
---  \item |field|: Connections to nodes by other fields than |next| and
---        |previous| fields, e. g. |head|, |pre|.
+--  \item `list`: Nodes, which are double connected by `next` and
+--        `previous` fields.
+--  \item `field`: Connections to nodes by other fields than `next` and
+--        `previous` fields, e. g. `head`, `pre`.
 -- \end{itemize}
 
--- The lua table named |tree.state| holds state values of the current
+-- The lua table named `tree.state` holds state values of the current
 -- tree item.
 
--- |tree.state|:
+-- `tree.state`:
 -- \begin{itemize}
--- * |1| (level):
+-- * `1` (level):
 -- \begin{itemize}
--- * |list|: |continue|
--- * |field|: |stop|
+-- * `list`: `continue`
+-- * `field`: `stop`
 -- \end{itemize}
--- * |2|:
+-- * `2`:
 -- \begin{itemize}
--- * |list|: |continue|
--- * |field|: |stop|
+-- * `list`: `continue`
+-- * `field`: `stop`
 -- \end{itemize}
 -- \end{itemize}
 tree.state = {}
@@ -47,8 +47,6 @@ tree.state = {}
 -- a written into file, wrapped with some TeX boilerplate code.
 -- This written files are compiled.
 local example_counter = 0
--- Table to bundle all callback wrapper functions.
-local callbacks = {}
 
 local export = {}
 -- The default options
@@ -64,13 +62,17 @@ local options = {
 -- File descriptor
 local output_file
 
--- \subsubsection{node_extended --- Extend the node library}
+--- Extend the node library
+-- @section node_extended
 
----
--- Get the ID of a node. We have to convert the node into a string and
--- than have to extract the ID from this string using a regular
--- expression. If you convert a node into a string it looks like:
--- |<node    nil <    172 >    nil : hlist 2>|.
+--- Get the ID of a node.
+--
+-- We have to convert the node into a string and than have to extract
+-- the ID from this string using a regular expression. If you convert a
+-- node into a string it looks like: `<node    nil <    172 >    nil :
+-- hlist 2>`.
+--
+-- @treturn string
 function node_extended.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
 end
@@ -116,193 +118,197 @@ end
 -- * `passive` (48)
 -- * `shape` (49)
 --
-local subtypes = {} -- Bug in LCode
-subtypes = {
-  -- hlist (0)
-  hlist = {
-    [0] = 'unknown',
-    [1] = 'line',
-    [2] = 'box',
-    [3] = 'indent',
-    [4] = 'alignment',
-    [5] = 'cell',
-    [6] = 'equation',
-    [7] = 'equationnumber',
-    [8] = 'math',
-    [9] = 'mathchar',
-    [10] = 'hextensible',
-    [11] = 'vextensible',
-    [12] = 'hdelimiter',
-    [13] = 'vdelimiter',
-    [14] = 'overdelimiter',
-    [15] = 'underdelimiter',
-    [16] = 'numerator',
-    [17] = 'denominator',
-    [18] = 'limits',
-    [19] = 'fraction',
-    [20] = 'nucleus',
-    [21] = 'sup',
-    [22] = 'sub',
-    [23] = 'degree',
-    [24] = 'scripts',
-    [25] = 'over',
-    [26] = 'under',
-    [27] = 'accent',
-    [28] = 'radical',
-  },
-  -- vlist (1)
-  vlist = {
-    [0] = 'unknown',
-    [4] = 'alignment',
-    [5] = 'cell',
-  },
-  -- rule (2)
-  rule = {
-    [0] = 'normal',
-    [1] = 'box',
-    [2] = 'image',
-    [3] = 'empty',
-    [4] = 'user',
-    [5] = 'over',
-    [6] = 'under',
-    [7] = 'fraction',
-    [8] = 'radical',
-    [9] = 'outline',
-  },
-  -- adjust (5)
-  adjust = {
-    [0] = 'normal',
-    [1] = 'pre',
-  },
-  -- boundary (6)
-  boundary = {
-    [0] = 'cancel',
-    [1] = 'user',
-    [2] = 'protrusion',
-    [3] = 'word',
-  },
-  -- disc (7)
-  disc  = {
-    [0] = 'discretionary',
-    [1] = 'explicit',
-    [2] = 'automatic',
-    [3] = 'regular',
-    [4] = 'first',
-    [5] = 'second',
-  },
-  -- math (11)
-  math = {
-    [0] = 'beginmath',
-    [1] = 'endmath',
-  },
-  -- glue (12)
-  glue = {
-    [0]   = 'userskip',
-    [1]   = 'lineskip',
-    [2]   = 'baselineskip',
-    [3]   = 'parskip',
-    [4]   = 'abovedisplayskip',
-    [5]   = 'belowdisplayskip',
-    [6]   = 'abovedisplayshortskip',
-    [7]   = 'belowdisplayshortskip',
-    [8]   = 'leftskip',
-    [9]   = 'rightskip',
-    [10]  = 'topskip',
-    [11]  = 'splittopskip',
-    [12]  = 'tabskip',
-    [13]  = 'spaceskip',
-    [14]  = 'xspaceskip',
-    [15]  = 'parfillskip',
-    [16]  = 'mathskip',
-    [17]  = 'thinmuskip',
-    [18]  = 'medmuskip',
-    [19]  = 'thickmuskip',
-    [98]  = 'conditionalmathskip',
-    [99]  = 'muglue',
-    [100] = 'leaders',
-    [101] = 'cleaders',
-    [102] = 'xleaders',
-    [103] = 'gleaders',
-  },
-  -- kern (13)
-  kern = {
-    [0] = 'fontkern',
-    [1] = 'userkern',
-    [2] = 'accentkern',
-    [3] = 'italiccorrection',
-  },
-  -- penalty (14)
-  penalty = {
-    [0] = 'userpenalty',
-    [1] = 'linebreakpenalty',
-    [2] = 'linepenalty',
-    [3] = 'wordpenalty',
-    [4] = 'finalpenalty',
-    [5] = 'noadpenalty',
-    [6] = 'beforedisplaypenalty',
-    [7] = 'afterdisplaypenalty',
-    [8] = 'equationnumberpenalty',
-  },
-  -- noad (18)
-  noad = {
-    [0] = 'ord',
-    [1] = 'opdisplaylimits',
-    [2] = 'oplimits',
-    [3] = 'opnolimits',
-    [4] = 'bin',
-    [5] = 'rel',
-    [6] = 'open',
-    [7] = 'close',
-    [8] = 'punct',
-    [9] = 'inner',
-    [10] = 'under',
-    [11] = 'over',
-    [12] = 'vcenter',
-  },
-  -- radical (19)
-  radical = {
-    [0] = 'radical',
-    [1] = 'uradical',
-    [2] = 'uroot',
-    [3] = 'uunderdelimiter',
-    [4] = 'uoverdelimiter',
-    [5] = 'udelimiterunder',
-    [6] = 'udelimiterover',
-  },
-  -- accent (21)
-  accent = {
-    [0] = 'bothflexible',
-    [1] = 'fixedtop',
-    [2] = 'fixedbottom',
-    [3] = 'fixedboth',
-  },
-  -- fence (22)
-  fence = {
-    [0] = 'unset',
-    [1] = 'left',
-    [2] = 'middle',
-    [3] = 'right',
-    [4] = 'no',
-  },
-  -- margin_kern (28)
-  margin_kern = {
-    [0] = 'left',
-    [1] = 'right',
-  },
-  -- glyph (29)
-  glyph = {
-    [0] = 'character',
-    [1] = 'ligature',
-    [2] = 'ghost',
-    [3] = 'left',
-    [4] = 'right',
-  },
-}
-subtypes.whatsit = node.whatsits()
+-- @treturn table
+local function get_node_subtypes ()
+    local subtypes = {
+    -- hlist (0)
+    hlist = {
+      [0] = 'unknown',
+      [1] = 'line',
+      [2] = 'box',
+      [3] = 'indent',
+      [4] = 'alignment',
+      [5] = 'cell',
+      [6] = 'equation',
+      [7] = 'equationnumber',
+      [8] = 'math',
+      [9] = 'mathchar',
+      [10] = 'hextensible',
+      [11] = 'vextensible',
+      [12] = 'hdelimiter',
+      [13] = 'vdelimiter',
+      [14] = 'overdelimiter',
+      [15] = 'underdelimiter',
+      [16] = 'numerator',
+      [17] = 'denominator',
+      [18] = 'limits',
+      [19] = 'fraction',
+      [20] = 'nucleus',
+      [21] = 'sup',
+      [22] = 'sub',
+      [23] = 'degree',
+      [24] = 'scripts',
+      [25] = 'over',
+      [26] = 'under',
+      [27] = 'accent',
+      [28] = 'radical',
+    },
+    -- vlist (1)
+    vlist = {
+      [0] = 'unknown',
+      [4] = 'alignment',
+      [5] = 'cell',
+    },
+    -- rule (2)
+    rule = {
+      [0] = 'normal',
+      [1] = 'box',
+      [2] = 'image',
+      [3] = 'empty',
+      [4] = 'user',
+      [5] = 'over',
+      [6] = 'under',
+      [7] = 'fraction',
+      [8] = 'radical',
+      [9] = 'outline',
+    },
+    -- adjust (5)
+    adjust = {
+      [0] = 'normal',
+      [1] = 'pre',
+    },
+    -- boundary (6)
+    boundary = {
+      [0] = 'cancel',
+      [1] = 'user',
+      [2] = 'protrusion',
+      [3] = 'word',
+    },
+    -- disc (7)
+    disc  = {
+      [0] = 'discretionary',
+      [1] = 'explicit',
+      [2] = 'automatic',
+      [3] = 'regular',
+      [4] = 'first',
+      [5] = 'second',
+    },
+    -- math (11)
+    math = {
+      [0] = 'beginmath',
+      [1] = 'endmath',
+    },
+    -- glue (12)
+    glue = {
+      [0]   = 'userskip',
+      [1]   = 'lineskip',
+      [2]   = 'baselineskip',
+      [3]   = 'parskip',
+      [4]   = 'abovedisplayskip',
+      [5]   = 'belowdisplayskip',
+      [6]   = 'abovedisplayshortskip',
+      [7]   = 'belowdisplayshortskip',
+      [8]   = 'leftskip',
+      [9]   = 'rightskip',
+      [10]  = 'topskip',
+      [11]  = 'splittopskip',
+      [12]  = 'tabskip',
+      [13]  = 'spaceskip',
+      [14]  = 'xspaceskip',
+      [15]  = 'parfillskip',
+      [16]  = 'mathskip',
+      [17]  = 'thinmuskip',
+      [18]  = 'medmuskip',
+      [19]  = 'thickmuskip',
+      [98]  = 'conditionalmathskip',
+      [99]  = 'muglue',
+      [100] = 'leaders',
+      [101] = 'cleaders',
+      [102] = 'xleaders',
+      [103] = 'gleaders',
+    },
+    -- kern (13)
+    kern = {
+      [0] = 'fontkern',
+      [1] = 'userkern',
+      [2] = 'accentkern',
+      [3] = 'italiccorrection',
+    },
+    -- penalty (14)
+    penalty = {
+      [0] = 'userpenalty',
+      [1] = 'linebreakpenalty',
+      [2] = 'linepenalty',
+      [3] = 'wordpenalty',
+      [4] = 'finalpenalty',
+      [5] = 'noadpenalty',
+      [6] = 'beforedisplaypenalty',
+      [7] = 'afterdisplaypenalty',
+      [8] = 'equationnumberpenalty',
+    },
+    noad = {
+      [0] = 'ord',
+      [1] = 'opdisplaylimits',
+      [2] = 'oplimits',
+      [3] = 'opnolimits',
+      [4] = 'bin',
+      [5] = 'rel',
+      [6] = 'open',
+      [7] = 'close',
+      [8] = 'punct',
+      [9] = 'inner',
+      [10] = 'under',
+      [11] = 'over',
+      [12] = 'vcenter',
+    },
+    -- radical (19)
+    radical = {
+      [0] = 'radical',
+      [1] = 'uradical',
+      [2] = 'uroot',
+      [3] = 'uunderdelimiter',
+      [4] = 'uoverdelimiter',
+      [5] = 'udelimiterunder',
+      [6] = 'udelimiterover',
+    },
+    -- accent (21)
+    accent = {
+      [0] = 'bothflexible',
+      [1] = 'fixedtop',
+      [2] = 'fixedbottom',
+      [3] = 'fixedboth',
+    },
+    -- fence (22)
+    fence = {
+      [0] = 'unset',
+      [1] = 'left',
+      [2] = 'middle',
+      [3] = 'right',
+      [4] = 'no',
+    },
+    -- margin_kern (28)
+    margin_kern = {
+      [0] = 'left',
+      [1] = 'right',
+    },
+    -- glyph (29)
+    glyph = {
+      [0] = 'character',
+      [1] = 'ligature',
+      [2] = 'ghost',
+      [3] = 'left',
+      [4] = 'right',
+    },
+  }
+  subtypes.whatsit = node.whatsits()
+  return subtypes
+end
 
 ---
+-- @treturn string
 function node_extended.subtype(n)
   local typ = node.type(n.id)
+  local subtypes = get_node_subtypes()
 
   local out = ''
   if subtypes[typ] and subtypes[typ][n.subtype] then
@@ -317,9 +323,11 @@ function node_extended.subtype(n)
   assert(false)
 end
 
--- \subsubsection{template --- Template function}
+--- Template functions.
+-- @section template
 
 ---
+-- @treturn string
 function template.underscore(string)
   if options.channel == 'tex' then
     return string.gsub(string, '_', '\\_')
@@ -329,6 +337,7 @@ function template.underscore(string)
 end
 
 ---
+-- @treturn string
 function template.escape(string)
   if options.channel == 'tex' then
     return string.gsub(string, [[\]], [[\string\]])
@@ -337,12 +346,15 @@ function template.escape(string)
   end
 end
 
+---
+-- @treturn number
 function template.round(number)
   local mult = 10^(options.decimalplaces or 0)
   return math.floor(number * mult + 0.5) / mult
 end
 
 ---
+-- @treturn string
 function template.whitespace(count)
   local whitespace, out = '', ''
   if options.channel == 'tex' then
@@ -359,6 +371,12 @@ function template.whitespace(count)
   return out
 end
 
+--- Format a scaled point input value into dimension string (`12pt`,
+--  `1cm`)
+--
+-- @tparam number input
+--
+-- @treturn string
 function template.length(input)
   input = tonumber(input)
   input = input / tex.sp('1' .. options.unit)
@@ -366,7 +384,9 @@ function template.length(input)
 end
 
 ---
+-- @treturn string
 function template.fill(number, order, field)
+  local out
   if order ~= nil and order ~= 0 then
     if field == 'stretch' then
       out = '+'
@@ -437,6 +457,7 @@ template.node_colors = {
 }
 
 ---
+-- @treturn string
 function template.color_code(code)
   return string.char(27) .. '[' .. tostring(code) .. 'm'
 end
@@ -484,6 +505,7 @@ end
 -- onwhite & 47 \\
 -- \end{tabular}
 
+-- @treturn string
 function template.color(color, mode, background)
   if options.color ~= 'colored' then
     return ''
@@ -522,12 +544,14 @@ function template.color(color, mode, background)
 end
 
 ---
+-- @treturn string
 function template.color_tex(color, mode, background)
   if not mode then mode = '' end
   return 'NT' .. color .. mode
 end
 
 ---
+-- @treturn string
 function template.colored_string(string, color, mode, background)
   if options.channel == 'tex' then
     return '\\textcolor{' ..
@@ -541,6 +565,7 @@ function template.colored_string(string, color, mode, background)
 end
 
 ---
+-- @treturn string
 function template.table_inline(o)
   local tex_escape = ''
   if options.channel == 'tex' then
@@ -559,6 +584,7 @@ function template.table_inline(o)
 end
 
 ---
+-- @treturn string
 function template.key_value(key, value, color)
   if type(color) ~= 'string' then
     color = 'yellow'
@@ -574,6 +600,7 @@ function template.key_value(key, value, color)
 end
 
 ---
+-- @treturn string
 function template.char(input)
   input = string.format('%q', unicode.utf8.char(input))
   if options.channel == 'tex' then
@@ -583,6 +610,7 @@ function template.char(input)
 end
 
 ---
+-- @treturn string
 function template.type(type, id)
   local out = ''
   if options.channel == 'tex' then
@@ -602,6 +630,7 @@ function template.type(type, id)
 end
 
 ---
+-- @treturn string
 function template.callback_variable(variable_name, variable)
   if variable ~= nil and variable ~= '' then
     template.print(
@@ -613,6 +642,7 @@ function template.callback_variable(variable_name, variable)
 end
 
 ---
+-- @treturn string
 function template.line(length)
   local out = ''
   if length == 'long' then
@@ -624,6 +654,7 @@ function template.line(length)
 end
 
 ---
+-- @treturn string
 function template.node_begin()
   if options.channel == 'tex' then
     return '\\mbox{'
@@ -633,6 +664,7 @@ function template.node_begin()
 end
 
 ---
+-- @treturn string
 function template.node_end()
   if options.channel == 'tex' then
     return '}'
@@ -642,6 +674,7 @@ function template.node_end()
 end
 
 ---
+-- @treturn string
 function template.new_line_character()
   if options.channel == 'tex' then
     return '\\par\n'
@@ -651,6 +684,7 @@ function template.new_line_character()
 end
 
 ---
+-- @treturn string
 function template.new_line(count)
   local out = ''
   if not count then
@@ -663,6 +697,7 @@ function template.new_line(count)
 end
 
 ---
+-- @treturn string
 function template.callback(callback_name, variables)
   template.print(
     template.new_line(2) ..
@@ -687,11 +722,13 @@ function template.callback(callback_name, variables)
 end
 
 ---
+-- @treturn string
 function template.type_id(id)
   return '[' .. tostring(id) .. ']'
 end
 
 ---
+-- @treturn string
 function template.branch(connection_type, connection_state, last)
   local c = connection_type
   local s = connection_state
@@ -717,6 +754,7 @@ function template.branch(connection_type, connection_state, last)
 end
 
 ---
+-- @treturn string
 function template.branches(level, connection_type)
   local out = ''
   for i = 1, level - 1  do
@@ -734,6 +772,7 @@ function template.branches(level, connection_type)
 end
 
 ---
+-- @treturn string
 function template.print(text)
   if options.channel == 'log' or options.channel == 'tex' then
     output_file:write(text)
@@ -742,9 +781,11 @@ function template.print(text)
   end
 end
 
--- \subsubsection{tree --- Build the node tree}
+--- Build the node tree.
+-- @section tree
 
 ---
+-- @treturn string
 function tree.format_field(head, field)
   local out = ''
 -- Character "0" should be printed in a tree, because in TeX fonts the
@@ -801,8 +842,10 @@ end
 
 ---
 -- Attributes are key/value number pairs. They are printed as an inline
--- list. The attribute |0| with the value |0| is skipped because this
+-- list. The attribute `0` with the value `0` is skipped because this
 -- attribute is in every node by default.
+--
+-- @treturn string
 function tree.format_attributes(head)
   if not head then
     return ''
@@ -819,10 +862,10 @@ function tree.format_attributes(head)
 end
 
 ---
--- |level| is a integer beginning with 1. The variable |connection_type|
--- is a string, which can be either |list| or |field|. The variable
--- |connection_state| is a string, which can be either |continue| or
--- |stop|.
+-- `level` is a integer beginning with 1. The variable `connection_type`
+-- is a string, which can be either `list` or `field`. The variable
+-- `connection_state` is a string, which can be either `continue` or
+-- `stop`.
 function tree.set_state(level, connection_type, connection_state)
   if not tree.state[level] then
     tree.state[level] = {}
@@ -928,178 +971,240 @@ function tree.analyze_callback(head)
   template.print(template.line('short') .. template.new_line())
 end
 
--- \subsubsection{callbacks --- Callback wrapper}
+--- Callback wrapper.
+-- @section callbacks
 
----
-function callbacks.contribute_filter(extrainfo)
-  template.callback('contribute_filter', {extrainfo = extrainfo})
-  return true
-end
+local callbacks = {
 
----
-function callbacks.buildpage_filter(extrainfo)
-  template.callback('buildpage_filter', {extrainfo = extrainfo})
-  return true
-end
+  ---
+  -- @tparam string extrainfo
+  contribute_filter = function(extrainfo)
+    template.callback('contribute_filter', {extrainfo = extrainfo})
+    return true
+  end,
 
----
-function callbacks.pre_linebreak_filter(head, groupcode)
-  template.callback('pre_linebreak_filter', {groupcode = groupcode})
-  tree.analyze_callback(head)
-  return true
-end
+  ---
+  -- @tparam string extrainfo
+  buildpage_filter = function(extrainfo)
+    template.callback('buildpage_filter', {extrainfo = extrainfo})
+    return true
+  end,
 
----
-function callbacks.linebreak_filter(head, is_display)
-  template.callback('linebreak_filter', {is_display = is_display})
-  tree.analyze_callback(head)
-  return true
-end
+  build_page_insert = false,
 
----
--- TODO: Fix return values, page output
-function callbacks.append_to_vlist_filter(head, locationcode, prevdepth, mirrored)
-  local variables = {
-    locationcode = locationcode,
-    prevdepth = prevdepth,
-    mirrored = mirrored,
-  }
-  template.callback('append_to_vlist_filter', variables)
-  tree.analyze_callback(head)
-  return true
-end
+  ---
+  -- @tparam node head
+  -- @tparam string groupcode
+  pre_linebreak_filter = function(head, groupcode)
+    template.callback('pre_linebreak_filter', {groupcode = groupcode})
+    tree.analyze_callback(head)
+    return true
+  end,
 
----
-function callbacks.post_linebreak_filter(head, groupcode)
-  template.callback('post_linebreak_filter', {groupcode = groupcode})
-  tree.analyze_callback(head)
-  return true
-end
+  ---
+  -- @tparam node head
+  -- @tparam boolean is_display
+  linebreak_filter = function(head, is_display)
+    template.callback('linebreak_filter', {is_display = is_display})
+    tree.analyze_callback(head)
+    return true
+  end,
 
----
-function callbacks.hpack_filter(head, groupcode, size, packtype, direction, attributelist)
-  local variables = {
-    groupcode = groupcode,
-    size = size,
-    packtype = packtype,
-    direction = direction,
-    attributelist = attributelist,
-  }
-  template.callback('hpack_filter', variables)
-  tree.analyze_callback(head)
-  return true
-end
+  ---
+  -- TODO: Fix return values, page output
+  -- @tparam node box
+  -- @tparam string locationcode
+  -- @tparam number prevdepth
+  -- @tparam boolean mirrored
+  append_to_vlist_filter = function(box, locationcode, prevdepth, mirrored)
+    local variables = {
+      locationcode = locationcode,
+      prevdepth = prevdepth,
+      mirrored = mirrored,
+    }
+    template.callback('append_to_vlist_filter', variables)
+    tree.analyze_callback(box)
+    return true
+  end,
 
----
-function callbacks.vpack_filter(head, groupcode, size, packtype, maxdepth, direction, attributelist)
-  local variables = {
-    groupcode = groupcode,
-    size = size,
-    packtype = packtype,
-    maxdepth = template.length(maxdepth),
-    direction = direction,
-    attributelist = attributelist,
-  }
-  template.callback('vpack_filter', variables)
-  tree.analyze_callback(head)
-  return true
-end
+  ---
+  -- @tparam node head
+  -- @tparam string groupcode
+  post_linebreak_filter = function(head, groupcode)
+    template.callback('post_linebreak_filter', {groupcode = groupcode})
+    tree.analyze_callback(head)
+    return true
+  end,
 
----
-function callbacks.hpack_quality(incident, detail, head, first, last)
-  local variables = {
-    incident = incident,
-    detail = detail,
-    first = first,
-    last = last,
-  }
-  template.callback('hpack_quality', variables)
-  tree.analyze_callback(head)
-end
+  ---
+  -- @tparam node head
+  -- @tparam string groupcode
+  -- @tparam number size
+  -- @tparam string packtype
+  -- @tparam string direction
+  -- @tparam node attributelist
+  hpack_filter = function(head, groupcode, size, packtype, direction, attributelist)
+    local variables = {
+      groupcode = groupcode,
+      size = size,
+      packtype = packtype,
+      direction = direction,
+      attributelist = attributelist,
+    }
+    template.callback('hpack_filter', variables)
+    tree.analyze_callback(head)
+    return true
+  end,
 
----
-function callbacks.vpack_quality(incident, detail, head, first, last)
-  local variables = {
-    incident = incident,
-    detail = detail,
-    first = first,
-    last = last,
-  }
-  template.callback('vpack_quality', variables)
-  tree.analyze_callback(head)
-end
+  ---
+  -- @tparam node head
+  -- @tparam string groupcode
+  -- @tparam number size
+  -- @tparam string packtype
+  -- @tparam number maxdepth
+  -- @tparam string direction
+  -- @tparam node attributelist
+  vpack_filter = function(head, groupcode, size, packtype, maxdepth, direction, attributelist)
+    local variables = {
+      groupcode = groupcode,
+      size = size,
+      packtype = packtype,
+      maxdepth = template.length(maxdepth),
+      direction = direction,
+      attributelist = attributelist,
+    }
+    template.callback('vpack_filter', variables)
+    tree.analyze_callback(head)
+    return true
+  end,
 
----
-function callbacks.process_rule(head, width, height)
-  local variables = {
-    width = width,
-    height = height,
-  }
-  template.callback('process_rule', variables)
-  tree.analyze_callback(head)
-  return true
-end
+  ---
+  -- @tparam string incident
+  -- @tparam number detail
+  -- @tparam node head
+  -- @tparam number first
+  -- @tparam number last
+  hpack_quality = function(incident, detail, head, first, last)
+    local variables = {
+      incident = incident,
+      detail = detail,
+      first = first,
+      last = last,
+    }
+    template.callback('hpack_quality', variables)
+    tree.analyze_callback(head)
+  end,
 
----
-function callbacks.pre_output_filter(head, groupcode, size, packtype, maxdepth, direction)
-  local variables = {
-    groupcode = groupcode,
-    size = size,
-    packtype = packtype,
-    maxdepth = maxdepth,
-    direction = direction,
-  }
-  template.callback('pre_output_filter', variables)
-  tree.analyze_callback(head)
-  return true
-end
+  ---
+  -- @tparam string incident
+  -- @tparam number detail
+  -- @tparam node head
+  -- @tparam number first
+  -- @tparam number last
+  vpack_quality = function(incident, detail, head, first, last)
+    local variables = {
+      incident = incident,
+      detail = detail,
+      first = first,
+      last = last,
+    }
+    template.callback('vpack_quality', variables)
+    tree.analyze_callback(head)
+  end,
 
----
-function callbacks.hyphenate(head, tail)
-  template.callback('hyphenate')
-  template.print('head:')
-  tree.analyze_callback(head)
-  template.print('tail:')
-  tree.analyze_callback(tail)
-end
+  ---
+  -- @tparam node head
+  -- @tparam number width
+  -- @tparam number height
+  process_rule = function(head, width, height)
+    local variables = {
+      width = width,
+      height = height,
+    }
+    template.callback('process_rule', variables)
+    tree.analyze_callback(head)
+    return true
+  end,
 
----
-function callbacks.ligaturing(head, tail)
-  template.callback('ligaturing')
-  template.print('head:')
-  tree.analyze_callback(head)
-  template.print('tail:')
-  tree.analyze_callback(tail)
-end
+  ---
+  -- @tparam node head
+  -- @tparam string groupcode
+  -- @tparam number size
+  -- @tparam string packtype
+  -- @tparam number maxdepth
+  -- @tparam string direction
+  pre_output_filter = function(head, groupcode, size, packtype, maxdepth, direction)
+    local variables = {
+      groupcode = groupcode,
+      size = size,
+      packtype = packtype,
+      maxdepth = maxdepth,
+      direction = direction,
+    }
+    template.callback('pre_output_filter', variables)
+    tree.analyze_callback(head)
+    return true
+  end,
 
----
-function callbacks.kerning(head, tail)
-  template.callback('kerning')
-  template.print('head:')
-  tree.analyze_callback(head)
-  template.print('tail:')
-  tree.analyze_callback(tail)
-end
+  ---
+  -- @tparam node head
+  -- @tparam node tail
+  hyphenate = function(head, tail)
+    template.callback('hyphenate')
+    template.print('head:')
+    tree.analyze_callback(head)
+    template.print('tail:')
+    tree.analyze_callback(tail)
+  end,
 
----
-function callbacks.insert_local_par(local_par, location)
-  template.callback('insert_local_par', {location = location})
-  tree.analyze_callback(local_par)
-  return true
-end
+  ---
+  -- @tparam node head
+  -- @tparam node tail
+  ligaturing = function(head, tail)
+    template.callback('ligaturing')
+    template.print('head:')
+    tree.analyze_callback(head)
+    template.print('tail:')
+    tree.analyze_callback(tail)
+  end,
 
----
-function callbacks.mlist_to_hlist(head, display_type, need_penalties)
-  local variables = {
-    display_type = display_type,
-    need_penalties = need_penalties,
-  }
-  template.callback('mlist_to_hlist', variables)
-  tree.analyze_callback(head)
-  return node.mlist_to_hlist(head, display_type, need_penalties)
-end
+  ---
+  -- @tparam node head
+  -- @tparam node tail
+  kerning = function(head, tail)
+    template.callback('kerning')
+    template.print('head:')
+    tree.analyze_callback(head)
+    template.print('tail:')
+    tree.analyze_callback(tail)
+  end,
 
--- \subsubsection{export --- Exported functions}
+  ---
+  -- @tparam node local_par
+  -- @tparam string location
+  insert_local_par = function(local_par, location)
+    template.callback('insert_local_par', {location = location})
+    tree.analyze_callback(local_par)
+    return true
+  end,
+
+  ---
+  -- @tparam node head
+  -- @tparam string display_type
+  -- @tparam boolean need_penalties
+  mlist_to_hlist = function(head, display_type, need_penalties)
+    local variables = {
+      display_type = display_type,
+      need_penalties = need_penalties,
+    }
+    template.callback('mlist_to_hlist', variables)
+    tree.analyze_callback(head)
+    return node.mlist_to_hlist(head, display_type, need_penalties)
+  end,
+}
+
+--- Exported functions.
+-- @section export
 
 ---
 function export.set_option(key, value)

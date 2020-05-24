@@ -29,8 +29,9 @@
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#Extend_the_node_library">Extend the node library </a></li>
+<li><a href="#Format_functions">Format functions </a></li>
 <li><a href="#Template_functions">Template functions </a></li>
+<li><a href="#Extend_the_node_library">Extend the node library </a></li>
 <li><a href="#Build_the_node_tree">Build the node tree </a></li>
 <li><a href="#Callback_wrapper">Callback wrapper </a></li>
 <li><a href="#Exported_functions">Exported functions </a></li>
@@ -53,59 +54,59 @@
   the <a href="https://github.com/stevedonovan/LDoc/wiki">wiki</a>.</p>
 
 
-<h2><a href="#Extend_the_node_library">Extend the node library </a></h2>
+<h2><a href="#Format_functions">Format functions </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#node_extended.node_id">node_extended.node_id (n)</a></td>
-	<td class="summary">Get the ID of a node.</td>
+	<td class="name" nowrap><a href="#underscore">underscore (string)</a></td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#get_node_subtypes">get_node_subtypes ()</a></td>
-	<td class="summary">A table of all node subtype names.</td>
+	<td class="name" nowrap><a href="#escape">escape (string)</a></td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#node_extended.subtype">node_extended.subtype (n)</a></td>
+	<td class="name" nowrap><a href="#whitespace">whitespace (count)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#color_code">color_code (code)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#color_tex">color_tex (color, mode, background)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#node_begin">node_begin ()</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#node_end">node_end ()</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#new_line">new_line (count)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#type_id">type_id (id)</a></td>
 	<td class="summary"></td>
 	</tr>
 </table>
 <h2><a href="#Template_functions">Template functions </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#template.underscore">template.underscore (string)</a></td>
+	<td class="name" nowrap><a href="#template.fill">template.fill (number, order, field)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.escape">template.escape (string)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.round">template.round (number)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.whitespace">template.whitespace (count)</a></td>
+	<td class="name" nowrap><a href="#template.colored_string">template.colored_string (string, color, mode, background)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.length">template.length (input)</a></td>
 	<td class="summary">Format a scaled point input value into dimension string (<code>12pt</code>,
   <code>1cm</code>)</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.fill">template.fill (number, order, field)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.color_code">template.color_code (code)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.color_tex">template.color_tex (color, mode, background)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.colored_string">template.colored_string (string, color, mode, background)</a></td>
-	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.table_inline">template.table_inline (o)</a></td>
@@ -124,35 +125,11 @@
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.callback_variable">template.callback_variable (variable_name, variable)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#template.line">template.line (length)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.node_begin">template.node_begin ()</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.node_end">template.node_end ()</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.new_line_character">template.new_line_character ()</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.new_line">template.new_line (count)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#template.callback">template.callback (callback_name, variables)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.type_id">template.type_id (id)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
@@ -165,6 +142,21 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.print">template.print (text)</a></td>
+	<td class="summary"></td>
+	</tr>
+</table>
+<h2><a href="#Extend_the_node_library">Extend the node library </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#node_extended.node_id">node_extended.node_id (n)</a></td>
+	<td class="summary">Get the ID of a node.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_node_subtypes">get_node_subtypes ()</a></td>
+	<td class="summary">A table of all node subtype names.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#node_extended.subtype">node_extended.subtype (n)</a></td>
 	<td class="summary"></td>
 	</tr>
 </table>
@@ -282,136 +274,15 @@
 <br/>
 
 
-    <h2 class="section-header "><a name="Extend_the_node_library"></a>Extend the node library </h2>
+    <h2 class="section-header has-description"><a name="Format_functions"></a>Format functions </h2>
 
+          <div class="section-description">
+           Low level template functions.
+          </div>
     <dl class="function">
     <dt>
-    <a name = "node_extended.node_id"></a>
-    <strong>node_extended.node_id (n)</strong>
-    </dt>
-    <dd>
-    Get the ID of a node.</p>
-
-<p> We have to convert the node into a string and than have to extract
- the ID from this string using a regular expression. If you convert a
- node into a string it looks like: <code>&lt;node    nil &lt;    172 &gt;    nil :
- hlist 2&gt;</code>.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">n</span>
-            <span class="types"><span class="type">node</span></span>
-         A node.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "get_node_subtypes"></a>
-    <strong>get_node_subtypes ()</strong>
-    </dt>
-    <dd>
-    <p>A table of all node subtype names.</p>
-
-<p> <strong>Nodes without subtypes:</strong></p>
-
-<ul>
-<li><code>ins</code> (3)</li>
-<li><code>mark</code> (4)</li>
-<li><code>whatsit</code> (8)</li>
-<li><code>local_par</code> (9)</li>
-<li><code>dir</code> (10)</li>
-<li><code>penalty</code> (14)</li>
-<li><code>unset</code> (15)</li>
-<li><code>style</code> (16)</li>
-<li><code>choice</code> (17)</li>
-<li><code>fraction</code> (20)</li>
-<li><code>math_char</code> (23)</li>
-<li><code>sub_box</code> (24)</li>
-<li><code>sub_mlist</code> (25)</li>
-<li><code>math_text_char</code> (26)</li>
-<li><code>delim</code> (27)</li>
-<li><code>margin_kern</code> (28)</li>
-<li><code>align_record</code> (30)</li>
-<li><code>pseudo_file</code> (31)</li>
-<li><code>pseudo_line</code> (32)</li>
-<li><code>page_insert</code> (33)</li>
-<li><code>split_insert</code> (34)</li>
-<li><code>expr_stack</code> (35)</li>
-<li><code>nested_list</code> (36)</li>
-<li><code>span</code> (37)</li>
-<li><code>attribute</code> (38)</li>
-<li><code>glue_spec</code> (39)</li>
-<li><code>attribute_list</code> (40)</li>
-<li><code>temp</code> (41)</li>
-<li><code>align_stack</code> (42)</li>
-<li><code>movement_stack</code> (43)</li>
-<li><code>if_stack</code> (44)</li>
-<li><code>unhyphenated</code> (45)</li>
-<li><code>hyphenated</code> (46)</li>
-<li><code>delta</code> (47)</li>
-<li><code>passive</code> (48)</li>
-<li><code>shape</code> (49)</li>
-</ul>
-
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "node_extended.subtype"></a>
-    <strong>node_extended.subtype (n)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">n</span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-</dl>
-    <h2 class="section-header "><a name="Template_functions"></a>Template functions </h2>
-
-    <dl class="function">
-    <dt>
-    <a name = "template.underscore"></a>
-    <strong>template.underscore (string)</strong>
+    <a name = "underscore"></a>
+    <strong>underscore (string)</strong>
     </dt>
     <dd>
 
@@ -436,8 +307,8 @@
 
 </dd>
     <dt>
-    <a name = "template.escape"></a>
-    <strong>template.escape (string)</strong>
+    <a name = "escape"></a>
+    <strong>escape (string)</strong>
     </dt>
     <dd>
 
@@ -462,34 +333,8 @@
 
 </dd>
     <dt>
-    <a name = "template.round"></a>
-    <strong>template.round (number)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">number</span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">number</span></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.whitespace"></a>
-    <strong>template.whitespace (count)</strong>
+    <a name = "whitespace"></a>
+    <strong>whitespace (count)</strong>
     </dt>
     <dd>
 
@@ -514,68 +359,8 @@
 
 </dd>
     <dt>
-    <a name = "template.length"></a>
-    <strong>template.length (input)</strong>
-    </dt>
-    <dd>
-    Format a scaled point input value into dimension string (<code>12pt</code>,
-  <code>1cm</code>)
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">input</span>
-            <span class="types"><span class="type">number</span></span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.fill"></a>
-    <strong>template.fill (number, order, field)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">number</span>
-
-        </li>
-        <li><span class="parameter">order</span>
-
-        </li>
-        <li><span class="parameter">field</span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.color_code"></a>
-    <strong>template.color_code (code)</strong>
+    <a name = "color_code"></a>
+    <strong>color_code (code)</strong>
     </dt>
     <dd>
 
@@ -600,8 +385,8 @@
 
 </dd>
     <dt>
-    <a name = "template.color_tex"></a>
-    <strong>template.color_tex (color, mode, background)</strong>
+    <a name = "color_tex"></a>
+    <strong>color_tex (color, mode, background)</strong>
     </dt>
     <dd>
 
@@ -616,6 +401,134 @@
 
         </li>
         <li><span class="parameter">background</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "node_begin"></a>
+    <strong>node_begin ()</strong>
+    </dt>
+    <dd>
+
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "node_end"></a>
+    <strong>node_end ()</strong>
+    </dt>
+    <dd>
+
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "new_line"></a>
+    <strong>new_line (count)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">count</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "type_id"></a>
+    <strong>type_id (id)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Template_functions"></a>Template functions </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "template.fill"></a>
+    <strong>template.fill (number, order, field)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">number</span>
+
+        </li>
+        <li><span class="parameter">order</span>
+
+        </li>
+        <li><span class="parameter">field</span>
 
         </li>
     </ul>
@@ -651,6 +564,34 @@
 
         </li>
         <li><span class="parameter">background</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "template.length"></a>
+    <strong>template.length (input)</strong>
+    </dt>
+    <dd>
+    Format a scaled point input value into dimension string (<code>12pt</code>,
+  <code>1cm</code>)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">input</span>
+            <span class="types"><span class="type">number</span></span>
 
         </li>
     </ul>
@@ -780,35 +721,6 @@
 
 </dd>
     <dt>
-    <a name = "template.callback_variable"></a>
-    <strong>template.callback_variable (variable_name, variable)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">variable_name</span>
-
-        </li>
-        <li><span class="parameter">variable</span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "template.line"></a>
     <strong>template.line (length)</strong>
     </dt>
@@ -819,92 +731,6 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">length</span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.node_begin"></a>
-    <strong>template.node_begin ()</strong>
-    </dt>
-    <dd>
-
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.node_end"></a>
-    <strong>template.node_end ()</strong>
-    </dt>
-    <dd>
-
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.new_line_character"></a>
-    <strong>template.new_line_character ()</strong>
-    </dt>
-    <dd>
-
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.new_line"></a>
-    <strong>template.new_line (count)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">count</span>
 
         </li>
     </ul>
@@ -934,32 +760,6 @@
 
         </li>
         <li><span class="parameter">variables</span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.type_id"></a>
-    <strong>template.type_id (id)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">id</span>
 
         </li>
     </ul>
@@ -1047,6 +847,130 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">text</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Extend_the_node_library"></a>Extend the node library </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "node_extended.node_id"></a>
+    <strong>node_extended.node_id (n)</strong>
+    </dt>
+    <dd>
+    Get the ID of a node.</p>
+
+<p> We have to convert the node into a string and than have to extract
+ the ID from this string using a regular expression. If you convert a
+ node into a string it looks like: <code>&lt;node    nil &lt;    172 &gt;    nil :
+ hlist 2&gt;</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">n</span>
+            <span class="types"><span class="type">node</span></span>
+         A node.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_node_subtypes"></a>
+    <strong>get_node_subtypes ()</strong>
+    </dt>
+    <dd>
+    <p>A table of all node subtype names.</p>
+
+<p> <strong>Nodes without subtypes:</strong></p>
+
+<ul>
+<li><code>ins</code> (3)</li>
+<li><code>mark</code> (4)</li>
+<li><code>whatsit</code> (8)</li>
+<li><code>local_par</code> (9)</li>
+<li><code>dir</code> (10)</li>
+<li><code>penalty</code> (14)</li>
+<li><code>unset</code> (15)</li>
+<li><code>style</code> (16)</li>
+<li><code>choice</code> (17)</li>
+<li><code>fraction</code> (20)</li>
+<li><code>math_char</code> (23)</li>
+<li><code>sub_box</code> (24)</li>
+<li><code>sub_mlist</code> (25)</li>
+<li><code>math_text_char</code> (26)</li>
+<li><code>delim</code> (27)</li>
+<li><code>margin_kern</code> (28)</li>
+<li><code>align_record</code> (30)</li>
+<li><code>pseudo_file</code> (31)</li>
+<li><code>pseudo_line</code> (32)</li>
+<li><code>page_insert</code> (33)</li>
+<li><code>split_insert</code> (34)</li>
+<li><code>expr_stack</code> (35)</li>
+<li><code>nested_list</code> (36)</li>
+<li><code>span</code> (37)</li>
+<li><code>attribute</code> (38)</li>
+<li><code>glue_spec</code> (39)</li>
+<li><code>attribute_list</code> (40)</li>
+<li><code>temp</code> (41)</li>
+<li><code>align_stack</code> (42)</li>
+<li><code>movement_stack</code> (43)</li>
+<li><code>if_stack</code> (44)</li>
+<li><code>unhyphenated</code> (45)</li>
+<li><code>hyphenated</code> (46)</li>
+<li><code>delta</code> (47)</li>
+<li><code>passive</code> (48)</li>
+<li><code>shape</code> (49)</li>
+</ul>
+
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "node_extended.subtype"></a>
+    <strong>node_extended.subtype (n)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">n</span>
 
         </li>
     </ul>
@@ -1797,7 +1721,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-24 07:45:05 </i>
+<i style="float:right;">Last updated 2020-05-24 08:54:42 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

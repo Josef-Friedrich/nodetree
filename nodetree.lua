@@ -62,6 +62,457 @@ local options = {
 -- File descriptor
 local output_file
 
+--- Format functions.
+--
+-- Low level template functions.
+--
+-- @section format
+
+local format = {
+  ---
+  -- @treturn string
+  underscore = function(string)
+    if options.channel == 'tex' then
+      return string.gsub(string, '_', '\\_')
+    else
+      return string
+    end
+  end,
+
+  ---
+  -- @treturn string
+  escape = function(string)
+    if options.channel == 'tex' then
+      return string.gsub(string, [[\]], [[\string\]])
+    else
+      return string
+    end
+  end,
+
+  -- @treturn number
+  number = function(number)
+    local mult = 10^(options.decimalplaces or 0)
+    return math.floor(number * mult + 0.5) / mult
+  end,
+
+  ---
+  -- @treturn string
+  whitespace = function(count)
+    local whitespace, out = '', ''
+    if options.channel == 'tex' then
+      whitespace = '\\hspace{0.5em}'
+    else
+      whitespace = ' '
+    end
+    if not count then
+      count = 1
+    end
+    for i = 1, count do
+      out = out .. whitespace
+    end
+    return out
+  end,
+
+  ---
+  -- @treturn string
+  color_code = function(code)
+    return string.char(27) .. '[' .. tostring(code) .. 'm'
+  end,
+
+  ---
+  -- @treturn string
+  color_tex = function(color, mode, background)
+    if not mode then mode = '' end
+    return 'NT' .. color .. mode
+  end,
+
+  ---
+  -- @treturn string
+  node_begin = function()
+    if options.channel == 'tex' then
+      return '\\mbox{'
+    else
+      return ''
+    end
+  end,
+
+  ---
+  -- @treturn string
+  node_end = function()
+    if options.channel == 'tex' then
+      return '}'
+    else
+      return ''
+    end
+  end,
+
+  ---
+  -- @treturn string
+  new_line = function(count)
+    local out = ''
+    if not count then
+      count = 1
+    end
+    local new_line
+    if options.channel == 'tex' then
+      new_line = '\\par\n'
+    else
+      new_line = '\n'
+    end
+
+    for i = 1, count do
+      out = out .. new_line
+    end
+    return out
+  end,
+
+  ---
+  -- @treturn string
+  type_id = function(id)
+    return '[' .. tostring(id) .. ']'
+  end
+}
+
+--- Template functions.
+-- @section template
+
+---
+-- @treturn string
+function template.fill(number, order, field)
+  local out
+  if order ~= nil and order ~= 0 then
+    if field == 'stretch' then
+      out = '+'
+    else
+      out = '-'
+    end
+    return out .. string.format(
+      '%gfi%s', number / 2^16,
+      string.rep('l', order - 1)
+    )
+  else
+    return template.length(number)
+  end
+end
+
+---
+template.node_colors = {
+  hlist = {'red', 'bright'},
+  vlist = {'green', 'bright'},
+  rule = {'blue', 'bright'},
+  ins = {'blue'},
+  mark = {'magenta'},
+  adjust = {'cyan'},
+  boundary = {'red', 'bright'},
+  disc = {'green', 'bright'},
+  whatsit = {'yellow', 'bright'},
+  local_par = {'blue', 'bright'},
+  dir = {'magenta', 'bright'},
+  math = {'cyan', 'bright'},
+  glue = {'magenta', 'bright'},
+  kern = {'green', 'bright'},
+  penalty = {'yellow', 'bright'},
+  unset = {'blue'},
+  style = {'magenta'},
+  choice = {'cyan'},
+  noad = {'red'},
+  radical = {'green'},
+  fraction = {'yellow'},
+  accent = {'blue'},
+  fence = {'magenta'},
+  math_char = {'cyan'},
+  sub_box = {'red', 'bright'},
+  sub_mlist = {'green', 'bright'},
+  math_text_char = {'yellow', 'bright'},
+  delim = {'blue', 'bright'},
+  margin_kern = {'magenta', 'bright'},
+  glyph = {'cyan', 'bright'},
+  align_record = {'red'},
+  pseudo_file = {'green'},
+  pseudo_line = {'yellow'},
+  page_insert = {'blue'},
+  split_insert = {'magenta'},
+  expr_stack = {'cyan'},
+  nested_list = {'red'},
+  span = {'green'},
+  attribute = {'yellow'},
+  glue_spec = {'magenta'},
+  attribute_list = {'cyan'},
+  temp = {'magenta'},
+  align_stack = {'red', 'bright'},
+  movement_stack = {'green', 'bright'},
+  if_stack = {'yellow', 'bright'},
+  unhyphenated = {'magenta', 'bright'},
+  hyphenated = {'cyan', 'bright'},
+  delta = {'red'},
+  passive = {'green'},
+  shape = {'yellow'},
+}
+
+--
+-- \href{https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters}
+-- {SGR (Select Graphic Rendition) Parameters}
+
+-- \paragraph{attributes}
+
+-- \begin{tabular}{ll}
+-- reset & 0 \\
+-- clear & 0 \\
+-- bright & 1 \\
+-- dim & 2 \\
+-- underscore & 4 \\
+-- blink & 5 \\
+-- reverse & 7 \\
+-- hidden & 8 \\
+-- \end{tabular}
+
+-- \paragraph{foreground}
+
+-- \begin{tabular}{ll}
+-- black & 30 \\
+-- red & 31 \\
+-- green & 32 \\
+-- yellow & 33 \\
+-- blue & 34 \\
+-- magenta & 35 \\
+-- cyan & 36 \\
+-- white & 37 \\
+-- \end{tabular}
+
+-- \paragraph{background}
+
+-- \begin{tabular}{ll}
+-- onblack & 40 \\
+-- onred & 41 \\
+-- ongreen & 42 \\
+-- onyellow & 43 \\
+-- onblue & 44 \\
+-- onmagenta & 45 \\
+-- oncyan & 46 \\
+-- onwhite & 47 \\
+-- \end{tabular}
+
+-- @treturn string
+function template.color(color, mode, background)
+  if options.color ~= 'colored' then
+    return ''
+  end
+
+  local out = ''
+  local code = ''
+
+  if mode == 'bright' then
+    out = format.color_code(1)
+  elseif mode == 'dim' then
+    out = format.color_code(2)
+  end
+
+  if not background then
+    if color == 'reset' then code = 0
+    elseif color == 'red' then code = 31
+    elseif color == 'green' then code = 32
+    elseif color == 'yellow' then code = 33
+    elseif color == 'blue' then code = 34
+    elseif color == 'magenta' then code = 35
+    elseif color == 'cyan' then code = 36
+    else code = 37 end
+  else
+    if color == 'black' then code = 40
+    elseif color == 'red' then code = 41
+    elseif color == 'green' then code = 42
+    elseif color == 'yellow' then code = 43
+    elseif color == 'blue' then code = 44
+    elseif color == 'magenta' then code = 45
+    elseif color == 'cyan' then code = 46
+    elseif color == 'white' then code = 47
+    else code = 40 end
+  end
+  return out .. format.color_code(code)
+end
+
+---
+-- @treturn string
+function template.colored_string(string, color, mode, background)
+  if options.channel == 'tex' then
+    return '\\textcolor{' ..
+      format.color_tex(color, mode, background) ..
+      '}{' ..
+      string ..
+      '}'
+  else
+   return template.color(color, mode, background) .. string .. template.color('reset')
+  end
+end
+
+--- Format a scaled point input value into dimension string (`12pt`,
+--  `1cm`)
+--
+-- @tparam number input
+--
+-- @treturn string
+function template.length (input)
+  input = tonumber(input)
+  input = input / tex.sp('1' .. options.unit)
+  return string.format('%g%s', format.number(input), options.unit)
+end
+
+---
+-- @treturn string
+function template.table_inline(o)
+  local tex_escape = ''
+  if options.channel == 'tex' then
+    tex_escape = '\\'
+  end
+  if type(o) == 'table' then
+    local s = tex_escape .. '{ '
+    for k,v in pairs(o) do
+        if type(k) ~= 'number' then k = '"'..k..'"' end
+        s = s .. '['..k..'] = ' .. template.table_inline(v) .. ', '
+    end
+    return s .. tex_escape .. '} '
+  else
+    return tostring(o)
+  end
+end
+
+---
+-- @treturn string
+function template.key_value(key, value, color)
+  if type(color) ~= 'string' then
+    color = 'yellow'
+  end
+  if options.channel == 'tex' then
+    key = format.underscore(key)
+  end
+  local out = template.colored_string(key .. ':', color)
+  if value then
+    out = out .. ' ' .. value .. '; '
+  end
+  return out
+end
+
+---
+-- @treturn string
+function template.char(input)
+  input = string.format('%q', unicode.utf8.char(input))
+  if options.channel == 'tex' then
+    input = format.escape(input)
+  end
+  return input
+end
+
+---
+-- @treturn string
+function template.type(type, id)
+  local out = ''
+  if options.channel == 'tex' then
+    out = format.underscore(type)
+  else
+    out = type
+  end
+  out = string.upper(out)
+  if options.verbosity > 1 then
+    out = out .. format.type_id(id)
+  end
+  return template.colored_string(
+    out .. format.whitespace(),
+    template.node_colors[type][1],
+    template.node_colors[type][2]
+  )
+end
+
+---
+-- @treturn string
+function template.line(length)
+  local out = ''
+  if length == 'long' then
+    out = '------------------------------------------'
+  else
+    out = '-----------------------'
+  end
+    return out .. format.new_line()
+end
+
+---
+-- @treturn string
+function template.callback(callback_name, variables)
+  template.print(
+    format.new_line(2) ..
+    'Callback: ' ..
+    template.colored_string(format.underscore(callback_name), 'red', '', true) ..
+    format.new_line()
+  )
+  if variables then
+    for name, value in pairs(variables) do
+      if value ~= nil and value ~= '' then
+        template.print(
+          '- ' ..
+          format.underscore(name) ..
+          ': ' ..
+          tostring(value) ..
+          format.new_line()
+        )
+      end
+    end
+  end
+  template.print(template.line('long'))
+end
+
+---
+-- @treturn string
+function template.branch(connection_type, connection_state, last)
+  local c = connection_type
+  local s = connection_state
+  local l = last
+  if c == 'list' and s == 'stop' and l == false then
+    return format.whitespace(2)
+  elseif c == 'field' and s == 'stop' and l == false then
+    return format.whitespace(2)
+  elseif c == 'list' and s == 'continue' and l == false then
+    return '│' .. format.whitespace()
+  elseif c == 'field' and s == 'continue' and l == false then
+    return '║' .. format.whitespace()
+  elseif c == 'list' and s == 'continue' and l == true then
+    return '├─'
+  elseif c == 'field' and s == 'continue' and l == true then
+    return '╠═'
+  elseif c == 'list' and s == 'stop' and l == true then
+    return '└─'
+  elseif c == 'field' and s == 'stop' and l == true then
+    return '╚═'
+  end
+  return ''
+end
+
+---
+-- @treturn string
+function template.branches(level, connection_type)
+  local out = ''
+  for i = 1, level - 1  do
+    out = out .. template.branch('list', tree.state[i]['list'], false)
+    out = out .. template.branch('field', tree.state[i]['field'], false)
+  end
+-- Format the last branches
+  if connection_type == 'list' then
+    out = out .. template.branch('list', tree.state[level]['list'], true)
+  else
+    out = out .. template.branch('list', tree.state[level]['list'], false)
+    out = out .. template.branch('field', tree.state[level]['field'], true)
+  end
+  return out
+end
+
+---
+-- @treturn string
+function template.print(text)
+  if options.channel == 'log' or options.channel == 'tex' then
+    output_file:write(text)
+  else
+    io.write(text)
+  end
+end
+
+
 --- Extend the node library
 -- @section node_extended
 
@@ -316,471 +767,13 @@ function node_extended.subtype(n)
   if subtypes[typ] and subtypes[typ][n.subtype] then
     out = subtypes[typ][n.subtype]
     if options.verbosity > 1 then
-      out = out .. template.type_id(n.subtype)
+      out = out .. format.type_id(n.subtype)
     end
     return out
   else
     return tostring(n.subtype)
   end
   assert(false)
-end
-
---- Template functions.
--- @section template
-
----
--- @treturn string
-function template.underscore(string)
-  if options.channel == 'tex' then
-    return string.gsub(string, '_', '\\_')
-  else
-    return string
-  end
-end
-
----
--- @treturn string
-function template.escape(string)
-  if options.channel == 'tex' then
-    return string.gsub(string, [[\]], [[\string\]])
-  else
-    return string
-  end
-end
-
----
--- @treturn number
-function template.round(number)
-  local mult = 10^(options.decimalplaces or 0)
-  return math.floor(number * mult + 0.5) / mult
-end
-
----
--- @treturn string
-function template.whitespace(count)
-  local whitespace, out = '', ''
-  if options.channel == 'tex' then
-    whitespace = '\\hspace{0.5em}'
-  else
-    whitespace = ' '
-  end
-  if not count then
-    count = 1
-  end
-  for i = 1, count do
-    out = out .. whitespace
-  end
-  return out
-end
-
---- Format a scaled point input value into dimension string (`12pt`,
---  `1cm`)
---
--- @tparam number input
---
--- @treturn string
-function template.length(input)
-  input = tonumber(input)
-  input = input / tex.sp('1' .. options.unit)
-  return string.format('%g%s', template.round(input), options.unit)
-end
-
----
--- @treturn string
-function template.fill(number, order, field)
-  local out
-  if order ~= nil and order ~= 0 then
-    if field == 'stretch' then
-      out = '+'
-    else
-      out = '-'
-    end
-    return out .. string.format(
-      '%gfi%s', number / 2^16,
-      string.rep('l', order - 1)
-    )
-  else
-    return template.length(number)
-  end
-end
-
----
-template.node_colors = {
-  hlist = {'red', 'bright'},
-  vlist = {'green', 'bright'},
-  rule = {'blue', 'bright'},
-  ins = {'blue'},
-  mark = {'magenta'},
-  adjust = {'cyan'},
-  boundary = {'red', 'bright'},
-  disc = {'green', 'bright'},
-  whatsit = {'yellow', 'bright'},
-  local_par = {'blue', 'bright'},
-  dir = {'magenta', 'bright'},
-  math = {'cyan', 'bright'},
-  glue = {'magenta', 'bright'},
-  kern = {'green', 'bright'},
-  penalty = {'yellow', 'bright'},
-  unset = {'blue'},
-  style = {'magenta'},
-  choice = {'cyan'},
-  noad = {'red'},
-  radical = {'green'},
-  fraction = {'yellow'},
-  accent = {'blue'},
-  fence = {'magenta'},
-  math_char = {'cyan'},
-  sub_box = {'red', 'bright'},
-  sub_mlist = {'green', 'bright'},
-  math_text_char = {'yellow', 'bright'},
-  delim = {'blue', 'bright'},
-  margin_kern = {'magenta', 'bright'},
-  glyph = {'cyan', 'bright'},
-  align_record = {'red'},
-  pseudo_file = {'green'},
-  pseudo_line = {'yellow'},
-  page_insert = {'blue'},
-  split_insert = {'magenta'},
-  expr_stack = {'cyan'},
-  nested_list = {'red'},
-  span = {'green'},
-  attribute = {'yellow'},
-  glue_spec = {'magenta'},
-  attribute_list = {'cyan'},
-  temp = {'magenta'},
-  align_stack = {'red', 'bright'},
-  movement_stack = {'green', 'bright'},
-  if_stack = {'yellow', 'bright'},
-  unhyphenated = {'magenta', 'bright'},
-  hyphenated = {'cyan', 'bright'},
-  delta = {'red'},
-  passive = {'green'},
-  shape = {'yellow'},
-}
-
----
--- @treturn string
-function template.color_code(code)
-  return string.char(27) .. '[' .. tostring(code) .. 'm'
-end
-
---
--- \href{https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters}
--- {SGR (Select Graphic Rendition) Parameters}
-
--- \paragraph{attributes}
-
--- \begin{tabular}{ll}
--- reset & 0 \\
--- clear & 0 \\
--- bright & 1 \\
--- dim & 2 \\
--- underscore & 4 \\
--- blink & 5 \\
--- reverse & 7 \\
--- hidden & 8 \\
--- \end{tabular}
-
--- \paragraph{foreground}
-
--- \begin{tabular}{ll}
--- black & 30 \\
--- red & 31 \\
--- green & 32 \\
--- yellow & 33 \\
--- blue & 34 \\
--- magenta & 35 \\
--- cyan & 36 \\
--- white & 37 \\
--- \end{tabular}
-
--- \paragraph{background}
-
--- \begin{tabular}{ll}
--- onblack & 40 \\
--- onred & 41 \\
--- ongreen & 42 \\
--- onyellow & 43 \\
--- onblue & 44 \\
--- onmagenta & 45 \\
--- oncyan & 46 \\
--- onwhite & 47 \\
--- \end{tabular}
-
--- @treturn string
-function template.color(color, mode, background)
-  if options.color ~= 'colored' then
-    return ''
-  end
-
-  local out = ''
-  local code = ''
-
-  if mode == 'bright' then
-    out = template.color_code(1)
-  elseif mode == 'dim' then
-    out = template.color_code(2)
-  end
-
-  if not background then
-    if color == 'reset' then code = 0
-    elseif color == 'red' then code = 31
-    elseif color == 'green' then code = 32
-    elseif color == 'yellow' then code = 33
-    elseif color == 'blue' then code = 34
-    elseif color == 'magenta' then code = 35
-    elseif color == 'cyan' then code = 36
-    else code = 37 end
-  else
-    if color == 'black' then code = 40
-    elseif color == 'red' then code = 41
-    elseif color == 'green' then code = 42
-    elseif color == 'yellow' then code = 43
-    elseif color == 'blue' then code = 44
-    elseif color == 'magenta' then code = 45
-    elseif color == 'cyan' then code = 46
-    elseif color == 'white' then code = 47
-    else code = 40 end
-  end
-  return out .. template.color_code(code)
-end
-
----
--- @treturn string
-function template.color_tex(color, mode, background)
-  if not mode then mode = '' end
-  return 'NT' .. color .. mode
-end
-
----
--- @treturn string
-function template.colored_string(string, color, mode, background)
-  if options.channel == 'tex' then
-    return '\\textcolor{' ..
-      template.color_tex(color, mode, background) ..
-      '}{' ..
-      string ..
-      '}'
-  else
-   return template.color(color, mode, background) .. string .. template.color('reset')
-  end
-end
-
----
--- @treturn string
-function template.table_inline(o)
-  local tex_escape = ''
-  if options.channel == 'tex' then
-    tex_escape = '\\'
-  end
-  if type(o) == 'table' then
-     local s = tex_escape .. '{ '
-     for k,v in pairs(o) do
-        if type(k) ~= 'number' then k = '"'..k..'"' end
-        s = s .. '['..k..'] = ' .. template.table_inline(v) .. ', '
-     end
-     return s .. tex_escape .. '} '
-  else
-     return tostring(o)
-  end
-end
-
----
--- @treturn string
-function template.key_value(key, value, color)
-  if type(color) ~= 'string' then
-    color = 'yellow'
-  end
-  if options.channel == 'tex' then
-    key = template.underscore(key)
-  end
-  local out = template.colored_string(key .. ':', color)
-  if value then
-    out = out .. ' ' .. value .. '; '
-  end
-  return out
-end
-
----
--- @treturn string
-function template.char(input)
-  input = string.format('%q', unicode.utf8.char(input))
-  if options.channel == 'tex' then
-    input = template.escape(input)
-  end
-  return input
-end
-
----
--- @treturn string
-function template.type(type, id)
-  local out = ''
-  if options.channel == 'tex' then
-    out = template.underscore(type)
-  else
-    out = type
-  end
-  out = string.upper(out)
-  if options.verbosity > 1 then
-    out = out .. template.type_id(id)
-  end
-  return template.colored_string(
-    out .. template.whitespace(),
-    template.node_colors[type][1],
-    template.node_colors[type][2]
-  )
-end
-
----
--- @treturn string
-function template.callback_variable(variable_name, variable)
-  if variable ~= nil and variable ~= '' then
-    template.print(
-      template.underscore(variable_name) .. ': ' ..
-      tostring(variable) ..
-      template.new_line()
-    )
-  end
-end
-
----
--- @treturn string
-function template.line(length)
-  local out = ''
-  if length == 'long' then
-    out = '------------------------------------------'
-  else
-    out = '-----------------------'
-  end
-    return out .. template.new_line()
-end
-
----
--- @treturn string
-function template.node_begin()
-  if options.channel == 'tex' then
-    return '\\mbox{'
-  else
-    return ''
-  end
-end
-
----
--- @treturn string
-function template.node_end()
-  if options.channel == 'tex' then
-    return '}'
-  else
-    return ''
-  end
-end
-
----
--- @treturn string
-function template.new_line_character()
-  if options.channel == 'tex' then
-    return '\\par\n'
-  else
-    return '\n'
-  end
-end
-
----
--- @treturn string
-function template.new_line(count)
-  local out = ''
-  if not count then
-    count = 1
-  end
-  for i = 1, count do
-    out = out .. template.new_line_character()
-  end
-  return out
-end
-
----
--- @treturn string
-function template.callback(callback_name, variables)
-  template.print(
-    template.new_line(2) ..
-    'Callback: ' ..
-    template.colored_string(template.underscore(callback_name), 'red', '', true) ..
-    template.new_line()
-  )
-  if variables then
-    for name, value in pairs(variables) do
-      if value ~= nil and value ~= '' then
-        template.print(
-          '- ' ..
-          template.underscore(name) ..
-          ': ' ..
-          tostring(value) ..
-          template.new_line()
-        )
-      end
-    end
-  end
-  template.print(template.line('long'))
-end
-
----
--- @treturn string
-function template.type_id(id)
-  return '[' .. tostring(id) .. ']'
-end
-
----
--- @treturn string
-function template.branch(connection_type, connection_state, last)
-  local c = connection_type
-  local s = connection_state
-  local l = last
-  if c == 'list' and s == 'stop' and l == false then
-    return template.whitespace(2)
-  elseif c == 'field' and s == 'stop' and l == false then
-    return template.whitespace(2)
-  elseif c == 'list' and s == 'continue' and l == false then
-    return '│' .. template.whitespace()
-  elseif c == 'field' and s == 'continue' and l == false then
-    return '║' .. template.whitespace()
-  elseif c == 'list' and s == 'continue' and l == true then
-    return '├─'
-  elseif c == 'field' and s == 'continue' and l == true then
-    return '╠═'
-  elseif c == 'list' and s == 'stop' and l == true then
-    return '└─'
-  elseif c == 'field' and s == 'stop' and l == true then
-    return '╚═'
-  end
-  return ''
-end
-
----
--- @treturn string
-function template.branches(level, connection_type)
-  local out = ''
-  for i = 1, level - 1  do
-    out = out .. template.branch('list', tree.state[i]['list'], false)
-    out = out .. template.branch('field', tree.state[i]['field'], false)
-  end
--- Format the last branches
-  if connection_type == 'list' then
-    out = out .. template.branch('list', tree.state[level]['list'], true)
-  else
-    out = out .. template.branch('list', tree.state[level]['list'], false)
-    out = out .. template.branch('field', tree.state[level]['field'], true)
-  end
-  return out
-end
-
----
--- @treturn string
-function template.print(text)
-  if options.channel == 'log' or options.channel == 'tex' then
-    output_file:write(text)
-  else
-    io.write(text)
-  end
 end
 
 --- Build the node tree.
@@ -824,7 +817,7 @@ function tree.format_field(head, field)
   if field == 'prev' or field == 'next' then
     out = node_extended.node_id(head[field])
   elseif field == 'subtype' then
-    out = template.underscore(node_extended.subtype(head))
+    out = format.underscore(node_extended.subtype(head))
   elseif
     field == 'width' or
     field == 'height' or
@@ -835,7 +828,7 @@ function tree.format_field(head, field)
   elseif field == 'char' then
     out = template.char(head[field])
   elseif field == 'glue_set' then
-    out = template.round(head[field])
+    out = format.number(head[field])
   elseif field == 'stretch' or field == 'shrink' then
     out = template.fill(head[field], head[field .. '_order'], field)
   else
@@ -900,11 +893,11 @@ function tree.analyze_fields(fields, level)
     end
     tree.set_state(level, 'field', connection_state)
     template.print(
-      template.node_begin() ..
+      format.node_begin() ..
       template.branches(level, 'field') ..
       template.key_value(field_name) ..
-      template.node_end() ..
-      template.new_line()
+      format.node_end() ..
+      format.new_line()
     )
     tree.analyze_list(recursion_node, level + 1)
   end
@@ -947,22 +940,22 @@ function tree.analyze_node(head, level)
   end
 
   template.print(
-    template.node_begin() ..
+    format.node_begin() ..
     out ..
-    template.node_end() ..
-    template.new_line()
+    format.node_end() ..
+    format.new_line()
   )
 
   local property = node.getproperty(head)
   if property then
     template.print(
-      template.node_begin() ..
+      format.node_begin() ..
       template.branches(level, 'field') ..
       '  ' ..
       template.colored_string('properties:', 'blue') .. ' ' ..
       template.table_inline(property) ..
-      template.node_end() ..
-      template.new_line()
+      format.node_end() ..
+      format.new_line()
     )
   end
 
@@ -983,7 +976,7 @@ end
 -- @tparam node head
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
-  template.print(template.line('short') .. template.new_line())
+  template.print(template.line('short') .. format.new_line())
 end
 
 --- Callback wrapper.
@@ -1376,7 +1369,7 @@ end
 
 ---
 function export.analyze(head)
-  template.print(template.new_line())
+  template.print(format.new_line())
   tree.analyze_list(head, 1)
 end
 
@@ -1385,7 +1378,7 @@ function export.print(head, opts)
   if opts and type(opts) == 'table' then
     export.set_options(opts)
   end
-  template.print(template.new_line())
+  template.print(format.new_line())
   tree.analyze_list(head, 1)
 end
 

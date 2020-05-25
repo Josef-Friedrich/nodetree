@@ -131,8 +131,8 @@
 	<td class="summary"><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.colored_string">template.colored_string (string, color, mode, background)</a></td>
-	<td class="summary"></td>
+	<td class="name" nowrap><a href="#template.colored_string">template.colored_string (text, color, mode, background)</a></td>
+	<td class="summary">Colorize a text string.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.length">template.length (input)</a></td>
@@ -140,16 +140,16 @@
   <code>1cm</code>)</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.table_inline">template.table_inline (o)</a></td>
-	<td class="summary"></td>
+	<td class="name" nowrap><a href="#template.table_inline">template.table_inline (table)</a></td>
+	<td class="summary">Convert a Lua table into a format string.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.key_value">template.key_value (key, value, color)</a></td>
-	<td class="summary"></td>
+	<td class="summary">Format a key value pair (<code>key: value, </code>).</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.char">template.char (input)</a></td>
-	<td class="summary"></td>
+	<td class="name" nowrap><a href="#template.char">template.char (char)</a></td>
+	<td class="summary">Format a single unicode character.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.type">template.type (type, id)</a></td>
@@ -233,6 +233,10 @@
 	<td class="summary"></td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#build_page_insert">build_page_insert (n, i)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#pre_linebreak_filter">pre_linebreak_filter (head, groupcode)</a></td>
 	<td class="summary"></td>
 	</tr>
@@ -310,6 +314,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#export.get_callback_name">export.get_callback_name (alias)</a></td>
 	<td class="summary">Get the real callback name from an alias string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#export.register">export.register (cb)</a></td>
+	<td class="summary">Register a callback.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#export.compile_include">export.compile_include (tex_markup)</a></td>
@@ -808,13 +816,17 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">color</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         A color name (<code>black</code>, <code>red</code>, <code>green</code>,
+   <code>yellow</code>, <code>blue</code>, <code>magenta</code>, <code>cyan</code>, <code>white</code>).
         </li>
         <li><span class="parameter">mode</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         <code>bright</code> or <code>dim</code>.
         </li>
         <li><span class="parameter">background</span>
-
+            <span class="types"><span class="type">boolean</span></span>
+         Colorize the background not the text.
         </li>
     </ul>
 
@@ -831,25 +843,30 @@
 </dd>
     <dt>
     <a name = "template.colored_string"></a>
-    <strong>template.colored_string (string, color, mode, background)</strong>
+    <strong>template.colored_string (text, color, mode, background)</strong>
     </dt>
     <dd>
-
+    Colorize a text string.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">string</span>
-
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         A text string.
         </li>
         <li><span class="parameter">color</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         A color name (<code>black</code>, <code>red</code>, <code>green</code>,
+   <code>yellow</code>, <code>blue</code>, <code>magenta</code>, <code>cyan</code>, <code>white</code>).
         </li>
         <li><span class="parameter">mode</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         <code>bright</code> or <code>dim</code>.
         </li>
         <li><span class="parameter">background</span>
-
+            <span class="types"><span class="type">boolean</span></span>
+         Colorize the background not the text.
         </li>
     </ul>
 
@@ -894,16 +911,17 @@
 </dd>
     <dt>
     <a name = "template.table_inline"></a>
-    <strong>template.table_inline (o)</strong>
+    <strong>template.table_inline (table)</strong>
     </dt>
     <dd>
-
+    Convert a Lua table into a format string.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">o</span>
-
+        <li><span class="parameter">table</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+         A table to generate a inline view of.
         </li>
     </ul>
 
@@ -923,19 +941,23 @@
     <strong>template.key_value (key, value, color)</strong>
     </dt>
     <dd>
-
+    Format a key value pair (<code>key: value, </code>).
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">key</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         A key
         </li>
         <li><span class="parameter">value</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a> or <span class="type">number</span></span>
+         A value
         </li>
         <li><span class="parameter">color</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         A color name (<code>black</code>, <code>red</code>, <code>green</code>,
+   <code>yellow</code>, <code>blue</code>, <code>magenta</code>, <code>cyan</code>, <code>white</code>).
         </li>
     </ul>
 
@@ -952,16 +974,17 @@
 </dd>
     <dt>
     <a name = "template.char"></a>
-    <strong>template.char (input)</strong>
+    <strong>template.char (char)</strong>
     </dt>
     <dd>
-
+    Format a single unicode character.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">input</span>
-
+        <li><span class="parameter">char</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         A single input character.
         </li>
     </ul>
 
@@ -1498,6 +1521,31 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">extrainfo</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "build_page_insert"></a>
+    <strong>build_page_insert (n, i)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">n</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">i</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
         </li>
@@ -2082,6 +2130,26 @@
 
 </dd>
     <dt>
+    <a name = "export.register"></a>
+    <strong>export.register (cb)</strong>
+    </dt>
+    <dd>
+    Register a callback.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cb</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "export.compile_include"></a>
     <strong>export.compile_include (tex_markup)</strong>
     </dt>
@@ -2154,7 +2222,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-25 10:30:18 </i>
+<i style="float:right;">Last updated 2020-05-25 18:23:18 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

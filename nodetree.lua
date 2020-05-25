@@ -396,7 +396,7 @@ end
 --- Format a key value pair (`key: value, `).
 --
 -- @tparam string key A key
--- @tparam string|number A value
+-- @tparam string|number value A value
 -- @tparam string color A color name (`black`, `red`, `green`,
 --   `yellow`, `blue`, `magenta`, `cyan`, `white`).
 --
@@ -417,7 +417,7 @@ end
 
 --- Format a single unicode character.
 --
--- @tparam string input A single input character.
+-- @tparam string char A single input character.
 --
 -- @treturn string
 function template.char(char)

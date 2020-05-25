@@ -184,8 +184,12 @@ function template.fill(number, order, field)
       output = '-'
     end
     return output .. string.format(
-      '%gfi%s', number / 2^16,
-      string.rep('l', order - 1)
+      '%g%s', number / 2^16,
+      template.colored_string(
+        'fi' .. string.rep('l', order - 1),
+        'white',
+        'dim'
+      )
     )
   else
     return template.length(number)

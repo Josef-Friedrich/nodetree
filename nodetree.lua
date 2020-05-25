@@ -995,7 +995,14 @@ local callbacks = {
     return true
   end,
 
-  build_page_insert = false,
+  ---
+  -- @tparam string n
+  -- @tparam string i
+  build_page_insert = function(n, i)
+    print('lol')
+    template.callback('build_page_insert', {n = n, i = i})
+    return 0
+  end,
 
   ---
   -- @tparam node head
@@ -1275,11 +1282,17 @@ end
 -- @treturn string The real callback name.
 function export.get_callback_name(alias)
   local callback_name
+  -- Listed as in the LuaTeX reference manual.
   if alias == 'contribute' or alias == 'contributefilter' then
     callback_name = 'contribute_filter'
 
-  elseif alias == 'buildpage' or alias == 'buildpagefilter' then
+  -- Formerly called buildpage, now there is a build_page_insert.
+  elseif alias == 'buildfilter' or alias == 'buildpagefilter' then
     callback_name = 'buildpage_filter'
+
+  -- Untested: I don’t know how to invoke this filter.
+  elseif alias == 'buildinsert' or alias == 'buildpageinsert' then
+    callback_name = 'build_page_insert'
 
   elseif alias == 'preline' or alias == 'prelinebreakfilter' then
     callback_name = 'pre_linebreak_filter'
@@ -1290,6 +1303,7 @@ function export.get_callback_name(alias)
   elseif alias == 'append' or alias == 'appendtovlistfilter' then
     callback_name = 'append_to_vlist_filter'
 
+  -- postlinebreak is not documented.
   elseif alias == 'postline' or alias == 'postlinebreak' or alias == 'postlinebreakfilter' then
     callback_name = 'post_linebreak_filter'
 
@@ -1329,13 +1343,10 @@ function export.get_callback_name(alias)
   else
     callback_name = alias
   end
-
-  print(callback_name)
-
   return check_callback_name(callback_name)
 end
 
----
+--- Register a callback.
 function export.register(cb)
   if options.engine == 'lualatex' then
     luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree')

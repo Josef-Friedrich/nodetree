@@ -53,7 +53,7 @@
   fontsize=\footnotesize,
 }
 
-\def\nodetreelua#1{\texttt{\scantokens{\catcode`\_=12\relax#1}}}
+\def\TmpLuaCodeInline#1{\texttt{\scantokens{\catcode`\_=12\relax#1}}}
 
 \def\secref#1{(\rightarrow\ \ref{#1})}
 
@@ -339,6 +339,8 @@ value pairs.
 The option |callback| is the most important setting of the package. It
 is possible to specify an alias to select the |callback|. Take a look
 the overview of callbacks (\rightarrow{} Figure \ref{fig:callback}).
+|nodetree| supports all node related callbacks as listed in the
+Lua\TeX reference manual.
 
 This macros process callback options:
 \cmd{\nodetreeregister}\marg{callbacks},
@@ -368,32 +370,89 @@ The same applies for the macro |\usepackage|:
 % Tabular callbacks
 %%
 
-\newcommand{\nodetreecallback}[3]{
-  \nodetreelua{#1} & \nodetreelua{#2} & \nodetreelua{#3} \\
+\newcommand{\TmpCallbackRow}[3]{
+  \TmpLuaCodeInline{#1} & \TmpLuaCodeInline{#2} & \TmpLuaCodeInline{\footnotesize#3} \\
 }
 
 \begin{figure}
+The callbacks are listed in the same order as in the Lua\TeX reference
+manual.
 
 \noindent
 \begin{tabular}{lll}
-\textbf{Alias (short)} & \textbf{Alias (longer)} & \textbf{Callback} \\
-\nodetreecallback{contribute}{contributefilter}{contribute_filter}
-\nodetreecallback{buildpage}{buildpagefilter}{buildpage_filter}
-\nodetreecallback{preline}{prelinebreakfilter}{pre_linebreak_filter}
-\nodetreecallback{line}{linebreakfilter}{linebreak_filter}
-\nodetreecallback{append}{appendtovlistfilter}{append_to_vlist_filter}
-\nodetreecallback{postline}{postlinebreakfilter}{post_linebreak_filter}
-\nodetreecallback{hpack}{hpackfilter}{hpack_filter}
-\nodetreecallback{vpack}{vpackfilter}{vpack_filter}
-\nodetreecallback{hpackq}{hpackquality}{hpack_quality}
-\nodetreecallback{vpackq}{vpackquality}{vpack_quality}
-\nodetreecallback{process}{processrule}{process_rule}
-\nodetreecallback{preout}{preoutputfilter}{pre_output_filter}
-\nodetreecallback{hyph}{hyphenate}{hyphenate}
-\nodetreecallback{liga}{ligaturing}{ligaturing}
-\nodetreecallback{kern}{kerning}{kerning}
-\nodetreecallback{insert}{insertlocalpar}{insert_local_par}
-\nodetreecallback{mhlist}{mlisttohlist}{mlist_to_hlist}
+\textbf{Callback} & \textbf{Alias} & \textbf{Alias (longer)} \\
+\TmpCallbackRow{contribute_filter}
+{contribute}
+{contributefilter}
+
+\TmpCallbackRow{buildpage_filter}
+{buildfilter} %
+{buildpagefilter}
+
+% new
+\TmpCallbackRow{build_page_insert}
+{buildinsert}
+{buildpageinsert}
+
+\TmpCallbackRow{pre_linebreak_filter}
+{preline}
+{prelinebreakfilter}
+
+\TmpCallbackRow{linebreak_filter}
+{line}
+{linebreakfilter}
+
+\TmpCallbackRow{append_to_vlist_filter}
+{append}
+{appendtovlistfilter}
+
+\TmpCallbackRow{post_linebreak_filter}
+{postline}
+{postlinebreakfilter}
+
+\TmpCallbackRow{hpack_filter}
+{hpack}
+{hpackfilter}
+
+\TmpCallbackRow{vpack_filter}
+{vpack}
+{vpackfilter}
+
+\TmpCallbackRow{hpack_quality}
+{hpackq}
+{hpackquality}
+
+\TmpCallbackRow{vpack_quality}
+{vpackq}
+{vpackquality}
+
+\TmpCallbackRow{process_rule}
+{process}
+{processrule}
+
+\TmpCallbackRow{pre_output_filter}
+{preout}
+{preoutputfilter}
+
+\TmpCallbackRow{hyphenate}
+{hyph}
+{}
+
+\TmpCallbackRow{ligaturing}
+{liga}
+{}
+
+\TmpCallbackRow{kerning}
+{kern}
+{}
+
+\TmpCallbackRow{insert_local_par}
+{insert}
+{insertlocalpar}
+
+\TmpCallbackRow{mlist_to_hlist}
+{mhlist}
+{mlisttohlist}
 \end{tabular}
 
 \caption{The callback aliases}

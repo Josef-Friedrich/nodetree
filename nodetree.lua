@@ -147,7 +147,7 @@ local format = {
     end
     local new_line
     if options.channel == 'tex' then
-      new_line = '\\par\n'
+      new_line = '\\par{}'
     else
       new_line = '\n'
     end
@@ -1378,11 +1378,10 @@ function export.compile_include(tex_markup)
   output_file:write(prefix .. tex_markup .. suffix)
   output_file:close()
   local status, error = os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
-
   local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'rb'))
   local include_content = include_file:read("*all")
   include_file:close()
-  print(include_content)
+  tex.print(include_content:gsub("[\r\n]", ""))
 end
 
 ---
@@ -1404,6 +1403,15 @@ end
 ---
 function export.format_dim(sp)
   return template.length(sp)
+end
+
+--- Check for `--shell-escape`
+--
+function export.check_shell_escape()
+  local info = status.list()
+  if info.shell_escape == 0 then
+    tex.error('Package "nodetree-embed": You have to use the --shell-escape option')
+  end
 end
 
 return export

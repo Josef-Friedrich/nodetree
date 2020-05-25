@@ -2,7 +2,7 @@
 \ProvidesPackage{nodetree-embed}
   [2020/05/24 v1.2 Embed node trees into a LaTeX document]
 
-\RequirePackage{xcolor,mdframed,expl3,xparse}
+\RequirePackage{xcolor,mdframed,expl3,xparse,fontspec}
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
@@ -10,21 +10,29 @@
   prefix=NTK@
 }
 \directlua{
+  nodetree = require('nodetree')
+  nodetree.check_shell_escape()
   nodetree.set_option('engine', 'lualatex')
 }
 \ProcessKeyvalOptions{NT}
+
 \DeclareStringOption[term]{channel}
 \define@key{NT}{channel}[]{\nodetreeoption[channel]{#1}}
 \DeclareStringOption[postlinebreak]{callback}
 \define@key{NT}{callback}[]{\nodetreeoption[callback]{#1}}
+
 \DeclareStringOption[1]{verbosity}
 \define@key{NT}{verbosity}[]{\nodetreeoption[verbosity]{#1}}
+
 \DeclareStringOption[colored]{color}
 \define@key{NT}{color}[]{\nodetreeoption[color]{#1}}
+
 \DeclareStringOption[1]{unit}
 \define@key{NT}{unit}[]{\nodetreeoption[unit]{#1}}
+
 \DeclareStringOption[1]{decimalplaces}
 \define@key{NT}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
+
 \DeclareStringOption[smyck]{theme}
 \DeclareStringOption[dark]{thememode}
 \DeclareStringOption[Ubuntu Mono]{font}
@@ -172,6 +180,7 @@
   }
 }
 \ExplSyntaxOff
+
 \def\NT@fonts{
   \bfseries%
   \NTK@fontsize%
@@ -193,16 +202,21 @@
 }{
   \end{mdframed}%
 }
+
 \newcommand{\nodetreeterminalemulator}[2][]{
   \setkeys{NT}{#1}
   \begin{nodetreeexample}
   \input{#2.nttex}
   \end{nodetreeexample}
 }
-\NewDocumentEnvironment { nodetreeShow } { +b } {
-  \directlua{
-    nodetree.compile_include('\luaescapestring{\unexpanded{#1}}')
-  }
+
+\NewDocumentEnvironment { nodetreeembed } { O{} +b } {
+  \begin{nodetreeexample}
+    \directlua{
+      nodetree = require('nodetree')
+      nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
+    }
+  \end{nodetreeexample}
 }{}
 
 \endinput

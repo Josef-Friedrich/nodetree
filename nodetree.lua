@@ -29,7 +29,7 @@ local example_counter = 0
 --- The default options
 local options = {
   verbosity = 1,
-  callback = 'postlinebreak',
+  callback = 'post_linebreak_filter',
   engine = 'luatex',
   color = 'colored',
   decimalplaces = 2,
@@ -1212,7 +1212,10 @@ local callbacks = {
 
 local export = {}
 
----
+--- Set a single option kev value pair.
+--
+-- @tparam string key The key of the option pair.
+-- @tparam number|string value The value of the option pair.
 function export.set_option(key, value)
   if not options then
     options = {}
@@ -1245,62 +1248,91 @@ function export.get_option(key)
   end
 end
 
----
+--- Check if the given callback name exists.
+--
+-- Throw an error if it doen’t.
+--
+-- @tparam string callback_name The name of a callback to check.
+--
+-- @treturn string The unchanged input of the function.
+local function check_callback_name(callback_name)
+  local info = callback.list()
+  if info[callback_name] == nil then
+    tex.error(
+      'Package "nodetree": Unkown callback name or callback alias: "' ..
+      callback_name ..
+      '"'
+    )
+  end
+  return callback_name
+end
+
+--- Get the real callback name from an alias string.
+--
+-- @tparam string alias The alias of a callback name or the callback
+-- name itself.
+--
+-- @treturn string The real callback name.
 function export.get_callback_name(alias)
+  local callback_name
   if alias == 'contribute' or alias == 'contributefilter' then
-    return 'contribute_filter'
+    callback_name = 'contribute_filter'
 
   elseif alias == 'buildpage' or alias == 'buildpagefilter' then
-    return 'buildpage_filter'
+    callback_name = 'buildpage_filter'
 
   elseif alias == 'preline' or alias == 'prelinebreakfilter' then
-    return 'pre_linebreak_filter'
+    callback_name = 'pre_linebreak_filter'
 
   elseif alias == 'line' or alias == 'linebreakfilter' then
-    return 'linebreak_filter'
+    callback_name = 'linebreak_filter'
 
   elseif alias == 'append' or alias == 'appendtovlistfilter' then
-    return 'append_to_vlist_filter'
+    callback_name = 'append_to_vlist_filter'
 
-  elseif alias == 'postline' or alias == 'postlinebreakfilter' then
-    return 'post_linebreak_filter'
+  elseif alias == 'postline' or alias == 'postlinebreak' or alias == 'postlinebreakfilter' then
+    callback_name = 'post_linebreak_filter'
 
   elseif alias == 'hpack' or alias == 'hpackfilter' then
-    return 'hpack_filter'
+    callback_name = 'hpack_filter'
 
   elseif alias == 'vpack' or alias == 'vpackfilter' then
-    return 'vpack_filter'
+    callback_name = 'vpack_filter'
 
   elseif alias == 'hpackq' or alias == 'hpackquality' then
-    return 'hpack_quality'
+    callback_name = 'hpack_quality'
 
   elseif alias == 'vpackq' or alias == 'vpackquality' then
-    return 'vpack_quality'
+    callback_name = 'vpack_quality'
 
   elseif alias == 'process' or alias == 'processrule' then
-    return 'process_rule'
+    callback_name = 'process_rule'
 
   elseif alias == 'preout' or alias == 'preoutputfilter' then
-    return 'pre_output_filter'
+    callback_name = 'pre_output_filter'
 
   elseif alias == 'hyph' or alias == 'hyphenate' then
-    return 'hyphenate'
+    callback_name = 'hyphenate'
 
   elseif alias == 'liga' or alias == 'ligaturing' then
-    return 'ligaturing'
+    callback_name = 'ligaturing'
 
   elseif alias == 'kern' or alias == 'kerning' then
-   return 'kerning'
+    callback_name = 'kerning'
 
   elseif alias == 'insert' or alias == 'insertlocalpar' then
-    return 'insert_local_par'
+    callback_name = 'insert_local_par'
 
   elseif alias == 'mhlist' or alias == 'mlisttohlist' then
-    return 'mlist_to_hlist'
+    callback_name = 'mlist_to_hlist'
 
   else
-    return 'post_linebreak_filter'
+    callback_name = alias
   end
+
+  print(callback_name)
+
+  return check_callback_name(callback_name)
 end
 
 ---

@@ -193,8 +193,9 @@ Import the Lua module of the package inside
 \mintinline{latex}{\directlua{}}
 with this command:
 \mintinline{lua}{local nodetree = require('nodetree')}.
-Then use the Lua function \mintinline{lua}{nodetree.print(head, options)} to debug nodes
-inside your Lua code.
+Then use the Lua function
+\mintinline{lua}{nodetree.print(head, options)}
+to debug nodes inside your Lua code.
 
 \begin{minted}{lua}
 local nodetree = require('nodetree')
@@ -206,6 +207,7 @@ rule1.depth  = 10 * 65536
 nodetree.print(vbox)
 \end{minted}
 
+\noindent
 The function \mintinline{lua}{nodetree.print()} takes as a second
 argument a Lua table to configure the output.
 
@@ -213,12 +215,13 @@ argument a Lua table to configure the output.
 nodetree.print(vbox, { verbosity = 2, unit = 'cm' })
 \end{minted}
 
+\noindent
 This are the default options:
 
 \begin{minted}{lua}
 options =  {
   verbosity = 1,
-  callback = 'postlinebreak',
+  callback = 'post_linebreak_filter',
   engine = 'luatex',
   color = 'colored',
   decimalplaces = 2,
@@ -227,6 +230,7 @@ options =  {
 }
 \end{minted}
 
+\noindent
 The following code snippet demonstrates the usage in Lua\TeX{}.
 |head| is the current node.
 
@@ -234,7 +238,7 @@ The following code snippet demonstrates the usage in Lua\TeX{}.
   \directlua{
   local nodetree = require('nodetree')
   local test = function (head)
-    nodetree.analyze(head)
+    nodetree.print(head)
   end
   callback.register('post_linebreak_filter', test)
 }
@@ -243,6 +247,7 @@ Lorem ipsum dolor.
 \bye
 \end{minted}
 
+\noindent
 This example illustrates how the function has to be applied in
 Lua\LaTeX{}.
 
@@ -253,8 +258,9 @@ Lua\LaTeX{}.
 \begin{document}
 
 \directlua{
+  local nodetree = require('nodetree')
   local test = function (head)
-    nodetree.analyze(head)
+    nodetree.print(head)
   end
   luatexbase.add_to_callback('post_linebreak_filter', test, 'test')
 }
@@ -330,10 +336,9 @@ value pairs.
 \subsection{Option \texttt{callback}}
 \label{sec:option-callback}
 
-The option |callback| is the most important setting of the package. You
-have to specify one alias to select the |callback|. Because of the
-underscores the callback name contains it can not set by its technical
-name (\rightarrow{} Figure \ref{fig:callback}).
+The option |callback| is the most important setting of the package. It
+is possible to specify an alias to select the |callback|. Take a look
+the overview of callbacks (\rightarrow{} Figure \ref{fig:callback}).
 
 This macros process callback options:
 \cmd{\nodetreeregister}\marg{callbacks},

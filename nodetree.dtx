@@ -269,6 +269,16 @@ Lorem ipsum dolor.
 \end{document}
 \end{minted}
 
+\subsection{The package nodetree-embed}
+
+The single purpose of this auxilliary package is to provide a termial
+like view that mimiks the output of nodetree in a terminal and that
+can be embeded in a Lua\LaTeX file. You have to compile documents
+using this embeded view with the option --shell-escape. The main
+environment is nodetreeembed. Markup inside this environment is
+written into a temporary \LaTeX file. This file is compiled in the
+background and the nodetree output is embded into this view.
+
 %-----------------------------------------------------------------------
 % Macros
 %-----------------------------------------------------------------------

@@ -285,6 +285,11 @@ template.node_colors = {
 -- | oncyan     | 46 |
 -- | onwhite    | 47 |
 --
+-- @tparam string color A color name (`black`, `red`, `green`,
+--   `yellow`, `blue`, `magenta`, `cyan`, `white`).
+-- @tparam string mode `bright` or `dim`.
+-- @tparam boolean background Colorize the background not the text.
+--
 -- @treturn string
 function template.color(color, mode, background)
   if options.color ~= 'colored' then
@@ -323,9 +328,16 @@ function template.color(color, mode, background)
   return out .. format.color_code(code)
 end
 
----
+--- Colorize a text string.
+--
+-- @tparam string text A text string.
+-- @tparam string color A color name (`black`, `red`, `green`,
+--   `yellow`, `blue`, `magenta`, `cyan`, `white`).
+-- @tparam string mode `bright` or `dim`.
+-- @tparam boolean background Colorize the background not the text.
+--
 -- @treturn string
-function template.colored_string(string, color, mode, background)
+function template.colored_string(text, color, mode, background)
   if options.channel == 'tex' then
     return '\\textcolor{' ..
       format.color_tex(color, mode, background) ..
@@ -333,7 +345,7 @@ function template.colored_string(string, color, mode, background)
       string ..
       '}'
   else
-   return template.color(color, mode, background) .. string .. template.color('reset')
+   return template.color(color, mode, background) .. text .. template.color('reset')
   end
 end
 
@@ -346,29 +358,48 @@ end
 function template.length (input)
   input = tonumber(input)
   input = input / tex.sp('1' .. options.unit)
-  return string.format('%g%s', format.number(input), options.unit)
+  return string.format(
+    '%g%s',
+    format.number(input),
+    template.colored_string(options.unit, 'white', 'dim')
+  )
 end
 
----
+--- Convert a Lua table into a format string.
+--
+-- @tparam table table A table to generate a inline view of.
+--
 -- @treturn string
-function template.table_inline(o)
+function template.table_inline(table)
   local tex_escape = ''
   if options.channel == 'tex' then
     tex_escape = '\\'
   end
-  if type(o) == 'table' then
-    local s = tex_escape .. '{ '
-    for k,v in pairs(o) do
-        if type(k) ~= 'number' then k = '\''..k..'\'' end
-        s = s .. '['..k..'] = ' .. template.table_inline(v) .. ', '
+  if type(table) == 'table' then
+    local output = tex_escape .. '{'
+    local kv_list = ''
+    for key, value in pairs(table) do
+        if type(key) ~= 'numbers' then
+          key = '\'' ..
+            template.colored_string(key, 'cyan', 'dim') .. '\''
+        end
+        kv_list = kv_list .. '[' .. key .. '] = ' ..
+          template.table_inline(value) .. ', '
     end
-    return s .. tex_escape .. '} '
+    output = output .. kv_list:gsub(', $', '')
+    return output .. tex_escape .. '}'
   else
-    return tostring(o)
+    return tostring(table)
   end
 end
 
----
+--- Format a key value pair (`key: value, `).
+--
+-- @tparam string key A key
+-- @tparam string|number A value
+-- @tparam string color A color name (`black`, `red`, `green`,
+--   `yellow`, `blue`, `magenta`, `cyan`, `white`).
+--
 -- @treturn string
 function template.key_value(key, value, color)
   if type(color) ~= 'string' then
@@ -941,13 +972,15 @@ function tree.analyze_node(head, level)
     end
   end
   if output_fields ~= '' then
-    out = out .. output_fields:gsub(', $', '')
+    out = out .. output_fields
   end
 
   -- Append the attributes output if available
   if attributes ~= '' then
     out = out .. template.key_value('attr', attributes, 'blue')
   end
+
+  out = out:gsub(', $', '')
 
   template.print(
     format.node_begin() ..

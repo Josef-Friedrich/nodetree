@@ -13,6 +13,8 @@
 --   `previous` fields, e. g. `head`, `pre`.
 -- @module nodetree
 
+-- luacheck: globals node tex luatexbase lfs callback os unicode status modules
+
 if not modules then modules = { } end modules ['nodetree'] = {
   version   = '1.2',
   comment   = 'nodetree',
@@ -90,7 +92,8 @@ local format = {
   ---
   -- @treturn string
   whitespace = function(count)
-    local whitespace, out = '', ''
+    local whitespace
+    local output = ''
     if options.channel == 'tex' then
       whitespace = '\\hspace{0.5em}'
     else
@@ -99,10 +102,10 @@ local format = {
     if not count then
       count = 1
     end
-    for i = 1, count do
-      out = out .. whitespace
+    for _ = 1, count do
+      output = output .. whitespace
     end
-    return out
+    return output
   end,
 
   ---
@@ -113,7 +116,7 @@ local format = {
 
   ---
   -- @treturn string
-  color_tex = function(color, mode, background)
+  color_tex = function(color, mode)
     if not mode then mode = '' end
     return 'NT' .. color .. mode
   end,
@@ -141,7 +144,7 @@ local format = {
   ---
   -- @treturn string
   new_line = function(count)
-    local out = ''
+    local output = ''
     if not count then
       count = 1
     end
@@ -152,10 +155,10 @@ local format = {
       new_line = '\n'
     end
 
-    for i = 1, count do
-      out = out .. new_line
+    for _ = 1, count do
+      output = output .. new_line
     end
-    return out
+    return output
   end,
 
   ---
@@ -173,14 +176,14 @@ local template = {}
 ---
 -- @treturn string
 function template.fill(number, order, field)
-  local out
+  local output
   if order ~= nil and order ~= 0 then
     if field == 'stretch' then
-      out = '+'
+      output = '+'
     else
-      out = '-'
+      output = '-'
     end
-    return out .. string.format(
+    return output .. string.format(
       '%gfi%s', number / 2^16,
       string.rep('l', order - 1)
     )
@@ -296,13 +299,13 @@ function template.color(color, mode, background)
     return ''
   end
 
-  local out = ''
-  local code = ''
+  local output = ''
+  local code
 
   if mode == 'bright' then
-    out = format.color_code(1)
+    output = format.color_code(1)
   elseif mode == 'dim' then
-    out = format.color_code(2)
+    output = format.color_code(2)
   end
 
   if not background then
@@ -325,7 +328,7 @@ function template.color(color, mode, background)
     elseif color == 'white' then code = 47
     else code = 40 end
   end
-  return out .. format.color_code(code)
+  return output .. format.color_code(code)
 end
 
 --- Colorize a text string.
@@ -408,11 +411,11 @@ function template.key_value(key, value, color)
   if options.channel == 'tex' then
     key = format.underscore(key)
   end
-  local out = template.colored_string(key .. ':', color)
+  local output = template.colored_string(key .. ':', color)
   if value then
-    out = out .. ' ' .. value .. ', '
+    output = output .. ' ' .. value .. ', '
   end
-  return out
+  return output
 end
 
 --- Format a single unicode character.
@@ -432,18 +435,18 @@ end
 ---
 -- @treturn string
 function template.type(type, id)
-  local out = ''
+  local output
   if options.channel == 'tex' then
-    out = format.underscore(type)
+    output = format.underscore(type)
   else
-    out = type
+    output = type
   end
-  out = string.upper(out)
+  output = string.upper(output)
   if options.verbosity > 1 then
-    out = out .. format.type_id(id)
+    output = output .. format.type_id(id)
   end
   return template.colored_string(
-    out .. format.whitespace(),
+    output .. format.whitespace(),
     template.node_colors[type][1],
     template.node_colors[type][2]
   )
@@ -452,13 +455,13 @@ end
 ---
 -- @treturn string
 function template.line(length)
-  local out = ''
+  local output
   if length == 'long' then
-    out = '------------------------------------------'
+    output = '------------------------------------------'
   else
-    out = '-----------------------'
+    output = '-----------------------'
   end
-    return out .. format.new_line()
+    return output .. format.new_line()
 end
 
 ---
@@ -515,19 +518,19 @@ end
 ---
 -- @treturn string
 function template.branches(level, connection_type)
-  local out = ''
+  local output = ''
   for i = 1, level - 1  do
-    out = out .. template.branch('list', tree_state[i]['list'], false)
-    out = out .. template.branch('field', tree_state[i]['field'], false)
+    output = output .. template.branch('list', tree_state[i]['list'], false)
+    output = output .. template.branch('field', tree_state[i]['field'], false)
   end
 -- Format the last branches
   if connection_type == 'list' then
-    out = out .. template.branch('list', tree_state[level]['list'], true)
+    output = output .. template.branch('list', tree_state[level]['list'], true)
   else
-    out = out .. template.branch('list', tree_state[level]['list'], false)
-    out = out .. template.branch('field', tree_state[level]['field'], true)
+    output = output .. template.branch('list', tree_state[level]['list'], false)
+    output = output .. template.branch('field', tree_state[level]['field'], true)
   end
-  return out
+  return output
 end
 
 ---
@@ -793,17 +796,16 @@ function node_extended.subtype(n)
   local typ = node.type(n.id)
   local subtypes = get_node_subtypes()
 
-  local out = ''
+  local output
   if subtypes[typ] and subtypes[typ][n.subtype] then
-    out = subtypes[typ][n.subtype]
+    output = subtypes[typ][n.subtype]
     if options.verbosity > 1 then
-      out = out .. format.type_id(n.subtype)
+      output = output .. format.type_id(n.subtype)
     end
-    return out
+    return output
   else
     return tostring(n.subtype)
   end
-  assert(false)
 end
 
 --- Build the node tree.
@@ -817,7 +819,7 @@ local tree = {}
 --
 -- @treturn string
 function tree.format_field(head, field)
-  local out = ''
+  local output
 -- Character "0" should be printed in a tree, because in TeX fonts the
 -- 0 slot usually has a symbol.
   if not head[field] or (head[field] == 0 and field ~= "char") then
@@ -847,27 +849,27 @@ function tree.format_field(head, field)
   end
 
   if field == 'prev' or field == 'next' then
-    out = node_extended.node_id(head[field])
+    output = node_extended.node_id(head[field])
   elseif field == 'subtype' then
-    out = format.underscore(node_extended.subtype(head))
+    output = format.underscore(node_extended.subtype(head))
   elseif
     field == 'width' or
     field == 'height' or
     field == 'depth' or
     field == 'kern' or
     field == 'shift' then
-    out = template.length(head[field])
+    output = template.length(head[field])
   elseif field == 'char' then
-    out = template.char(head[field])
+    output = template.char(head[field])
   elseif field == 'glue_set' then
-    out = format.number(head[field])
+    output = format.number(head[field])
   elseif field == 'stretch' or field == 'shrink' then
-    out = template.fill(head[field], head[field .. '_order'], field)
+    output = template.fill(head[field], head[field .. '_order'], field)
   else
-    out = tostring(head[field])
+    output = tostring(head[field])
   end
 
-  return template.key_value(field, out)
+  return template.key_value(field, output)
 end
 
 ---
@@ -882,15 +884,15 @@ function tree.format_attributes(head)
   if not head then
     return ''
   end
-  local out = ''
+  local output = ''
   local attr = head.next
   while attr do
     if attr.number ~= 0 or (attr.number == 0 and attr.value ~= 0) then
-      out = out .. tostring(attr.number) .. '=' .. tostring(attr.value) .. ' '
+      output = output .. tostring(attr.number) .. '=' .. tostring(attr.value) .. ' '
     end
     attr = attr.next
   end
-  return out
+  return output
 end
 
 ---
@@ -911,7 +913,7 @@ end
 -- @tparam number level
 function tree.analyze_fields(fields, level)
   local max = 0
-  local connection_state = ''
+  local connection_state
   for _ in pairs(fields) do
     max = max + 1
   end
@@ -940,17 +942,17 @@ end
 -- @tparam number level
 function tree.analyze_node(head, level)
   local connection_state
-  local out = ''
+  local output
   if head.next then
     connection_state = 'continue'
   else
     connection_state = 'stop'
   end
   tree.set_state(level, 'list', connection_state)
-  out = template.branches(level, 'list')
+  output = template.branches(level, 'list')
     .. template.type(node.type(head.id), head.id)
   if options.verbosity > 1 then
-    out = out .. template.key_value('no', node_extended.node_id(head))
+    output = output .. template.key_value('no', node_extended.node_id(head))
   end
 
   -- We store the attributes output to append it to the field list.
@@ -961,7 +963,7 @@ function tree.analyze_node(head, level)
 
   -- Inline fields, for example: char: 'm', width: 25pt, height: 13.33pt,
   local output_fields = ''
-  for field_id, field_name in pairs(node.fields(head.id, head.subtype)) do
+  for _, field_name in pairs(node.fields(head.id, head.subtype)) do
     if field_name == 'attr' then
       attributes = tree.format_attributes(head.attr)
     elseif field_name ~= 'next' and field_name ~= 'prev' and
@@ -972,19 +974,19 @@ function tree.analyze_node(head, level)
     end
   end
   if output_fields ~= '' then
-    out = out .. output_fields
+    output = output .. output_fields
   end
 
   -- Append the attributes output if available
   if attributes ~= '' then
-    out = out .. template.key_value('attr', attributes, 'blue')
+    output = output .. template.key_value('attr', attributes, 'blue')
   end
 
-  out = out:gsub(', $', '')
+  output = output:gsub(', $', '')
 
   template.print(
     format.node_begin() ..
-    out ..
+    output ..
     format.node_end() ..
     format.new_line()
   )
@@ -1397,7 +1399,7 @@ function export.register(cb)
   if options.engine == 'lualatex' then
     luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree')
   else
-    id, error = callback.register(cb, callbacks[cb])
+    callback.register(cb, callbacks[cb])
   end
 end
 
@@ -1421,7 +1423,7 @@ function export.unregister(cb)
   if options.engine == 'lualatex' then
     luatexbase.remove_from_callback(cb, 'nodetree')
   else
-    id, error = callback.register(cb, nil)
+    callback.register(cb, nil)
   end
 end
 
@@ -1438,7 +1440,7 @@ function export.execute()
   if options.engine == 'lualatex' then
     luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'nodetree')
   else
-    id, error = callback.register(c, callbacks.post_linebreak_filter)
+    callback.register(c, callbacks.post_linebreak_filter)
   end
 end
 
@@ -1465,7 +1467,7 @@ function export.compile_include(tex_markup)
   local suffix = '\n\\end{document}'
   output_file:write(prefix .. tex_markup .. suffix)
   output_file:close()
-  local status, error = os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
+  os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
   local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'rb'))
   local include_content = include_file:read("*all")
   include_file:close()

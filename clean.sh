@@ -16,9 +16,6 @@ _remove() {
 for i in $EXT; do
 	_remove $i
 done
-
-rm -f nodetree.sty
-rm -f nodetree.tex
 '
 
 if [ "$1" = 'install' ]; then

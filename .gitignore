@@ -13,7 +13,6 @@
 *.fls
 *.toc
 *.tar.gz
-nodetree.tex
 *.bbl
 *.bcf
 *.blg

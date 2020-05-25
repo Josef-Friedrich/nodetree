@@ -359,7 +359,7 @@ function template.table_inline(o)
   if type(o) == 'table' then
     local s = tex_escape .. '{ '
     for k,v in pairs(o) do
-        if type(k) ~= 'number' then k = '"'..k..'"' end
+        if type(k) ~= 'number' then k = '\''..k..'\'' end
         s = s .. '['..k..'] = ' .. template.table_inline(v) .. ', '
     end
     return s .. tex_escape .. '} '
@@ -379,19 +379,23 @@ function template.key_value(key, value, color)
   end
   local out = template.colored_string(key .. ':', color)
   if value then
-    out = out .. ' ' .. value .. '; '
+    out = out .. ' ' .. value .. ', '
   end
   return out
 end
 
----
+--- Format a single unicode character.
+--
+-- @tparam string input A single input character.
+--
 -- @treturn string
-function template.char(input)
-  input = string.format('%q', unicode.utf8.char(input))
+function template.char(char)
+  char = string.format('%s', unicode.utf8.char(char))
+  char = '\'' .. char .. '\''
   if options.channel == 'tex' then
-    input = format.escape(input)
+    char = format.escape(char)
   end
-  return input
+  return char
 end
 
 ---
@@ -917,21 +921,30 @@ function tree.analyze_node(head, level)
   if options.verbosity > 1 then
     out = out .. template.key_value('no', node_extended.node_id(head))
   end
--- We store the attributes output to append it to the field list.
+
+  -- We store the attributes output to append it to the field list.
   local attributes
--- We store fields which are nodes for later treatment.
+
+  -- We store fields which are nodes for later treatment.
   local fields = {}
+
+  -- Inline fields, for example: char: 'm', width: 25pt, height: 13.33pt,
+  local output_fields = ''
   for field_id, field_name in pairs(node.fields(head.id, head.subtype)) do
     if field_name == 'attr' then
       attributes = tree.format_attributes(head.attr)
-    elseif field_name ~= 'next' and      field_name ~= 'prev' and
+    elseif field_name ~= 'next' and field_name ~= 'prev' and
       node.is_node(head[field_name]) then
       fields[field_name] = head[field_name]
     else
-      out = out .. tree.format_field(head, field_name)
+      output_fields = output_fields .. tree.format_field(head, field_name)
     end
   end
--- Append the attributes output if available
+  if output_fields ~= '' then
+    out = out .. output_fields:gsub(', $', '')
+  end
+
+  -- Append the attributes output if available
   if attributes ~= '' then
     out = out .. template.key_value('attr', attributes, 'blue')
   end

@@ -168,10 +168,213 @@ local format = {
   end
 }
 
+--- Print the output to stdout or write it into a file (`output_file`).
+-- New text is appended.
+--
+-- @tparam string text A text string.
+--
+local function nodetree_print(text)
+  if options.channel == 'log' or options.channel == 'tex' then
+    output_file:write(text)
+  else
+    io.write(text)
+  end
+end
+
 --- Template functions.
 -- @section template
 
-local template = {}
+local template = {
+  node_colors = {
+    hlist = {'red', 'bright'},
+    vlist = {'green', 'bright'},
+    rule = {'blue', 'bright'},
+    ins = {'blue'},
+    mark = {'magenta'},
+    adjust = {'cyan'},
+    boundary = {'red', 'bright'},
+    disc = {'green', 'bright'},
+    whatsit = {'yellow', 'bright'},
+    local_par = {'blue', 'bright'},
+    dir = {'magenta', 'bright'},
+    math = {'cyan', 'bright'},
+    glue = {'magenta', 'bright'},
+    kern = {'green', 'bright'},
+    penalty = {'yellow', 'bright'},
+    unset = {'blue'},
+    style = {'magenta'},
+    choice = {'cyan'},
+    noad = {'red'},
+    radical = {'green'},
+    fraction = {'yellow'},
+    accent = {'blue'},
+    fence = {'magenta'},
+    math_char = {'cyan'},
+    sub_box = {'red', 'bright'},
+    sub_mlist = {'green', 'bright'},
+    math_text_char = {'yellow', 'bright'},
+    delim = {'blue', 'bright'},
+    margin_kern = {'magenta', 'bright'},
+    glyph = {'cyan', 'bright'},
+    align_record = {'red'},
+    pseudo_file = {'green'},
+    pseudo_line = {'yellow'},
+    page_insert = {'blue'},
+    split_insert = {'magenta'},
+    expr_stack = {'cyan'},
+    nested_list = {'red'},
+    span = {'green'},
+    attribute = {'yellow'},
+    glue_spec = {'magenta'},
+    attribute_list = {'cyan'},
+    temp = {'magenta'},
+    align_stack = {'red', 'bright'},
+    movement_stack = {'green', 'bright'},
+    if_stack = {'yellow', 'bright'},
+    unhyphenated = {'magenta', 'bright'},
+    hyphenated = {'cyan', 'bright'},
+    delta = {'red'},
+    passive = {'green'},
+    shape = {'yellow'},
+  },
+
+  ---
+  -- [SGR (Select Graphic Rendition) Parameters](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters)
+  --
+  -- __attributes__
+  --
+  -- | color      |code|
+  -- |------------|----|
+  -- | reset      |  0 |
+  -- | clear      |  0 |
+  -- | bright     |  1 |
+  -- | dim        |  2 |
+  -- | underscore |  4 |
+  -- | blink      |  5 |
+  -- | reverse    |  7 |
+  -- | hidden     |  8 |
+  --
+  -- __foreground__
+  --
+  -- | color      |code|
+  -- |------------|----|
+  -- | black      | 30 |
+  -- | red        | 31 |
+  -- | green      | 32 |
+  -- | yellow     | 33 |
+  -- | blue       | 34 |
+  -- | magenta    | 35 |
+  -- | cyan       | 36 |
+  -- | white      | 37 |
+  --
+  -- __background__
+  --
+  -- | color      |code|
+  -- |------------|----|
+  -- | onblack    | 40 |
+  -- | onred      | 41 |
+  -- | ongreen    | 42 |
+  -- | onyellow   | 43 |
+  -- | onblue     | 44 |
+  -- | onmagenta  | 45 |
+  -- | oncyan     | 46 |
+  -- | onwhite    | 47 |
+  --
+  -- @tparam string color A color name (`black`, `red`, `green`,
+  --   `yellow`, `blue`, `magenta`, `cyan`, `white`).
+  -- @tparam string mode `bright` or `dim`.
+  -- @tparam boolean background Colorize the background not the text.
+  --
+  -- @treturn string
+  color = function(color, mode, background)
+    if options.color ~= 'colored' then
+      return ''
+    end
+
+    local output = ''
+    local code
+
+    if mode == 'bright' then
+      output = format.color_code(1)
+    elseif mode == 'dim' then
+      output = format.color_code(2)
+    end
+
+    if not background then
+      if color == 'reset' then code = 0
+      elseif color == 'red' then code = 31
+      elseif color == 'green' then code = 32
+      elseif color == 'yellow' then code = 33
+      elseif color == 'blue' then code = 34
+      elseif color == 'magenta' then code = 35
+      elseif color == 'cyan' then code = 36
+      else code = 37 end
+    else
+      if color == 'black' then code = 40
+      elseif color == 'red' then code = 41
+      elseif color == 'green' then code = 42
+      elseif color == 'yellow' then code = 43
+      elseif color == 'blue' then code = 44
+      elseif color == 'magenta' then code = 45
+      elseif color == 'cyan' then code = 46
+      elseif color == 'white' then code = 47
+      else code = 40 end
+    end
+    return output .. format.color_code(code)
+  end,
+
+  --- Format a single unicode character.
+  --
+  -- @tparam string char A single input character.
+  --
+  -- @treturn string
+  char = function(char)
+    char = string.format('%s', unicode.utf8.char(char))
+    char = '\'' .. char .. '\''
+    if options.channel == 'tex' then
+      char = format.escape(char)
+    end
+    return char
+  end,
+
+  ---
+  -- @treturn string
+  line = function(length)
+    local output
+    if length == 'long' then
+      output = '------------------------------------------'
+    else
+      output = '-----------------------'
+    end
+      return output .. format.new_line()
+  end,
+
+  ---
+  -- @treturn string
+  branch = function(connection_type, connection_state, last)
+    local c = connection_type
+    local s = connection_state
+    local l = last
+    if c == 'list' and s == 'stop' and l == false then
+      return format.whitespace(2)
+    elseif c == 'field' and s == 'stop' and l == false then
+      return format.whitespace(2)
+    elseif c == 'list' and s == 'continue' and l == false then
+      return '│' .. format.whitespace()
+    elseif c == 'field' and s == 'continue' and l == false then
+      return '║' .. format.whitespace()
+    elseif c == 'list' and s == 'continue' and l == true then
+      return '├─'
+    elseif c == 'field' and s == 'continue' and l == true then
+      return '╠═'
+    elseif c == 'list' and s == 'stop' and l == true then
+      return '└─'
+    elseif c == 'field' and s == 'stop' and l == true then
+      return '╚═'
+    end
+    return ''
+  end,
+}
 
 ---
 -- @treturn string
@@ -194,145 +397,6 @@ function template.fill(number, order, field)
   else
     return template.length(number)
   end
-end
-
----
-template.node_colors = {
-  hlist = {'red', 'bright'},
-  vlist = {'green', 'bright'},
-  rule = {'blue', 'bright'},
-  ins = {'blue'},
-  mark = {'magenta'},
-  adjust = {'cyan'},
-  boundary = {'red', 'bright'},
-  disc = {'green', 'bright'},
-  whatsit = {'yellow', 'bright'},
-  local_par = {'blue', 'bright'},
-  dir = {'magenta', 'bright'},
-  math = {'cyan', 'bright'},
-  glue = {'magenta', 'bright'},
-  kern = {'green', 'bright'},
-  penalty = {'yellow', 'bright'},
-  unset = {'blue'},
-  style = {'magenta'},
-  choice = {'cyan'},
-  noad = {'red'},
-  radical = {'green'},
-  fraction = {'yellow'},
-  accent = {'blue'},
-  fence = {'magenta'},
-  math_char = {'cyan'},
-  sub_box = {'red', 'bright'},
-  sub_mlist = {'green', 'bright'},
-  math_text_char = {'yellow', 'bright'},
-  delim = {'blue', 'bright'},
-  margin_kern = {'magenta', 'bright'},
-  glyph = {'cyan', 'bright'},
-  align_record = {'red'},
-  pseudo_file = {'green'},
-  pseudo_line = {'yellow'},
-  page_insert = {'blue'},
-  split_insert = {'magenta'},
-  expr_stack = {'cyan'},
-  nested_list = {'red'},
-  span = {'green'},
-  attribute = {'yellow'},
-  glue_spec = {'magenta'},
-  attribute_list = {'cyan'},
-  temp = {'magenta'},
-  align_stack = {'red', 'bright'},
-  movement_stack = {'green', 'bright'},
-  if_stack = {'yellow', 'bright'},
-  unhyphenated = {'magenta', 'bright'},
-  hyphenated = {'cyan', 'bright'},
-  delta = {'red'},
-  passive = {'green'},
-  shape = {'yellow'},
-}
-
----
--- [SGR (Select Graphic Rendition) Parameters](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters)
---
--- __attributes__
---
--- | color      |code|
--- |------------|----|
--- | reset      |  0 |
--- | clear      |  0 |
--- | bright     |  1 |
--- | dim        |  2 |
--- | underscore |  4 |
--- | blink      |  5 |
--- | reverse    |  7 |
--- | hidden     |  8 |
---
--- __foreground__
---
--- | color      |code|
--- |------------|----|
--- | black      | 30 |
--- | red        | 31 |
--- | green      | 32 |
--- | yellow     | 33 |
--- | blue       | 34 |
--- | magenta    | 35 |
--- | cyan       | 36 |
--- | white      | 37 |
---
--- __background__
---
--- | color      |code|
--- |------------|----|
--- | onblack    | 40 |
--- | onred      | 41 |
--- | ongreen    | 42 |
--- | onyellow   | 43 |
--- | onblue     | 44 |
--- | onmagenta  | 45 |
--- | oncyan     | 46 |
--- | onwhite    | 47 |
---
--- @tparam string color A color name (`black`, `red`, `green`,
---   `yellow`, `blue`, `magenta`, `cyan`, `white`).
--- @tparam string mode `bright` or `dim`.
--- @tparam boolean background Colorize the background not the text.
---
--- @treturn string
-function template.color(color, mode, background)
-  if options.color ~= 'colored' then
-    return ''
-  end
-
-  local output = ''
-  local code
-
-  if mode == 'bright' then
-    output = format.color_code(1)
-  elseif mode == 'dim' then
-    output = format.color_code(2)
-  end
-
-  if not background then
-    if color == 'reset' then code = 0
-    elseif color == 'red' then code = 31
-    elseif color == 'green' then code = 32
-    elseif color == 'yellow' then code = 33
-    elseif color == 'blue' then code = 34
-    elseif color == 'magenta' then code = 35
-    elseif color == 'cyan' then code = 36
-    else code = 37 end
-  else
-    if color == 'black' then code = 40
-    elseif color == 'red' then code = 41
-    elseif color == 'green' then code = 42
-    elseif color == 'yellow' then code = 43
-    elseif color == 'blue' then code = 44
-    elseif color == 'magenta' then code = 45
-    elseif color == 'cyan' then code = 46
-    elseif color == 'white' then code = 47
-    else code = 40 end
-  end
-  return output .. format.color_code(code)
 end
 
 --- Colorize a text string.
@@ -425,20 +489,6 @@ function template.key_value(key, value, color)
   return output
 end
 
---- Format a single unicode character.
---
--- @tparam string char A single input character.
---
--- @treturn string
-function template.char(char)
-  char = string.format('%s', unicode.utf8.char(char))
-  char = '\'' .. char .. '\''
-  if options.channel == 'tex' then
-    char = format.escape(char)
-  end
-  return char
-end
-
 ---
 -- @treturn string
 function template.type(type, id)
@@ -461,20 +511,8 @@ end
 
 ---
 -- @treturn string
-function template.line(length)
-  local output
-  if length == 'long' then
-    output = '------------------------------------------'
-  else
-    output = '-----------------------'
-  end
-    return output .. format.new_line()
-end
-
----
--- @treturn string
 function template.callback(callback_name, variables)
-  template.print(
+  nodetree_print(
     format.new_line(2) ..
     'Callback: ' ..
     template.colored_string(format.underscore(callback_name), 'red', '', true) ..
@@ -483,7 +521,7 @@ function template.callback(callback_name, variables)
   if variables then
     for name, value in pairs(variables) do
       if value ~= nil and value ~= '' then
-        template.print(
+        nodetree_print(
           '- ' ..
           format.underscore(name) ..
           ': ' ..
@@ -493,33 +531,7 @@ function template.callback(callback_name, variables)
       end
     end
   end
-  template.print(template.line('long'))
-end
-
----
--- @treturn string
-function template.branch(connection_type, connection_state, last)
-  local c = connection_type
-  local s = connection_state
-  local l = last
-  if c == 'list' and s == 'stop' and l == false then
-    return format.whitespace(2)
-  elseif c == 'field' and s == 'stop' and l == false then
-    return format.whitespace(2)
-  elseif c == 'list' and s == 'continue' and l == false then
-    return '│' .. format.whitespace()
-  elseif c == 'field' and s == 'continue' and l == false then
-    return '║' .. format.whitespace()
-  elseif c == 'list' and s == 'continue' and l == true then
-    return '├─'
-  elseif c == 'field' and s == 'continue' and l == true then
-    return '╠═'
-  elseif c == 'list' and s == 'stop' and l == true then
-    return '└─'
-  elseif c == 'field' and s == 'stop' and l == true then
-    return '╚═'
-  end
-  return ''
+  nodetree_print(template.line('long'))
 end
 
 ---
@@ -539,17 +551,6 @@ function template.branches(level, connection_type)
   end
   return output
 end
-
----
--- @treturn string
-function template.print(text)
-  if options.channel == 'log' or options.channel == 'tex' then
-    output_file:write(text)
-  else
-    io.write(text)
-  end
-end
-
 
 --- Extend the node library
 -- @section node_extended
@@ -933,7 +934,7 @@ function tree.analyze_fields(fields, level)
       connection_state = 'continue'
     end
     tree.set_state(level, 'field', connection_state)
-    template.print(
+    nodetree_print(
       format.node_begin() ..
       template.branches(level, 'field') ..
       template.key_value(field_name) ..
@@ -991,7 +992,7 @@ function tree.analyze_node(head, level)
 
   output = output:gsub(', $', '')
 
-  template.print(
+  nodetree_print(
     format.node_begin() ..
     output ..
     format.node_end() ..
@@ -1000,7 +1001,7 @@ function tree.analyze_node(head, level)
 
   local property = node.getproperty(head)
   if property then
-    template.print(
+    nodetree_print(
       format.node_begin() ..
       template.branches(level, 'field') ..
       '  ' ..
@@ -1028,7 +1029,7 @@ end
 -- @tparam node head
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
-  template.print(template.line('short') .. format.new_line())
+  nodetree_print(template.line('short') .. format.new_line())
 end
 
 --- Callback wrapper.
@@ -1217,9 +1218,9 @@ local callbacks = {
   -- @tparam node tail
   hyphenate = function(head, tail)
     template.callback('hyphenate')
-    template.print('head:')
+    nodetree_print('head:')
     tree.analyze_callback(head)
-    template.print('tail:')
+    nodetree_print('tail:')
     tree.analyze_callback(tail)
   end,
 
@@ -1228,9 +1229,9 @@ local callbacks = {
   -- @tparam node tail
   ligaturing = function(head, tail)
     template.callback('ligaturing')
-    template.print('head:')
+    nodetree_print('head:')
     tree.analyze_callback(head)
-    template.print('tail:')
+    nodetree_print('tail:')
     tree.analyze_callback(tail)
   end,
 
@@ -1239,9 +1240,9 @@ local callbacks = {
   -- @tparam node tail
   kerning = function(head, tail)
     template.callback('kerning')
-    template.print('head:')
+    nodetree_print('head:')
     tree.analyze_callback(head)
-    template.print('tail:')
+    nodetree_print('tail:')
     tree.analyze_callback(tail)
   end,
 
@@ -1485,7 +1486,7 @@ local export = {
     if opts and type(opts) == 'table' then
       set_options(opts)
     end
-    template.print(format.new_line())
+    nodetree_print(format.new_line())
     tree.analyze_list(head, 1)
   end,
 

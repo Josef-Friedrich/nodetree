@@ -1,9 +1,11 @@
 {
   "Lua.diagnostics.globals": [
-    "luatexbase",
     "callback",
-    "tex",
+    "lfs",
+    "luatexbase",
     "node",
+    "status",
+    "tex",
     "unicode"
   ]
 }

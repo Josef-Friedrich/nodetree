@@ -1016,7 +1016,6 @@ local callbacks = {
   end,
 
   ---
-  -- TODO: Fix return values, page output
   -- @tparam node box
   -- @tparam string locationcode
   -- @tparam number prevdepth
@@ -1029,7 +1028,7 @@ local callbacks = {
     }
     template.callback('append_to_vlist_filter', variables)
     tree.analyze_callback(box)
-    return true
+    return box
   end,
 
   ---

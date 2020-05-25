@@ -342,10 +342,13 @@ end
 -- @treturn string
 function template.colored_string(text, color, mode, background)
   if options.channel == 'tex' then
+    if mode == 'dim' then
+      mode = ''
+    end
     return '\\textcolor{' ..
-      format.color_tex(color, mode, background) ..
+      format.color_tex(color, mode) ..
       '}{' ..
-      string ..
+      text ..
       '}'
   else
    return template.color(color, mode, background) .. text .. template.color('reset')

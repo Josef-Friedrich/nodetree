@@ -1269,16 +1269,11 @@ local callbacks = {
   end,
 }
 
---- Exported functions.
--- @section export
-
-local export = {}
-
---- Set a single option kev value pair.
+--- Set a single option key value pair.
 --
 -- @tparam string key The key of the option pair.
 -- @tparam number|string value The value of the option pair.
-function export.set_option(key, value)
+local function set_option(key, value)
   if not options then
     options = {}
   end
@@ -1289,24 +1284,15 @@ function export.set_option(key, value)
   end
 end
 
----
--- a table.
-function export.set_options(opts)
+--- Set multiple key value pairs using a table.
+--
+-- @tparam table opts Options
+local function set_options(opts)
   if not options then
     options = {}
   end
   for key, value in pairs(opts) do
-    export.set_option(key, value)
-  end
-end
-
----
-function export.get_option(key)
-  if not options then
-    options = {}
-  end
-  if options[key] then
-    return options[key]
+    set_option(key, value)
   end
 end
 
@@ -1335,7 +1321,7 @@ end
 -- name itself.
 --
 -- @treturn string The real callback name.
-function export.get_callback_name(alias)
+local function get_callback_name(alias)
   local callback_name
   -- Listed as in the LuaTeX reference manual.
   if alias == 'contribute' or alias == 'contributefilter' then
@@ -1402,7 +1388,9 @@ function export.get_callback_name(alias)
 end
 
 --- Register a callback.
-function export.register(cb)
+--
+-- @tparam string cb The name of a callback.
+local function register_callback(cb)
   if options.engine == 'lualatex' then
     luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree')
   else
@@ -1410,105 +1398,109 @@ function export.register(cb)
   end
 end
 
----
-function export.register_callbacks()
-  if options.channel == 'log' or options.channel == 'tex' then
-    -- nt = nodetree
-    -- jobname.nttex
-    -- jobname.ntlog
-    local file_name = tex.jobname .. '.nt' .. options.channel
-    io.open(file_name, 'w'):close() -- Clear former content
-    output_file = io.open(file_name, 'a')
-  end
-  for alias in string.gmatch(options.callback, '([^,]+)') do
-    export.register(export.get_callback_name(alias))
-  end
-end
-
----
-function export.unregister(cb)
+--- Unregister a callback.
+--
+-- @tparam string cb The name of a callback.
+local function unregister_callback(cb)
   if options.engine == 'lualatex' then
     luatexbase.remove_from_callback(cb, 'nodetree')
   else
-    callback.register(cb, nil)
+    register_callback(cb, nil)
   end
 end
 
----
-function export.unregister_callbacks()
-  for alias in string.gmatch(options.callback, '([^,]+)') do
-    export.unregister(export.get_callback_name(alias))
+--- Exported functions.
+-- @section export
+
+local export = {
+  set_option = set_option,
+  set_options = set_options,
+
+  ---
+  register_callbacks = function()
+    if options.channel == 'log' or options.channel == 'tex' then
+      -- nt = nodetree
+      -- jobname.nttex
+      -- jobname.ntlog
+      local file_name = tex.jobname .. '.nt' .. options.channel
+      io.open(file_name, 'w'):close() -- Clear former content
+      output_file = io.open(file_name, 'a')
+    end
+    for alias in string.gmatch(options.callback, '([^,]+)') do
+      register_callback(get_callback_name(alias))
+    end
+  end,
+
+  ---
+  unregister_callbacks = function()
+    for alias in string.gmatch(options.callback, '([^,]+)') do
+      unregister_callback(get_callback_name(alias))
+    end
+  end,
+
+  --- Compile a TeX snippet.
+  --
+  -- Write some TeX snippets into a temporary LaTeX file, compile this
+  -- file using `latexmk` and read the generated `*.nttex` file and
+  -- return its content.
+  --
+  -- @tparam string tex_markup
+  --
+  -- @treturn string
+  compile_include = function(tex_markup)
+    local parent_path = lfs.currentdir() .. '/' .. '_nodetree-' .. tex.jobname
+    lfs.mkdir(parent_path)
+    example_counter = example_counter + 1
+    local filename_tex = example_counter .. '.tex'
+    local absolute_path_tex = parent_path .. '/' .. filename_tex
+    output_file = io.open(absolute_path_tex, 'w')
+    local prefix = '%!TEX program = lualatex\n' ..
+                  '\\documentclass{article}\n' ..
+                  '\\usepackage[channel=tex]{nodetree}\n' ..
+                  '\\begin{document}\n'
+    local suffix = '\n\\end{document}'
+    output_file:write(prefix .. tex_markup .. suffix)
+    output_file:close()
+    os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
+    local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'rb'))
+    local include_content = include_file:read("*all")
+    include_file:close()
+    tex.print(include_content:gsub("[\r\n]", ""))
+  end,
+
+  --- Check for `--shell-escape`
+  --
+  check_shell_escape = function()
+    local info = status.list()
+    if info.shell_escape == 0 then
+      tex.error('Package "nodetree-embed": You have to use the --shell-escape option')
+    end
+  end,
+
+  --- Print a node tree.
+  ---
+  -- @tparam node head The head node of a node list.
+  -- @tparam table opts Options as a table.
+  print = function(head, opts)
+    if opts and type(opts) == 'table' then
+      set_options(opts)
+    end
+    template.print(format.new_line())
+    tree.analyze_list(head, 1)
+  end,
+
+  --- Format a scaled point value into a formated string.
+  --
+  -- @tparam number sp A scaled point value
+  --
+  -- @treturn string
+  format_dim = function(sp)
+    return template.length(sp)
   end
-end
+}
 
----
-function export.execute()
-  local c = export.get_callback()
-  if options.engine == 'lualatex' then
-    luatexbase.add_to_callback(c, callbacks.post_linebreak_filter, 'nodetree')
-  else
-    callback.register(c, callbacks.post_linebreak_filter)
-  end
-end
-
---- Compile a TeX snippet.
---
--- Write some TeX snippets into a temporary LaTeX file, compile this
--- file using `latexmk` and read the generated `*.nttex` file and
--- return its content.
---
--- @tparam string tex_markup
---
--- @treturn string
-function export.compile_include(tex_markup)
-  local parent_path = lfs.currentdir() .. '/' .. '_nodetree-' .. tex.jobname
-  lfs.mkdir(parent_path)
-  example_counter = example_counter + 1
-  local filename_tex = example_counter .. '.tex'
-  local absolute_path_tex = parent_path .. '/' .. filename_tex
-  output_file = io.open(absolute_path_tex, 'w')
-  local prefix = '%!TEX program = lualatex\n' ..
-                 '\\documentclass{article}\n' ..
-                 '\\usepackage[channel=tex]{nodetree}\n' ..
-                 '\\begin{document}\n'
-  local suffix = '\n\\end{document}'
-  output_file:write(prefix .. tex_markup .. suffix)
-  output_file:close()
-  os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
-  local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'rb'))
-  local include_content = include_file:read("*all")
-  include_file:close()
-  tex.print(include_content:gsub("[\r\n]", ""))
-end
-
----
+--- Use export.print
 -- @tparam node head
-function export.analyze(head)
-  template.print(format.new_line())
-  tree.analyze_list(head, 1)
-end
-
----
-function export.print(head, opts)
-  if opts and type(opts) == 'table' then
-    export.set_options(opts)
-  end
-  template.print(format.new_line())
-  tree.analyze_list(head, 1)
-end
-
----
-function export.format_dim(sp)
-  return template.length(sp)
-end
-
---- Check for `--shell-escape`
---
-function export.check_shell_escape()
-  local info = status.list()
-  if info.shell_escape == 0 then
-    tex.error('Package "nodetree-embed": You have to use the --shell-escape option')
-  end
-end
+export.analyze = export.print
 
 return export

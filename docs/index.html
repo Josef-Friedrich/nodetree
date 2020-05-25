@@ -100,7 +100,7 @@
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#color_tex">color_tex (color, mode, background)</a></td>
+	<td class="name" nowrap><a href="#color_tex">color_tex (color, mode)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
@@ -296,40 +296,52 @@
 	<td class="name" nowrap><a href="#mlist_to_hlist">mlist_to_hlist (head, display_type, need_penalties)</a></td>
 	<td class="summary"></td>
 	</tr>
-</table>
-<h2><a href="#Exported_functions">Exported functions </a></h2>
-<table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#export.set_option">export.set_option (key, value)</a></td>
-	<td class="summary">Set a single option kev value pair.</td>
+	<td class="name" nowrap><a href="#set_option">set_option (key, value)</a></td>
+	<td class="summary">Set a single option key value pair.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.set_options">export.set_options (opts)</a></td>
-	<td class="summary">a table.</td>
+	<td class="name" nowrap><a href="#set_options">set_options (opts)</a></td>
+	<td class="summary">Set multiple key value pairs using a table.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#check_callback_name">check_callback_name (callback_name)</a></td>
 	<td class="summary">Check if the given callback name exists.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.get_callback_name">export.get_callback_name (alias)</a></td>
+	<td class="name" nowrap><a href="#get_callback_name">get_callback_name (alias)</a></td>
 	<td class="summary">Get the real callback name from an alias string.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.register">export.register (cb)</a></td>
+	<td class="name" nowrap><a href="#register_callback">register_callback (cb)</a></td>
 	<td class="summary">Register a callback.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.compile_include">export.compile_include (tex_markup)</a></td>
+	<td class="name" nowrap><a href="#unregister_callback">unregister_callback (cb)</a></td>
+	<td class="summary">Unregister a callback.</td>
+	</tr>
+</table>
+<h2><a href="#Exported_functions">Exported functions </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#compile_include">compile_include (tex_markup)</a></td>
 	<td class="summary">Compile a TeX snippet.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.analyze">export.analyze (head)</a></td>
-	<td class="summary"></td>
+	<td class="name" nowrap><a href="#check_shell_escape">check_shell_escape ()</a></td>
+	<td class="summary">Check for <code>&ndash;shell-escape</code></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#export.check_shell_escape">export.check_shell_escape ()</a></td>
-	<td class="summary">Check for <code>&ndash;shell-escape</code></td>
+	<td class="name" nowrap><a href="#print">print (head, opts)</a></td>
+	<td class="summary">Print a node tree.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#format_dim">format_dim (sp)</a></td>
+	<td class="summary">Format a scaled point value into a formated string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#export.analyze">export.analyze</a></td>
+	<td class="summary">Use export.print</td>
 	</tr>
 </table>
 
@@ -511,7 +523,7 @@
 </dd>
     <dt>
     <a name = "color_tex"></a>
-    <strong>color_tex (color, mode, background)</strong>
+    <strong>color_tex (color, mode)</strong>
     </dt>
     <dd>
 
@@ -523,9 +535,6 @@
 
         </li>
         <li><span class="parameter">mode</span>
-
-        </li>
-        <li><span class="parameter">background</span>
 
         </li>
     </ul>
@@ -2023,16 +2032,12 @@
 
 
 </dd>
-</dl>
-    <h2 class="section-header "><a name="Exported_functions"></a>Exported functions </h2>
-
-    <dl class="function">
     <dt>
-    <a name = "export.set_option"></a>
-    <strong>export.set_option (key, value)</strong>
+    <a name = "set_option"></a>
+    <strong>set_option (key, value)</strong>
     </dt>
     <dd>
-    Set a single option kev value pair.
+    Set a single option key value pair.
 
 
     <h3>Parameters:</h3>
@@ -2053,17 +2058,18 @@
 
 </dd>
     <dt>
-    <a name = "export.set_options"></a>
-    <strong>export.set_options (opts)</strong>
+    <a name = "set_options"></a>
+    <strong>set_options (opts)</strong>
     </dt>
     <dd>
-    a table.
+    Set multiple key value pairs using a table.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">opts</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+         Options
         </li>
     </ul>
 
@@ -2102,8 +2108,8 @@
 
 </dd>
     <dt>
-    <a name = "export.get_callback_name"></a>
-    <strong>export.get_callback_name (alias)</strong>
+    <a name = "get_callback_name"></a>
+    <strong>get_callback_name (alias)</strong>
     </dt>
     <dd>
     Get the real callback name from an alias string.
@@ -2130,8 +2136,8 @@
 
 </dd>
     <dt>
-    <a name = "export.register"></a>
-    <strong>export.register (cb)</strong>
+    <a name = "register_callback"></a>
+    <strong>register_callback (cb)</strong>
     </dt>
     <dd>
     Register a callback.
@@ -2140,7 +2146,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">cb</span>
-
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The name of a callback.
         </li>
     </ul>
 
@@ -2150,8 +2157,33 @@
 
 </dd>
     <dt>
-    <a name = "export.compile_include"></a>
-    <strong>export.compile_include (tex_markup)</strong>
+    <a name = "unregister_callback"></a>
+    <strong>unregister_callback (cb)</strong>
+    </dt>
+    <dd>
+    Unregister a callback.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cb</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The name of a callback.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Exported_functions"></a>Exported functions </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "compile_include"></a>
+    <strong>compile_include (tex_markup)</strong>
     </dt>
     <dd>
     Compile a TeX snippet.</p>
@@ -2181,18 +2213,36 @@
 
 </dd>
     <dt>
-    <a name = "export.analyze"></a>
-    <strong>export.analyze (head)</strong>
+    <a name = "check_shell_escape"></a>
+    <strong>check_shell_escape ()</strong>
     </dt>
     <dd>
+    Check for <code>&ndash;shell-escape</code>
 
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "print"></a>
+    <strong>print (head, opts)</strong>
+    </dt>
+    <dd>
+    Print a node tree.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
+        </li>
+        <li><span class="parameter">opts</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+         Options as a table.
         </li>
     </ul>
 
@@ -2202,13 +2252,46 @@
 
 </dd>
     <dt>
-    <a name = "export.check_shell_escape"></a>
-    <strong>export.check_shell_escape ()</strong>
+    <a name = "format_dim"></a>
+    <strong>format_dim (sp)</strong>
     </dt>
     <dd>
-    Check for <code>&ndash;shell-escape</code>
+    Format a scaled point value into a formated string.
 
 
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">sp</span>
+            <span class="types"><span class="type">number</span></span>
+         A scaled point value
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "export.analyze"></a>
+    <strong>export.analyze</strong>
+    </dt>
+    <dd>
+    Use export.print
+
+
+    <ul>
+        <li><span class="parameter">head</span>
+            <span class="types"><span class="type">node</span></span>
+
+        </li>
+    </ul>
 
 
 
@@ -2222,7 +2305,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-25 18:23:18 </i>
+<i style="float:right;">Last updated 2020-05-25 22:28:14 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

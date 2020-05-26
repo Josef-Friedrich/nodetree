@@ -39,7 +39,7 @@
   filecolor=red,
   urlcolor=red,
 ]{hyperref}
-\usepackage[theme=molokai,thememode=dark,documentationmode]{nodetree}
+\usepackage[theme=molokai,thememode=dark,documentationmode]{nodetree-embed}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -987,6 +987,68 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+\ProcessKeyvalOptions{NT}
+\directlua{
+  nodetree.register_callbacks()
+}
+%    \end{macrocode}
+%
+% \begin{macro}{\nodetreeset}
+%    \begin{macrocode}
+\newcommand{\nodetreeset}[1]{%
+  \setkeys{NT}{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \iffalse
+%</package>
+%<*packageembed>
+% \fi
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{nodetree-embed}
+  [2020/05/24 v1.2 Embed node trees into a LaTeX document]
+
+\RequirePackage{xcolor,mdframed,expl3,xparse,fontspec}
+
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{
+  family=NT,
+  prefix=NTEK@
+}
+\directlua{
+  nodetree = require('nodetree')
+  nodetree.check_shell_escape()
+  nodetree.set_option('engine', 'lualatex')
+}
+\ProcessKeyvalOptions{NTE}
+
+%    \begin{macrocode}
+\DeclareStringOption[postlinebreak]{callback}
+\define@key{NTE}{callback}[]{\nodetreeoption[callback]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[1]{verbosity}
+\define@key{NTE}{verbosity}[]{\nodetreeoption[verbosity]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[colored]{color}
+\define@key{NTE}{color}[]{\nodetreeoption[color]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[1]{unit}
+\define@key{NTE}{unit}[]{\nodetreeoption[unit]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[1]{decimalplaces}
+\define@key{NTE}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \DeclareStringOption[smyck]{theme}
 %    \end{macrocode}
 %
@@ -1002,178 +1064,146 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 \DeclareStringOption[\footnotesize]{fontsize}
 %    \end{macrocode}
 %
-
-% Never load “heavy” packages like |mdframed| in default debug mode.
-% They are way to slow.
-%    \begin{macrocode}
-\newif\ifdocumentationmode%
-\documentationmodefalse%
-\DeclareVoidOption{documentationmode}{%
-  \RequirePackage{xcolor,mdframed,expl3,xparse}%
-  \nodetreeoption[callback]{}%
-  \documentationmodetrue%
-}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\ProcessKeyvalOptions{NT}
-\directlua{
-  nodetree.register_callbacks()
-}
-%    \end{macrocode}
-%
-% \begin{macro}{\nodetreeset}
-%    \begin{macrocode}
-\newcommand{\nodetreeset}[1]{%
-  \setkeys{NT}{#1}%
-}
-%    \end{macrocode}
-% \end{macro}
-% Begin of the documentation mode.
-%    \begin{macrocode}
-\ifdocumentationmode
-%    \end{macrocode}
-%
-% \begin{macro}{\NT@colors}
+% \begin{macro}{\NTE@colors}
 %    \begin{macrocode}
 \ExplSyntaxOn
-\def\NT@colors{
-  \str_case_e:nn{\NTK@theme}{
+\def\NTE@colors{
+  \str_case_e:nn{\NTEK@theme}{
     {bwdark}{
-      \definecolor{NTblack}{gray}{0}
-      \definecolor{NTred}{gray}{1}
-      \definecolor{NTgreen}{gray}{1}
-      \definecolor{NTyellow}{gray}{1}
-      \definecolor{NTblue}{gray}{1}
-      \definecolor{NTmagenta}{gray}{1}
-      \definecolor{NTcyan}{gray}{1}
-      \definecolor{NTwhite}{gray}{1}
-      \definecolor{NTblackbright}{gray}{0}
-      \definecolor{NTredbright}{gray}{1}
-      \definecolor{NTgreenbright}{gray}{1}
-      \definecolor{NTyellowbright}{gray}{1}
-      \definecolor{NTbluebright}{gray}{1}
-      \definecolor{NTmagentabright}{gray}{1}
-      \definecolor{NTcyanbright}{gray}{1}
-      \definecolor{NTwhitebright}{gray}{1}
+      \definecolor{NTEblack}{gray}{0}
+      \definecolor{NTEred}{gray}{1}
+      \definecolor{NTEgreen}{gray}{1}
+      \definecolor{NTEyellow}{gray}{1}
+      \definecolor{NTEblue}{gray}{1}
+      \definecolor{NTEmagenta}{gray}{1}
+      \definecolor{NTEcyan}{gray}{1}
+      \definecolor{NTEwhite}{gray}{1}
+      \definecolor{NTEblackbright}{gray}{0}
+      \definecolor{NTEredbright}{gray}{1}
+      \definecolor{NTEgreenbright}{gray}{1}
+      \definecolor{NTEyellowbright}{gray}{1}
+      \definecolor{NTEbluebright}{gray}{1}
+      \definecolor{NTEmagentabright}{gray}{1}
+      \definecolor{NTEcyanbright}{gray}{1}
+      \definecolor{NTEwhitebright}{gray}{1}
     }
     {bwlight}{
-      \definecolor{NTblack}{gray}{0}
-      \definecolor{NTred}{gray}{0}
-      \definecolor{NTgreen}{gray}{0}
-      \definecolor{NTyellow}{gray}{0}
-      \definecolor{NTblue}{gray}{0}
-      \definecolor{NTmagenta}{gray}{0}
-      \definecolor{NTcyan}{gray}{0}
-      \definecolor{NTwhite}{gray}{1}
-      \definecolor{NTblackbright}{gray}{0}
-      \definecolor{NTredbright}{gray}{0}
-      \definecolor{NTgreenbright}{gray}{0}
-      \definecolor{NTyellowbright}{gray}{0}
-      \definecolor{NTbluebright}{gray}{0}
-      \definecolor{NTmagentabright}{gray}{0}
-      \definecolor{NTcyanbright}{gray}{0}
-      \definecolor{NTwhitebright}{gray}{1}
+      \definecolor{NTEblack}{gray}{0}
+      \definecolor{NTEred}{gray}{0}
+      \definecolor{NTEgreen}{gray}{0}
+      \definecolor{NTEyellow}{gray}{0}
+      \definecolor{NTEblue}{gray}{0}
+      \definecolor{NTEmagenta}{gray}{0}
+      \definecolor{NTEcyan}{gray}{0}
+      \definecolor{NTEwhite}{gray}{1}
+      \definecolor{NTEblackbright}{gray}{0}
+      \definecolor{NTEredbright}{gray}{0}
+      \definecolor{NTEgreenbright}{gray}{0}
+      \definecolor{NTEyellowbright}{gray}{0}
+      \definecolor{NTEbluebright}{gray}{0}
+      \definecolor{NTEmagentabright}{gray}{0}
+      \definecolor{NTEcyanbright}{gray}{0}
+      \definecolor{NTEwhitebright}{gray}{1}
     }
     {terminalapp}{
-      \definecolor{NTblack}{RGB}{0,0,0}
-      \definecolor{NTred}{RGB}{194,54,33}
-      \definecolor{NTgreen}{RGB}{37,188,36}
-      \definecolor{NTyellow}{RGB}{173,173,39}
-      \definecolor{NTblue}{RGB}{73,46,225}
-      \definecolor{NTmagenta}{RGB}{211,56,211}
-      \definecolor{NTcyan}{RGB}{51,187,200}
-      \definecolor{NTwhite}{RGB}{203,204,205}
-      \definecolor{NTblackbright}{RGB}{129,131,131}
-      \definecolor{NTredbright}{RGB}{252,57,31}
-      \definecolor{NTgreenbright}{RGB}{49,231,34}
-      \definecolor{NTyellowbright}{RGB}{234,236,35}
-      \definecolor{NTbluebright}{RGB}{88,51,255}
-      \definecolor{NTmagentabright}{RGB}{249,53,248}
-      \definecolor{NTcyanbright}{RGB}{20,240,240}
-      \definecolor{NTwhitebright}{RGB}{233,235,235}
+      \definecolor{NTEblack}{RGB}{0,0,0}
+      \definecolor{NTEred}{RGB}{194,54,33}
+      \definecolor{NTEgreen}{RGB}{37,188,36}
+      \definecolor{NTEyellow}{RGB}{173,173,39}
+      \definecolor{NTEblue}{RGB}{73,46,225}
+      \definecolor{NTEmagenta}{RGB}{211,56,211}
+      \definecolor{NTEcyan}{RGB}{51,187,200}
+      \definecolor{NTEwhite}{RGB}{203,204,205}
+      \definecolor{NTEblackbright}{RGB}{129,131,131}
+      \definecolor{NTEredbright}{RGB}{252,57,31}
+      \definecolor{NTEgreenbright}{RGB}{49,231,34}
+      \definecolor{NTEyellowbright}{RGB}{234,236,35}
+      \definecolor{NTEbluebright}{RGB}{88,51,255}
+      \definecolor{NTEmagentabright}{RGB}{249,53,248}
+      \definecolor{NTEcyanbright}{RGB}{20,240,240}
+      \definecolor{NTEwhitebright}{RGB}{233,235,235}
     }
     {xterm}{
-      \definecolor{NTblack}{RGB}{0,0,0}
-      \definecolor{NTred}{RGB}{205,0,0}
-      \definecolor{NTgreen}{RGB}{0,205,0}
-      \definecolor{NTyellow}{RGB}{205,205,0}
-      \definecolor{NTblue}{RGB}{0,0,238}
-      \definecolor{NTmagenta}{RGB}{205,0,205}
-      \definecolor{NTcyan}{RGB}{0,205,205}
-      \definecolor{NTwhite}{RGB}{229,229,229}
-      \definecolor{NTblackbright}{RGB}{127,127,127}
-      \definecolor{NTredbright}{RGB}{255,0,0}
-      \definecolor{NTgreenbright}{RGB}{0,255,0}
-      \definecolor{NTyellowbright}{RGB}{255,255,0}
-      \definecolor{NTbluebright}{RGB}{92,92,255}
-      \definecolor{NTmagentabright}{RGB}{255,0,255}
-      \definecolor{NTcyanbright}{RGB}{0,255,255}
-      \definecolor{NTwhitebright}{RGB}{255,255,255}
+      \definecolor{NTEblack}{RGB}{0,0,0}
+      \definecolor{NTEred}{RGB}{205,0,0}
+      \definecolor{NTEgreen}{RGB}{0,205,0}
+      \definecolor{NTEyellow}{RGB}{205,205,0}
+      \definecolor{NTEblue}{RGB}{0,0,238}
+      \definecolor{NTEmagenta}{RGB}{205,0,205}
+      \definecolor{NTEcyan}{RGB}{0,205,205}
+      \definecolor{NTEwhite}{RGB}{229,229,229}
+      \definecolor{NTEblackbright}{RGB}{127,127,127}
+      \definecolor{NTEredbright}{RGB}{255,0,0}
+      \definecolor{NTEgreenbright}{RGB}{0,255,0}
+      \definecolor{NTEyellowbright}{RGB}{255,255,0}
+      \definecolor{NTEbluebright}{RGB}{92,92,255}
+      \definecolor{NTEmagentabright}{RGB}{255,0,255}
+      \definecolor{NTEcyanbright}{RGB}{0,255,255}
+      \definecolor{NTEwhitebright}{RGB}{255,255,255}
     }
     {smyck}{
-      \definecolor{NTblack}{HTML}{212121}
-      \definecolor{NTred}{HTML}{C75646}
-      \definecolor{NTgreen}{HTML}{8EB33B}
-      \definecolor{NTyellow}{HTML}{D0B03C}
-      \definecolor{NTblue}{HTML}{72B3CC}
-      \definecolor{NTmagenta}{HTML}{C8A0D1}
-      \definecolor{NTcyan}{HTML}{218693}
-      \definecolor{NTwhite}{HTML}{B0B0B0}
-      \definecolor{NTblackbright}{HTML}{5D5D5D}
-      \definecolor{NTredbright}{HTML}{E09690}
-      \definecolor{NTgreenbright}{HTML}{CDEE69}
-      \definecolor{NTyellowbright}{HTML}{FFE377}
-      \definecolor{NTbluebright}{HTML}{9CD9F0}
-      \definecolor{NTmagentabright}{HTML}{FBB1F9}
-      \definecolor{NTcyanbright}{HTML}{77DFD8}
-      \definecolor{NTwhitebright}{HTML}{F7F7F7}
+      \definecolor{NTEblack}{HTML}{212121}
+      \definecolor{NTEred}{HTML}{C75646}
+      \definecolor{NTEgreen}{HTML}{8EB33B}
+      \definecolor{NTEyellow}{HTML}{D0B03C}
+      \definecolor{NTEblue}{HTML}{72B3CC}
+      \definecolor{NTEmagenta}{HTML}{C8A0D1}
+      \definecolor{NTEcyan}{HTML}{218693}
+      \definecolor{NTEwhite}{HTML}{B0B0B0}
+      \definecolor{NTEblackbright}{HTML}{5D5D5D}
+      \definecolor{NTEredbright}{HTML}{E09690}
+      \definecolor{NTEgreenbright}{HTML}{CDEE69}
+      \definecolor{NTEyellowbright}{HTML}{FFE377}
+      \definecolor{NTEbluebright}{HTML}{9CD9F0}
+      \definecolor{NTEmagentabright}{HTML}{FBB1F9}
+      \definecolor{NTEcyanbright}{HTML}{77DFD8}
+      \definecolor{NTEwhitebright}{HTML}{F7F7F7}
     }
     {molokai}{
-      \definecolor{NTblack}{HTML}{212121}
-      \definecolor{NTred}{HTML}{fa2573}
-      \definecolor{NTgreen}{HTML}{98e123}
-      \definecolor{NTyellow}{HTML}{dfd460}
-      \definecolor{NTblue}{HTML}{1080d0}
-      \definecolor{NTmagenta}{HTML}{8700ff}
-      \definecolor{NTcyan}{HTML}{43a8d0}
-      \definecolor{NTwhite}{HTML}{bbbbbb}
-      \definecolor{NTblackbright}{HTML}{555555}
-      \definecolor{NTredbright}{HTML}{f6669d}
-      \definecolor{NTgreenbright}{HTML}{b1e05f}
-      \definecolor{NTyellowbright}{HTML}{fff26d}
-      \definecolor{NTbluebright}{HTML}{00afff}
-      \definecolor{NTmagentabright}{HTML}{af87ff}
-      \definecolor{NTcyanbright}{HTML}{51ceff}
-      \definecolor{NTwhitebright}{HTML}{ffffff}
+      \definecolor{NTEblack}{HTML}{212121}
+      \definecolor{NTEred}{HTML}{fa2573}
+      \definecolor{NTEgreen}{HTML}{98e123}
+      \definecolor{NTEyellow}{HTML}{dfd460}
+      \definecolor{NTEblue}{HTML}{1080d0}
+      \definecolor{NTEmagenta}{HTML}{8700ff}
+      \definecolor{NTEcyan}{HTML}{43a8d0}
+      \definecolor{NTEwhite}{HTML}{bbbbbb}
+      \definecolor{NTEblackbright}{HTML}{555555}
+      \definecolor{NTEredbright}{HTML}{f6669d}
+      \definecolor{NTEgreenbright}{HTML}{b1e05f}
+      \definecolor{NTEyellowbright}{HTML}{fff26d}
+      \definecolor{NTEbluebright}{HTML}{00afff}
+      \definecolor{NTEmagentabright}{HTML}{af87ff}
+      \definecolor{NTEcyanbright}{HTML}{51ceff}
+      \definecolor{NTEwhitebright}{HTML}{ffffff}
     }
     {monokaisoda}{
-      \definecolor{NTblack}{HTML}{1a1a1a}
-      \definecolor{NTred}{HTML}{f4005f}
-      \definecolor{NTgreen}{HTML}{98e024}
-      \definecolor{NTyellow}{HTML}{fa8419}
-      \definecolor{NTblue}{HTML}{9d65ff}
-      \definecolor{NTmagenta}{HTML}{f4005f}
-      \definecolor{NTcyan}{HTML}{58d1eb}
-      \definecolor{NTwhite}{HTML}{c4c5b5}
-      \definecolor{NTblackbright}{HTML}{625e4c}
-      \definecolor{NTredbright}{HTML}{f4005f}
-      \definecolor{NTgreenbright}{HTML}{98e024}
-      \definecolor{NTyellowbright}{HTML}{e0d561}
-      \definecolor{NTbluebright}{HTML}{9d65ff}
-      \definecolor{NTmagentabright}{HTML}{f4005f}
-      \definecolor{NTcyanbright}{HTML}{58d1eb}
-      \definecolor{NTwhitebright}{HTML}{f6f6ef}
+      \definecolor{NTEblack}{HTML}{1a1a1a}
+      \definecolor{NTEred}{HTML}{f4005f}
+      \definecolor{NTEgreen}{HTML}{98e024}
+      \definecolor{NTEyellow}{HTML}{fa8419}
+      \definecolor{NTEblue}{HTML}{9d65ff}
+      \definecolor{NTEmagenta}{HTML}{f4005f}
+      \definecolor{NTEcyan}{HTML}{58d1eb}
+      \definecolor{NTEwhite}{HTML}{c4c5b5}
+      \definecolor{NTEblackbright}{HTML}{625e4c}
+      \definecolor{NTEredbright}{HTML}{f4005f}
+      \definecolor{NTEgreenbright}{HTML}{98e024}
+      \definecolor{NTEyellowbright}{HTML}{e0d561}
+      \definecolor{NTEbluebright}{HTML}{9d65ff}
+      \definecolor{NTEmagentabright}{HTML}{f4005f}
+      \definecolor{NTEcyanbright}{HTML}{58d1eb}
+      \definecolor{NTEwhitebright}{HTML}{f6f6ef}
     }
   }
-  \str_case_e:nn{\NTK@thememode}{
+  \str_case_e:nn{\NTEK@thememode}{
     {dark}{
-      \definecolor{NTbackground}{named}{NTblack}
-      \definecolor{NTfont}{named}{NTwhitebright}
+      \definecolor{NTEbackground}{named}{NTEblack}
+      \definecolor{NTEfont}{named}{NTEwhitebright}
     }
     {light}{
-      \definecolor{NTbackground}{named}{NTwhitebright}
-      \definecolor{NTfont}{named}{NTblack}
+      \definecolor{NTEbackground}{named}{NTEwhitebright}
+      \definecolor{NTEfont}{named}{NTEblack}
     }
   }
 }
@@ -1181,12 +1211,12 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\NT@fonts}
+% \begin{macro}{\NTE@fonts}
 %    \begin{macrocode}
-\def\NT@fonts{
+\def\NTE@fonts{
   \bfseries%
-  \NTK@fontsize%
-  \setmonofont{\NTK@font}%
+  \NTEK@fontsize%
+  \setmonofont{\NTEK@font}%
   \ttfamily%
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{-0.9pt}%
@@ -1205,14 +1235,14 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 % \begin{environment}{nodetreeexample}
 %    \begin{macrocode}
 \newenvironment{nodetreeexample}[1][]{
-  \setkeys{NT}{#1}
-  \NT@colors
+  \setkeys{NTE}{#1}
+  \NTE@colors
   \begin{mdframed}[
     linecolor=black,
-    backgroundcolor=NTbackground,
-    fontcolor=NTfont,
+    backgroundcolor=NTEbackground,
+    fontcolor=NTEfont,
   ]%
-  \NT@fonts
+  \NTE@fonts
 }{
   \end{mdframed}%
 }
@@ -1222,7 +1252,7 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 % \begin{macro}{\nodetreetermemulator}
 %    \begin{macrocode}
 \newcommand{\nodetreeterminalemulator}[2][]{
-  \setkeys{NT}{#1}
+  \setkeys{NTE}{#1}
   \begin{nodetreeexample}
   \input{#2.nttex}
   \end{nodetreeexample}
@@ -1230,21 +1260,22 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{environment}{nodetreeembed}
 %    \begin{macrocode}
-\NewDocumentEnvironment { nodetreeShow } { +b } {
-  \directlua{
-    nodetree.compile_include('\luaescapestring{\unexpanded{#1}}')
-  }
+\NewDocumentEnvironment { nodetreeembed } { O{} +b } {
+  \begin{nodetreeexample}
+    \directlua{
+      nodetree = require('nodetree')
+      nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
+    }
+  \end{nodetreeexample}
 }{}
 %    \end{macrocode}
+% \end{environment}
 %
-% End of the documentation mode.
-%    \begin{macrocode}
-\fi
-%    \end{macrocode}
-%
+\endinput
 % \iffalse
-%</package>
+%</packageembed>
 % \fi
 %
 % \Finale

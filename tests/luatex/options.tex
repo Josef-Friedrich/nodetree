@@ -1,17 +1,17 @@
 %!TEX program = luatex
 
 \input{nodetree.tex}
-\nodetreeregister{postline}
+\NodetreeRegisterCallback{postline}
 
-\nodetreeoption[verbosity]{3}
-
-Lorem ipsum.
-
-\nodetreeoption[decimalplaces]{4}
+\NodetreeSetOption[verbosity]{3}
 
 Lorem ipsum.
 
-\nodetreeoption[color]{no}
+\NodetreeSetOption[decimalplaces]{4}
+
+Lorem ipsum.
+
+\NodetreeSetOption[color]{no}
 
 Lorem ipsum.
 

@@ -23,12 +23,11 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{nodetree-embed}
   [2020/05/24 v1.2 Embed node trees into a LaTeX document]
-
 \RequirePackage{xcolor,mdframed,expl3,xparse,fontspec}
-
+\input{nodetree}
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
-  family=NT,
+  family=NTE,
   prefix=NTEK@
 }
 \directlua{
@@ -36,22 +35,21 @@
   nodetree.check_shell_escape()
   nodetree.set_option('engine', 'lualatex')
 }
-\ProcessKeyvalOptions{NTE}
-
 \DeclareStringOption[postlinebreak]{callback}
-\define@key{NTE}{callback}[]{\nodetreeoption[callback]{#1}}
+\define@key{NTE}{callback}[]{\NodetreeSetOption[callback]{#1}}
 \DeclareStringOption[1]{verbosity}
-\define@key{NTE}{verbosity}[]{\nodetreeoption[verbosity]{#1}}
+\define@key{NTE}{verbosity}[]{\NodetreeSetOption[verbosity]{#1}}
 \DeclareStringOption[colored]{color}
-\define@key{NTE}{color}[]{\nodetreeoption[color]{#1}}
+\define@key{NTE}{color}[]{\NodetreeSetOption[color]{#1}}
 \DeclareStringOption[1]{unit}
-\define@key{NTE}{unit}[]{\nodetreeoption[unit]{#1}}
+\define@key{NTE}{unit}[]{\NodetreeSetOption[unit]{#1}}
 \DeclareStringOption[1]{decimalplaces}
-\define@key{NTE}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
+\define@key{NTE}{decimalplaces}[]{\NodetreeSetOption[decimalplaces]{#1}}
 \DeclareStringOption[smyck]{theme}
 \DeclareStringOption[dark]{thememode}
 \DeclareStringOption[Ubuntu Mono]{font}
 \DeclareStringOption[\footnotesize]{fontsize}
+\ProcessKeyvalOptions{NTE}
 \ExplSyntaxOn
 \def\NTE@colors{
   \str_case_e:nn{\NTEK@theme}{
@@ -202,10 +200,15 @@
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{-0.9pt}%
 }
-\def\nodetreereset{
-  \nodetreeset{theme=monokaisoda,thememode=dark,font={Ubuntu Mono},fontsize=\tiny}
+\newcommand{\NodetreeSet}[1]{%
+  \setkeys{NTE}{#1}%
 }
-\newenvironment{nodetreeexample}[1][]{
+\let\nodetreeset\NodetreeSet
+\def\NodetreeReset{
+  \NodetreeSet{theme=monokaisoda,thememode=dark,font={Ubuntu Mono},fontsize=\tiny}
+}
+\let\nodetreereset\NodetreeReset
+\newenvironment{NodetreeExample}[1][]{
   \setkeys{NTE}{#1}
   \NTE@colors
   \begin{mdframed}[
@@ -217,19 +220,20 @@
 }{
   \end{mdframed}%
 }
-\newcommand{\nodetreeterminalemulator}[2][]{
+\newcommand{\NodetreeTerminalEmulator}[2][]{
   \setkeys{NTE}{#1}
-  \begin{nodetreeexample}
+  \begin{NodetreeExample}
   \input{#2.nttex}
-  \end{nodetreeexample}
+  \end{NodetreeExample}
 }
-\NewDocumentEnvironment { nodetreeembed } { O{} +b } {
-  \begin{nodetreeexample}
+\let\nodetreeterminalemulator\NodetreeTerminalEmulator
+\NewDocumentEnvironment { NodetreeEmbed } { O{} +b } {
+  \begin{NodetreeExample}
     \directlua{
       nodetree = require('nodetree')
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
-  \end{nodetreeexample}
+  \end{NodetreeExample}
 }{}
 \endinput
 %%

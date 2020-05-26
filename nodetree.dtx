@@ -39,7 +39,7 @@
   filecolor=red,
   urlcolor=red,
 ]{hyperref}
-\usepackage[theme=molokai,thememode=dark,documentationmode]{nodetree-embed}
+\usepackage[theme=molokai,thememode=dark]{nodetree-embed}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -64,9 +64,9 @@
 
 
 \newcommand{\TmpExample}[1]{
-\begin{nodetreeexample}
+\begin{NodetreeExample}
 \input{examples/#1.nttex}
-\end{nodetreeexample}
+\end{NodetreeExample}
 }
 
 \newcommand{\TmpVerbExample}[1]{
@@ -104,9 +104,9 @@
 
 \maketitle
 
-\begin{nodetreeexample}[fontsize=\footnotesize]
+\begin{NodetreeExample}[fontsize=\footnotesize]
 \input{examples/packagename.nttex}
-\end{nodetreeexample}
+\end{NodetreeExample}
 
 \newpage
 
@@ -156,7 +156,7 @@ Lua\TeX{}.
 
 \begin{minted}{latex}
 \input{nodetree.tex}
-\nodetreeregister{postline}
+\NodetreeRegisterCallback{postline}
 
 Lorem ipsum dolor.
 \bye
@@ -169,10 +169,10 @@ Lorem ipsum dolor.
 \subsection{As a Lua\LaTeX{} package}
 
 Or run |lualatex lualatex-test.tex| to show a node tree using
-Lua\LaTeX{}. In Lua\LaTeX{} you can omit |\nodetreeregister{postline}|.
+Lua\LaTeX{}. In Lua\LaTeX{} you can omit |\NodetreeRegisterCallback{postline}|.
 |\usepackage{nodetree}| registers automatically the
 |post_linebreak_filter|. If you don’t want debug the
-|post_linebreak_filter| use |\nodetreeunregister{postline}|.
+|post_linebreak_filter| use |\NodetreeUnregisterCallback{postline}|.
 
 \begin{minted}{latex}
 \documentclass{article}
@@ -275,7 +275,7 @@ The single purpose of this auxilliary package is to provide a termial
 like view that mimiks the output of nodetree in a terminal and that
 can be embeded in a Lua\LaTeX file. You have to compile documents
 using this embeded view with the option --shell-escape. The main
-environment is nodetreeembed. Markup inside this environment is
+environment is NodetreeEmbed. Markup inside this environment is
 written into a temporary \LaTeX file. This file is compiled in the
 background and the nodetree output is embded into this view.
 
@@ -286,50 +286,50 @@ background and the nodetree output is embded into this view.
 \section{Macros}
 
 %%
-% \nodetreeregister
+% \NodetreeRegisterCallback
 %%
 
-\subsection{\cmd{\nodetreeregister}}
+\subsection{\cmd{\NodetreeRegisterCallback}}
 
-\DescribeMacro{\nodetreeregister}
-\cmd{\nodetreeregister}\marg{callbacks}: The argument \marg{callbacks}
+\DescribeMacro{\NodetreeRegisterCallback}
+\cmd{\NodetreeRegisterCallback}\marg{callbacks}: The argument \marg{callbacks}
 takes a comma separated list of callback aliases as described in
 \secref{sec:option-callback}.
 
 %%
-% \nodetreeunregister
+% \NodetreeUnregisterCallback
 %%
 
-\subsection{\cmd{\nodetreeunregister}}
+\subsection{\cmd{\NodetreeUnregisterCallback}}
 
-\DescribeMacro{\nodetreeunregister}
-\cmd{\nodetreeunregister}\marg{callbacks}: The argument \marg{callbacks}
+\DescribeMacro{\NodetreeUnregisterCallback}
+\cmd{\NodetreeUnregisterCallback}\marg{callbacks}: The argument \marg{callbacks}
 takes a comma separated list of callback aliases as described in
 \secref{sec:option-callback}.
 
 %%
-% \nodetreeoption
+% \NodetreeSetOption
 %%
 
-\subsection{\cmd{\nodetreeoption}}
+\subsection{\cmd{\NodetreeSetOption}}
 
-\DescribeMacro{\nodetreeoption}
-\cmd{\nodetreeoption}\oarg{option}\marg{value}: \secref{sec:options}
+\DescribeMacro{\NodetreeSetOption}
+\cmd{\NodetreeSetOption}\oarg{option}\marg{value}: \secref{sec:options}
 This macro sets the option \oarg{option} to the value \marg{value}.
 
 %%
-% \nodetreeset
+% \NodetreeSet
 %%
 
-\subsection{\cmd{\nodetreeset}}
+\subsection{\cmd{\NodetreeSet}}
 
-\DescribeMacro{\nodetreeset}
-\cmd{\nodetreeset}\marg{kv-options}:
+\DescribeMacro{\NodetreeSet}
+\cmd{\NodetreeSet}\marg{kv-options}:
 This macro can only be used in Lua\LaTeX{}. \marg{kv-options} are key
 value pairs.
 
 \begin{code}
-\nodetreeset{color=no,callbacks={hpack,vpack},verbosity=2}
+\NodetreeSet{color=no,callbacks={hpack,vpack},verbosity=2}
 \end{code}
 
 %-----------------------------------------------------------------------
@@ -353,21 +353,21 @@ the overview of callbacks (\rightarrow{} Figure \ref{fig:callback}).
 Lua\TeX reference manual.
 
 This macros process callback options:
-\cmd{\nodetreeregister}\marg{callbacks},
-\cmd{\nodetreeunregister}\marg{callbacks},
-\cmd{\nodetreeset}\marg{callback=<callbacks>} and
+\cmd{\NodetreeRegisterCallback}\marg{callbacks},
+\cmd{\NodetreeUnregisterCallback}\marg{callbacks},
+\cmd{\NodetreeSet}\marg{callback=<callbacks>} and
 \cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}.
 
 Use commas to specify mulitple callbacks. Avoid using whitespaces:
 
 \begin{code}
-\nodetreeregister{preline,line,postline}
+\NodetreeRegisterCallback{preline,line,postline}
 \end{code}
 
-Wrap your callback aliases in curly braces for the macro |\nodetreeset|:
+Wrap your callback aliases in curly braces for the macro |\NodetreeSet|:
 
 \begin{code}
-\nodetreeset{callback={preline,line,postline}}
+\NodetreeSet{callback={preline,line,postline}}
 \end{code}
 
 The same applies for the macro |\usepackage|:
@@ -494,15 +494,15 @@ implemented.
 
 \subsubsection{Example \texttt{verbosity=1}}
 
-\nodetreeterminalemulator{examples/option_verbosity-1}
+\NodetreeTerminalEmulator{examples/option_verbosity-1}
 
 \subsubsection{Example \texttt{verbosity=2}}
 
-\nodetreeterminalemulator{examples/option_verbosity-2}
+\NodetreeTerminalEmulator{examples/option_verbosity-2}
 
 \subsubsection{Example \texttt{verbosity=3}}
 
-\nodetreeterminalemulator{examples/option_verbosity-3}
+\NodetreeTerminalEmulator{examples/option_verbosity-3}
 
 %%
 % color
@@ -582,9 +582,9 @@ Width of the capital letter M \\
 \end{figure}
 
 
-\nodetreeterminalemulator{examples/option_unit-pt}
-\nodetreeterminalemulator{examples/option_unit-sp}
-\nodetreeterminalemulator{examples/option_unit-cm}
+\NodetreeTerminalEmulator{examples/option_unit-pt}
+\NodetreeTerminalEmulator{examples/option_unit-sp}
+\NodetreeTerminalEmulator{examples/option_unit-cm}
 
 %%
 % decimalplaces
@@ -596,7 +596,7 @@ The options |decimalplaces| sets the number of decimal places for some
 node fields.
 
 \begin{code}
-\nodetreeoption[decimalplaces]{4}
+\NodetreeSetOption[decimalplaces]{4}
 \end{code}
 
 gets
@@ -617,7 +617,7 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \newcommand{\TmpExampleTheme}[2]{
   \subsubsection{Example \texttt{theme=#1} \texttt{thememode=#2}}
-  \nodetreeterminalemulator[theme=#1,thememode=#2]{examples/minimal}
+  \NodetreeTerminalEmulator[theme=#1,thememode=#2]{examples/minimal}
 }
 
 \subsection{Option \texttt{theme} and \texttt{thememode}}
@@ -646,7 +646,7 @@ If |decimalplaces| is set to |0| only integer values are shown.
 \TmpExampleTheme{monokaisoda}{dark}
 \TmpExampleTheme{monokaisoda}{light}
 
-\nodetreereset
+\NodetreeReset
 
 %%
 % font
@@ -654,11 +654,11 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \subsection{Option \texttt{font}}
 
-\nodetreeset{fontsize=\small}
+\NodetreeSet{fontsize=\small}
 
 \newcommand{\TmpExampleFont}[1]{
   \subsubsection{Example \texttt{font=\{#1\}}}
-  \nodetreeterminalemulator[font={#1}]{examples/minimal}
+  \NodetreeTerminalEmulator[font={#1}]{examples/minimal}
 }
 
 \TmpExampleFont{FreeMono}
@@ -667,7 +667,7 @@ If |decimalplaces| is set to |0| only integer values are shown.
 \TmpExampleFont{Ubuntu Mono}
 
 
-\nodetreereset
+\NodetreeReset
 
 %%
 % fontsize
@@ -677,13 +677,13 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \string\small
 
-\nodetreeterminalemulator[fontsize=\small]{examples/minimal}
+\NodetreeTerminalEmulator[fontsize=\small]{examples/minimal}
 
 \string\tiny
 
-\nodetreeterminalemulator[fontsize=\tiny]{examples/minimal}
+\NodetreeTerminalEmulator[fontsize=\tiny]{examples/minimal}
 
-\nodetreereset
+\NodetreeReset
 
 %-----------------------------------------------------------------------
 % Visual tree structure
@@ -896,35 +896,38 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 }
 %    \end{macrocode}
 %
-% \begin{macro}{\nodetreeoption}
+% \begin{macro}{\NodetreeSetOption}
 %    \begin{macrocode}
-\def\nodetreeoption[#1]#2{
+\def\NodetreeSetOption[#1]#2{
   \directlua{
     nodetree.set_option('#1', '#2')
   }
 }
+\let\nodetreeoption\NodetreeSetOption
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\nodetreeregister}
+% \begin{macro}{\NodetreeRegisterCallback}
 %    \begin{macrocode}
-\def\nodetreeregister#1{
+\def\NodetreeRegisterCallback#1{
   \directlua{
     nodetree.set_option('callback', '#1')
     nodetree.register_callbacks()
   }
 }
+\let\nodetreeregister\NodetreeRegisterCallback
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\nodetreeunregister}
+% \begin{macro}{\NodetreeUnregisterCallback}
 %    \begin{macrocode}
-\def\nodetreeunregister#1{
+\def\NodetreeUnregisterCallback#1{
   \directlua{
     nodetree.set_option('callback', '#1')
     nodetree.unregister_callbacks()
   }
 }
+\let\nodetreeunregister\NodetreeUnregisterCallback
 %    \end{macrocode}
 % \end{macro}
 %
@@ -958,32 +961,32 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %
 %    \begin{macrocode}
 \DeclareStringOption[term]{channel}
-\define@key{NT}{channel}[]{\nodetreeoption[channel]{#1}}
+\define@key{NT}{channel}[]{\NodetreeSetOption[channel]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[postlinebreak]{callback}
-\define@key{NT}{callback}[]{\nodetreeoption[callback]{#1}}
+\define@key{NT}{callback}[]{\NodetreeSetOption[callback]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{verbosity}
-\define@key{NT}{verbosity}[]{\nodetreeoption[verbosity]{#1}}
+\define@key{NT}{verbosity}[]{\NodetreeSetOption[verbosity]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[colored]{color}
-\define@key{NT}{color}[]{\nodetreeoption[color]{#1}}
+\define@key{NT}{color}[]{\NodetreeSetOption[color]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{unit}
-\define@key{NT}{unit}[]{\nodetreeoption[unit]{#1}}
+\define@key{NT}{unit}[]{\NodetreeSetOption[unit]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{decimalplaces}
-\define@key{NT}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
+\define@key{NT}{decimalplaces}[]{\NodetreeSetOption[decimalplaces]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -993,59 +996,63 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 }
 %    \end{macrocode}
 %
-% \begin{macro}{\nodetreeset}
-%    \begin{macrocode}
-\newcommand{\nodetreeset}[1]{%
-  \setkeys{NT}{#1}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \iffalse
 %</package>
 %<*packageembed>
 % \fi
+%    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{nodetree-embed}
   [2020/05/24 v1.2 Embed node trees into a LaTeX document]
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \RequirePackage{xcolor,mdframed,expl3,xparse,fontspec}
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\input{nodetree}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
-  family=NT,
+  family=NTE,
   prefix=NTEK@
 }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \directlua{
   nodetree = require('nodetree')
   nodetree.check_shell_escape()
   nodetree.set_option('engine', 'lualatex')
 }
-\ProcessKeyvalOptions{NTE}
-
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 \DeclareStringOption[postlinebreak]{callback}
-\define@key{NTE}{callback}[]{\nodetreeoption[callback]{#1}}
+\define@key{NTE}{callback}[]{\NodetreeSetOption[callback]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{verbosity}
-\define@key{NTE}{verbosity}[]{\nodetreeoption[verbosity]{#1}}
+\define@key{NTE}{verbosity}[]{\NodetreeSetOption[verbosity]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[colored]{color}
-\define@key{NTE}{color}[]{\nodetreeoption[color]{#1}}
+\define@key{NTE}{color}[]{\NodetreeSetOption[color]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{unit}
-\define@key{NTE}{unit}[]{\nodetreeoption[unit]{#1}}
+\define@key{NTE}{unit}[]{\NodetreeSetOption[unit]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1]{decimalplaces}
-\define@key{NTE}{decimalplaces}[]{\nodetreeoption[decimalplaces]{#1}}
+\define@key{NTE}{decimalplaces}[]{\NodetreeSetOption[decimalplaces]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -1062,6 +1069,10 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %
 %    \begin{macrocode}
 \DeclareStringOption[\footnotesize]{fontsize}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\ProcessKeyvalOptions{NTE}
 %    \end{macrocode}
 %
 % \begin{macro}{\NTE@colors}
@@ -1224,17 +1235,27 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\nodetreereset}
+% \begin{macro}{\NodetreeSet}
 %    \begin{macrocode}
-\def\nodetreereset{
-  \nodetreeset{theme=monokaisoda,thememode=dark,font={Ubuntu Mono},fontsize=\tiny}
+\newcommand{\NodetreeSet}[1]{%
+  \setkeys{NTE}{#1}%
 }
+\let\nodetreeset\NodetreeSet
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{environment}{nodetreeexample}
+% \begin{macro}{\NodetreeReset}
 %    \begin{macrocode}
-\newenvironment{nodetreeexample}[1][]{
+\def\NodetreeReset{
+  \NodetreeSet{theme=monokaisoda,thememode=dark,font={Ubuntu Mono},fontsize=\tiny}
+}
+\let\nodetreereset\NodetreeReset
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{environment}{NodetreeExample}
+%    \begin{macrocode}
+\newenvironment{NodetreeExample}[1][]{
   \setkeys{NTE}{#1}
   \NTE@colors
   \begin{mdframed}[
@@ -1249,26 +1270,27 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %    \end{macrocode}
 % \end{environment}
 %
-% \begin{macro}{\nodetreetermemulator}
+% \begin{macro}{\NodetreeTerminalEmulator}
 %    \begin{macrocode}
-\newcommand{\nodetreeterminalemulator}[2][]{
+\newcommand{\NodetreeTerminalEmulator}[2][]{
   \setkeys{NTE}{#1}
-  \begin{nodetreeexample}
+  \begin{NodetreeExample}
   \input{#2.nttex}
-  \end{nodetreeexample}
+  \end{NodetreeExample}
 }
+\let\nodetreeterminalemulator\NodetreeTerminalEmulator
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{environment}{nodetreeembed}
+% \begin{environment}{NodetreeEmbed}
 %    \begin{macrocode}
-\NewDocumentEnvironment { nodetreeembed } { O{} +b } {
-  \begin{nodetreeexample}
+\NewDocumentEnvironment { NodetreeEmbed } { O{} +b } {
+  \begin{NodetreeExample}
     \directlua{
       nodetree = require('nodetree')
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
-  \end{nodetreeexample}
+  \end{NodetreeExample}
 }{}
 %    \end{macrocode}
 % \end{environment}

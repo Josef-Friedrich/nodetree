@@ -118,7 +118,7 @@ local format = {
   -- @treturn string
   color_tex = function(color, mode)
     if not mode then mode = '' end
-    return 'NT' .. color .. mode
+    return 'NTE' .. color .. mode
   end,
 
   ---

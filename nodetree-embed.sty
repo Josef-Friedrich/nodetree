@@ -34,7 +34,6 @@
   nodetree = require('nodetree')
   nodetree.check_shell_escape()
 }
-\DeclareStringOption[postlinebreak]{callback}
 \define@key{NTE}{callback}[]{\NodetreeSetOption[callback]{#1}}
 \DeclareStringOption[1]{verbosity}
 \define@key{NTE}{verbosity}[]{\NodetreeSetOption[verbosity]{#1}}
@@ -227,9 +226,9 @@
 }
 \let\nodetreeterminalemulator\NodetreeTerminalEmulator
 \NewDocumentEnvironment { NodetreeEmbed } { O{} +b } {
+  \setkeys{NTE}{#1}
   \begin{NodetreeExample}
     \directlua{
-      nodetree = require('nodetree')
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
   \end{NodetreeExample}

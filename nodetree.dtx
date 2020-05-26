@@ -104,9 +104,9 @@
 
 \maketitle
 
-\begin{NodetreeExample}[fontsize=\footnotesize]
-\input{examples/packagename.nttex}
-\end{NodetreeExample}
+\begin{NodetreeEmbed}
+nodetree
+\end{NodetreeEmbed}
 
 \newpage
 
@@ -494,15 +494,15 @@ implemented.
 
 \subsubsection{Example \texttt{verbosity=1}}
 
-\NodetreeTerminalEmulator{examples/option_verbosity-1}
+\begin{NodetreeEmbed}[verbosity=1,callback=pre_linebreak_filter]
+.
+\end{NodetreeEmbed}
 
 \subsubsection{Example \texttt{verbosity=2}}
 
-\NodetreeTerminalEmulator{examples/option_verbosity-2}
-
-\subsubsection{Example \texttt{verbosity=3}}
-
-\NodetreeTerminalEmulator{examples/option_verbosity-3}
+\begin{NodetreeEmbed}[verbosity=2,callback=pre_linebreak_filter]
+.
+\end{NodetreeEmbed}
 
 %%
 % color
@@ -1026,7 +1026,6 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\DeclareStringOption[postlinebreak]{callback}
 \define@key{NTE}{callback}[]{\NodetreeSetOption[callback]{#1}}
 %    \end{macrocode}
 %
@@ -1280,9 +1279,9 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 % \begin{environment}{NodetreeEmbed}
 %    \begin{macrocode}
 \NewDocumentEnvironment { NodetreeEmbed } { O{} +b } {
+  \setkeys{NTE}{#1}
   \begin{NodetreeExample}
     \directlua{
-      nodetree = require('nodetree')
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
   \end{NodetreeExample}

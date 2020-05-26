@@ -1453,24 +1453,39 @@ local export = {
   --
   -- @treturn string
   compile_include = function(tex_markup)
+    -- Generate a subfolder for all tempory files: _nodetree-jobname.
     local parent_path = lfs.currentdir() .. '/' .. '_nodetree-' .. tex.jobname
     lfs.mkdir(parent_path)
+
+    -- Generate the temporary LuaTeX or LuaLaTeX file.
     example_counter = example_counter + 1
     local filename_tex = example_counter .. '.tex'
     local absolute_path_tex = parent_path .. '/' .. filename_tex
     output_file = io.open(absolute_path_tex, 'w')
+
+    -- Process the options
+    local options =
+      '\\NodetreeSetOption[channel]{tex}' .. '\n' ..
+      '\\NodetreeSetOption[verbosity]{' .. options.verbosity .. '}' .. '\n' ..
+      '\\NodetreeUnregisterCallback{post_linebreak_filter}'  .. '\n' ..
+      '\\NodetreeRegisterCallback{' .. options.callback .. '}'
+
     local prefix = '%!TEX program = lualatex\n' ..
                   '\\documentclass{article}\n' ..
-                  '\\usepackage[channel=tex]{nodetree}\n' ..
+                  '\\usepackage{nodetree}\n' ..
+                  options .. '\n' ..
                   '\\begin{document}\n'
     local suffix = '\n\\end{document}'
     output_file:write(prefix .. tex_markup .. suffix)
     output_file:close()
+
+    -- Compile the temporary LuaTeX or LuaLaTeX file.
     os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
     local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'rb'))
     local include_content = include_file:read("*all")
     include_file:close()
-    tex.print(include_content:gsub("[\r\n]", ""))
+    include_content = include_content:gsub('[\r\n]', '')
+    tex.print(include_content)
   end,
 
   --- Check for `--shell-escape`

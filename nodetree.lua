@@ -1463,10 +1463,16 @@ local export = {
     local absolute_path_tex = parent_path .. '/' .. filename_tex
     output_file = io.open(absolute_path_tex, 'w')
 
+    local format_option = function (key, value)
+      return '\\NodetreeSetOption[' .. key .. ']{' .. value .. '}' .. '\n'
+    end
+
     -- Process the options
     local options =
-      '\\NodetreeSetOption[channel]{tex}' .. '\n' ..
-      '\\NodetreeSetOption[verbosity]{' .. options.verbosity .. '}' .. '\n' ..
+      format_option('channel', 'tex') ..
+      format_option('verbosity', options.verbosity) ..
+      format_option('unit', options.unit) ..
+      format_option('decimalplaces', options.decimalplaces) ..
       '\\NodetreeUnregisterCallback{post_linebreak_filter}'  .. '\n' ..
       '\\NodetreeRegisterCallback{' .. options.callback .. '}'
 

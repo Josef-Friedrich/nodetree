@@ -496,17 +496,15 @@ Higher integer values result in a more verbose output. The default value
 for this options is |1|. At the moment only verbosity level |2| is
 implemented.
 
-\subsubsection{Example \texttt{verbosity=1}}
+\def\TmpExampleVerbosity#1{
+  \subsubsection{Example: \texttt{verbosity=#1}}
+  \begin{NodetreeEmbed}[verbosity=#1,callback=pre_linebreak_filter]
+  .
+  \end{NodetreeEmbed}
+}
 
-\begin{NodetreeEmbed}[verbosity=1,callback=pre_linebreak_filter]
-.
-\end{NodetreeEmbed}
-
-\subsubsection{Example \texttt{verbosity=2}}
-
-\begin{NodetreeEmbed}[verbosity=2,callback=pre_linebreak_filter]
-.
-\end{NodetreeEmbed}
+\TmpExampleVerbosity{1}
+\TmpExampleVerbosity{2}
 
 %%
 % color
@@ -585,10 +583,18 @@ Width of the capital letter M \\
 \label{fig:relative-units}
 \end{figure}
 
+\NodetreeSetOption[verbosity]{1}
 
-\NodetreeTerminalEmulator{examples/option_unit-pt}
-\NodetreeTerminalEmulator{examples/option_unit-sp}
-\NodetreeTerminalEmulator{examples/option_unit-cm}
+\def\TmpExampleUnit#1{
+  \subsubsection{Example: \texttt{unit=#1}}
+  \begin{NodetreeEmbed}[unit=#1,callback=pre_linebreak_filter]
+  Lorem.
+  \end{NodetreeEmbed}
+}
+
+\TmpExampleUnit{pt}
+\TmpExampleUnit{sp}
+\TmpExampleUnit{cm}
 
 %%
 % decimalplaces
@@ -597,31 +603,33 @@ Width of the capital letter M \\
 \subsection{Option \texttt{decimalplaces}}
 
 The options |decimalplaces| sets the number of decimal places for some
-node fields.
+node fields. If |decimalplaces| is set to |0| only integer values are shown.
+
 
 \begin{code}
 \NodetreeSetOption[decimalplaces]{4}
 \end{code}
 
-gets
+\def\TmpExampleDecimalplaces#1{
+  \subsubsection{Example: \texttt{decimalplaces=#1}}
+  \begin{NodetreeEmbed}[unit=cc,decimalplaces=#1,callback=pre_linebreak_filter]
+  Lorem.
+  \end{NodetreeEmbed}
+}
 
-\begin{code}
-├─GLYPH char: "a"; width: 5pt; height: 4.3055pt;
-\end{code}
+\TmpExampleDecimalplaces{0}
+\TmpExampleDecimalplaces{2}
+\TmpExampleDecimalplaces{5}
 
-If |decimalplaces| is set to |0| only integer values are shown.
-
-\begin{code}
-├─GLYPH char: "a"; width: 5pt; height: 4pt;
-\end{code}
+\NodetreeReset
 
 %%
 % theme and thememode
 %%
 
-\newcommand{\TmpExampleTheme}[2]{
-  \subsubsection{Example \texttt{theme=#1} \texttt{thememode=#2}}
-  \begin{NodetreeEmbed}[callback=pre_linebreak_filter,theme=#1,thememode=#2]
+\def\TmpExampleTheme#1#2{
+  \subsubsection{Example: \texttt{theme=#1} \texttt{thememode=#2}}
+  \begin{NodetreeEmbed}[callback=pre_linebreak_filter,theme=#1,thememode=#2,fontsize=\small]
   .
   \end{NodetreeEmbed}
 }
@@ -646,8 +654,8 @@ If |decimalplaces| is set to |0| only integer values are shown.
 
 \NodetreeSet{fontsize=\small}
 
-\newcommand{\TmpExampleFont}[1]{
-  \subsubsection{Example \texttt{font=\{#1\}}}
+\def\TmpExampleFont#1{
+  \subsubsection{Example: \texttt{font=\{#1\}}}
   \NodetreeTerminalEmulator[font={#1}]{examples/minimal}
 }
 
@@ -667,13 +675,15 @@ UNICODE glyphs \ref{fig:unicode}).
 
 \subsection{Option \texttt{fontsize}}
 
-\string\small
+\def\TmpExampleFontSize#1{
+  \subsubsection{Example: \string#1}
+  \begin{NodetreeEmbed}[callback=pre_linebreak_filter,fontsize=#1]
+  .
+  \end{NodetreeEmbed}
+}
 
-\NodetreeTerminalEmulator[fontsize=\small]{examples/minimal}
-
-\string\tiny
-
-\NodetreeTerminalEmulator[fontsize=\tiny]{examples/minimal}
+\TmpExampleFontSize{\small}
+\TmpExampleFontSize{\tiny}
 
 \NodetreeReset
 
@@ -712,7 +722,6 @@ default terminal font should contain this characters to obtain the tree
 view. Eight box drawing characters are necessary.
 
 \begin{figure}
-\label{fig:unicode}
 {
 \fontspec{DejaVu Sans Mono}
 \begin{tabular}{lcl}
@@ -728,6 +737,7 @@ U+2560 & ╠ & BOX DRAWINGS DOUBLE VERTICAL AND RIGHT \\
 \end{tabular}
 }
 \caption{The UNICODE box drawings glyphs}
+\label{fig:unicode}
 \end{figure}
 
 \noindent
@@ -1163,7 +1173,7 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 % \begin{macro}{\NodetreeReset}
 %    \begin{macrocode}
 \def\NodetreeReset{
-  \NodetreeSet{theme=monokaisoda,thememode=dark,font={Ubuntu Mono},fontsize=\tiny}
+  \NodetreeSet{theme=monokaisoda,thememode=dark,font={Ubuntu Mono},fontsize=\small}
 }
 \let\nodetreereset\NodetreeReset
 %    \end{macrocode}

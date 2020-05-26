@@ -32,12 +32,16 @@ local example_counter = 0
 local options = {
   verbosity = 1,
   callback = 'post_linebreak_filter',
-  engine = 'luatex',
+  engine = 'luatex', -- Required for the callback registration
   color = 'colored',
   decimalplaces = 2,
   unit = 'pt',
   channel = 'term',
 }
+
+if arg[0] == 'lualatex' then
+  options.engine = 'lualatex'
+end
 
 --- File descriptor
 local output_file

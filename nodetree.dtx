@@ -892,7 +892,6 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %    \begin{macrocode}
 \directlua{
   nodetree = require('nodetree')
-  nodetree.set_option('engine', 'luatex')
 }
 %    \end{macrocode}
 %
@@ -943,9 +942,6 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 %
 %    \begin{macrocode}
 \input{nodetree}
-\directlua{
-  nodetree.set_option('engine', 'lualatex')
-}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -1026,7 +1022,6 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 \directlua{
   nodetree = require('nodetree')
   nodetree.check_shell_escape()
-  nodetree.set_option('engine', 'lualatex')
 }
 %    \end{macrocode}
 %

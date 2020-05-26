@@ -5,12 +5,11 @@
 \begin{document}
 
 \directlua{
-
-local test = function (head)
-  nodetree.analyze(head)
-end
-
-luatexbase.add_to_callback('post_linebreak_filter', test, 'test')
+  local test = function (head)
+    nodetree.analyze(head)
+    return head
+  end
+  luatexbase.add_to_callback('post_linebreak_filter', test, 'test')
 }
 
 Lorem ipsum dolor.

@@ -33,7 +33,6 @@
 \directlua{
   nodetree = require('nodetree')
   nodetree.check_shell_escape()
-  nodetree.set_option('engine', 'lualatex')
 }
 \DeclareStringOption[postlinebreak]{callback}
 \define@key{NTE}{callback}[]{\NodetreeSetOption[callback]{#1}}

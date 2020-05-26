@@ -479,8 +479,12 @@ manual.
 You can select the debug output channel with this option. The default
 value for the option |channel| is |term| which displays the node tree in
 the current terminal. Specify |log| and the package creates a log file
-named |jobname_nodetree.log|. |jobname| is the name of your file you
-want to debug.
+named |jobname.ntlog|. Specify |tex| and a log file named
+|jobname.nttex| is creatred. |nt...| stands for |nodetree|.
+|jobname| is the basename of your file you want to debug. The debug
+channel is only useful for the auxiliary package |nodetree-embed|. Paste
+the markup in the environment |NodetreeExample| and you get a
+terminal like view in your document.
 
 %%
 % verbosity

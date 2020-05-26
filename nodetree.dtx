@@ -269,15 +269,66 @@ Lorem ipsum dolor.
 \end{document}
 \end{minted}
 
-\subsection{The package nodetree-embed}
+\subsection{The package \texttt{nodetree-embed}}
 
-The single purpose of this auxilliary package is to provide a termial
-like view that mimiks the output of nodetree in a terminal and that
-can be embeded in a Lua\LaTeX file. You have to compile documents
-using this embeded view with the option --shell-escape. The main
-environment is NodetreeEmbed. Markup inside this environment is
-written into a temporary \LaTeX file. This file is compiled in the
-background and the nodetree output is embded into this view.
+The single purpose of this auxiliary package is to provide a view
+similar to a terminal (console) output.
+This view mimics the output
+of |nodetree| in a terminal.
+The view can be embedded in a Lua\LaTeX{} file. You have to
+compile documents using this embedded view with the option
+|--shell-escape|.
+The main environment of this package is |NodetreeEmbed|.
+Markup
+inside this environment is written into a temporary \LaTeX{} file.
+This file is compiled in the background by |latexmk| and the
+|nodetree| output is embded into this view.
+The following list shows the single intermediate steps:
+
+\begin{enumerate}
+
+\item |jobname.tex|
+
+\begin{minted}{latex}
+\begin{NodetreeEmbed}
+nodetree
+\end{NodetreeEmbed}
+\end{minted}
+
+\item |_nodetree-jobname/1.tex|
+
+\begin{minted}{latex}
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{nodetree}
+\NodetreeSetOption[channel]{tex}
+\NodetreeSetOption[verbosity]{1}
+\NodetreeSetOption[unit]{pt}
+\NodetreeSetOption[decimalplaces]{2}
+\NodetreeUnregisterCallback{post_linebreak_filter}
+\NodetreeRegisterCallback{post_linebreak_filter}
+\begin{document}
+nodetree
+\end{document}
+\end{minted}
+
+\item |_nodetree-jobname/1.nttex|: This temporary Lua\LaTeX file is
+compiled using |latexmk| and embed in the environment |NodetreeEmbed|
+
+\begin{minted}{latex}
+\par{}\par{}Callback: \textcolor{NTEred}{post\_linebreak\_filter}\par{}
+------------------------------------------\par{}
+\mbox{├─\textcolor{NTEmagentabright}{GLUE\hspace{0.5em}}\textcolor{NTEyellow}{subtype:} baselineskip, \textcolor{NTEyellow}{width:} 5.06\textcolor{NTEwhite}{pt}}\par{}
+...
+\end{minted}
+
+\item Finally the result:
+
+\begin{NodetreeEmbed}
+nodetree
+\end{NodetreeEmbed}
+
+\end{enumerate}
 
 %-----------------------------------------------------------------------
 % Macros
@@ -839,11 +890,16 @@ The characters \emph{ffi} are deeply nested in a discretionary node.
 \TmpNodeType{attribute}{38}
 \TmpNodeType{attributelist}{40}
 
+  \DocInput{nodetree.dtx}
+
+  \subsection{The file nodetree.lua}
+
+  \inputminted{lua}{nodetree.lua}
+
 %-----------------------------------------------------------------------
 % Index
 %-----------------------------------------------------------------------
 
-  \DocInput{nodetree.dtx}
   \pagebreak
   \PrintChanges
   \pagebreak

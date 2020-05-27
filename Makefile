@@ -17,11 +17,12 @@ install:
 doc: doc_examples doc_pdf
 
 doc_pdf:
-	lualatex --shell-escape $(jobname).dtx
-	makeindex -s gglo.ist -o $(jobname).gls $(jobname).glo
-	makeindex -s gind.ist -o $(jobname).ind $(jobname).idx
-	lualatex --shell-escape $(jobname).dtx
+	lualatex --shell-escape documentation.tex
+	makeindex -s gglo.ist -o documentation.gls documentation.glo
+	makeindex -s gind.ist -o documentation.ind documentation.idx
+	lualatex --shell-escape documentation.tex
 	mkdir -p $(texmf)/doc
+	mv documentation.pdf nodetree.pdf
 	cp $(jobname).pdf $(texmf)/doc
 
 doc_examples:

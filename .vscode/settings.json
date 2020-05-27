@@ -8,5 +8,34 @@
     "tex",
     "unicode"
   ],
-  "latex-workshop.latex.autoBuild.run": "never"
+  "latex-workshop.latex.autoBuild.run": "never",
+  "files.exclude": {
+    "**/*.DS_Store": true,
+    "**/*.aux": true,
+    "**/*.log": true,
+    "**/*.pdf": true,
+    "**/*.fdb_latexmk": true,
+    "**/*.synctex.gz": true,
+    "**/*.out": true,
+    "**/*.glo": true,
+    "**/*.gls": true,
+    "**/*.idx": true,
+    "**/*.ilg": true,
+    "**/*.ind": true,
+    "**/*.fls": true,
+    "**/*.toc": true,
+    "**/*.tar.gz": true,
+    "**/*.bbl": true,
+    "**/*.bcf": true,
+    "**/*.blg": true,
+    "**/*.run.xml": true,
+    "**/*.tar": true,
+    "nodetree/*": true,
+    "**/*_nodetree.tex": true,
+    "**/*_nodetree.log": true,
+    "**/_minted*": true,
+    "**/*.nttex": true,
+    "**/*.ntlog": true,
+    "**/_nodetree*": true
+  }
 }

@@ -47,6 +47,7 @@
 \DeclareStringOption[dark]{thememode}
 \DeclareStringOption[Ubuntu Mono]{font}
 \DeclareStringOption[\footnotesize]{fontsize}
+\DeclareBoolOption{showmarkup}
 \ProcessKeyvalOptions{NTE}
 \ExplSyntaxOn
 \def\NTE@colors{
@@ -155,6 +156,10 @@
 \let\nodetreeterminalemulator\NodetreeTerminalEmulator
 \NewDocumentEnvironment { NodetreeEmbed } { O{} +b } {
   \setkeys{NTE}{#1}
+  \ifNTEK@showmarkup
+    \texttt{\detokenize{#2}}
+  \else
+  \fi
   \NTE@colors
   \begin{NodetreeExample}
     \directlua{

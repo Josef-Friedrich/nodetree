@@ -250,6 +250,10 @@
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+\DeclareBoolOption{showmarkup}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \ProcessKeyvalOptions{NTE}
 %    \end{macrocode}
 %
@@ -392,6 +396,10 @@
 %    \begin{macrocode}
 \NewDocumentEnvironment { NodetreeEmbed } { O{} +b } {
   \setkeys{NTE}{#1}
+  \ifNTEK@showmarkup
+    \texttt{\detokenize{#2}}
+  \else
+  \fi
   \NTE@colors
   \begin{NodetreeExample}
     \directlua{

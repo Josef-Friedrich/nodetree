@@ -23,7 +23,14 @@
 
 \def\TmpLuaCodeInline#1{\texttt{\scantokens{\catcode`\_=12\relax#1}}}
 
-\def\secref#1{(\rightarrow\ \ref{#1})}
+\def\TmpSecRef#1{(\rightarrow\ \ref{#1})}
+
+\def\TmpPageSecRef#1{
+  Page
+  \pageref{#1},
+  Section
+  \ref{#1}
+}
 
 \newcommand{\TmpGraphics}[1]{
   \noindent
@@ -112,9 +119,11 @@ The package |nodetree| has three usage scenarios.
 It can be used as a standalone Lua module, as a plain Lua\TeX{} or a
 Lua\LaTeX{} package.
 
-%%
+%-----------------------------------------------------------------------
 %
-%%
+%-----------------------------------------------------------------------
+
+\newpage
 
 \subsection{As a plain Lua\TeX{} package}
 
@@ -129,9 +138,61 @@ Lorem ipsum dolor.
 \bye
 \end{minted}
 
-%%
+\subsubsection{Available macros}
+
+\def\TmpTabularMacrosPlainTeX{
+\cmd{\NodetreeRegisterCallback}\marg{callbacks} &
+\TmpPageSecRef{sec:macro:nodetree-register-callback} \\
+
+\cmd{\NodetreeUnregisterCallback}\marg{callbacks} &
+\TmpPageSecRef{sec:macro:nodetree-unregister-callback} \\
+
+\cmd{\NodetreeSetOption}\oarg{option}\marg{value} &
+\TmpPageSecRef{sec:macro:nodetree-set-option} \\
+}
+
+\begin{tabular}{ll}
+\textbf{Macro name} &
+\textbf{Reference} \\
+
+\TmpTabularMacrosPlainTeX
+
+\end{tabular}
+
+\subsubsection{Available options}
+
+\def\TmpTabularOptionsBase{
+|callback| &
+\TmpPageSecRef{sec:option:callback} \\
+
+|channel| &
+\TmpPageSecRef{sec:option:channel} \\
+
+|verbosity| &
+\TmpPageSecRef{sec:option:verbosity} \\
+
+|color| &
+\TmpPageSecRef{sec:option:color} \\
+
+|unit| &
+\TmpPageSecRef{sec:option:unit} \\
+
+|decimalplaces| &
+\TmpPageSecRef{sec:option:decimalplaces} \\
+}
+
+\begin{tabular}{ll}
+\textbf{Option name} &
+\textbf{Reference} \\
+
+\TmpTabularOptionsBase
+\end{tabular}
+
+%-----------------------------------------------------------------------
 %
-%%
+%-----------------------------------------------------------------------
+
+\newpage
 
 \subsection{As a Lua\LaTeX{} package}
 
@@ -150,10 +211,32 @@ Lorem ipsum dolor.
 \end{document}
 \end{minted}
 
-%%
-% inside Lua code
-%%
+\subsubsection{Available macros}
 
+\begin{tabular}{ll}
+\textbf{Macro name} &
+\textbf{Reference} \\
+
+\TmpTabularMacrosPlainTeX
+
+\cmd{\NodetreeSet}\marg{kv-options} &
+\TmpPageSecRef{sec:macro:nodetree-set} \\
+\end{tabular}
+
+\subsubsection{Available options}
+
+\begin{tabular}{ll}
+\textbf{Option name} &
+\textbf{Reference} \\
+
+\TmpTabularOptionsBase
+\end{tabular}
+
+%-----------------------------------------------------------------------
+%
+%-----------------------------------------------------------------------
+
+\newpage
 \subsection{As a Lua module}
 
 Import the Lua module of the package inside
@@ -236,6 +319,11 @@ Lorem ipsum dolor.
 \end{document}
 \end{minted}
 
+%-----------------------------------------------------------------------
+%
+%-----------------------------------------------------------------------
+
+\newpage
 \subsection{The package \texttt{nodetree-embed}}
 
 The single purpose of this auxiliary package is to provide a view
@@ -297,10 +385,31 @@ nodetree
 
 \end{enumerate}
 
+\subsubsection{Available options}
+
+\begin{tabular}{ll}
+\textbf{Option name} &
+\textbf{Reference} \\
+
+\TmpTabularOptionsBase
+
+|theme| &
+\TmpPageSecRef{sec:option:theme} \\
+
+|thememode| &
+\TmpPageSecRef{sec:option:thememode} \\
+
+|font| &
+\TmpPageSecRef{sec:option:font} \\
+
+|fontsize| &
+\TmpPageSecRef{sec:option:fontsize} \\
+\end{tabular}
+
 %-----------------------------------------------------------------------
 % Macros
 %-----------------------------------------------------------------------
-
+\newpage
 \section{Macros}
 
 %%
@@ -308,31 +417,34 @@ nodetree
 %%
 
 \subsection{\cmd{\NodetreeRegisterCallback}}
+\label{sec:macro:nodetree-register-callback}
 
 \DescribeMacro{\NodetreeRegisterCallback}
 \cmd{\NodetreeRegisterCallback}\marg{callbacks}: The argument \marg{callbacks}
 takes a comma separated list of callback aliases as described in
-\secref{sec:option-callback}.
+\TmpSecRef{sec:option:callback}.
 
 %%
 % \NodetreeUnregisterCallback
 %%
 
 \subsection{\cmd{\NodetreeUnregisterCallback}}
+\label{sec:macro:nodetree-unregister-callback}
 
 \DescribeMacro{\NodetreeUnregisterCallback}
 \cmd{\NodetreeUnregisterCallback}\marg{callbacks}: The argument \marg{callbacks}
 takes a comma separated list of callback aliases as described in
-\secref{sec:option-callback}.
+\TmpSecRef{sec:option:callback}.
 
 %%
 % \NodetreeSetOption
 %%
 
 \subsection{\cmd{\NodetreeSetOption}}
+\label{sec:macro:nodetree-set-option}
 
 \DescribeMacro{\NodetreeSetOption}
-\cmd{\NodetreeSetOption}\oarg{option}\marg{value}: \secref{sec:options}
+\cmd{\NodetreeSetOption}\oarg{option}\marg{value}: \TmpSecRef{sec:options}
 This macro sets the option \oarg{option} to the value \marg{value}.
 
 %%
@@ -340,6 +452,7 @@ This macro sets the option \oarg{option} to the value \marg{value}.
 %%
 
 \subsection{\cmd{\NodetreeSet}}
+\label{sec:macro:nodetree-set}
 
 \DescribeMacro{\NodetreeSet}
 \cmd{\NodetreeSet}\marg{kv-options}:
@@ -353,7 +466,7 @@ value pairs.
 %-----------------------------------------------------------------------
 % Options
 %-----------------------------------------------------------------------
-
+\newpage
 \section{Options}
 \label{sec:options}
 
@@ -362,7 +475,7 @@ value pairs.
 %%
 
 \subsection{Option \texttt{callback}}
-\label{sec:option-callback}
+\label{sec:option:callback}
 
 The option |callback| is the most important setting of the package. It
 is possible to specify an alias to select the |callback|. Take a look
@@ -492,7 +605,7 @@ manual.
 %%
 
 \subsection{Option \texttt{channel}}
-\label{sec:option-channel}
+\label{sec:option:channel}
 
 You can select the debug output channel with this option. The default
 value for the option |channel| is |term| which displays the node tree in
@@ -509,6 +622,7 @@ terminal like view in your document.
 %
 
 \subsection{Option \texttt{verbosity}}
+\label{sec:option:verbosity}
 
 Higher integer values result in a more verbose output. The default value
 for this options is |1|. At the moment only verbosity level |2| is
@@ -529,6 +643,7 @@ implemented.
 %%
 
 \subsection{Option \texttt{color}}
+\label{sec:option:color}
 
 The default option for |color| is |colored|. Use any other string (for
 example |none| or |no|) to disable the colored terminal output of the
@@ -543,6 +658,7 @@ package.
 %%
 
 \subsection{Option \texttt{unit}}
+\label{sec:option:unit}
 
 The option |unit| sets the length unit to display all length values of
 the nodes. The default option for |unit| is |pt|. See figure
@@ -619,6 +735,7 @@ Width of the capital letter M \\
 %%
 
 \subsection{Option \texttt{decimalplaces}}
+\label{sec:option:decimalplaces}
 
 The options |decimalplaces| sets the number of decimal places for some
 node fields. If |decimalplaces| is set to |0| only integer values are shown.
@@ -652,6 +769,8 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 }
 
 \subsection{Option \texttt{theme} and \texttt{thememode}}
+\label{sec:option:theme}
+\label{sec:option:thememode}
 
 % bw
 \TmpExampleTheme{bwdark}{dark}
@@ -668,6 +787,7 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 %%
 
 \subsection{Option \texttt{font}}
+\label{sec:option:font}
 
 \NodetreeSet{fontsize=\small}
 
@@ -691,6 +811,7 @@ UNICODE glyphs \ref{fig:unicode}).
 %%
 
 \subsection{Option \texttt{fontsize}}
+\label{sec:option:fontsize}
 
 \def\TmpExampleFontSize#1{
   \subsubsection{Example: \string#1}
@@ -707,7 +828,7 @@ UNICODE glyphs \ref{fig:unicode}).
 %-----------------------------------------------------------------------
 % Visual tree structure
 %-----------------------------------------------------------------------
-
+\newpage
 \section{Visual tree structure}
 
 %%
@@ -786,7 +907,7 @@ For |list| connections \emph{light} characters are shown.
 %-----------------------------------------------------------------------
 % Examples
 %-----------------------------------------------------------------------
-
+\newpage
 \section{Examples}
 
 %%

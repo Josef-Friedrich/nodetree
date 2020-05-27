@@ -7,5 +7,6 @@
     "status",
     "tex",
     "unicode"
-  ]
+  ],
+  "latex-workshop.latex.autoBuild.run": "never"
 }

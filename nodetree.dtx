@@ -409,6 +409,26 @@
 }{}
 %    \end{macrocode}
 % \end{environment}
+
+% \begin{macro}{\NodetreeEmbedCmd}
+%    \begin{macrocode}
+\NewDocumentCommand { \NodetreeEmbedCmd } { O{} +v } {
+  \setkeys{NTE}{#1}
+  \ifNTEK@showmarkup
+    \noindent
+    \texttt{#2}
+  \else
+  \fi
+  \NTE@colors
+  \begin{NodetreeExample}
+    \directlua{
+      nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
+    }
+  \end{NodetreeExample}
+}
+%    \end{macrocode}
+% \end{macro}
+%
 %
 \endinput
 % \iffalse

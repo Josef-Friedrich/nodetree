@@ -167,6 +167,21 @@
     }
   \end{NodetreeExample}
 }{}
+
+\NewDocumentCommand { \NodetreeEmbedCmd } { O{} +v } {
+  \setkeys{NTE}{#1}
+  \ifNTEK@showmarkup
+    \noindent
+    \texttt{#2}
+  \else
+  \fi
+  \NTE@colors
+  \begin{NodetreeExample}
+    \directlua{
+      nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
+    }
+  \end{NodetreeExample}
+}
 \endinput
 %%
 %% End of file `nodetree-embed.sty'.

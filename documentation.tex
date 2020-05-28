@@ -446,7 +446,19 @@ takes a comma separated list of callback aliases as described in
 
 \DescribeMacro{\NodetreeSetOption}
 \cmd{\NodetreeSetOption}\oarg{option}\marg{value}: \TmpSecRef{sec:options}
-This macro sets the option \oarg{option} to the value \marg{value}.
+This macro sets a single \oarg{option} to \marg{value}.
+
+%%
+% \NodetreeResetOption
+%%
+
+\subsection{\cmd{\NodetreeResetOption}}
+\label{sec:macro:nodetree-set-option}
+
+\DescribeMacro{\NodetreeResetOption}
+\cmd{\NodetreeResetOption}\marg{option}: \TmpSecRef{sec:options}
+This macro resets a single \marg{option} to its default value.
+
 
 %%
 % \NodetreeSet
@@ -457,8 +469,8 @@ This macro sets the option \oarg{option} to the value \marg{value}.
 
 \DescribeMacro{\NodetreeSet}
 \cmd{\NodetreeSet}\marg{kv-options}:
-This macro can only be used in Lua\LaTeX{}. \marg{kv-options} are key
-value pairs.
+This macro sets multiple options a once. It only can be used along with
+ Lua\LaTeX{}. \marg{kv-options} are key value pairs.
 
 \begin{code}
 \NodetreeSet{color=no,callbacks={hpack,vpack},verbosity=2}
@@ -911,6 +923,10 @@ For |list| connections \emph{light} characters are shown.
 \newpage
 \section{Examples}
 
+\NodetreeReset
+
+In this section lists some examples of the |nodetree| output.
+
 %%
 % packagename
 %%
@@ -919,7 +935,7 @@ For |list| connections \emph{light} characters are shown.
 
 \TmpVerbExample{packagename}
 
-\begin{NodetreeEmbed}
+\begin{NodetreeEmbed}[showmarkup=true]
 nodetree
 \end{NodetreeEmbed}
 
@@ -966,6 +982,11 @@ Office
 }
 
 \TmpNodeTypeSub{hlist}{0}{line}{1}
+
+\begin{NodetreeEmbed}[showmarkup=true]
+Lorem
+\end{NodetreeEmbed}
+
 \TmpNodeTypeSub{hlist}{0}{box}{2}
 \TmpNodeTypeSub{hlist}{0}{indent}{3}
 \TmpNodeType{vlist}{1}

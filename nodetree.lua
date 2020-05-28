@@ -29,15 +29,22 @@ if not modules then modules = { } end modules ['nodetree'] = {
 local example_counter = 0
 
 --- The default options
-local options = {
-  verbosity = 1,
+local default_options = {
   callback = 'post_linebreak_filter',
-  engine = 'luatex', -- Required for the callback registration
+  channel = 'term',
   color = 'colored',
   decimalplaces = 2,
+  engine = 'luatex', -- Required for the callback registration
   unit = 'pt',
-  channel = 'term',
+  verbosity = 1,
 }
+
+--- The current options
+-- They are changed very often.
+local options = {}
+for key, value in pairs(default_options) do
+  options[key] = value
+end
 
 if arg[0] == 'lualatex' then
   options.engine = 'lualatex'
@@ -1522,6 +1529,14 @@ local export = {
   -- @treturn string
   format_dim = function(sp)
     return template.length(sp)
+  end,
+
+  --- Get a default option that is not changed.
+  -- @tparam string key The key of the option.
+  --
+  -- @treturn string|number|boolean
+  get_default_option = function(key)
+    return default_options[key]
   end
 }
 

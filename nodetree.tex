@@ -29,6 +29,23 @@
   }
 }
 \let\nodetreeoption\NodetreeSetOption
+\def\NodetreeResetOption#1{
+  \NodetreeSetOption[#1]{%
+    \directlua{
+      tex.print(nodetree.get_default_option('#1'))
+    }%
+  }%
+}
+\def\NodetreeReset{
+  \NodetreeResetOption{callback}
+  \NodetreeResetOption{channel}
+  \NodetreeResetOption{color}
+  \NodetreeResetOption{decimalplaces}
+  \NodetreeResetOption{engine}
+  \NodetreeResetOption{unit}
+  \NodetreeResetOption{verbosity}
+}
+\let\nodetreereset\NodetreeReset
 \def\NodetreeRegisterCallback#1{
   \directlua{
     nodetree.set_option('callback', '#1')

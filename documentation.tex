@@ -805,7 +805,9 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 
 \def\TmpExampleFont#1{
   \subsubsection{Example: \texttt{font=\{#1\}}}
-  \NodetreeTerminalEmulator[font={#1}]{examples/minimal}
+  \begin{NodetreeEmbed}[font={#1}]
+  .
+  \end{NodetreeEmbed}
 }
 
 |nodetree-embed| passes the option |font| down to the
@@ -1080,7 +1082,7 @@ Office
 
 \NodetreeReset
 
-\NodetreeEmbedCmd[showmarkup=true]{
+\NodetreeEmbedCmd[showmarkup=true,unit=cm]{
 \baselineskip=5cm
 Lorem
 

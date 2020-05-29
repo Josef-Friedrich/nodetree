@@ -14,7 +14,7 @@ install:
 	cp -f $(jobname).lua $(installdir)
 	./clean.sh install
 
-doc: doc_examples doc_pdf
+doc: doc_examples doc_pdf doc_lua
 
 doc_pdf:
 	lualatex --shell-escape documentation.tex
@@ -51,6 +51,7 @@ ctan: install doc
 	cp -f $(jobname).ins $(jobname)/
 	cp -f $(jobname).dtx $(jobname)/
 	cp -f $(jobname).pdf $(jobname)/
+	cp -f $(jobname).lua $(jobname)/
 	tar cvfz $(jobname).tar.gz $(jobname)
 	rm -rf $(jobname)
 

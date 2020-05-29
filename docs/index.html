@@ -70,8 +70,13 @@
 <h2><a href="#Tables">Tables</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#options">options</a></td>
+	<td class="name" nowrap><a href="#default_options">default_options</a></td>
 	<td class="summary">The default options</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#options">options</a></td>
+	<td class="summary">The current options
+ They are changed very often.</td>
 	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
@@ -119,16 +124,32 @@
 	<td class="name" nowrap><a href="#type_id">type_id (id)</a></td>
 	<td class="summary"></td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#nodetree_print">nodetree_print (text)</a></td>
+	<td class="summary">Print the output to stdout or write it into a file (<code>output_file</code>).</td>
+	</tr>
 </table>
 <h2><a href="#Template_functions">Template functions </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#template.fill">template.fill (number, order, field)</a></td>
+	<td class="name" nowrap><a href="#color">color (color, mode, background)</a></td>
+	<td class="summary"><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#char">char (char)</a></td>
+	<td class="summary">Format a single unicode character.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#line">line (length)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.color">template.color (color, mode, background)</a></td>
-	<td class="summary"><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a></td>
+	<td class="name" nowrap><a href="#branch">branch (connection_type, connection_state, last)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#template.fill">template.fill (number, order, field)</a></td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.colored_string">template.colored_string (text, color, mode, background)</a></td>
@@ -148,15 +169,7 @@
 	<td class="summary">Format a key value pair (<code>key: value, </code>).</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.char">template.char (char)</a></td>
-	<td class="summary">Format a single unicode character.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#template.type">template.type (type, id)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.line">template.line (length)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
@@ -164,15 +177,7 @@
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.branch">template.branch (connection_type, connection_state, last)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#template.branches">template.branches (level, connection_type)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#template.print">template.print (text)</a></td>
 	<td class="summary"></td>
 	</tr>
 </table>
@@ -340,6 +345,10 @@
 	<td class="summary">Format a scaled point value into a formated string.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#get_default_option">get_default_option (key)</a></td>
+	<td class="summary">Get a default option that is not changed.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#export.analyze">export.analyze</a></td>
 	<td class="summary">Use export.print</td>
 	</tr>
@@ -353,8 +362,8 @@
 
     <dl class="function">
     <dt>
-    <a name = "options"></a>
-    <strong>options</strong>
+    <a name = "default_options"></a>
+    <strong>default_options</strong>
     </dt>
     <dd>
     The default options
@@ -362,13 +371,10 @@
 
     <h3>Fields:</h3>
     <ul>
-        <li><span class="parameter">verbosity</span>
-
-        </li>
         <li><span class="parameter">callback</span>
 
         </li>
-        <li><span class="parameter">engine</span>
+        <li><span class="parameter">channel</span>
 
         </li>
         <li><span class="parameter">color</span>
@@ -377,13 +383,31 @@
         <li><span class="parameter">decimalplaces</span>
 
         </li>
+        <li><span class="parameter">engine</span>
+        Required for the callback registration
+        </li>
         <li><span class="parameter">unit</span>
 
         </li>
-        <li><span class="parameter">channel</span>
+        <li><span class="parameter">verbosity</span>
 
         </li>
     </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "options"></a>
+    <strong>options</strong>
+    </dt>
+    <dd>
+    The current options
+ They are changed very often.
+
+
 
 
 
@@ -642,45 +666,35 @@
 
 
 </dd>
-</dl>
-    <h2 class="section-header "><a name="Template_functions"></a>Template functions </h2>
-
-    <dl class="function">
     <dt>
-    <a name = "template.fill"></a>
-    <strong>template.fill (number, order, field)</strong>
+    <a name = "nodetree_print"></a>
+    <strong>nodetree_print (text)</strong>
     </dt>
     <dd>
-
+    Print the output to stdout or write it into a file (<code>output_file</code>).
+ New text is appended.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">number</span>
-
-        </li>
-        <li><span class="parameter">order</span>
-
-        </li>
-        <li><span class="parameter">field</span>
-
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         A text string.
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
 
 
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="Template_functions"></a>Template functions </h2>
+
+    <dl class="function">
     <dt>
-    <a name = "template.color"></a>
-    <strong>template.color (color, mode, background)</strong>
+    <a name = "color"></a>
+    <strong>color (color, mode, background)</strong>
     </dt>
     <dd>
     <p><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a>  <strong>attributes</strong></p>
@@ -851,6 +865,123 @@
 
 </dd>
     <dt>
+    <a name = "char"></a>
+    <strong>char (char)</strong>
+    </dt>
+    <dd>
+    Format a single unicode character.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">char</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         A single input character.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "line"></a>
+    <strong>line (length)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">length</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "branch"></a>
+    <strong>branch (connection_type, connection_state, last)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">connection_type</span>
+
+        </li>
+        <li><span class="parameter">connection_state</span>
+
+        </li>
+        <li><span class="parameter">last</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "template.fill"></a>
+    <strong>template.fill (number, order, field)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">number</span>
+
+        </li>
+        <li><span class="parameter">order</span>
+
+        </li>
+        <li><span class="parameter">field</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "template.colored_string"></a>
     <strong>template.colored_string (text, color, mode, background)</strong>
     </dt>
@@ -982,33 +1113,6 @@
 
 </dd>
     <dt>
-    <a name = "template.char"></a>
-    <strong>template.char (char)</strong>
-    </dt>
-    <dd>
-    Format a single unicode character.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">char</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-         A single input character.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "template.type"></a>
     <strong>template.type (type, id)</strong>
     </dt>
@@ -1022,32 +1126,6 @@
 
         </li>
         <li><span class="parameter">id</span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.line"></a>
-    <strong>template.line (length)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">length</span>
 
         </li>
     </ul>
@@ -1093,38 +1171,6 @@
 
 </dd>
     <dt>
-    <a name = "template.branch"></a>
-    <strong>template.branch (connection_type, connection_state, last)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">connection_type</span>
-
-        </li>
-        <li><span class="parameter">connection_state</span>
-
-        </li>
-        <li><span class="parameter">last</span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "template.branches"></a>
     <strong>template.branches (level, connection_type)</strong>
     </dt>
@@ -1138,32 +1184,6 @@
 
         </li>
         <li><span class="parameter">connection_type</span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "template.print"></a>
-    <strong>template.print (text)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">text</span>
 
         </li>
     </ul>
@@ -2279,6 +2299,33 @@
 
 </dd>
     <dt>
+    <a name = "get_default_option"></a>
+    <strong>get_default_option (key)</strong>
+    </dt>
+    <dd>
+    Get a default option that is not changed.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         The key of the option.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a>, <span class="type">number</span> or <span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "export.analyze"></a>
     <strong>export.analyze</strong>
     </dt>
@@ -2305,7 +2352,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-25 22:28:14 </i>
+<i style="float:right;">Last updated 2020-05-29 22:11:18 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

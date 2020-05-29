@@ -119,7 +119,13 @@ Update the version number in the file `nodetree.dtx` on this locations:
     [2016/07/18 v1.2 Visualize node lists in a tree view]
     %<*package>
 
-### In the markup for the package documentation (approximately at the line number 750)
+### In the markup for the file `nodetree-embed.sty` (approximately at the line number 220)
+
+    %<*package>
+    [2016/07/18 v1.2 Visualize node lists in a tree view]
+    %<*package>
+
+### In the markup for the package documentation (approximately at the line number 50)
 
 Add a changes entry:
 
@@ -127,7 +133,13 @@ Add a changes entry:
 \changes{v1.2}{2020/05/20}{...}
 ```
 
-### In the markup for the file `nodetree.lua` (approximately at the line number 900)
+### In documentation (documentation.tex) (approximately at the line number 70)
+
+```latex
+\date{v2.0 from 2020/05/29}
+```
+
+### In the file `nodetree.lua` (approximately at the line number 20)
 
 ```lua
 if not modules then modules = { } end modules ['nodetree'] = {
@@ -145,7 +157,7 @@ sed -i 's/(C) 2016-2020/(C) 2016-2021/g' nodetree.dtx
 ### Command line tasks:
 
 ```
-git tag v1.4
+git tag -a v1.4
 make
 make ctan
 ```

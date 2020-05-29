@@ -38,9 +38,9 @@
 }
 
 \newcommand{\TmpExample}[1]{
-\begin{NodetreeExample}
+\begin{NodetreeEmbedView}
 \input{examples/#1.nttex}
-\end{NodetreeExample}
+\end{NodetreeEmbedView}
 }
 
 \newcommand{\TmpVerbExample}[1]{
@@ -74,13 +74,13 @@
   \url{josef@friedrich.rocks}\\%
   \href{https://github.com/Josef-Friedrich/nodetree}{github.com/Josef-Friedrich/nodetree}%
 }
-\date{v.1.2 from 2020/05/03}
+\date{v2.0 from 2020/05/29}
 
 \maketitle
 
-\begin{NodetreeEmbed}
+\begin{NodetreeEmbedEnv}
 nodetree
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 \newpage
 
@@ -115,9 +115,10 @@ terminal to generate the document.
 
 \section{Usage}
 
-The package |nodetree| has three usage scenarios.
-It can be used as a standalone Lua module, as a plain Lua\TeX{} or a
-Lua\LaTeX{} package.
+The package |nodetree| has four usage scenarios.
+It can be used as a standalone Lua module, as a plain Lua\TeX{}, a
+Lua\LaTeX{} package or as package to embed nodetree views in a
+Lua\LaTeX{} document.
 
 %-----------------------------------------------------------------------
 %
@@ -149,6 +150,12 @@ Lorem ipsum dolor.
 
 \cmd{\NodetreeSetOption}\oarg{option}\marg{value} &
 \TmpPageSecRef{sec:macro:nodetree-set-option} \\
+
+\cmd{\NodetreeResetOption}\marg{option} &
+\TmpPageSecRef{sec:macro:nodetree-reset-option} \\
+
+\cmd{\NodetreeReset} &
+\TmpPageSecRef{sec:macro:nodetree-reset} \\
 }
 
 \begin{tabular}{ll}
@@ -271,13 +278,13 @@ This are the default options:
 
 \begin{minted}{lua}
 options =  {
-  verbosity = 1,
   callback = 'post_linebreak_filter',
-  engine = 'luatex',
+  channel = 'term',
   color = 'colored',
   decimalplaces = 2,
+  engine = 'luatex', -- Required for the callback registration
   unit = 'pt',
-  channel = 'term'
+  verbosity = 1,
 }
 \end{minted}
 
@@ -346,9 +353,9 @@ The following list shows the single intermediate steps:
 \item |jobname.tex|
 
 \begin{minted}{latex}
-\begin{NodetreeEmbed}
+\begin{NodetreeEmbedEnv}
 nodetree
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 \end{minted}
 
 \item |_nodetree-jobname/1.tex|
@@ -380,9 +387,9 @@ compiled using |latexmk| and embed in the environment |NodetreeEmbed|
 
 \item Finally the result:
 
-\begin{NodetreeEmbed}
+\begin{NodetreeEmbedEnv}
 nodetree
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 \end{enumerate}
 
@@ -453,7 +460,7 @@ This macro sets a single \oarg{option} to \marg{value}.
 %%
 
 \subsection{\cmd{\NodetreeResetOption}}
-\label{sec:macro:nodetree-set-option}
+\label{sec:macro:nodetree-reset-option}
 
 \DescribeMacro{\NodetreeResetOption}
 \cmd{\NodetreeResetOption}\marg{option}: \TmpSecRef{sec:options}
@@ -474,6 +481,17 @@ This macro sets multiple options a once. It only can be used along with
 \begin{code}
 \NodetreeSet{color=no,callbacks={hpack,vpack},verbosity=2}
 \end{code}
+
+%%
+% \NodetreeSet
+%%
+
+\subsection{\cmd{\NodetreeReset}}
+\label{sec:macro:nodetree-reset}
+
+\DescribeMacro{\NodetreeReset}
+\cmd{\NodetreeReset}:
+This macro resets multiple options to its default values.
 
 %-----------------------------------------------------------------------
 % Options
@@ -626,7 +644,7 @@ named |jobname.ntlog|. Specify |tex| and a log file named
 |jobname.nttex| is creatred. |nt...| stands for |nodetree|.
 |jobname| is the basename of your file you want to debug. The debug
 channel is only useful for the auxiliary package |nodetree-embed|. Paste
-the markup in the environment |NodetreeExample| and you get a
+the markup in the environment |NodetreeEmbedView| and you get a
 terminal like view in your document.
 
 %%
@@ -642,9 +660,9 @@ implemented.
 
 \def\TmpExampleVerbosity#1{
   \subsubsection{Example: \texttt{verbosity=#1}}
-  \begin{NodetreeEmbed}[verbosity=#1,callback=pre_linebreak_filter]
+  \begin{NodetreeEmbedEnv}[verbosity=#1,callback=pre_linebreak_filter]
   .
-  \end{NodetreeEmbed}
+  \end{NodetreeEmbedEnv}
 }
 
 \TmpExampleVerbosity{1}
@@ -733,9 +751,9 @@ Width of the capital letter M \\
 
 \def\TmpExampleUnit#1{
   \subsubsection{Example: \texttt{unit=#1}}
-  \begin{NodetreeEmbed}[unit=#1,callback=pre_linebreak_filter]
+  \begin{NodetreeEmbedEnv}[unit=#1,callback=pre_linebreak_filter]
   Lorem.
-  \end{NodetreeEmbed}
+  \end{NodetreeEmbedEnv}
 }
 
 \TmpExampleUnit{pt}
@@ -758,9 +776,9 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 
 \def\TmpExampleDecimalplaces#1{
   \subsubsection{Example: \texttt{decimalplaces=#1}}
-  \begin{NodetreeEmbed}[unit=cc,decimalplaces=#1,callback=pre_linebreak_filter]
+  \begin{NodetreeEmbedEnv}[unit=cc,decimalplaces=#1,callback=pre_linebreak_filter]
   Lorem.
-  \end{NodetreeEmbed}
+  \end{NodetreeEmbedEnv}
 }
 
 \TmpExampleDecimalplaces{0}
@@ -775,9 +793,9 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 
 \def\TmpExampleTheme#1#2{
   \subsubsection{Example: \texttt{theme=#1} \texttt{thememode=#2}}
-  \begin{NodetreeEmbed}[callback=pre_linebreak_filter,theme=#1,thememode=#2,fontsize=\small]
+  \begin{NodetreeEmbedEnv}[callback=pre_linebreak_filter,theme=#1,thememode=#2,fontsize=\small]
   .
-  \end{NodetreeEmbed}
+  \end{NodetreeEmbedEnv}
 }
 
 \subsection{Option \texttt{theme} and \texttt{thememode}}
@@ -805,9 +823,9 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 
 \def\TmpExampleFont#1{
   \subsubsection{Example: \texttt{font=\{#1\}}}
-  \begin{NodetreeEmbed}[font={#1}]
+  \begin{NodetreeEmbedEnv}[font={#1}]
   .
-  \end{NodetreeEmbed}
+  \end{NodetreeEmbedEnv}
 }
 
 |nodetree-embed| passes the option |font| down to the
@@ -829,9 +847,9 @@ UNICODE glyphs \ref{fig:unicode}).
 
 \def\TmpExampleFontSize#1{
   \subsubsection{Example: \string#1}
-  \begin{NodetreeEmbed}[callback=pre_linebreak_filter,fontsize=#1]
+  \begin{NodetreeEmbedEnv}[callback=pre_linebreak_filter,fontsize=#1]
   .
-  \end{NodetreeEmbed}
+  \end{NodetreeEmbedEnv}
 }
 
 \TmpExampleFontSize{\small}
@@ -934,9 +952,9 @@ In this section lists some examples of the |nodetree| output.
 
 \subsection{The node list of the package name}
 
-\begin{NodetreeEmbed}[showmarkup=true,callback=post_linebreak_filter]
+\begin{NodetreeEmbedEnv}[showmarkup=true,callback=post_linebreak_filter]
 nodetree
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 % math
@@ -944,9 +962,9 @@ nodetree
 
 \subsection{The node list of a mathematical formula}
 
-\begin{NodetreeEmbed}[showmarkup=true,callback=post_linebreak_filter]
+\begin{NodetreeEmbedEnv}[showmarkup=true,callback=post_linebreak_filter]
 $1+2$
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 % ligatures
@@ -956,9 +974,9 @@ $1+2$
 
 The characters \emph{ffi} are deeply nested in a discretionary node.
 
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 Office
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %-----------------------------------------------------------------------
 % Node types
@@ -992,9 +1010,9 @@ This chapter shows some node types in a |nodetree| view.
 
 \TmpHeadingNodeTypeSub{hlist}{0}{line}{1}
 
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 Lorem
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1002,9 +1020,9 @@ Lorem
 
 \TmpHeadingNodeTypeSub{hlist}{0}{box}{2}
 
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 L\hbox to 40pt{ore}m
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1012,10 +1030,10 @@ L\hbox to 40pt{ore}m
 
 \TmpHeadingNodeTypeSub{hlist}{0}{indent}{3}
 
-\begin{NodetreeEmbed}[showmarkup=true,unit=cm]
+\begin{NodetreeEmbedEnv}[showmarkup=true,unit=cm]
 \setlength{\parindent}{5cm}
 I
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1023,9 +1041,9 @@ I
 
 \TmpHeadingNodeType{vlist}{1}
 
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 L\vbox to 40pt{O}L
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1033,9 +1051,9 @@ L\vbox to 40pt{O}L
 
 \TmpHeadingNodeType{rule}{2}
 
-\begin{NodetreeEmbed}[showmarkup=true,unit=mm]
+\begin{NodetreeEmbedEnv}[showmarkup=true,unit=mm]
 \rule[-2mm]{10mm}{4mm}
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1043,9 +1061,9 @@ L\vbox to 40pt{O}L
 
 \TmpHeadingNodeType{mark}{4}
 
-\begin{NodetreeEmbed}[showmarkup=true,callback=pre_output_filter]
+\begin{NodetreeEmbedEnv}[showmarkup=true,callback=pre_output_filter]
 \mark{Lorem}.
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1054,9 +1072,9 @@ L\vbox to 40pt{O}L
 \TmpHeadingNodeTypeSub{disc}{7}{discretionary}{0}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 L\-O\-L
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1065,9 +1083,9 @@ L\-O\-L
 \TmpHeadingNodeTypeSub{disc}{7}{regular}{3}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 Office
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 \TmpNodeTypeSub{whatsit}{8}{pdfaction}{22}
 \TmpNodeTypeSub{whatsit}{8}{pdfcolorstack}{28}
@@ -1107,10 +1125,10 @@ Lorem
 \TmpHeadingNodeTypeSub{glue}{12}{spaceskip}{13}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 \spaceskip=5cm
 a a
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1119,9 +1137,9 @@ a a
 \TmpHeadingNodeTypeSub{glue}{12}{leaders}{100}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 a \leavevmode\leaders\hbox{ . }\hfill\kern0pt a
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1130,9 +1148,9 @@ a \leavevmode\leaders\hbox{ . }\hfill\kern0pt a
 \TmpHeadingNodeTypeSub{glue}{12}{cleaders}{101}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 a \leavevmode\cleaders\hbox{ . }\hfill\kern0pt a
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1141,9 +1159,9 @@ a \leavevmode\cleaders\hbox{ . }\hfill\kern0pt a
 \TmpHeadingNodeTypeSub{glue}{12}{xleaders}{102}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 a \leavevmode\xleaders\hbox{ . }\hfill\kern0pt a
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1152,9 +1170,9 @@ a \leavevmode\xleaders\hbox{ . }\hfill\kern0pt a
 \TmpHeadingNodeTypeSub{glue}{12}{gleaders}{102}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 a \leavevmode\gleaders\hbox{ . }\hfill\kern0pt a
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1163,9 +1181,9 @@ a \leavevmode\gleaders\hbox{ . }\hfill\kern0pt a
 \TmpHeadingNodeTypeSub{kern}{13}{userkern}{0}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 a\kern2pt
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1174,9 +1192,9 @@ a\kern2pt
 \TmpHeadingNodeTypeSub{kern}{13}{fontkern}{1}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 Ve
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1185,9 +1203,9 @@ Ve
 \TmpHeadingNodeTypeSub{kern}{13}{accentkern}{2}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 \`{a}
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1196,9 +1214,9 @@ Ve
 \TmpHeadingNodeTypeSub{kern}{13}{italiccorrection}{3}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 \textit{L}\/OL
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1207,9 +1225,9 @@ Ve
 \TmpHeadingNodeType{penalty}{14}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 L \penalty 23 OL
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1218,9 +1236,9 @@ L \penalty 23 OL
 \TmpHeadingNodeType{glyph}{29}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 abc
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1229,9 +1247,9 @@ abc
 \TmpHeadingNodeType{attribute}{38}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 {\attribute0=1 A}
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1240,9 +1258,9 @@ abc
 \TmpHeadingNodeType{attributelist}{40}
 
 \NodetreeReset
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 {\attribute0=1 A}
-\end{NodetreeEmbed}
+\end{NodetreeEmbedEnv}
 
 \DocInput{nodetree.dtx}
 

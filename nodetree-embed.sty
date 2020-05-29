@@ -22,7 +22,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{nodetree-embed}
-  [2020/05/24 v1.2 Embed node trees into a LaTeX document]
+  [2020/05/29 v2.0 Embed node trees into a LaTeX document]
 \RequirePackage{xcolor,mdframed,expl3,xparse,fontspec}
 \input{nodetree}
 \RequirePackage{kvoptions}
@@ -131,7 +131,7 @@
   \setkeys{NTE}{#1}%
 }
 \let\nodetreeset\NodetreeSet
-\newenvironment{NodetreeExample}[1][]{
+\newenvironment{NodetreeEmbedView}[1][]{
   \setkeys{NTE}{#1}
   \NTE@colors
   \begin{mdframed}[
@@ -143,14 +143,14 @@
 }{
   \end{mdframed}%
 }
-\newcommand{\NodetreeTerminalEmulator}[2][]{
+\newcommand{\NodetreeEmbedInput}[2][]{
   \setkeys{NTE}{#1}
-  \begin{NodetreeExample}
+  \begin{NodetreeEmbedView}
   \input{#2.nttex}
-  \end{NodetreeExample}
+  \end{NodetreeEmbedView}
 }
-\let\nodetreeterminalemulator\NodetreeTerminalEmulator
-\NewDocumentEnvironment { NodetreeEmbed } { O{} +b } {
+\let\nodetreeterminalemulator\NodetreeEmbedInput
+\NewDocumentEnvironment { NodetreeEmbedEnv } { O{} +b } {
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
@@ -158,11 +158,11 @@
   \else
   \fi
   \NTE@colors
-  \begin{NodetreeExample}
+  \begin{NodetreeEmbedView}
     \directlua{
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
-  \end{NodetreeExample}
+  \end{NodetreeEmbedView}
 }{}
 
 \NewDocumentCommand { \NodetreeEmbedCmd } { O{} +v } {
@@ -173,11 +173,11 @@
   \else
   \fi
   \NTE@colors
-  \begin{NodetreeExample}
+  \begin{NodetreeEmbedView}
     \directlua{
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
-  \end{NodetreeExample}
+  \end{NodetreeEmbedView}
 }
 \endinput
 %%

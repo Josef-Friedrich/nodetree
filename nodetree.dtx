@@ -28,7 +28,7 @@
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<package>\ProvidesPackage{nodetree}
 %<*package>
-    [2016/07/18 v1.2 Visualize node lists in a tree view]
+    [2020/05/29 v2.0 Visualize node lists in a tree view]
 %</package>
 % \fi
 %
@@ -55,6 +55,15 @@
 % \changes{v1.0}{2016/07/07}{Inital release}
 % \changes{v1.1}{2016/07/13}{Fix the registration of same callbacks}
 % \changes{v1.2}{2016/07/18}{Fix difference between README.md in the upload and that from nodetree.dtx}
+% \changes{v2.0}{2020/05/29}{
+%  Switch from lowercase macro names to PascalCase names for better readability.
+%  The Lua code is no longer developed inside the DTX file, instead in a separate file named nodetree.lua
+%  Add a sub package named nodetree-embed.sty for embedding nodetree views into a \LaTeX{} document.
+%  Add support for new node subtype names.
+%  Add support for new Lua\TeX{} node callback.
+%  Add support for node properties.
+%  Minor tree output adjustments.
+% }
 %
 % \DoNotIndex{\newcommand,\newenvironment,\def,\directlua}
 %
@@ -210,7 +219,7 @@
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{nodetree-embed}
-  [2020/05/24 v1.2 Embed node trees into a LaTeX document]
+  [2020/05/29 v2.0 Embed node trees into a LaTeX document]
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -381,9 +390,9 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{environment}{NodetreeExample}
+% \begin{environment}{NodetreeEmbedView}
 %    \begin{macrocode}
-\newenvironment{NodetreeExample}[1][]{
+\newenvironment{NodetreeEmbedView}[1][]{
   \setkeys{NTE}{#1}
   \NTE@colors
   \begin{mdframed}[
@@ -398,21 +407,21 @@
 %    \end{macrocode}
 % \end{environment}
 %
-% \begin{macro}{\NodetreeTerminalEmulator}
+% \begin{macro}{\NodetreeEmbedInput}
 %    \begin{macrocode}
-\newcommand{\NodetreeTerminalEmulator}[2][]{
+\newcommand{\NodetreeEmbedInput}[2][]{
   \setkeys{NTE}{#1}
-  \begin{NodetreeExample}
+  \begin{NodetreeEmbedView}
   \input{#2.nttex}
-  \end{NodetreeExample}
+  \end{NodetreeEmbedView}
 }
-\let\nodetreeterminalemulator\NodetreeTerminalEmulator
+\let\nodetreeterminalemulator\NodetreeEmbedInput
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{environment}{NodetreeEmbed}
+% \begin{environment}{NodetreeEmbedEnv}
 %    \begin{macrocode}
-\NewDocumentEnvironment { NodetreeEmbed } { O{} +b } {
+\NewDocumentEnvironment { NodetreeEmbedEnv } { O{} +b } {
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
@@ -420,11 +429,11 @@
   \else
   \fi
   \NTE@colors
-  \begin{NodetreeExample}
+  \begin{NodetreeEmbedView}
     \directlua{
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
-  \end{NodetreeExample}
+  \end{NodetreeEmbedView}
 }{}
 %    \end{macrocode}
 % \end{environment}
@@ -439,11 +448,11 @@
   \else
   \fi
   \NTE@colors
-  \begin{NodetreeExample}
+  \begin{NodetreeEmbedView}
     \directlua{
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
-  \end{NodetreeExample}
+  \end{NodetreeEmbedView}
 }
 %    \end{macrocode}
 % \end{macro}

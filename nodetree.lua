@@ -16,7 +16,7 @@
 -- luacheck: globals node tex luatexbase lfs callback os unicode status modules
 
 if not modules then modules = { } end modules ['nodetree'] = {
-  version   = '1.2',
+  version   = '2.0',
   comment   = 'nodetree',
   author    = 'Josef Friedrich',
   copyright = 'Josef Friedrich',

@@ -459,7 +459,6 @@ This macro sets a single \oarg{option} to \marg{value}.
 \cmd{\NodetreeResetOption}\marg{option}: \TmpSecRef{sec:options}
 This macro resets a single \marg{option} to its default value.
 
-
 %%
 % \NodetreeSet
 %%
@@ -933,9 +932,7 @@ In this section lists some examples of the |nodetree| output.
 
 \subsection{The node list of the package name}
 
-\TmpVerbExample{packagename}
-
-\begin{NodetreeEmbed}[showmarkup=true]
+\begin{NodetreeEmbed}[showmarkup=true,callback=post_linebreak_filter]
 nodetree
 \end{NodetreeEmbed}
 
@@ -959,8 +956,6 @@ nodetree
 
 The characters \emph{ffi} are deeply nested in a discretionary node.
 
-\TmpVerbExample{ligatures}
-
 \begin{NodetreeEmbed}[showmarkup=true]
 Office
 \end{NodetreeEmbed}
@@ -970,6 +965,12 @@ Office
 %-----------------------------------------------------------------------
 
 \subsection{Node types}
+
+This chapter shows some node types in a |nodetree| view.
+
+\newcommand{\TmpHeadingNodeTypeSub}[4]{
+  \subsubsection{Type: \texttt{#1(#2)} Subtype: \texttt{#3(#4)}}
+}
 
 \newcommand{\TmpNodeTypeSub}[4]{
   \subsubsection{Type: #1(#2) Subtype: #3(#4)}
@@ -981,19 +982,93 @@ Office
   \TmpVerbExample{#2#1}
 }
 
-\TmpNodeTypeSub{hlist}{0}{line}{1}
+\newcommand{\TmpHeadingNodeType}[2]{
+  \subsubsection{Type: \texttt{#1(#2)}}
+}
+
+%%
+%
+%%
+
+\TmpHeadingNodeTypeSub{hlist}{0}{line}{1}
 
 \begin{NodetreeEmbed}[showmarkup=true]
 Lorem
 \end{NodetreeEmbed}
 
-\TmpNodeTypeSub{hlist}{0}{box}{2}
-\TmpNodeTypeSub{hlist}{0}{indent}{3}
-\TmpNodeType{vlist}{1}
-\TmpNodeType{rule}{2}
-\TmpNodeType{mark}{4}
-\TmpNodeTypeSub{disc}{7}{discretionary}{0}
-\TmpNodeTypeSub{disc}{7}{regular}{3}
+%%
+%
+%%
+
+\TmpHeadingNodeTypeSub{hlist}{0}{box}{2}
+
+\begin{NodetreeEmbed}[showmarkup=true]
+L\hbox to 40pt{ore}m
+\end{NodetreeEmbed}
+
+%%
+%
+%%
+
+\TmpHeadingNodeTypeSub{hlist}{0}{indent}{3}
+
+\begin{NodetreeEmbed}[showmarkup=true,unit=cm]
+\setlength{\parindent}{5cm}
+I
+\end{NodetreeEmbed}
+
+%%
+%
+%%
+
+\TmpHeadingNodeType{vlist}{1}
+
+\begin{NodetreeEmbed}[showmarkup=true]
+L\vbox to 40pt{O}L
+\end{NodetreeEmbed}
+
+%%
+%
+%%
+
+\TmpHeadingNodeType{rule}{2}
+
+\begin{NodetreeEmbed}[showmarkup=true,unit=mm]
+\rule[-2mm]{10mm}{4mm}
+\end{NodetreeEmbed}
+
+%%
+%
+%%
+
+\TmpHeadingNodeType{mark}{4}
+
+\begin{NodetreeEmbed}[showmarkup=true,callback=pre_output_filter]
+\mark{Lorem}.
+\end{NodetreeEmbed}
+
+%%
+%
+%%
+
+\TmpHeadingNodeTypeSub{disc}{7}{discretionary}{0}
+
+\NodetreeReset
+\begin{NodetreeEmbed}[showmarkup=true]
+L\-O\-L
+\end{NodetreeEmbed}
+
+%%
+%
+%%
+
+\TmpHeadingNodeTypeSub{disc}{7}{regular}{3}
+
+\NodetreeReset
+\begin{NodetreeEmbed}[showmarkup=true]
+Office
+\end{NodetreeEmbed}
+
 \TmpNodeTypeSub{whatsit}{8}{pdfaction}{22}
 \TmpNodeTypeSub{whatsit}{8}{pdfcolorstack}{28}
 \TmpNodeTypeSub{glue}{12}{baselineskip}{2}

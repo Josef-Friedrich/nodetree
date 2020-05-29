@@ -415,6 +415,7 @@
 \NewDocumentEnvironment { NodetreeEmbed } { O{} +b } {
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
+    \noindent
     \texttt{\detokenize{#2}}
   \else
   \fi

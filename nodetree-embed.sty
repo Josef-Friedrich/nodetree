@@ -127,10 +127,9 @@
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{-0.9pt}%
 }
-\newcommand{\NodetreeSet}[1]{%
+\providecommand{\NodetreeSet}[1]{%
   \setkeys{NTE}{#1}%
 }
-\let\nodetreeset\NodetreeSet
 \newenvironment{NodetreeEmbedView}[1][]{
   \setkeys{NTE}{#1}
   \NTE@colors
@@ -143,13 +142,6 @@
 }{
   \end{mdframed}%
 }
-\newcommand{\NodetreeEmbedInput}[2][]{
-  \setkeys{NTE}{#1}
-  \begin{NodetreeEmbedView}
-  \input{#2.nttex}
-  \end{NodetreeEmbedView}
-}
-\let\nodetreeterminalemulator\NodetreeEmbedInput
 \NewDocumentEnvironment { NodetreeEmbedEnv } { O{} +b } {
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
@@ -179,6 +171,13 @@
     }
   \end{NodetreeEmbedView}
 }
+\newcommand{\NodetreeEmbedInput}[2][]{
+  \setkeys{NTE}{#1}
+  \begin{NodetreeEmbedView}
+  \input{#2.nttex}
+  \end{NodetreeEmbedView}
+}
+\let\nodetreeterminalemulator\NodetreeEmbedInput
 \endinput
 %%
 %% End of file `nodetree-embed.sty'.

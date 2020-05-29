@@ -45,6 +45,10 @@
 \directlua{
   nodetree.register_callbacks()
 }
+\newcommand{\NodetreeSet}[1]{%
+  \setkeys{NT}{#1}%
+}
+\let\nodetreeset\NodetreeSet
 \endinput
 %%
 %% End of file `nodetree.sty'.

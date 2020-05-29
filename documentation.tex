@@ -143,19 +143,19 @@ Lorem ipsum dolor.
 
 \def\TmpTabularMacrosPlainTeX{
 \cmd{\NodetreeRegisterCallback}\marg{callbacks} &
-\TmpPageSecRef{sec:macro:nodetree-register-callback} \\
+\TmpPageSecRef{sec:cmd:nodetree-register-callback} \\
 
 \cmd{\NodetreeUnregisterCallback}\marg{callbacks} &
-\TmpPageSecRef{sec:macro:nodetree-unregister-callback} \\
+\TmpPageSecRef{sec:cmd:nodetree-unregister-callback} \\
 
 \cmd{\NodetreeSetOption}\oarg{option}\marg{value} &
-\TmpPageSecRef{sec:macro:nodetree-set-option} \\
+\TmpPageSecRef{sec:cmd:nodetree-set-option} \\
 
 \cmd{\NodetreeResetOption}\marg{option} &
-\TmpPageSecRef{sec:macro:nodetree-reset-option} \\
+\TmpPageSecRef{sec:cmd:nodetree-reset-option} \\
 
 \cmd{\NodetreeReset} &
-\TmpPageSecRef{sec:macro:nodetree-reset} \\
+\TmpPageSecRef{sec:cmd:nodetree-reset} \\
 }
 
 \begin{tabular}{ll}
@@ -227,7 +227,7 @@ Lorem ipsum dolor.
 \TmpTabularMacrosPlainTeX
 
 \cmd{\NodetreeSet}\marg{kv-options} &
-\TmpPageSecRef{sec:macro:nodetree-set} \\
+\TmpPageSecRef{sec:cmd:nodetree-set} \\
 \end{tabular}
 
 \subsubsection{Available options}
@@ -393,6 +393,34 @@ nodetree
 
 \end{enumerate}
 
+\subsubsection{Available macros}
+
+\begin{tabular}{ll}
+\textbf{Macro name} &
+\textbf{Reference} \\
+
+\TmpTabularMacrosPlainTeX
+
+\cmd{\NodetreeSet}\marg{kv-options} &
+\TmpPageSecRef{sec:cmd:nodetree-set} \\
+
+\cmd{\NodetreeEmbedCmd}\oarg{kv-options}\marg{tex-markup} &
+\TmpPageSecRef{sec:cmd:nodetree-embed-cmd} \\
+
+\cmd{\NodetreeEmbedInput}\oarg{kv-options}\marg{nttex-file} &
+\TmpPageSecRef{sec:cmd:nodetree-embed-input} \\
+\end{tabular}
+
+\subsubsection{Available environment}
+
+\begin{tabular}{ll}
+\textbf{Environment name} &
+\textbf{Reference} \\
+
+|\begin{NodetreeEmbedEnv}|\oarg{kv-options} &
+\TmpPageSecRef{sec:env:nodetree-embed-env} \\
+\end{tabular}
+
 \subsubsection{Available options}
 
 \begin{tabular}{ll}
@@ -425,7 +453,7 @@ nodetree
 %%
 
 \subsection{\cmd{\NodetreeRegisterCallback}}
-\label{sec:macro:nodetree-register-callback}
+\label{sec:cmd:nodetree-register-callback}
 
 \DescribeMacro{\NodetreeRegisterCallback}
 \cmd{\NodetreeRegisterCallback}\marg{callbacks}: The argument \marg{callbacks}
@@ -437,7 +465,7 @@ takes a comma separated list of callback aliases as described in
 %%
 
 \subsection{\cmd{\NodetreeUnregisterCallback}}
-\label{sec:macro:nodetree-unregister-callback}
+\label{sec:cmd:nodetree-unregister-callback}
 
 \DescribeMacro{\NodetreeUnregisterCallback}
 \cmd{\NodetreeUnregisterCallback}\marg{callbacks}: The argument \marg{callbacks}
@@ -449,7 +477,7 @@ takes a comma separated list of callback aliases as described in
 %%
 
 \subsection{\cmd{\NodetreeSetOption}}
-\label{sec:macro:nodetree-set-option}
+\label{sec:cmd:nodetree-set-option}
 
 \DescribeMacro{\NodetreeSetOption}
 \cmd{\NodetreeSetOption}\oarg{option}\marg{value}: \TmpSecRef{sec:options}
@@ -460,7 +488,7 @@ This macro sets a single \oarg{option} to \marg{value}.
 %%
 
 \subsection{\cmd{\NodetreeResetOption}}
-\label{sec:macro:nodetree-reset-option}
+\label{sec:cmd:nodetree-reset-option}
 
 \DescribeMacro{\NodetreeResetOption}
 \cmd{\NodetreeResetOption}\marg{option}: \TmpSecRef{sec:options}
@@ -471,7 +499,7 @@ This macro resets a single \marg{option} to its default value.
 %%
 
 \subsection{\cmd{\NodetreeSet}}
-\label{sec:macro:nodetree-set}
+\label{sec:cmd:nodetree-set}
 
 \DescribeMacro{\NodetreeSet}
 \cmd{\NodetreeSet}\marg{kv-options}:
@@ -483,15 +511,62 @@ This macro sets multiple options a once. It only can be used along with
 \end{code}
 
 %%
-% \NodetreeSet
+% \NodetreeReset
 %%
 
 \subsection{\cmd{\NodetreeReset}}
-\label{sec:macro:nodetree-reset}
+\label{sec:cmd:nodetree-reset}
 
 \DescribeMacro{\NodetreeReset}
 \cmd{\NodetreeReset}:
 This macro resets multiple options to its default values.
+
+%%
+%
+%%
+
+\subsection{\cmd{\NodetreeEmbedCmd}}
+\label{sec:cmd:nodetree-embed-cmd}
+
+\DescribeMacro{\NodetreeEmbedCmd}
+\cmd{\NodetreeEmbedCmd}\oarg{kv-options}\marg{tex-markup}:
+
+Main macro (cmd) to evaluate some \TeX{} markup and generate a
+node tree from it. See environment version.
+\TmpSecRef{sec:cmd:nodetree-embed-cmd}. Uses the xparse +v option to
+grab the verbatim content. Only available in the package nodetree-embed.
+
+%%
+% \NodetreeEmbedInput
+%%
+
+\subsection{\cmd{\NodetreeEmbedInput}}
+\label{sec:cmd:nodetree-embed-input}
+
+\DescribeMacro{\NodetreeEmbedInput}
+\cmd{\NodetreeEmbedInput}\oarg{kv-options}\marg{nttex-file}: The path or
+filename of *.nttex file without the extension. Only available in the
+package nodetree-embed.
+
+%-----------------------------------------------------------------------
+% Environments
+%-----------------------------------------------------------------------
+
+\newpage
+\section{Environments}
+
+\subsection{\texttt{NodetreeEmbedEnv}}
+\label{sec:env:nodetree-embed-env}
+
+\DescribeEnv{NodetreeEmbedEnv}
+|\begin{NodetreeEmbedEnv}|\oarg{kv-options}
+\dots \textit{\TeX{} markup for evaluation} \dots |\end{NodetreeEmbedEnv}|
+
+Main environment (env) to evaluate some \TeX{} markup and generate a
+node tree from it. See command version
+\TmpSecRef{sec:cmd:nodetree-embed-cmd}. Uses the \cmd{\detokenize}
+command to grab the verbatim content. Only available in the package
+nodetree-embed.
 
 %-----------------------------------------------------------------------
 % Options
@@ -1264,7 +1339,7 @@ abc
 
 \DocInput{nodetree.dtx}
 
-\subsection{The file nodetree.lua}
+\subsection{The file \texttt{nodetree.lua}}
 
 \inputminted{lua}{nodetree.lua}
 

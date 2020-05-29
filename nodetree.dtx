@@ -212,6 +212,15 @@
 }
 %    \end{macrocode}
 %
+% \begin{macro}{\NodetreeSet}
+%    \begin{macrocode}
+\newcommand{\NodetreeSet}[1]{%
+  \setkeys{NT}{#1}%
+}
+\let\nodetreeset\NodetreeSet
+%    \end{macrocode}
+% \end{macro}
+%
 % \iffalse
 %</package>
 %<*packageembed>
@@ -382,15 +391,15 @@
 % \end{macro}
 %
 % \begin{macro}{\NodetreeSet}
+% Same definition as in nodetree.sty. Only implement this command
+% if not already registers.
 %    \begin{macrocode}
-\newcommand{\NodetreeSet}[1]{%
+\providecommand{\NodetreeSet}[1]{%
   \setkeys{NTE}{#1}%
 }
-\let\nodetreeset\NodetreeSet
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{environment}{NodetreeEmbedView}
 %    \begin{macrocode}
 \newenvironment{NodetreeEmbedView}[1][]{
   \setkeys{NTE}{#1}
@@ -405,19 +414,6 @@
   \end{mdframed}%
 }
 %    \end{macrocode}
-% \end{environment}
-%
-% \begin{macro}{\NodetreeEmbedInput}
-%    \begin{macrocode}
-\newcommand{\NodetreeEmbedInput}[2][]{
-  \setkeys{NTE}{#1}
-  \begin{NodetreeEmbedView}
-  \input{#2.nttex}
-  \end{NodetreeEmbedView}
-}
-\let\nodetreeterminalemulator\NodetreeEmbedInput
-%    \end{macrocode}
-% \end{macro}
 %
 % \begin{environment}{NodetreeEmbedEnv}
 %    \begin{macrocode}
@@ -457,6 +453,17 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\NodetreeEmbedInput}
+%    \begin{macrocode}
+\newcommand{\NodetreeEmbedInput}[2][]{
+  \setkeys{NTE}{#1}
+  \begin{NodetreeEmbedView}
+  \input{#2.nttex}
+  \end{NodetreeEmbedView}
+}
+\let\nodetreeterminalemulator\NodetreeEmbedInput
+%    \end{macrocode}
+% \end{macro}
 %
 \endinput
 % \iffalse

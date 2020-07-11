@@ -34,7 +34,6 @@ local default_options = {
   channel = 'term',
   color = 'colored',
   decimalplaces = 2,
-  engine = 'luatex', -- Required for the callback registration
   unit = 'pt',
   verbosity = 1,
 }
@@ -44,10 +43,6 @@ local default_options = {
 local options = {}
 for key, value in pairs(default_options) do
   options[key] = value
-end
-
-if arg[0] == 'lualatex' then
-  options.engine = 'lualatex'
 end
 
 --- File descriptor
@@ -1403,7 +1398,7 @@ end
 --
 -- @tparam string cb The name of a callback.
 local function register_callback(cb)
-  if options.engine == 'lualatex' then
+  if luatexbase then
     luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree')
   else
     callback.register(cb, callbacks[cb])
@@ -1414,7 +1409,7 @@ end
 --
 -- @tparam string cb The name of a callback.
 local function unregister_callback(cb)
-  if options.engine == 'lualatex' then
+  if luatexbase then
     luatexbase.remove_from_callback(cb, 'nodetree')
   else
     register_callback(cb, nil)

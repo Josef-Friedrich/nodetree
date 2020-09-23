@@ -331,14 +331,20 @@ local template = {
 
   --- Format a single unicode character.
   --
-  -- @tparam string char A single input character.
+  -- @tparam number char A single input character.
   --
   -- @treturn string
   char = function(char)
-    char = string.format('%s', unicode.utf8.char(char))
-    char = '\'' .. char .. '\''
-    if options.channel == 'tex' then
-      char = format.escape(char)
+    -- See Issue #6
+    -- See test file tests/luatex/unicode-support.lua
+    -- Last character that unicode.utf8.char() can handle is 1114367.
+    -- See source/texk/web2c/luatexdir/slnunicode/slnunico.c static int unic_char
+    if char < 1114368 then
+      char = string.format('%s', unicode.utf8.char(char))
+      char = '\'' .. char .. '\''
+      if options.channel == 'tex' then
+        char = format.escape(char)
+      end
     end
     return char
   end,
@@ -469,6 +475,7 @@ function template.table_inline(table)
     output = output .. kv_list:gsub(', $', '')
     return output .. tex_escape .. '}'
   else
+    print(table)
     return tostring(table)
   end
 end

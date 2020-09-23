@@ -475,7 +475,6 @@ function template.table_inline(table)
     output = output .. kv_list:gsub(', $', '')
     return output .. tex_escape .. '}'
   else
-    print(table)
     return tostring(table)
   end
 end

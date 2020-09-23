@@ -1,0 +1,18 @@
+\documentclass{article}
+\usepackage[lmargin=0.5in,tmargin=0.5in,rmargin=0.5in,bmargin=0.5in]{geometry}
+\usepackage{fontspec}
+\usepackage[callback={}]{nodetree}
+
+\newfontfamily{\devanagarifam}{Noto Sans Devanagari}[Script=Devanagari, Scale=1, Renderer=HarfBuzz]
+
+\begin{document}
+
+\NodetreeRegisterCallback{hpack_filter}
+
+\setbox0=\hbox{Příliš žluťoučký \textit{kůň} úpěl \hbox{ďábelské} ódy difference diffierence. \devanagarifam एक गांव -- में मोहन नाम का लड़का रहता था। उसके पिताजी एक मामूली मजदूर थे।}
+
+\box0
+
+\NodetreeUnregisterCallback{hpack_filter}
+
+\end{document}

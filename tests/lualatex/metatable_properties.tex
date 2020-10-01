@@ -1,0 +1,26 @@
+% https://github.com/Josef-Friedrich/nodetree/issues/7
+% https://tex.stackexchange.com/questions/564454/luatex-glyph-property-table-doesnt-get-copied-upon-vbox-copy
+
+\documentclass{article}
+\usepackage{fontspec}
+\setmainfont[Renderer=HarfBuzz,Script=Latin]{Linux Libertine O}
+
+\usepackage[callback={}]{nodetree}
+
+\begin{document}
+
+\NodetreeRegisterCallback{vpack_filter}
+
+\setbox0=\vbox{{\hsize=2in\relax Hello world\endgraf}}
+
+% NOTE: Comment following for second run
+%\box0
+
+% NOTE: Uncomment following for second run
+\copy0
+
+\newpage\null
+
+\NodetreeUnregisterCallback{vpack_filter}
+
+\end{document}

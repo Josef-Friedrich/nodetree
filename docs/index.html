@@ -136,8 +136,8 @@
 	<td class="summary"><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#char">char (char)</a></td>
-	<td class="summary">Format a single unicode character.</td>
+	<td class="name" nowrap><a href="#char">char (head)</a></td>
+	<td class="summary">Format the char field of a node.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#line">line (length)</a></td>
@@ -863,17 +863,48 @@
 </dd>
     <dt>
     <a name = "char"></a>
-    <strong>char (char)</strong>
+    <strong>char (head)</strong>
     </dt>
     <dd>
-    Format a single unicode character.
+    Format the char field of a node.  Try to find a textual representation that
+ corresponds with the number stored into the <a href="index.html#char">char</a> field.</p>
+
+<p> LuaTeX’s <code>node.char</code> are not really characters, they are font glyph indices
+ which sometimes happen to match valid Unicode characters. HarfBuzz shapers
+ differentiates between glyph IDs and characters by adding to 0x120000 to
+ glyph ID.</p>
+
+<p> The code of this function is borrowed from the <a href="https://github.com/latex3/luaotfload/blob/4c09fe264c1644792d95182280be259449e7da02/src/luaotfload-harf-plug.lua#L1018-L1031">function
+ <code>get_glyph_info(n)</code></a>
+ of the luaotfload package. The harfbuzz mode in luaotfload uses this
+ function to embed text in a PDF file and for messages that show textual
+ representation of the nodes like over/underfull messages. It will not
+ result in an error in other modes, but it might not give proper text
+ representation, but that is a limitation of these modes.</p>
+
+<p> It should be understood what the glyph nodes represent. Before
+ processing by luaotfload they represent one-to-one mapping of the
+ input characters. After processing, they represent font glyphs with
+ potentially complicated relationship with input characters.</p>
+
+<p> Relation between input characters and output glyphs are many-to-many.
+ An input character may be represented by one or more glyphs, and
+ output glyph might represent one or more input characters, and in
+ some cases (e.g. when there is reordering) a group of input
+ characters are represented by a group of output glyphs. In the 2nd
+ and 3rd cases, the first glyph node will have a <code>glyph_info</code> property
+ with all the characters of the group, and subsequent glyph nodes in
+ the group will have empty <code>glyph_info</code> properties.</p>
+
+<p> It should also noted that this mapping is not unique, the same glyph
+ can represent different characters in different context.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">char</span>
-            <span class="types"><span class="type">number</span></span>
-         A single input character.
+        <li><span class="parameter">head</span>
+            <span class="types"><span class="type">node</span></span>
+         The head node of a node list.
         </li>
     </ul>
 
@@ -881,7 +912,8 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
-
+        A textual representation of the <a href="index.html#char">char</a> number.
+ In verbosity level 2 or great suffixed with <code>[char number]</code>
     </ol>
 
 
@@ -1336,7 +1368,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">field</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
@@ -1369,7 +1401,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
     </ul>
 
@@ -1452,7 +1484,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">level</span>
             <span class="types"><span class="type">number</span></span>
@@ -1477,7 +1509,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">level</span>
             <span class="types"><span class="type">number</span></span>
@@ -1502,7 +1534,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
     </ul>
 
@@ -1594,7 +1626,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
@@ -1619,7 +1651,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">is_display</span>
             <span class="types"><span class="type">boolean</span></span>
@@ -1677,7 +1709,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
@@ -1702,7 +1734,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
@@ -1743,7 +1775,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
@@ -1796,7 +1828,7 @@
         </li>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">first</span>
             <span class="types"><span class="type">number</span></span>
@@ -1833,7 +1865,7 @@
         </li>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">first</span>
             <span class="types"><span class="type">number</span></span>
@@ -1862,7 +1894,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">width</span>
             <span class="types"><span class="type">number</span></span>
@@ -1891,7 +1923,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
@@ -1932,7 +1964,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">tail</span>
             <span class="types"><span class="type">node</span></span>
@@ -1957,7 +1989,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">tail</span>
             <span class="types"><span class="type">node</span></span>
@@ -1982,7 +2014,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">tail</span>
             <span class="types"><span class="type">node</span></span>
@@ -2032,7 +2064,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
         <li><span class="parameter">display_type</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
@@ -2333,7 +2365,7 @@
     <ul>
         <li><span class="parameter">head</span>
             <span class="types"><span class="type">node</span></span>
-
+         The head node of a node list.
         </li>
     </ul>
 
@@ -2349,7 +2381,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-23 11:06:45 </i>
+<i style="float:right;">Last updated 2020-10-01 16:35:24 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

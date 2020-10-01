@@ -23,6 +23,12 @@ if not modules then modules = { } end modules ['nodetree'] = {
   license   = 'The LaTeX Project Public License Version 1.3c 2008-05-04'
 }
 
+local direct            = node.direct
+local todirect          = direct.todirect
+local getchar           = direct.getchar
+local utfchar           = utf8.char
+local properties        = direct.get_properties_table()
+
 --- A counter for the compiled TeX examples. Some TeX code snippets
 -- a written into file, wrapped with some TeX boilerplate code.
 -- This written files are compiled.
@@ -329,24 +335,65 @@ local template = {
     return output .. format.color_code(code)
   end,
 
-  --- Format a single unicode character.
+  --- Format the char field of a node. Try to find a textual representation that
+  -- corresponds with the number stored into the `char` field.
   --
-  -- @tparam number char A single input character.
+  -- LuaTeX’s `node.char` are not really characters, they are font glyph indices
+  -- which sometimes happen to match valid Unicode characters. HarfBuzz shapers
+  -- differentiates between glyph IDs and characters by adding to 0x120000 to
+  -- glyph ID.
   --
-  -- @treturn string
-  char = function(char)
+  -- The code of this function is borrowed from the [function
+  -- `get_glyph_info(n)`](https://github.com/latex3/luaotfload/blob/4c09fe264c1644792d95182280be259449e7da02/src/luaotfload-harf-plug.lua#L1018-L1031)
+  -- of the luaotfload package. The harfbuzz mode in luaotfload uses this
+  -- function to embed text in a PDF file and for messages that show textual
+  -- representation of the nodes like over/underfull messages. It will not
+  -- result in an error in other modes, but it might not give proper text
+  -- representation, but that is a limitation of these modes.
+  --
+  -- It should be understood what the glyph nodes represent. Before
+  -- processing by luaotfload they represent one-to-one mapping of the
+  -- input characters. After processing, they represent font glyphs with
+  -- potentially complicated relationship with input characters.
+  --
+  -- Relation between input characters and output glyphs are many-to-many.
+  -- An input character may be represented by one or more glyphs, and
+  -- output glyph might represent one or more input characters, and in
+  -- some cases (e.g. when there is reordering) a group of input
+  -- characters are represented by a group of output glyphs. In the 2nd
+  -- and 3rd cases, the first glyph node will have a `glyph_info` property
+  -- with all the characters of the group, and subsequent glyph nodes in
+  -- the group will have empty `glyph_info` properties.
+  --
+  -- It should also noted that this mapping is not unique, the same glyph
+  -- can represent different characters in different context.
+  --
+  -- @tparam node head The head node of a node list.
+  --
+  -- @treturn string A textual representation of the `char` number.
+  -- In verbosity level 2 or great suffixed with `[char number]`
+  char = function(head)
     -- See Issue #6
-    -- See test file tests/luatex/unicode-support.lua
-    -- Last character that unicode.utf8.char() can handle is 1114367.
-    -- See source/texk/web2c/luatexdir/slnunicode/slnunico.c static int unic_char
-    if char < 1114368 then
-      char = string.format('%s', unicode.utf8.char(char))
-      char = '\'' .. char .. '\''
-      if options.channel == 'tex' then
-        char = format.escape(char)
-      end
+    local node_id = todirect(head) -- Convert to node id
+    local props = properties[node_id]
+    local info = props and props.glyph_info
+
+    local output
+    if info then
+      output = info
     end
-    return char
+    local c = getchar(node_id)
+    if c == 0 then
+      output = '^^@'
+    elseif c < 0x110000 then
+      output = utfchar(c)
+    else
+      output = string.format("^^^^^^%06X", c)
+    end
+    if options.verbosity > 1 then
+      return output .. ' [' .. head.char .. ']'
+    end
+    return output
   end,
 
   ---
@@ -834,7 +881,7 @@ end
 local tree = {}
 
 ---
--- @tparam node head
+-- @tparam node head The head node of a node list.
 -- @tparam string field
 --
 -- @treturn string
@@ -880,7 +927,7 @@ function tree.format_field(head, field)
     field == 'shift' then
     output = template.length(head[field])
   elseif field == 'char' then
-    output = template.char(head[field])
+    output = template.char(head)
   elseif field == 'glue_set' then
     output = format.number(head[field])
   elseif field == 'stretch' or field == 'shrink' then
@@ -897,7 +944,7 @@ end
 -- list. The attribute `0` with the value `0` is skipped because this
 -- attribute is in every node by default.
 --
--- @tparam node head
+-- @tparam node head The head node of a node list.
 --
 -- @treturn string
 function tree.format_attributes(head)
@@ -958,7 +1005,7 @@ function tree.analyze_fields(fields, level)
 end
 
 ---
--- @tparam node head
+-- @tparam node head The head node of a node list.
 -- @tparam number level
 function tree.analyze_node(head, level)
   local connection_state
@@ -1028,7 +1075,7 @@ function tree.analyze_node(head, level)
 end
 
 ---
--- @tparam node head
+-- @tparam node head The head node of a node list.
 -- @tparam number level
 function tree.analyze_list(head, level)
   while head do
@@ -1038,7 +1085,7 @@ function tree.analyze_list(head, level)
 end
 
 ---
--- @tparam node head
+-- @tparam node head The head node of a node list.
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
   nodetree_print(template.line('short') .. format.new_line())
@@ -1073,7 +1120,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam string groupcode
   pre_linebreak_filter = function(head, groupcode)
     template.callback('pre_linebreak_filter', {groupcode = groupcode})
@@ -1082,7 +1129,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam boolean is_display
   linebreak_filter = function(head, is_display)
     template.callback('linebreak_filter', {is_display = is_display})
@@ -1107,7 +1154,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam string groupcode
   post_linebreak_filter = function(head, groupcode)
     template.callback('post_linebreak_filter', {groupcode = groupcode})
@@ -1116,7 +1163,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam string groupcode
   -- @tparam number size
   -- @tparam string packtype
@@ -1136,7 +1183,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam string groupcode
   -- @tparam number size
   -- @tparam string packtype
@@ -1160,7 +1207,7 @@ local callbacks = {
   ---
   -- @tparam string incident
   -- @tparam number detail
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam number first
   -- @tparam number last
   hpack_quality = function(incident, detail, head, first, last)
@@ -1177,7 +1224,7 @@ local callbacks = {
   ---
   -- @tparam string incident
   -- @tparam number detail
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam number first
   -- @tparam number last
   vpack_quality = function(incident, detail, head, first, last)
@@ -1192,7 +1239,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam number width
   -- @tparam number height
   process_rule = function(head, width, height)
@@ -1206,7 +1253,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam string groupcode
   -- @tparam number size
   -- @tparam string packtype
@@ -1226,7 +1273,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam node tail
   hyphenate = function(head, tail)
     template.callback('hyphenate')
@@ -1237,7 +1284,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam node tail
   ligaturing = function(head, tail)
     template.callback('ligaturing')
@@ -1248,7 +1295,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam node tail
   kerning = function(head, tail)
     template.callback('kerning')
@@ -1268,7 +1315,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head
+  -- @tparam node head The head node of a node list.
   -- @tparam string display_type
   -- @tparam boolean need_penalties
   mlist_to_hlist = function(head, display_type, need_penalties)
@@ -1542,7 +1589,8 @@ local export = {
 }
 
 --- Use export.print
--- @tparam node head
+--
+-- @tparam node head The head node of a node list.
 export.analyze = export.print
 
 return export

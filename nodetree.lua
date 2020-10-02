@@ -498,6 +498,47 @@ function template.length (input)
   )
 end
 
+--- Get all data from a table including metatables.
+--
+-- Properties will reside in a metatable, if nodes were copied using an
+-- operation like box copy: (\copy). The LuaTeX manual states this: “If
+-- the second argument of `set_properties_mode` is true, then a
+-- metatable approach is chosen: the copy gets its own table with the
+-- original table as metatable.”
+--
+-- Source: https://stackoverflow.com/a/5639667 Works if __index returns
+-- table, which it should as per luatex manual
+--
+-- @tparam table table A Lua table.
+-- @tparam table previous_data table The of data of
+--   a Lua table of a previous recursive call.
+--
+-- @treturn table A merged table.
+local function get_all_table_data(table, previous_data)
+  -- If previous_data is nil, start empty, otherwise start with previous_data.
+  local data = previous_data or {}
+
+  -- Copy all the attributes from the table.
+  for key, value in pairs(table) do
+    data[key] = data[key] or value
+  end
+
+  -- Get table’s metatable, or exit if not existing
+  local metatable = getmetatable(table)
+  if type(metatable) ~= 'table' then
+    return data
+  end
+
+  -- Get the `__index` from metatable, or exit if not table.
+  local index = metatable.__index
+  if type(index) ~= 'table' then
+    return data
+  end
+
+  -- Include the data from index into data, recursively, and return.
+  return get_all_table_data(index, data)
+end
+
 --- Convert a Lua table into a format string.
 --
 -- @tparam table table A table to generate a inline view of.
@@ -509,6 +550,7 @@ function template.table_inline(table)
     tex_escape = '\\'
   end
   if type(table) == 'table' then
+    table = get_all_table_data(table)
     local output = tex_escape .. '{'
     local kv_list = ''
     for key, value in pairs(table) do

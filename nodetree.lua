@@ -26,6 +26,9 @@ if not modules then modules = { } end modules ['nodetree'] = {
 local direct            = node.direct
 local todirect          = direct.todirect
 local getchar           = direct.getchar
+--- Lua 5.1 does not have the utf8 library (Lua 5.1 is the default
+-- version in LuajitTeX). LuaJitTeX does include the slnunicode library.
+local utf8              = utf8 or unicode.utf8
 local utfchar           = utf8.char
 local properties        = direct.get_properties_table()
 

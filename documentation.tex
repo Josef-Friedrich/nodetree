@@ -74,7 +74,7 @@
   \url{josef@friedrich.rocks}\\%
   \href{https://github.com/Josef-Friedrich/nodetree}{github.com/Josef-Friedrich/nodetree}%
 }
-\date{v2.1 from 2020/10/03}
+\date{v2.2 from 2020/10/23}
 
 \maketitle
 
@@ -1340,7 +1340,12 @@ abc
 
 \subsection{The file \texttt{nodetree.lua}}
 
-\inputminted{lua}{nodetree.lua}
+% Compilation failure:
+% lualatex: ../../../texk/web2c/luatexdir/lang/texlang.c:986: hnj_hyphenation: Assertion `(((varmem[(wordstart)].hh.u.B1) & (1 << 0)) && !((varmem[(wordstart)].hh.u.B1) & (1 << 1) ) && !((varmem[(wordstart)].hh.u.B1) & (1 << 2) ))' failed
+% \inputminted{lua}{nodetree.lua}
+There is a source code documentation of the file nodetree.lua compiled
+with Ldoc on Github:
+\url{http://josef-friedrich.github.io/nodetree/}
 
 %-----------------------------------------------------------------------
 % Index

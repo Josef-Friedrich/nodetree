@@ -32,10 +32,10 @@ version 2005/12/01 or later.
 
 # CTAN
 
-Since July 2016 the cloze package is included in the Comprehensive TeX
+Since July 2016 the nodetree package is included in the Comprehensive TeX
 Archive Network (CTAN).
 
-* TeX archive: http://mirror.ctan.org/tex-archive/macros/luatex/generic/nodetree
+* TeX archive: http://mirror.ctan.org/macros/luatex/generic/nodetree
 * Package page: http://www.ctan.org/pkg/nodetree
 
 # Repository

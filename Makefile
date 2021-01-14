@@ -22,7 +22,7 @@ doc_pdf:
 	makeindex -s gind.ist -o documentation.ind documentation.idx
 	lualatex --shell-escape documentation.tex
 	mkdir -p $(texmf)/doc
-	mv documentation.pdf nodetree.pdf
+	mv documentation.pdf $(jobname).pdf
 	cp $(jobname).pdf $(texmf)/doc
 
 doc_examples:

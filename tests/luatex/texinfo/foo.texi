@@ -1,0 +1,13 @@
+% https://github.com/Josef-Friedrich/nodetree/issues/9
+\input nodetree.tex
+
+\input texinfo
+
+@set txicodequoteundirected
+@set txicodequotebacktick
+
+@NodetreeRegisterCallback{postline}
+
+@t{`foo'} -- @code{`foo'}
+
+@bye

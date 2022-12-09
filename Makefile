@@ -5,7 +5,12 @@ installdir = $(texmftex)/$(jobname)
 
 all: install doc
 
-install:
+install: uninstall_texlive install_dev
+
+uninstall_texlive:
+	-tlmgr uninstall --force nodetree
+
+install_dev:
 	luatex $(jobname).ins
 	mkdir -p $(installdir)
 	cp -f $(jobname).tex $(installdir)

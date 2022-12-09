@@ -376,27 +376,27 @@ local template = {
   -- @treturn string A textual representation of the `char` number.
   -- In verbosity level 2 or great suffixed with `[char number]`
   char = function(head)
-    -- See Issue #6
+    -- See Issues #6 and #9
     local node_id = todirect(head) -- Convert to node id
     local props = properties[node_id]
     local info = props and props.glyph_info
-
-    local output
+    local textual
+    local character_index = getchar(node_id)
     if info then
-      output = info
-    end
-    local c = getchar(node_id)
-    if c == 0 then
-      output = '^^@'
-    elseif c < 0x110000 then
-      output = utfchar(c)
+      textual = info
+    elseif character_index == 0 then
+      textual = '^^@'
+    elseif character_index <= 31 or (character_index >= 127 and character_index <= 159) then
+      -- The C0 range [c-zero] is the characters from U+0000 to U+001F
+      -- (decimal 0-31) and U+007F (decimal 127), the C1 range is the
+      -- characters from U+0080 to U+009F (decimal 128-159).
+      textual = '???'
+    elseif character_index < 0x110000 then
+      textual = utfchar(character_index)
     else
-      output = string.format("^^^^^^%06X", c)
+      textual = string.format("^^^^^^%06X", character_index)
     end
-    if options.verbosity > 1 then
-      return output .. ' [' .. head.char .. ']'
-    end
-    return output
+    return character_index .. ' (' .. string.format('0x%x', character_index) .. ', \''.. textual .. '\')'
   end,
 
   ---

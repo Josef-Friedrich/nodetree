@@ -1,4 +1,5 @@
 % https://github.com/Josef-Friedrich/nodetree/issues/9
+% PDFTEX=luatex texi2pdf foo.texi
 \input nodetree.tex
 
 \input texinfo

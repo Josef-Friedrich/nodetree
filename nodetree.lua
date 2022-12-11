@@ -923,6 +923,7 @@ local function get_node_subtypes ()
       [1] = 'right',
     },
     -- glyph (29)
+    -- the subtype for this node is a bit field, not an enumeration
     glyph = {
       [0] = 'character',
       [1] = 'ligature',
@@ -941,9 +942,31 @@ end
 function node_extended.subtype(n)
   local typ = node.type(n.id)
   local subtypes = get_node_subtypes()
-  local output
-  if subtypes[typ] and subtypes[typ][n.subtype] then
-    output = subtypes[typ][n.subtype]
+  local output = ''
+  if subtypes[typ] then
+    if typ == 'glyph' then
+      -- only handle the lowest five bits
+      local mask = 1
+      local need_space = false
+      for i = 0,4,1 do
+        if n.subtype & mask ~= 0 then
+          if need_space == true then
+            output = output .. ' '
+          else
+            need_space = true
+          end
+          output = output .. subtypes[typ][i]
+        end
+        mask = mask << 1
+      end
+    else
+      if subtypes[typ][n.subtype] then
+        output = subtypes[typ][n.subtype]
+      else
+        return tostring(n.subtype)
+      end
+    end
+
     if options.verbosity > 1 then
       output = output .. format.type_id(n.subtype)
     end

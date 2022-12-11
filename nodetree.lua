@@ -79,7 +79,7 @@ local tree_state = {}
 
 local format = {
   ---
-  -- @treturn string
+  ---@return string
   underscore = function(string)
     if options.channel == 'tex' then
       return string.gsub(string, '_', '\\_')
@@ -89,7 +89,7 @@ local format = {
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   escape = function(string)
     if options.channel == 'tex' then
       return string.gsub(string, [[\]], [[\string\]])
@@ -98,14 +98,14 @@ local format = {
     end
   end,
 
-  -- @treturn number
+  ---@return number
   number = function(number)
     local mult = 10^(options.decimalplaces or 0)
     return math.floor(number * mult + 0.5) / mult
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   whitespace = function(count)
     local whitespace
     local output = ''
@@ -124,20 +124,20 @@ local format = {
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   color_code = function(code)
     return string.char(27) .. '[' .. tostring(code) .. 'm'
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   color_tex = function(color, mode)
     if not mode then mode = '' end
     return 'NTE' .. color .. mode
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   node_begin = function()
     if options.channel == 'tex' then
       return '\\mbox{'
@@ -147,7 +147,7 @@ local format = {
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   node_end = function()
     if options.channel == 'tex' then
       return '}'
@@ -157,7 +157,7 @@ local format = {
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   new_line = function(count)
     local output = ''
     if not count then
@@ -177,7 +177,7 @@ local format = {
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   type_id = function(id)
     return '[' .. tostring(id) .. ']'
   end
@@ -300,7 +300,7 @@ local template = {
   -- @tparam string mode `bright` or `dim`.
   -- @tparam boolean background Colorize the background not the text.
   --
-  -- @treturn string
+  ---@return string
   color = function(color, mode, background)
     if options.color ~= 'colored' then
       return ''
@@ -373,7 +373,7 @@ local template = {
   --
   -- @tparam node head The head node of a node list.
   --
-  -- @treturn string A textual representation of the `char` number.
+  ---@return string A textual representation of the `char` number.
   -- In verbosity level 2 or great suffixed with `[char number]`
   char = function(head)
     -- See Issues #6 and #9
@@ -400,7 +400,7 @@ local template = {
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   line = function(length)
     local output
     if length == 'long' then
@@ -412,7 +412,7 @@ local template = {
   end,
 
   ---
-  -- @treturn string
+  ---@return string
   branch = function(connection_type, connection_state, last)
     local c = connection_type
     local s = connection_state
@@ -439,7 +439,7 @@ local template = {
 }
 
 ---
--- @treturn string
+---@return string
 function template.fill(number, order, field)
   local output
   if order ~= nil and order ~= 0 then
@@ -469,7 +469,7 @@ end
 -- @tparam string mode `bright` or `dim`.
 -- @tparam boolean background Colorize the background not the text.
 --
--- @treturn string
+---@return string
 function template.colored_string(text, color, mode, background)
   if options.channel == 'tex' then
     if mode == 'dim' then
@@ -490,7 +490,7 @@ end
 --
 -- @tparam number input
 --
--- @treturn string
+---@return string
 function template.length (input)
   input = tonumber(input)
   input = input / tex.sp('1' .. options.unit)
@@ -516,7 +516,7 @@ end
 -- @tparam table previous_data table The of data of
 --   a Lua table of a previous recursive call.
 --
--- @treturn table A merged table.
+---@return table A merged table.
 local function get_all_table_data(table, previous_data)
   -- If previous_data is nil, start empty, otherwise start with previous_data.
   local data = previous_data or {}
@@ -546,7 +546,7 @@ end
 --
 -- @tparam table table A table to generate a inline view of.
 --
--- @treturn string
+---@return string
 function template.table_inline(table)
   local tex_escape = ''
   if options.channel == 'tex' then
@@ -578,7 +578,7 @@ end
 -- @tparam string color A color name (`black`, `red`, `green`,
 --   `yellow`, `blue`, `magenta`, `cyan`, `white`).
 --
--- @treturn string
+---@return string
 function template.key_value(key, value, color)
   if type(color) ~= 'string' then
     color = 'yellow'
@@ -594,7 +594,7 @@ function template.key_value(key, value, color)
 end
 
 ---
--- @treturn string
+---@return string
 function template.type(type, id)
   local output
   if options.channel == 'tex' then
@@ -614,7 +614,7 @@ function template.type(type, id)
 end
 
 ---
--- @treturn string
+---@return string
 function template.callback(callback_name, variables)
   nodetree_print(
     format.new_line(2) ..
@@ -639,7 +639,7 @@ function template.callback(callback_name, variables)
 end
 
 ---
--- @treturn string
+---@return string
 function template.branches(level, connection_type)
   local output = ''
   for i = 1, level - 1  do
@@ -670,7 +670,7 @@ local node_extended = {}
 --
 -- @tparam node n A node.
 --
--- @treturn string
+---@return string
 function node_extended.node_id(n)
   return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
 end
@@ -716,7 +716,7 @@ end
 -- * `passive` (48)
 -- * `shape` (49)
 --
--- @treturn table
+---@return table
 local function get_node_subtypes ()
     local subtypes = {
     -- hlist (0)
@@ -903,7 +903,7 @@ local function get_node_subtypes ()
 end
 
 ---
--- @treturn string
+---@return string
 function node_extended.subtype(n)
   local typ = node.type(n.id)
   local subtypes = get_node_subtypes()
@@ -929,7 +929,7 @@ local tree = {}
 -- @tparam node head The head node of a node list.
 -- @tparam string field
 --
--- @treturn string
+---@return string
 function tree.format_field(head, field)
   local output
 -- Character "0" should be printed in a tree, because in TeX fonts the
@@ -991,7 +991,7 @@ end
 --
 -- @tparam node head The head node of a node list.
 --
--- @treturn string
+---@return string
 function tree.format_attributes(head)
   if not head then
     return ''
@@ -1407,7 +1407,7 @@ end
 --
 -- @tparam string callback_name The name of a callback to check.
 --
--- @treturn string The unchanged input of the function.
+---@return string The unchanged input of the function.
 local function check_callback_name(callback_name)
   local info = callback.list()
   if info[callback_name] == nil then
@@ -1425,7 +1425,7 @@ end
 -- @tparam string alias The alias of a callback name or the callback
 -- name itself.
 --
--- @treturn string The real callback name.
+---@return string The real callback name.
 local function get_callback_name(alias)
   local callback_name
   -- Listed as in the LuaTeX reference manual.
@@ -1551,7 +1551,7 @@ local export = {
   --
   -- @tparam string tex_markup
   --
-  -- @treturn string
+  ---@return string
   compile_include = function(tex_markup)
     -- Generate a subfolder for all tempory files: _nodetree-jobname.
     local parent_path = lfs.currentdir() .. '/' .. '_nodetree-' .. tex.jobname
@@ -1619,7 +1619,7 @@ local export = {
   --
   -- @tparam number sp A scaled point value
   --
-  -- @treturn string
+  ---@return string
   format_dim = function(sp)
     return template.length(sp)
   end,
@@ -1627,7 +1627,7 @@ local export = {
   --- Get a default option that is not changed.
   -- @tparam string key The key of the option.
   --
-  -- @treturn string|number|boolean
+  ---@return string|number|boolean
   get_default_option = function(key)
     return default_options[key]
   end

@@ -1,0 +1,15 @@
+% https://github.com/Josef-Friedrich/nodetree/issues/10
+% PDFTEX=luatex texi2pdf foo.texi
+\input nodetree.tex
+\NodetreeSetOption[verbosity]{2}
+
+\input texinfo
+
+@set txicodequoteundirected
+@set txicodequotebacktick
+
+@NodetreeRegisterCallback{contribute,buildfilter,buildinsert,preline,line,append,postline,hpack,vpack,hpackq,vpackq,process,preout,hyph,liga,kern,insert,mhlist}
+
+@t{`foo'} -- @code{`foo'}
+
+@bye

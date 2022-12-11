@@ -933,7 +933,6 @@ end
 function node_extended.subtype(n)
   local typ = node.type(n.id)
   local subtypes = get_node_subtypes()
-
   local output
   if subtypes[typ] and subtypes[typ][n.subtype] then
     output = subtypes[typ][n.subtype]
@@ -958,9 +957,15 @@ local tree = {}
 ---@return string
 function tree.format_field(head, field)
   local output
--- Character "0" should be printed in a tree, because in TeX fonts the
--- 0 slot usually has a symbol.
-  if not head[field] or (head[field] == 0 and field ~= "char") then
+
+  -- subtype with 0 are were not printed, see #12
+  if head[field] ~= nil and field == "subtype" then
+    return template.key_value(field, format.underscore(node_extended.subtype(head)))
+  end
+
+  -- Character "0" should be printed in a tree, because in TeX fonts the
+  -- 0 slot usually has a symbol.
+  if head[field] == nil or (head[field] == 0 and field ~= "char") then
     return ''
   end
 
@@ -988,8 +993,6 @@ function tree.format_field(head, field)
 
   if field == 'prev' or field == 'next' then
     output = node_extended.node_id(head[field])
-  elseif field == 'subtype' then
-    output = format.underscore(node_extended.subtype(head))
   elseif
     field == 'width' or
     field == 'height' or
@@ -1075,7 +1078,7 @@ end
 
 ---
 ---@param head Node # The head node of a node list.
--- @tparam number level
+---@param level number
 function tree.analyze_node(head, level)
   local connection_state
   local output

@@ -1,0 +1,10 @@
+https://github.com/Josef-Friedrich/nodetree/issues/12
+% PDFTEX=luatex texi2pdf foo.texi
+\input nodetree.tex
+\NodetreeSetOption[verbosity]{2}
+
+\NodetreeRegisterCallback{preline}
+
+office
+
+\bye

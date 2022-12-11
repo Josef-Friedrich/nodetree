@@ -15,6 +15,11 @@
 
 -- luacheck: globals node tex luatexbase lfs callback os unicode status modules
 
+---@class Node
+---@field next Node|nil # the next node in a list, or nil
+---@field id number # the node’s type (id) number
+---@field subtype number # the node subtype identifier
+
 if not modules then modules = { } end modules ['nodetree'] = {
   version   = '2.2',
   comment   = 'nodetree',
@@ -371,9 +376,9 @@ local template = {
   -- It should also noted that this mapping is not unique, the same glyph
   -- can represent different characters in different context.
   --
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   --
-  ---@return string A textual representation of the `char` number.
+  ---@return string # A textual representation of the `char` number.
   -- In verbosity level 2 or great suffixed with `[char number]`
   char = function(head)
     -- See Issues #6 and #9
@@ -516,7 +521,7 @@ end
 -- @tparam table previous_data table The of data of
 --   a Lua table of a previous recursive call.
 --
----@return table A merged table.
+---@return table # A merged table.
 local function get_all_table_data(table, previous_data)
   -- If previous_data is nil, start empty, otherwise start with previous_data.
   local data = previous_data or {}
@@ -902,6 +907,7 @@ local function get_node_subtypes ()
   return subtypes
 end
 
+---@param n Node
 ---
 ---@return string
 function node_extended.subtype(n)
@@ -926,7 +932,7 @@ end
 local tree = {}
 
 ---
--- @tparam node head The head node of a node list.
+---@param head Node # The head node of a node list.
 -- @tparam string field
 --
 ---@return string
@@ -989,7 +995,7 @@ end
 -- list. The attribute `0` with the value `0` is skipped because this
 -- attribute is in every node by default.
 --
--- @tparam node head The head node of a node list.
+---@param head Node # The head node of a node list.
 --
 ---@return string
 function tree.format_attributes(head)
@@ -1050,7 +1056,7 @@ function tree.analyze_fields(fields, level)
 end
 
 ---
--- @tparam node head The head node of a node list.
+---@param head Node # The head node of a node list.
 -- @tparam number level
 function tree.analyze_node(head, level)
   local connection_state
@@ -1120,7 +1126,7 @@ function tree.analyze_node(head, level)
 end
 
 ---
--- @tparam node head The head node of a node list.
+---@param head Node # The head node of a node list.
 -- @tparam number level
 function tree.analyze_list(head, level)
   while head do
@@ -1130,7 +1136,7 @@ function tree.analyze_list(head, level)
 end
 
 ---
--- @tparam node head The head node of a node list.
+---@param head Node # The head node of a node list.
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
   nodetree_print(template.line('short') .. format.new_line())
@@ -1165,7 +1171,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam string groupcode
   pre_linebreak_filter = function(head, groupcode)
     template.callback('pre_linebreak_filter', {groupcode = groupcode})
@@ -1174,7 +1180,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam boolean is_display
   linebreak_filter = function(head, is_display)
     template.callback('linebreak_filter', {is_display = is_display})
@@ -1183,7 +1189,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node box
+  ---@param box Node
   -- @tparam string locationcode
   -- @tparam number prevdepth
   -- @tparam boolean mirrored
@@ -1199,7 +1205,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam string groupcode
   post_linebreak_filter = function(head, groupcode)
     template.callback('post_linebreak_filter', {groupcode = groupcode})
@@ -1208,7 +1214,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam string groupcode
   -- @tparam number size
   -- @tparam string packtype
@@ -1228,7 +1234,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam string groupcode
   -- @tparam number size
   -- @tparam string packtype
@@ -1252,7 +1258,7 @@ local callbacks = {
   ---
   -- @tparam string incident
   -- @tparam number detail
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam number first
   -- @tparam number last
   hpack_quality = function(incident, detail, head, first, last)
@@ -1284,7 +1290,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam number width
   -- @tparam number height
   process_rule = function(head, width, height)
@@ -1298,7 +1304,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam string groupcode
   -- @tparam number size
   -- @tparam string packtype
@@ -1318,7 +1324,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam node tail
   hyphenate = function(head, tail)
     template.callback('hyphenate')
@@ -1329,7 +1335,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam node tail
   ligaturing = function(head, tail)
     template.callback('ligaturing')
@@ -1340,7 +1346,7 @@ local callbacks = {
   end,
 
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam node tail
   kerning = function(head, tail)
     template.callback('kerning')
@@ -1407,7 +1413,7 @@ end
 --
 -- @tparam string callback_name The name of a callback to check.
 --
----@return string The unchanged input of the function.
+---@return string # The unchanged input of the function.
 local function check_callback_name(callback_name)
   local info = callback.list()
   if info[callback_name] == nil then
@@ -1425,7 +1431,7 @@ end
 -- @tparam string alias The alias of a callback name or the callback
 -- name itself.
 --
----@return string The real callback name.
+---@return string # The real callback name.
 local function get_callback_name(alias)
   local callback_name
   -- Listed as in the LuaTeX reference manual.
@@ -1605,7 +1611,7 @@ local export = {
 
   --- Print a node tree.
   ---
-  -- @tparam node head The head node of a node list.
+  ---@param head Node # The head node of a node list.
   -- @tparam table opts Options as a table.
   print = function(head, opts)
     if opts and type(opts) == 'table' then

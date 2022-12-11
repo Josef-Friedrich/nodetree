@@ -20,6 +20,14 @@
 ---@field id number # the node’s type (id) number
 ---@field subtype number # the node subtype identifier
 
+---@alias ColorName `black` | `red` | `green` | `yellow` | `blue` | `magenta` | `cyan` | `white`
+---@alias ColorMode `bright` | `dim`
+
+---@alias ConnectionType `list` | `field` # A literal
+--   is a string, which can be either `list` or `field`.
+---@alias ConnectionState `stop` | `continue` # A literal which can
+--   be either `continue` or `stop`.
+
 if not modules then modules = { } end modules ['nodetree'] = {
   version   = '2.2',
   comment   = 'nodetree',
@@ -83,32 +91,39 @@ local tree_state = {}
 -- @section format
 
 local format = {
+  ---@param input string
   ---
   ---@return string
-  underscore = function(string)
+  underscore = function(input)
     if options.channel == 'tex' then
-      return string.gsub(string, '_', '\\_')
+      local result = input.gsub(input, '_', '\\_')
+      return result
     else
-      return string
+      return input
     end
   end,
 
+  ---@param input string
   ---
   ---@return string
-  escape = function(string)
+  escape = function(input)
     if options.channel == 'tex' then
-      return string.gsub(string, [[\]], [[\string\]])
+      local result = input.gsub(input, [[\]], [[\string\]])
+      return result
     else
-      return string
+      return input
     end
   end,
 
+  ---@param input number
+  ---
   ---@return number
-  number = function(number)
+  number = function(input)
     local mult = 10^(options.decimalplaces or 0)
-    return math.floor(number * mult + 0.5) / mult
+    return math.floor(input * mult + 0.5) / mult
   end,
 
+  ---@param count? number # how many spaces should be output
   ---
   ---@return string
   whitespace = function(count)
@@ -128,6 +143,7 @@ local format = {
     return output
   end,
 
+  ---@param code number
   ---
   ---@return string
   color_code = function(code)
@@ -161,6 +177,7 @@ local format = {
     end
   end,
 
+  ---@param count? number # how many new lines should be output
   ---
   ---@return string
   new_line = function(count)
@@ -181,6 +198,7 @@ local format = {
     return output
   end,
 
+  ---@param id number
   ---
   ---@return string
   type_id = function(id)
@@ -191,8 +209,7 @@ local format = {
 --- Print the output to stdout or write it into a file (`output_file`).
 -- New text is appended.
 --
--- @tparam string text A text string.
---
+---@param text string # A text string.
 local function nodetree_print(text)
   if options.channel == 'log' or options.channel == 'tex' then
     output_file:write(text)
@@ -300,10 +317,9 @@ local template = {
   -- | oncyan     | 46 |
   -- | onwhite    | 47 |
   --
-  -- @tparam string color A color name (`black`, `red`, `green`,
-  --   `yellow`, `blue`, `magenta`, `cyan`, `white`).
-  -- @tparam string mode `bright` or `dim`.
-  -- @tparam boolean background Colorize the background not the text.
+  ---@param color ColorName # A color name.
+  ---@param mode? ColorMode
+  ---@param background? boolean # Colorize the background not the text.
   --
   ---@return string
   color = function(color, mode, background)
@@ -416,6 +432,9 @@ local template = {
       return output .. format.new_line()
   end,
 
+  ---@param connection_type ConnectionType
+  ---@param connection_state ConnectionState
+  ---@param last boolean
   ---
   ---@return string
   branch = function(connection_type, connection_state, last)
@@ -468,11 +487,10 @@ end
 
 --- Colorize a text string.
 --
--- @tparam string text A text string.
--- @tparam string color A color name (`black`, `red`, `green`,
---   `yellow`, `blue`, `magenta`, `cyan`, `white`).
--- @tparam string mode `bright` or `dim`.
--- @tparam boolean background Colorize the background not the text.
+---@param text string A text string.
+---@param color ColorName A color name.
+---@param mode ColorMode
+---@param background? boolean # Colorize the background not the text.
 --
 ---@return string
 function template.colored_string(text, color, mode, background)
@@ -493,7 +511,7 @@ end
 --- Format a scaled point input value into dimension string (`12pt`,
 --  `1cm`)
 --
--- @tparam number input
+---@param input number
 --
 ---@return string
 function template.length (input)
@@ -578,10 +596,9 @@ end
 
 --- Format a key value pair (`key: value, `).
 --
--- @tparam string key A key
--- @tparam string|number value A value
--- @tparam string color A color name (`black`, `red`, `green`,
---   `yellow`, `blue`, `magenta`, `cyan`, `white`).
+---@param key string # A key.
+---@param value string|number # A value.
+---@param color? ColorName # A color name.
 --
 ---@return string
 function template.key_value(key, value, color)
@@ -643,6 +660,8 @@ function template.callback(callback_name, variables)
   nodetree_print(template.line('long'))
 end
 
+---@param level number
+---@param connection_type ConnectionType
 ---
 ---@return string
 function template.branches(level, connection_type)
@@ -673,11 +692,12 @@ local node_extended = {}
 -- node into a string it looks like: `<node    nil <    172 >    nil :
 -- hlist 2>`.
 --
--- @tparam node n A node.
+---@param n Node # A node.
 --
 ---@return string
 function node_extended.node_id(n)
-  return string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
+  local result = string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
+  return result
 end
 
 --- A table of all node subtype names.
@@ -933,7 +953,7 @@ local tree = {}
 
 ---
 ---@param head Node # The head node of a node list.
--- @tparam string field
+---@param field string
 --
 ---@return string
 function tree.format_field(head, field)
@@ -1014,11 +1034,9 @@ function tree.format_attributes(head)
 end
 
 ---
--- @tparam number level `level` is a integer beginning with 1.
--- @tparam number connection_type The variable `connection_type`
---   is a string, which can be either `list` or `field`.
--- @tparam connection_state `connection_state` is a string, which can
---   be either `continue` or `stop`.
+---@param level number # `level` is a integer beginning with 1.
+---@param connection_type ConnectionType
+---@param connection_state ConnectionState
 function tree.set_state(level, connection_type, connection_state)
   if not tree_state[level] then
     tree_state[level] = {}

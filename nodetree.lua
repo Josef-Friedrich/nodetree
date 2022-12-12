@@ -1398,9 +1398,9 @@ local callbacks = {
   ---@param tail Node
   hyphenate = function(head, tail)
     template.callback('hyphenate')
-    nodetree_print('head:\n')
+    nodetree_print('head:' .. format.new_line())
     tree.analyze_callback(head)
-    nodetree_print('tail:\n')
+    nodetree_print('tail:' .. format.new_line())
     tree.analyze_callback(tail)
   end,
 
@@ -1409,9 +1409,9 @@ local callbacks = {
   ---@param tail Node
   ligaturing = function(head, tail)
     template.callback('ligaturing')
-    nodetree_print('head:\n')
+    nodetree_print('head:' .. format.new_line())
     tree.analyze_callback(head)
-    nodetree_print('tail:\n')
+    nodetree_print('tail:' .. format.new_line())
     tree.analyze_callback(tail)
   end,
 
@@ -1420,9 +1420,9 @@ local callbacks = {
   ---@param tail Node
   kerning = function(head, tail)
     template.callback('kerning')
-    nodetree_print('head:\n')
+    nodetree_print('head:' .. format.new_line())
     tree.analyze_callback(head)
-    nodetree_print('tail:\n')
+    nodetree_print('tail:' .. format.new_line())
     tree.analyze_callback(tail)
   end,
 

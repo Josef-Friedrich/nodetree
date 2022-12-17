@@ -29,7 +29,7 @@
 --   be either `continue` or `stop`.
 
 if not modules then modules = { } end modules ['nodetree'] = {
-  version   = '2.2',
+  version   = '2.2.1',
   comment   = 'nodetree',
   author    = 'Josef Friedrich',
   copyright = 'Josef Friedrich',
@@ -642,7 +642,7 @@ function template.type(type, id)
 end
 
 ---@param callback_name string
----@param variables table
+---@param variables? table
 ---
 ---@return string
 function template.callback(callback_name, variables)

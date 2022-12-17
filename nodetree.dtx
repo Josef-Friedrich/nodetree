@@ -28,7 +28,7 @@
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<package>\ProvidesPackage{nodetree}
 %<*package>
-    [2020/10/23 v2.2 Visualize node lists in a tree view]
+    [2022/12/17 v2.2.1 Visualize node lists in a tree view]
 %</package>
 % \fi
 %
@@ -71,6 +71,12 @@
 % }
 % \changes{v2.2}{2020/10/23}{
 %  * Fix unavailable library error (utf8 not in Lua5.1)
+% }
+% \changes{v2.2.1}{2022/12/17}{
+% * Replace non-printable unicode symbols with ???.
+% * Add missing newlines for callbacks with multiple node lists.
+% * Print subtype fields with value 0.
+% * Fix the presentation of the subtype field of a glyph as a bit field.
 % }
 % \DoNotIndex{\newcommand,\newenvironment,\def,\directlua}
 %
@@ -234,7 +240,7 @@
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{nodetree-embed}
-  [2020/10/23 v2.2 Embed node trees into a LaTeX document]
+  [2022/12/17 v2.2.1 Embed node trees into a LaTeX document]
 %    \end{macrocode}
 %
 %    \begin{macrocode}

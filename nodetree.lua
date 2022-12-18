@@ -1628,8 +1628,6 @@ local export = {
   -- return its content.
   --
   ---@param tex_markup string
-  --
-  ---@return string
   compile_include = function(tex_markup)
     -- Generate a subfolder for all tempory files: _nodetree-jobname.
     local parent_path = lfs.currentdir() .. '/' .. '_nodetree-' .. tex.jobname

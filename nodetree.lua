@@ -1318,6 +1318,8 @@ local callbacks = {
     }
     template.callback('vpack_filter', variables)
     tree.analyze_callback(head)
+    tree.analyze_callback(attributelist)
+
     return true
   end,
 

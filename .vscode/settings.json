@@ -1,41 +1,39 @@
 {
-  "Lua.diagnostics.globals": [
-    "callback",
-    "lfs",
-    "luatexbase",
-    "node",
-    "status",
-    "tex",
-    "unicode"
-  ],
   "latex-workshop.latex.autoBuild.run": "never",
   "files.exclude": {
-    "**/*.DS_Store": true,
+    "**/_minted*": true,
+    "**/_nodetree*": true,
+    "**/*_nodetree.log": true,
+    "**/*_nodetree.tex": true,
     "**/*.aux": true,
-    "**/*.log": true,
-    "**/*.pdf": true,
+    "**/*.bbl": true,
+    "**/*.bcf": true,
+    "**/*.blg": true,
+    "**/*.DS_Store": true,
     "**/*.fdb_latexmk": true,
-    "**/*.synctex.gz": true,
-    "**/*.out": true,
+    "**/*.fls": true,
     "**/*.glo": true,
     "**/*.gls": true,
     "**/*.idx": true,
     "**/*.ilg": true,
     "**/*.ind": true,
-    "**/*.fls": true,
-    "**/*.toc": true,
-    "**/*.tar.gz": true,
-    "**/*.bbl": true,
-    "**/*.bcf": true,
-    "**/*.blg": true,
-    "**/*.run.xml": true,
-    "**/*.tar": true,
-    "nodetree/*": true,
-    "**/*_nodetree.tex": true,
-    "**/*_nodetree.log": true,
-    "**/_minted*": true,
-    "**/*.nttex": true,
+    "**/*.log": true,
     "**/*.ntlog": true,
-    "**/_nodetree*": true
-  }
+    "**/*.nttex": true,
+    "**/*.out": true,
+    "**/*.pdf": true,
+    "**/*.run.xml": true,
+    "**/*.synctex.gz": true,
+    "**/*.tar.gz": true,
+    "**/*.tar": true,
+    "**/*.toc": true,
+    "nodetree/*": true,
+  },
+  // https://github.com/sumneko/lua-language-server/wiki/Libraries
+  "Lua.workspace.library": [
+    // https://github.com/sumneko/lua-language-server/tree/master/meta/3rd
+    "${3rd}/busted/library",
+    // https://github.com/Josef-Friedrich/LuaTeX_Lua-API
+    "~/repos/tex/lua-api/src"
+  ]
 }

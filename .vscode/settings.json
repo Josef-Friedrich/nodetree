@@ -35,6 +35,6 @@
     "${3rd}/busted/library",
     // https://github.com/Josef-Friedrich/LuaTeX_Lua-API
     "~/repos/tex/lua-api/library",
-    "~/texmf/tex",
+    "~/repos/tex/luakeys/luakeys.lua",
   ]
 }

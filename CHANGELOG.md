@@ -31,45 +31,78 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ...
 
-## [v0.1] - 2015-06-16
+## [v2.2.1] - 2022-12-17
 
-Converted to DTX file
+### Added
 
-## [v1.0] - 2016-07-07
+- Add missing newlines for callbacks with multiple node lists.
 
-Inital release
+### Changed
 
-## [v1.1] - 2016-07-13
+- Replace non-printable unicode symbols with ???.
 
-Fix the registration of same callbacks
+### Fixed
 
-## [v1.2] - 2016-07-18
-
-Fix difference between README.md in the upload and that from nodetree.dtx
-
-## [v2.0] - 2020-05-29
-
-- Switch from lowercase macro names to PascalCase names for better readability.
-- The Lua code is no longer developed inside the DTX file, instead in a separate file named nodetree.lua.
-- Add a sub package named nodetree-embed.sty for embedding nodetree views into a \LaTeX{} document.
-- Add support for new node subtype names.
-- Add support for a new Lua\TeX{} node callback.
-- Add support for node properties.
-- Less verbose representation of node attributes.
-- Minor tree output adjustments.
-
-## [v2.1] - 2020-10-03
-
-- Make the package compatible with the Harfbuzz mode of the luaotfload fontloader.
-- Print node properties of copied nodes.
+- Print subtype fields with value 0.
+- Fix the presentation of the subtype field of a glyph as a bit field.
 
 ## [v2.2] - 2020-10-23
 
+### Fixed
+
 - Fix unavailable library error (utf8 not in Lua5.1)
 
-## [v2.2.1] - 2022-12-17
+## [v2.1] - 2020-10-03
 
-- Replace non-printable unicode symbols with ???.
-- Add missing newlines for callbacks with multiple node lists.
-- Print subtype fields with value 0.
-- Fix the presentation of the subtype field of a glyph as a bit field.
+### Added
+
+- Print node properties of copied nodes.
+
+### Fixed
+
+- Make the package compatible with the Harfbuzz mode of the luaotfload
+  fontloader.
+
+## [v2.0] - 2020-05-29
+
+### Added
+
+- Add a sub package named nodetree-embed.sty for embedding nodetree
+  views into a LaTeX document.
+- Add support for new node subtype names.
+- Add support for a new LuaTeX node callback.
+- Add support for node properties.
+
+### Changed
+
+- Switch from lowercase macro names to PascalCase names for better
+  readability.
+- The Lua code is no longer developed inside the DTX file, instead in
+  a separate file named nodetree.lua.
+- Less verbose representation of node attributes.
+- Minor tree output adjustments.
+
+## [v1.2] - 2016-07-18
+
+### Fixed
+
+- Fix difference between README.md in the upload and that from
+  nodetree.dtx
+
+## [v1.1] - 2016-07-13
+
+### Fixed
+
+- Fix the registration of same callbacks
+
+## [v1.0] - 2016-07-07
+
+### Added
+
+- Inital release
+
+## [v0.1] - 2015-06-16
+
+### Changed
+
+- Converted to DTX file

@@ -1,0 +1,8 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage[callback=preout,verbosity=3]{nodetree}
+\usepackage{color}
+\begin{document}
+\latelua 1 {print('-- latelua --')}
+test
+\end{document}

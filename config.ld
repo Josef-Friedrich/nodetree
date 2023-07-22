@@ -4,6 +4,7 @@ description='API documention of the Lua code.'
 format='discount'
 backtick_references=true
 file='nodetree.lua'
+style='docs'
 dir='docs'
 all=true
 new_type('node', 'A node')

@@ -35,7 +35,7 @@ doc_examples:
 	find examples -name "*.tex" -exec latexmk -latex=lualatex -cd {} \;
 
 doc_lua:
-	ldoc .
+	ldoc -a .
 
 clean:
 	./clean.sh

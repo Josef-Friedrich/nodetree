@@ -1055,11 +1055,13 @@ function tree.format_attributes(head)
   if not head then
     return ''
   end
+  local space = ''
   local output = ''
   local attr = head.next
   while attr do
     if attr.number ~= 0 or (attr.number == 0 and attr.value ~= 0) then
-      output = output .. tostring(attr.number) .. '=' .. tostring(attr.value) .. ' '
+      output = output .. space .. tostring(attr.number) .. '=' .. tostring(attr.value)
+      space = ' '
     end
     attr = attr.next
   end

@@ -1,31 +1,31 @@
 --- The nodetree package.
 --
 -- Nodetree uses [LDoc](https://github.com/stevedonovan/ldoc) for the
---  source code documentation. The supported tags are described on in
+--  source code documentation. The supported tags are described in
 --  the [wiki](https://github.com/stevedonovan/LDoc/wiki).
 --
--- Nodes in LuaTeX are connected. The nodetree view distinguishs
+-- Nodes in LuaTeX are connected. The nodetree view distinguishes
 -- between the `list` and `field` connections.
 --
--- * `list`: Nodes, which are double connected by `next` and
+-- * `list`: Nodes that are doubly connected by `next` and
 --   `previous` fields.
 -- * `field`: Connections to nodes by other fields than `next` and
---   `previous` fields, e. g. `head`, `pre`.
+--   `previous` fields, e.g., `head`, `pre`.
 -- @module nodetree
 
 -- luacheck: globals node tex luatexbase lfs callback os unicode status modules
 
 ---@class Node
----@field next Node|nil # the next node in a list, or nil
----@field id number # the node’s type (id) number
----@field subtype number # the node subtype identifier
+---@field next Node|nil # The next node in a list, or nil.
+---@field id number # The node’s type (id) number.
+---@field subtype number # The node subtype identifier.
 
 ---@alias ColorName `black` | `red` | `green` | `yellow` | `blue` | `magenta` | `cyan` | `white`
----@alias ColorMode `bright` | `dim`
+---@alias ColorMode `bright`| `dim`
 
 ---@alias ConnectionType `list` | `field` # A literal
 --   is a string, which can be either `list` or `field`.
----@alias ConnectionState `stop` | `continue` # A literal which can
+---@alias ConnectionState `stop` | `continue` # A literal, which can
 --   be either `continue` or `stop`.
 
 if not modules then modules = { } end modules ['nodetree'] = {
@@ -46,14 +46,14 @@ local utfchar           = utf8.char
 local properties        = direct.get_properties_table()
 
 --- A counter for the compiled TeX examples. Some TeX code snippets
--- a written into file, wrapped with some TeX boilerplate code.
--- This written files are compiled.
+-- a written into files, wrapped with some TeX boilerplate code.
+-- These written files are compiled later on.
 local example_counter = 0
 
 --- A flag to indicate that something has been emitted by nodetree.
 local have_output = false
 
---- The default options
+--- The default options.
 local default_options = {
   callback = 'post_linebreak_filter',
   channel = 'term',
@@ -63,14 +63,14 @@ local default_options = {
   verbosity = 1,
 }
 
---- The current options
+--- The current options.
 -- They are changed very often.
 local options = {}
 for key, value in pairs(default_options) do
   options[key] = value
 end
 
---- File descriptor
+--- File descriptor.
 local output_file
 
 --- The lua table named `tree_state` holds state values of the current
@@ -89,8 +89,7 @@ local tree_state = {}
 
 --- Format functions.
 --
--- Low level template functions.
---
+-- Low-level template functions.
 -- @section format
 
 local format = {
@@ -126,7 +125,7 @@ local format = {
     return math.floor(input * mult + 0.5) / mult
   end,
 
-  ---@param count? number # how many spaces should be output
+  ---@param count number # How many spaces should be output.
   ---
   ---@return string
   whitespace = function(count)
@@ -180,7 +179,7 @@ local format = {
     end
   end,
 
-  ---@param count? number # how many new lines should be output
+  ---@param count number # How many new lines should be output.
   ---
   ---@return string
   new_line = function(count)
@@ -221,7 +220,7 @@ local function nodetree_print(text)
   end
 end
 
---- Template functions.
+--- Template functions
 -- @section template
 
 local template = {
@@ -279,7 +278,7 @@ local template = {
   },
 
   ---
-  -- [SGR (Select Graphic Rendition) Parameters](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters)
+  -- [SGR (Select Graphic Rendition) Parameters](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters).
   --
   -- __attributes__
   --
@@ -321,8 +320,8 @@ local template = {
   -- | onwhite    | 47 |
   --
   ---@param color ColorName # A color name.
-  ---@param mode? ColorMode
-  ---@param background? boolean # Colorize the background not the text.
+  ---@param mode ColorMode
+  ---@param background boolean # Colorize the background, not the text.
   --
   ---@return string
   color = function(color, mode, background)
@@ -363,12 +362,12 @@ local template = {
   end,
 
   --- Format the char field of a node. Try to find a textual representation that
-  -- corresponds with the number stored into the `char` field.
+  -- corresponds with the number stored in the `char` field.
   --
-  -- LuaTeX’s `node.char` are not really characters, they are font glyph indices
+  -- LuaTeX’s `node.char` values are not really characters; they are font glyph indices
   -- which sometimes happen to match valid Unicode characters. HarfBuzz shapers
-  -- differentiates between glyph IDs and characters by adding to 0x120000 to
-  -- glyph ID.
+  -- differentiate between glyph IDs and characters by adding to 0x120000 to
+  -- glyph IDs.
   --
   -- The code of this function is borrowed from the [function
   -- `get_glyph_info(n)`](https://github.com/latex3/luaotfload/blob/4c09fe264c1644792d95182280be259449e7da02/src/luaotfload-harf-plug.lua#L1018-L1031)
@@ -397,10 +396,9 @@ local template = {
   --
   ---@param head Node # The head node of a node list.
   ---
-  ---@return string # A textual representation of the `char` number. In verbosity level 2 or great suffixed with `[char number]`
+  ---@return string # A textual representation of the `char` number, suffixed with `[char number]` in verbosity level 2 or greater.
   char = function(head)
-    -- See Issues #6 and #9
-    local node_id = todirect(head) -- Convert to node id
+    local node_id = todirect(head) -- Convert to node id.
     local props = properties[node_id]
     local info = props and props.glyph_info
     local textual
@@ -410,8 +408,8 @@ local template = {
     elseif character_index == 0 then
       textual = '^^@'
     elseif character_index <= 31 or (character_index >= 127 and character_index <= 159) then
-      -- The C0 range [c-zero] is the characters from U+0000 to U+001F
-      -- (decimal 0-31) and U+007F (decimal 127), the C1 range is the
+      -- The C0 range [c-zero] contains characters from U+0000 to U+001F
+      -- (decimal 0-31) and U+007F (decimal 127), the C1 range covers
       -- characters from U+0080 to U+009F (decimal 128-159).
       textual = '???'
     elseif character_index < 0x110000 then
@@ -422,7 +420,7 @@ local template = {
     return character_index .. ' (' .. string.format('0x%x', character_index) .. ', \''.. textual .. '\')'
   end,
 
-  ---@param length? `long`
+  ---@param length `long`
   ---
   ---@return string
   line = function(length)
@@ -496,7 +494,7 @@ end
 ---@param text string A text string.
 ---@param color ColorName A color name.
 ---@param mode ColorMode
----@param background? boolean # Colorize the background not the text.
+---@param background boolean # Colorize the background, not the text.
 --
 ---@return string
 function template.colored_string(text, color, mode, background)
@@ -534,17 +532,17 @@ end
 
 --- Get all data from a table including metatables.
 --
--- Properties will reside in a metatable, if nodes were copied using an
+-- Properties will reside in a metatable if nodes were copied using an
 -- operation like box copy: (\copy). The LuaTeX manual states this: “If
 -- the second argument of `set_properties_mode` is true, then a
 -- metatable approach is chosen: the copy gets its own table with the
 -- original table as metatable.”
 --
 -- Source: https://stackoverflow.com/a/5639667 Works if __index returns
--- table, which it should as per luatex manual
+-- table, which it should as per luatex manual.
 --
 ---@param data table # A Lua table.
----@param previous_data? table # The data of a Lua table of a previous recursive call.
+---@param previous_data table # The data of a Lua table of a previous recursive call.
 ---
 ---@return table # A merged table.
 local function get_all_table_data(data, previous_data)
@@ -556,7 +554,7 @@ local function get_all_table_data(data, previous_data)
     output[key] = output[key] or value
   end
 
-  -- Get table’s metatable, or exit if not existing
+  -- Get table’s metatable, or exit if not existing.
   local metatable = getmetatable(data)
   if type(metatable) ~= 'table' then
     return output
@@ -568,13 +566,13 @@ local function get_all_table_data(data, previous_data)
     return output
   end
 
-  -- Include the data from index into data, recursively, and return.
+  -- Include the data from index into data recursively and return.
   return get_all_table_data(index, output)
 end
 
 --- Convert a Lua table into a format string.
 --
----@param table table A table to generate a inline view of.
+---@param table table # A table to generate an inline view of.
 --
 ---@return string
 function template.table_inline(table)
@@ -601,11 +599,11 @@ function template.table_inline(table)
   end
 end
 
---- Format a key value pair (`key: value, `).
+--- Format a key-value pair (`key: value, `).
 --
 ---@param key string # A key.
 ---@param value string|number # A value.
----@param color? ColorName # A color name.
+---@param color ColorName # A color name.
 --
 ---@return string
 function template.key_value(key, value, color)
@@ -645,7 +643,7 @@ function template.type(type, id)
 end
 
 ---@param callback_name string
----@param variables? table
+---@param variables table
 ---
 ---@return string
 function template.callback(callback_name, variables)
@@ -703,7 +701,7 @@ local node_extended = {}
 
 --- Get the ID of a node.
 --
--- We have to convert the node into a string and than have to extract
+-- We have to convert the node into a string and then to extract
 -- the ID from this string using a regular expression. If you convert a
 -- node into a string it looks like: `<node    nil <    172 >    nil :
 -- hlist 2>`.
@@ -931,8 +929,8 @@ local function get_node_subtypes ()
       [1] = 'right',
     },
     -- glyph (29)
-    -- the subtype for this node is a bit field, not an enumeration;
-    -- bit 0 gets handled separately
+    -- The subtype for this node is a bit field, not an enumeration;
+    -- bit 0 gets handled separately.
     glyph = {
       [1] = 'ligature',
       [2] = 'ghost',
@@ -953,7 +951,7 @@ function node_extended.subtype(n)
   local output = ''
   if subtypes[typ] then
     if typ == 'glyph' then
-      -- only handle the lowest five bits
+      -- Only handle the lowest five bits.
       if n.subtype & 1 == 0 then
         output = output .. 'glyph'
       else
@@ -983,7 +981,7 @@ function node_extended.subtype(n)
   end
 end
 
---- Build the node tree.
+--- Build the node tree
 -- @section tree
 
 local tree = {}
@@ -996,13 +994,13 @@ local tree = {}
 function tree.format_field(head, field)
   local output
 
-  -- subtypes with IDs 0 are were not printed, see #12
+  -- Print subtypes with ID 0.
   if head[field] ~= nil and field == "subtype" then
     return template.key_value(field, format.underscore(node_extended.subtype(head)))
   end
 
-  -- Character "0" should be printed in a tree, because in TeX fonts the
-  -- 0 slot usually has a symbol.
+  -- Character 0 should be printed in a tree because the corresponding slot
+  -- zero in a TeX font usually contains a symbol.
   if head[field] == nil or (head[field] == 0 and field ~= "char") then
     return ''
   end
@@ -1052,7 +1050,7 @@ function tree.format_field(head, field)
 end
 
 ---
--- Attributes are key/value number pairs. They are printed as an inline
+-- Attributes are key-value number pairs. They are printed as an inline
 -- list. The attribute `0` with the value `0` is skipped because this
 -- attribute is in every node by default.
 --
@@ -1077,7 +1075,7 @@ function tree.format_attributes(head)
 end
 
 ---
----@param level number # `level` is a integer beginning with 1.
+---@param level number # `level` is an integer beginning with 1.
 ---@param connection_type ConnectionType
 ---@param connection_state ConnectionState
 function tree.set_state(level, connection_type, connection_state)
@@ -1134,13 +1132,14 @@ function tree.analyze_node(head, level)
     output = output .. template.key_value('no', node_extended.node_id(head))
   end
 
-  -- We store the attributes output to append it to the field list.
+  -- We store the attributes output so that we can append it to the field
+  -- list later on.
   local attributes
 
   -- We store fields which are nodes for later treatment.
   local fields = {}
 
-  -- Inline fields, for example: char: 'm', width: 25pt, height: 13.33pt,
+  -- Inline fields, for example: char: 'm', width: 25pt, height: 13.33pt.
   local output_fields = ''
   for _, field_name in pairs(node.fields(head.id, head.subtype)) do
     if field_name == 'attr' then
@@ -1156,7 +1155,7 @@ function tree.analyze_node(head, level)
     output = output .. output_fields
   end
 
-  -- Append the attributes output if available
+  -- Append the attributes output if available.
   if attributes ~= '' then
     output = output .. template.key_value('attr', attributes, 'blue')
   end
@@ -1203,7 +1202,7 @@ function tree.analyze_callback(head)
   nodetree_print(template.line('short'))
 end
 
---- Callback wrapper.
+--- Callback wrapper
 -- @section callbacks
 
 local callbacks = {
@@ -1464,7 +1463,7 @@ local callbacks = {
   end,
 }
 
---- Set a single option key value pair.
+--- Set a single-option key-value pair.
 --
 ---@param key string # The key of the option pair.
 ---@param value number|string # The value of the option pair.
@@ -1479,7 +1478,7 @@ local function set_option(key, value)
   end
 end
 
---- Set multiple key value pairs using a table.
+--- Set multiple key-value option pairs using a table.
 --
 ---@param opts table # Options
 local function set_options(opts)
@@ -1491,9 +1490,9 @@ local function set_options(opts)
   end
 end
 
---- Check if the given callback name exists.
+--- Check whether the given callback name exists.
 --
--- Throw an error if it doen’t.
+-- Throw an error if it doesn’t.
 --
 ---@param callback_name string # The name of a callback to check.
 --
@@ -1512,7 +1511,7 @@ end
 
 --- Get the real callback name from an alias string.
 --
----@param alias string The alias of a callback name or the callback
+---@param alias string # The alias of a callback name or the callback
 -- name itself.
 --
 ---@return string # The real callback name.
@@ -1604,7 +1603,7 @@ local function unregister_callback(cb)
   end
 end
 
---- Exported functions.
+--- Exported functions
 -- @section export
 
 local export = {
@@ -1618,7 +1617,7 @@ local export = {
       -- jobname.nttex
       -- jobname.ntlog
       local file_name = tex.jobname .. '.nt' .. options.channel
-      io.open(file_name, 'w'):close() -- Clear former content
+      io.open(file_name, 'w'):close() -- Clear former content.
       output_file = io.open(file_name, 'a')
     end
     for alias in string.gmatch(options.callback, '([^,]+)') do
@@ -1636,7 +1635,7 @@ local export = {
   --- Compile a TeX snippet.
   --
   -- Write some TeX snippets into a temporary LaTeX file, compile this
-  -- file using `latexmk` and read the generated `*.nttex` file and
+  -- file using `latexmk`, read the generated `*.nttex` file, and
   -- return its content.
   --
   ---@param tex_markup string
@@ -1655,7 +1654,7 @@ local export = {
       return '\\NodetreeSetOption[' .. key .. ']{' .. value .. '}' .. '\n'
     end
 
-    -- Process the options
+    -- Process the options.
     local options =
       format_option('channel', 'tex') ..
       format_option('verbosity', options.verbosity) ..
@@ -1682,7 +1681,7 @@ local export = {
     tex.print(include_content)
   end,
 
-  --- Check for `--shell-escape`
+  --- Check for `\--shell-escape`.
   --
   check_shell_escape = function()
     local info = status.list()
@@ -1703,9 +1702,9 @@ local export = {
     tree.analyze_list(head, 1)
   end,
 
-  --- Format a scaled point value into a formated string.
+  --- Format a scaled point value as a formatted string.
   --
-  ---@param sp number # A scaled point value
+  ---@param sp number # A scaled point value.
   --
   ---@return string
   format_dim = function(sp)
@@ -1721,7 +1720,7 @@ local export = {
   end
 }
 
---- Use export.print
+--- Use `export.print`.
 --
 ---@param head Node # The head node of a node list.
 export.analyze = export.print

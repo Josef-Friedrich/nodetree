@@ -50,6 +50,9 @@ local properties        = direct.get_properties_table()
 -- This written files are compiled.
 local example_counter = 0
 
+--- A flag to indicate that something has been emitted by nodetree.
+local have_output = false
+
 --- The default options
 local default_options = {
   callback = 'post_linebreak_filter',
@@ -646,8 +649,13 @@ end
 ---
 ---@return string
 function template.callback(callback_name, variables)
+  if options.channel == 'term' or have_output == true then
+    nodetree_print(format.new_line(2))
+  end
+
+  have_output = true
+
   nodetree_print(
-    format.new_line(2) ..
     'Callback: ' ..
     template.colored_string(format.underscore(callback_name), 'red', '', true) ..
     format.new_line()
@@ -1192,7 +1200,7 @@ end
 ---@param head Node # The head node of a node list.
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
-  nodetree_print(template.line('short') .. format.new_line())
+  nodetree_print(template.line('short'))
 end
 
 --- Callback wrapper.
@@ -1404,7 +1412,7 @@ local callbacks = {
     template.callback('hyphenate')
     nodetree_print('head:' .. format.new_line())
     tree.analyze_callback(head)
-    nodetree_print('tail:' .. format.new_line())
+    nodetree_print(format.new_line() .. 'tail:' .. format.new_line())
     tree.analyze_callback(tail)
   end,
 
@@ -1415,7 +1423,7 @@ local callbacks = {
     template.callback('ligaturing')
     nodetree_print('head:' .. format.new_line())
     tree.analyze_callback(head)
-    nodetree_print('tail:' .. format.new_line())
+    nodetree_print(format.new_line() .. 'tail:' .. format.new_line())
     tree.analyze_callback(tail)
   end,
 
@@ -1426,7 +1434,7 @@ local callbacks = {
     template.callback('kerning')
     nodetree_print('head:' .. format.new_line())
     tree.analyze_callback(head)
-    nodetree_print('tail:' .. format.new_line())
+    nodetree_print(format.new_line() .. 'tail:' .. format.new_line())
     tree.analyze_callback(tail)
   end,
 

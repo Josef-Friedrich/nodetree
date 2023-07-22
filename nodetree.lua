@@ -187,7 +187,7 @@ local format = {
     end
     local new_line
     if options.channel == 'tex' then
-      new_line = '\\par{}'
+      new_line = '\\par\n'
     else
       new_line = '\n'
     end

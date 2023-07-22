@@ -27,6 +27,7 @@
 <h1>nodetree</h1>
 
 
+
 <h2>Contents</h2>
 <ul>
 <li><a href="#Tables">Tables</a></li>
@@ -51,21 +52,18 @@
 
 <h1>Module <code>nodetree</code></h1>
 <p>The nodetree package.</p>
-<p>
-
-
-<p> Nodetree uses <a href="https://github.com/stevedonovan/ldoc">LDoc</a> for the
-  source code documentation. The supported tags are described on in
+<p><p> Nodetree uses <a href="https://github.com/stevedonovan/ldoc">LDoc</a> for the
+  source code documentation. The supported tags are described in
   the <a href="https://github.com/stevedonovan/LDoc/wiki">wiki</a>.</p>
 
-<p> Nodes in LuaTeX are connected. The nodetree view distinguishs
+<p> Nodes in LuaTeX are connected. The nodetree view distinguishes
  between the <code>list</code> and <code>field</code> connections.</p>
 
 <ul>
-    <li><code>list</code>: Nodes, which are double connected by <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and
-    <code>previous</code> fields.</li>
-    <li><code>field</code>: Connections to nodes by other fields than <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and
-    <code>previous</code> fields, e. g. <code>head</code>, <code>pre</code>.</li>
+<li><code>list</code>: Nodes that are doubly connected by <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and
+<code>previous</code> fields.</li>
+<li><code>field</code>: Connections to nodes by other fields than <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and
+<code>previous</code> fields, e.g., <code>head</code>, <code>pre</code>.</li>
 </ul>
 </p>
 
@@ -74,12 +72,11 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#default_options">default_options</a></td>
-	<td class="summary">The default options</td>
+	<td class="summary">The default options.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#options">options</a></td>
-	<td class="summary">The current options
- They are changed very often.</td>
+	<td class="summary">The current options.</td>
 	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
@@ -93,68 +90,52 @@
 	<td class="name" nowrap><a href="#example_counter">example_counter</a></td>
 	<td class="summary">A counter for the compiled TeX examples.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#have_output">have_output</a></td>
+	<td class="summary">A flag to indicate that something has been emitted by nodetree.</td>
+	</tr>
 </table>
 <h2><a href="#Format_functions">Format functions </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#underscore">underscore (input)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#escape">escape (input)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#number">number (input)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#whitespace">whitespace (count)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#color_code">color_code (code)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#color_tex">color_tex (color, mode)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#node_begin">node_begin ()</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#node_end">node_end ()</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#new_line">new_line (count)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#type_id">type_id (id)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#nodetree_print">nodetree_print (text)</a></td>
@@ -165,7 +146,7 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#color">color (color, mode, background)</a></td>
-	<td class="summary"><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a></td>
+	<td class="summary"><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#char">char (head)</a></td>
@@ -173,21 +154,15 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#line">line (length)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#branch">branch (connection_type, connection_state, last)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.fill">template.fill (number, order, field)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.colored_string">template.colored_string (text, color, mode, background)</a></td>
@@ -208,25 +183,19 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.key_value">template.key_value (key, value, color)</a></td>
-	<td class="summary">Format a key value pair (<code>key: value, </code>).</td>
+	<td class="summary">Format a key-value pair (<code>key: value, </code>).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.type">template.type (type, id)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.callback">template.callback (callback_name, variables)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.branches">template.branches (level, connection_type)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 </table>
 <h2><a href="#Extend_the_node_library">Extend the node library </a></h2>
@@ -241,175 +210,125 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#node_extended.subtype">node_extended.subtype (n)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 </table>
 <h2><a href="#Build_the_node_tree">Build the node tree </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#tree.format_field">tree.format_field (head, field)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.format_attributes">tree.format_attributes (head)</a></td>
-	<td class="summary">Attributes are key/value number pairs.</td>
+	<td class="summary">Attributes are key-value number pairs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.set_state">tree.set_state (level, connection_type, connection_state)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.analyze_fields">tree.analyze_fields (fields, level)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.analyze_node">tree.analyze_node (head, level)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.analyze_list">tree.analyze_list (head, level)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.analyze_callback">tree.analyze_callback (head)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 </table>
 <h2><a href="#Callback_wrapper">Callback wrapper </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#contribute_filter">contribute_filter (extrainfo)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#buildpage_filter">buildpage_filter (extrainfo)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#build_page_insert">build_page_insert (n, i)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#pre_linebreak_filter">pre_linebreak_filter (head, groupcode)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#linebreak_filter">linebreak_filter (head, is_display)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#append_to_vlist_filter">append_to_vlist_filter (box, locationcode, prevdepth, mirrored)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#post_linebreak_filter">post_linebreak_filter (head, groupcode)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#hpack_filter">hpack_filter (head, groupcode, size, packtype, direction, attributelist)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#vpack_filter">vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#hpack_quality">hpack_quality (incident, detail, head, first, last)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#vpack_quality">vpack_quality (incident, detail, head, first, last)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#process_rule">process_rule (head, width, height)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#pre_output_filter">pre_output_filter (head, groupcode, size, packtype, maxdepth, direction)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#hyphenate">hyphenate (head, tail)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ligaturing">ligaturing (head, tail)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#kerning">kerning (head, tail)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#insert_local_par">insert_local_par (local_par, location)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#mlist_to_hlist">mlist_to_hlist (head, display_type, need_penalties)</a></td>
-	<td class="summary">
-
-</td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#set_option">set_option (key, value)</a></td>
-	<td class="summary">Set a single option key value pair.</td>
+	<td class="summary">Set a single-option key-value pair.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#set_options">set_options (opts)</a></td>
-	<td class="summary">Set multiple key value pairs using a table.</td>
+	<td class="summary">Set multiple key-value option pairs using a table.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#check_callback_name">check_callback_name (callback_name)</a></td>
-	<td class="summary">Check if the given callback name exists.</td>
+	<td class="summary">Check whether the given callback name exists.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_callback_name">get_callback_name (alias)</a></td>
@@ -432,7 +351,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#check_shell_escape">check_shell_escape ()</a></td>
-	<td class="summary">Check for <code>--shell-escape</code></td>
+	<td class="summary">Check for <code>--shell-escape</code>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#print">print (head, opts)</a></td>
@@ -440,7 +359,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format_dim">format_dim (sp)</a></td>
-	<td class="summary">Format a scaled point value into a formated string.</td>
+	<td class="summary">Format a scaled point value as a formatted string.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_default_option">get_default_option (key)</a></td>
@@ -448,7 +367,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#export.analyze">export.analyze</a></td>
-	<td class="summary">Use export.print</td>
+	<td class="summary">Use <code>export.print</code>.</td>
 	</tr>
 </table>
 
@@ -464,39 +383,27 @@
     <strong>default_options</strong>
     </dt>
     <dd>
-    The default options
+    The default options.
 
 
     <h3>Fields:</h3>
     <ul>
         <li><span class="parameter">callback</span>
 
-
-
         </li>
         <li><span class="parameter">channel</span>
-
-
 
         </li>
         <li><span class="parameter">color</span>
 
-
-
         </li>
         <li><span class="parameter">decimalplaces</span>
-
-
 
         </li>
         <li><span class="parameter">unit</span>
 
-
-
         </li>
         <li><span class="parameter">verbosity</span>
-
-
 
         </li>
     </ul>
@@ -511,7 +418,7 @@
     <strong>options</strong>
     </dt>
     <dd>
-    The current options
+    The current options.
  They are changed very often.
 
 
@@ -546,8 +453,22 @@
     </dt>
     <dd>
     A counter for the compiled TeX examples.  Some TeX code snippets
- a written into file, wrapped with some TeX boilerplate code.
- This written files are compiled.
+ a written into files, wrapped with some TeX boilerplate code.
+ These written files are compiled later on.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "have_output"></a>
+    <strong>have_output</strong>
+    </dt>
+    <dd>
+    A flag to indicate that something has been emitted by nodetree.
 
 
 
@@ -560,7 +481,7 @@
     <h2 class="section-header has-description"><a name="Format_functions"></a>Format functions </h2>
 
           <div class="section-description">
-           Low level template functions.
+           Low-level template functions.
           </div>
     <dl class="function">
     <dt>
@@ -568,8 +489,6 @@
     <strong>underscore (input)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -598,8 +517,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">input</span>
@@ -622,8 +539,6 @@
     <strong>number (input)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -652,12 +567,10 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">count</span>
-        ? number # how many spaces should be output
+         number # How many spaces should be output.
         </li>
     </ul>
 
@@ -676,8 +589,6 @@
     <strong>color_code (code)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -706,18 +617,12 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">color</span>
 
-
-
         </li>
         <li><span class="parameter">mode</span>
-
-
 
         </li>
     </ul>
@@ -741,8 +646,6 @@
 
 
 
-
-
     <h3>Returns:</h3>
     <ol>
 
@@ -758,8 +661,6 @@
     <strong>node_end ()</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -782,12 +683,10 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">count</span>
-        ? number # how many new lines should be output
+         number # How many new lines should be output.
         </li>
     </ul>
 
@@ -806,8 +705,6 @@
     <strong>type_id (id)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -858,44 +755,145 @@
     <strong>color (color, mode, background)</strong>
     </dt>
     <dd>
-    <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a>  <strong>attributes</strong></p>
+    <p><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a>.</p>
 
-<p> | color      |code|
- |------------|----|
- | reset      |  0 |
- | clear      |  0 |
- | bright     |  1 |
- | dim        |  2 |
- | underscore |  4 |
- | blink      |  5 |
- | reverse    |  7 |
- | hidden     |  8 |</p>
+<p> <strong>attributes</strong></p>
+
+<table>
+<thead>
+<tr>
+<th> color      </th>
+<th>code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> reset      </td>
+<td>  0 </td>
+</tr>
+<tr>
+<td> clear      </td>
+<td>  0 </td>
+</tr>
+<tr>
+<td> bright     </td>
+<td>  1 </td>
+</tr>
+<tr>
+<td> dim        </td>
+<td>  2 </td>
+</tr>
+<tr>
+<td> underscore </td>
+<td>  4 </td>
+</tr>
+<tr>
+<td> blink      </td>
+<td>  5 </td>
+</tr>
+<tr>
+<td> reverse    </td>
+<td>  7 </td>
+</tr>
+<tr>
+<td> hidden     </td>
+<td>  8 </td>
+</tr>
+</tbody>
+</table>
+
 
 <p> <strong>foreground</strong></p>
 
-<p> | color      |code|
- |------------|----|
- | black      | 30 |
- | red        | 31 |
- | green      | 32 |
- | yellow     | 33 |
- | blue       | 34 |
- | magenta    | 35 |
- | cyan       | 36 |
- | white      | 37 |</p>
+<table>
+<thead>
+<tr>
+<th> color      </th>
+<th>code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> black      </td>
+<td> 30 </td>
+</tr>
+<tr>
+<td> red        </td>
+<td> 31 </td>
+</tr>
+<tr>
+<td> green      </td>
+<td> 32 </td>
+</tr>
+<tr>
+<td> yellow     </td>
+<td> 33 </td>
+</tr>
+<tr>
+<td> blue       </td>
+<td> 34 </td>
+</tr>
+<tr>
+<td> magenta    </td>
+<td> 35 </td>
+</tr>
+<tr>
+<td> cyan       </td>
+<td> 36 </td>
+</tr>
+<tr>
+<td> white      </td>
+<td> 37 </td>
+</tr>
+</tbody>
+</table>
+
 
 <p> <strong>background</strong></p>
 
-<p> | color      |code|
- |------------|----|
- | onblack    | 40 |
- | onred      | 41 |
- | ongreen    | 42 |
- | onyellow   | 43 |
- | onblue     | 44 |
- | onmagenta  | 45 |
- | oncyan     | 46 |
- | onwhite    | 47 |
+<table>
+<thead>
+<tr>
+<th> color      </th>
+<th>code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> onblack    </td>
+<td> 40 </td>
+</tr>
+<tr>
+<td> onred      </td>
+<td> 41 </td>
+</tr>
+<tr>
+<td> ongreen    </td>
+<td> 42 </td>
+</tr>
+<tr>
+<td> onyellow   </td>
+<td> 43 </td>
+</tr>
+<tr>
+<td> onblue     </td>
+<td> 44 </td>
+</tr>
+<tr>
+<td> onmagenta  </td>
+<td> 45 </td>
+</tr>
+<tr>
+<td> oncyan     </td>
+<td> 46 </td>
+</tr>
+<tr>
+<td> onwhite    </td>
+<td> 47 </td>
+</tr>
+</tbody>
+</table>
+
 
 
     <h3>Parameters:</h3>
@@ -904,10 +902,10 @@
          ColorName # A color name.
         </li>
         <li><span class="parameter">mode</span>
-        ? ColorMode
+         ColorMode
         </li>
         <li><span class="parameter">background</span>
-        ? boolean # Colorize the background not the text.
+         boolean # Colorize the background, not the text.
         </li>
     </ul>
 
@@ -927,12 +925,12 @@
     </dt>
     <dd>
     Format the char field of a node.  Try to find a textual representation that
- corresponds with the number stored into the <a href="index.html#char">char</a> field.</p>
+ corresponds with the number stored in the <a href="index.html#char">char</a> field.</p>
 
-<p> LuaTeX’s <code>node.char</code> are not really characters, they are font glyph indices
+<p> LuaTeX’s <code>node.char</code> values are not really characters; they are font glyph indices
  which sometimes happen to match valid Unicode characters. HarfBuzz shapers
- differentiates between glyph IDs and characters by adding to 0x120000 to
- glyph ID.</p>
+ differentiate between glyph IDs and characters by adding to 0x120000 to
+ glyph IDs.</p>
 
 <p> The code of this function is borrowed from the <a href="https://github.com/latex3/luaotfload/blob/4c09fe264c1644792d95182280be259449e7da02/src/luaotfload-harf-plug.lua#L1018-L1031">function
  <code>get_glyph_info(n)</code></a>
@@ -970,7 +968,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        string # A textual representation of the <a href="index.html#char">char</a> number. In verbosity level 2 or great suffixed with <code>[char number]</code>
+        string # A textual representation of the <a href="index.html#char">char</a> number, suffixed with <code>[char number]</code> in verbosity level 2 or greater.
     </ol>
 
 
@@ -985,12 +983,10 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">length</span>
-        ? <code>long</code>
+         <code>long</code>
         </li>
     </ul>
 
@@ -1009,8 +1005,6 @@
     <strong>branch (connection_type, connection_state, last)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1042,8 +1036,6 @@
     <strong>template.fill (number, order, field)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1090,7 +1082,7 @@
          ColorMode
         </li>
         <li><span class="parameter">background</span>
-        ? boolean # Colorize the background not the text.
+         boolean # Colorize the background, not the text.
         </li>
     </ul>
 
@@ -1135,16 +1127,16 @@
     <strong>get_all_table_data (data, previous_data)</strong>
     </dt>
     <dd>
-    Get all data from a table including metatables. </p>
+    Get all data from a table including metatables.</p>
 
-<p> Properties will reside in a metatable, if nodes were copied using an
+<p> Properties will reside in a metatable if nodes were copied using an
  operation like box copy: (\copy). The LuaTeX manual states this: “If
  the second argument of <code>set_properties_mode</code> is true, then a
  metatable approach is chosen: the copy gets its own table with the
  original table as metatable.”</p>
 
 <p> Source: https://stackoverflow.com/a/5639667 Works if __index returns
- table, which it should as per luatex manual
+ table, which it should as per luatex manual.
 
 
     <h3>Parameters:</h3>
@@ -1153,7 +1145,7 @@
          table # A Lua table.
         </li>
         <li><span class="parameter">previous_data</span>
-        ? table # The data of a Lua table of a previous recursive call.
+         table # The data of a Lua table of a previous recursive call.
         </li>
     </ul>
 
@@ -1178,7 +1170,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">table</span>
-         table A table to generate a inline view of.
+         table # A table to generate an inline view of.
         </li>
     </ul>
 
@@ -1197,7 +1189,7 @@
     <strong>template.key_value (key, value, color)</strong>
     </dt>
     <dd>
-    Format a key value pair (<code>key: value, </code>).
+    Format a key-value pair (<code>key: value, </code>).
 
 
     <h3>Parameters:</h3>
@@ -1209,7 +1201,7 @@
          string|number # A value.
         </li>
         <li><span class="parameter">color</span>
-        ? ColorName # A color name.
+         ColorName # A color name.
         </li>
     </ul>
 
@@ -1228,8 +1220,6 @@
     <strong>template.type (type, id)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1261,15 +1251,13 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">callback_name</span>
          string
         </li>
         <li><span class="parameter">variables</span>
-        ? table
+         table
         </li>
     </ul>
 
@@ -1288,8 +1276,6 @@
     <strong>template.branches (level, connection_type)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1322,9 +1308,9 @@
     <strong>node_extended.node_id (n)</strong>
     </dt>
     <dd>
-    Get the ID of a node. </p>
+    Get the ID of a node.</p>
 
-<p> We have to convert the node into a string and than have to extract
+<p> We have to convert the node into a string and then to extract
  the ID from this string using a regular expression. If you convert a
  node into a string it looks like: <code>&lt;node    nil &lt;    172 &gt;    nil :
  hlist 2&gt;</code>.
@@ -1352,50 +1338,48 @@
     <strong>get_node_subtypes ()</strong>
     </dt>
     <dd>
-
-<p>A table of all node subtype names. </p>
+    <p>A table of all node subtype names.</p>
 
 <p> <strong>Nodes without subtypes:</strong></p>
 
 <ul>
-    <li><code>ins</code> (3)</li>
-    <li><code>mark</code> (4)</li>
-    <li><code>whatsit</code> (8)</li>
-    <li><code>local_par</code> (9)</li>
-    <li><code>dir</code> (10)</li>
-    <li><code>penalty</code> (14)</li>
-    <li><code>unset</code> (15)</li>
-    <li><code>style</code> (16)</li>
-    <li><code>choice</code> (17)</li>
-    <li><code>fraction</code> (20)</li>
-    <li><code>math_char</code> (23)</li>
-    <li><code>sub_box</code> (24)</li>
-    <li><code>sub_mlist</code> (25)</li>
-    <li><code>math_text_char</code> (26)</li>
-    <li><code>delim</code> (27)</li>
-    <li><code>margin_kern</code> (28)</li>
-    <li><code>align_record</code> (30)</li>
-    <li><code>pseudo_file</code> (31)</li>
-    <li><code>pseudo_line</code> (32)</li>
-    <li><code>page_insert</code> (33)</li>
-    <li><code>split_insert</code> (34)</li>
-    <li><code>expr_stack</code> (35)</li>
-    <li><code>nested_list</code> (36)</li>
-    <li><code>span</code> (37)</li>
-    <li><code>attribute</code> (38)</li>
-    <li><code>glue_spec</code> (39)</li>
-    <li><code>attribute_list</code> (40)</li>
-    <li><code>temp</code> (41)</li>
-    <li><code>align_stack</code> (42)</li>
-    <li><code>movement_stack</code> (43)</li>
-    <li><code>if_stack</code> (44)</li>
-    <li><code>unhyphenated</code> (45)</li>
-    <li><code>hyphenated</code> (46)</li>
-    <li><code>delta</code> (47)</li>
-    <li><code>passive</code> (48)</li>
-    <li><code>shape</code> (49)</li>
+<li><code>ins</code> (3)</li>
+<li><code>mark</code> (4)</li>
+<li><code>whatsit</code> (8)</li>
+<li><code>local_par</code> (9)</li>
+<li><code>dir</code> (10)</li>
+<li><code>penalty</code> (14)</li>
+<li><code>unset</code> (15)</li>
+<li><code>style</code> (16)</li>
+<li><code>choice</code> (17)</li>
+<li><code>fraction</code> (20)</li>
+<li><code>math_char</code> (23)</li>
+<li><code>sub_box</code> (24)</li>
+<li><code>sub_mlist</code> (25)</li>
+<li><code>math_text_char</code> (26)</li>
+<li><code>delim</code> (27)</li>
+<li><code>margin_kern</code> (28)</li>
+<li><code>align_record</code> (30)</li>
+<li><code>pseudo_file</code> (31)</li>
+<li><code>pseudo_line</code> (32)</li>
+<li><code>page_insert</code> (33)</li>
+<li><code>split_insert</code> (34)</li>
+<li><code>expr_stack</code> (35)</li>
+<li><code>nested_list</code> (36)</li>
+<li><code>span</code> (37)</li>
+<li><code>attribute</code> (38)</li>
+<li><code>glue_spec</code> (39)</li>
+<li><code>attribute_list</code> (40)</li>
+<li><code>temp</code> (41)</li>
+<li><code>align_stack</code> (42)</li>
+<li><code>movement_stack</code> (43)</li>
+<li><code>if_stack</code> (44)</li>
+<li><code>unhyphenated</code> (45)</li>
+<li><code>hyphenated</code> (46)</li>
+<li><code>delta</code> (47)</li>
+<li><code>passive</code> (48)</li>
+<li><code>shape</code> (49)</li>
 </ul>
-
 
 
 
@@ -1415,8 +1399,6 @@
     <strong>node_extended.subtype (n)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1449,8 +1431,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -1476,7 +1456,7 @@
     <strong>tree.format_attributes (head)</strong>
     </dt>
     <dd>
-    Attributes are key/value number pairs.  They are printed as an inline
+    Attributes are key-value number pairs.  They are printed as an inline
  list. The attribute <code>0</code> with the value <code>0</code> is skipped because this
  attribute is in every node by default.
 
@@ -1506,12 +1486,10 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">level</span>
-         number # <code>level</code> is a integer beginning with 1.
+         number # <code>level</code> is an integer beginning with 1.
         </li>
         <li><span class="parameter">connection_type</span>
          ConnectionType
@@ -1531,8 +1509,6 @@
     <strong>tree.analyze_fields (fields, level)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1559,8 +1535,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -1581,8 +1555,6 @@
     <strong>tree.analyze_list (head, level)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1609,8 +1581,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -1632,8 +1602,6 @@
     <strong>contribute_filter (extrainfo)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1662,8 +1630,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">extrainfo</span>
@@ -1686,8 +1652,6 @@
     <strong>build_page_insert (n, i)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1719,8 +1683,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -1749,8 +1711,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -1776,8 +1736,6 @@
     <strong>append_to_vlist_filter (box, locationcode, prevdepth, mirrored)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1810,8 +1768,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -1837,8 +1793,6 @@
     <strong>hpack_filter (head, groupcode, size, packtype, direction, attributelist)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1879,8 +1833,6 @@
     <strong>vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1927,8 +1879,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">incident</span>
@@ -1958,8 +1908,6 @@
     <strong>vpack_quality (incident, detail, head, first, last)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -1995,8 +1943,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -2025,8 +1971,6 @@
     <strong>pre_output_filter (head, groupcode, size, packtype, maxdepth, direction)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -2070,8 +2014,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -2092,8 +2034,6 @@
     <strong>ligaturing (head, tail)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -2120,8 +2060,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -2142,8 +2080,6 @@
     <strong>insert_local_par (local_par, location)</strong>
     </dt>
     <dd>
-
-
 
 
 
@@ -2175,8 +2111,6 @@
 
 
 
-
-
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
@@ -2200,7 +2134,7 @@
     <strong>set_option (key, value)</strong>
     </dt>
     <dd>
-    Set a single option key value pair.
+    Set a single-option key-value pair.
 
 
     <h3>Parameters:</h3>
@@ -2223,7 +2157,7 @@
     <strong>set_options (opts)</strong>
     </dt>
     <dd>
-    Set multiple key value pairs using a table.
+    Set multiple key-value option pairs using a table.
 
 
     <h3>Parameters:</h3>
@@ -2243,9 +2177,9 @@
     <strong>check_callback_name (callback_name)</strong>
     </dt>
     <dd>
-    Check if the given callback name exists. </p>
+    Check whether the given callback name exists.</p>
 
-<p> Throw an error if it doen’t.
+<p> Throw an error if it doesn’t.
 
 
     <h3>Parameters:</h3>
@@ -2276,7 +2210,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">alias</span>
-         string The alias of a callback name or the callback
+         string # The alias of a callback name or the callback
  name itself.
         </li>
     </ul>
@@ -2340,10 +2274,10 @@
     <strong>compile_include (tex_markup)</strong>
     </dt>
     <dd>
-    Compile a TeX snippet. </p>
+    Compile a TeX snippet.</p>
 
 <p> Write some TeX snippets into a temporary LaTeX file, compile this
- file using <code>latexmk</code> and read the generated <code>*.nttex</code> file and
+ file using <code>latexmk</code>, read the generated <code>*.nttex</code> file, and
  return its content.
 
 
@@ -2354,11 +2288,6 @@
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        string
-    </ol>
 
 
 
@@ -2369,7 +2298,7 @@
     <strong>check_shell_escape ()</strong>
     </dt>
     <dd>
-    Check for <code>--shell-escape</code>
+    Check for <code>--shell-escape</code>.
 
 
 
@@ -2406,13 +2335,13 @@
     <strong>format_dim (sp)</strong>
     </dt>
     <dd>
-    Format a scaled point value into a formated string.
+    Format a scaled point value as a formatted string.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">sp</span>
-         number # A scaled point value
+         number # A scaled point value.
         </li>
     </ul>
 
@@ -2456,7 +2385,7 @@
     <strong>export.analyze</strong>
     </dt>
     <dd>
-    Use export.print
+    Use <code>export.print</code>.
 
 
     <ul>
@@ -2476,8 +2405,8 @@
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-12-17 18:54:47 </i>
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-22 20:04:53 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

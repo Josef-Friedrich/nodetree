@@ -665,7 +665,7 @@ function template.callback(callback_name, variables)
           '- ' ..
           format.underscore(name) ..
           ': ' ..
-          tostring(value) ..
+          format.underscore(tostring(value)) ..
           format.new_line()
         )
       end

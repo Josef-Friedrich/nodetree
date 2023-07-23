@@ -1186,7 +1186,7 @@ Lorem
 \TmpHeadingNodeTypeSub{glue}{12}{parskip}{3}
 
 \NodetreeReset
-\NodetreeEmbedCmd[showmarkup=true]{
+\NodetreeEmbedCmd[showmarkup=true,callback=pre_output_filter]{
 \parskip=5cm
 Lorem
 
@@ -1278,7 +1278,7 @@ Ve
 
 \NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
-\`{a}
+\accent96 a
 \end{NodetreeEmbedEnv}
 
 %%
@@ -1318,12 +1318,14 @@ abc
 %
 %%
 
-\TmpHeadingNodeType{attribute}{38}
-
-\NodetreeReset
-\begin{NodetreeEmbedEnv}[showmarkup=true]
-{\attribute0=1 A}
-\end{NodetreeEmbedEnv}
+% It seems that 'attribute' nodes don't appear in node trees.
+%
+% \TmpHeadingNodeType{attribute}{38}
+%
+% \NodetreeReset
+% \begin{NodetreeEmbedEnv}[showmarkup=true]
+% {\attribute0=1 A}
+% \end{NodetreeEmbedEnv}
 
 %%
 %
@@ -1332,7 +1334,7 @@ abc
 \TmpHeadingNodeType{attributelist}{40}
 
 \NodetreeReset
-\begin{NodetreeEmbedEnv}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true,callback=hpackfilter]
 {\attribute0=1 A}
 \end{NodetreeEmbedEnv}
 

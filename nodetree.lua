@@ -719,7 +719,6 @@ end
 -- __Nodes without subtypes:__
 --
 -- * `ins` (3)
--- * `mark` (4)
 -- * `whatsit` (8)
 -- * `local_par` (9)
 -- * `dir` (10)
@@ -808,6 +807,11 @@ local function get_node_subtypes ()
       [7] = 'fraction',
       [8] = 'radical',
       [9] = 'outline',
+    },
+    -- mark (4)
+    -- The subtype is not used.
+    mark = {
+      [0] = 'unused',
     },
     -- adjust (5)
     adjust = {

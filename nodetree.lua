@@ -1681,7 +1681,10 @@ local export = {
     local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'r'))
     local include_content = include_file:read("*all")
     include_file:close()
-    include_content = include_content:gsub('[\r\n]', '')
+    -- To make the newline character be handled properly by the TeX engine
+    -- it would be necessary to set up its correct catcode.  However, it is
+    -- simpler to just replace all newlines with '{}'.
+    include_content = include_content:gsub('[\r\n]', '{}')
     tex.print(include_content)
   end,
 

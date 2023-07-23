@@ -22,12 +22,12 @@ install_dev:
 doc: doc_examples doc_pdf doc_lua
 
 doc_pdf:
-	lualatex --shell-escape documentation.tex
-	makeindex -s gglo.ist -o documentation.gls documentation.glo
-	makeindex -s gind.ist -o documentation.ind documentation.idx
-	lualatex --shell-escape documentation.tex
+	lualatex --shell-escape nodetree-doc.tex
+	makeindex -s gglo.ist -o nodetree-doc.gls nodetree-doc.glo
+	makeindex -s gind.ist -o nodetree-doc.ind nodetree-doc.idx
+	lualatex --shell-escape nodetree-doc.tex
 	mkdir -p $(texmf)/doc
-	mv documentation.pdf $(jobname).pdf
+	mv nodetree-doc.pdf $(jobname).pdf
 	cp $(jobname).pdf $(texmf)/doc
 
 doc_examples:
@@ -35,7 +35,7 @@ doc_examples:
 	find examples -name "*.tex" -exec latexmk -latex=lualatex -cd {} \;
 
 doc_lua:
-	ldoc .
+	ldoc -a .
 
 clean:
 	./clean.sh

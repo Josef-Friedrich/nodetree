@@ -1678,7 +1678,7 @@ local export = {
 
     -- Compile the temporary LuaTeX or LuaLaTeX file.
     os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
-    local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'rb'))
+    local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'r'))
     local include_content = include_file:read("*all")
     include_file:close()
     include_content = include_content:gsub('[\r\n]', '')

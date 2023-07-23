@@ -665,7 +665,7 @@ function template.callback(callback_name, variables)
           '- ' ..
           format.underscore(name) ..
           ': ' ..
-          tostring(value) ..
+          format.underscore(tostring(value)) ..
           format.new_line()
         )
       end
@@ -1678,10 +1678,13 @@ local export = {
 
     -- Compile the temporary LuaTeX or LuaLaTeX file.
     os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
-    local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'rb'))
+    local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'r'))
     local include_content = include_file:read("*all")
     include_file:close()
-    include_content = include_content:gsub('[\r\n]', '')
+    -- To make the newline character be handled properly by the TeX engine
+    -- it would be necessary to set up its correct catcode.  However, it is
+    -- simpler to just replace all newlines with '{}'.
+    include_content = include_content:gsub('[\r\n]', '{}')
     tex.print(include_content)
   end,
 
@@ -1689,7 +1692,7 @@ local export = {
   --
   check_shell_escape = function()
     local info = status.list()
-    if info.shell_escape == 0 then
+    if info.shell_escape ~= 1 then
       tex.error('Package "nodetree-embed": You have to use the --shell-escape option')
     end
   end,

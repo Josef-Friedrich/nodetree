@@ -1692,7 +1692,7 @@ local export = {
   --
   check_shell_escape = function()
     local info = status.list()
-    if info.shell_escape == 0 then
+    if info.shell_escape ~= 1 then
       tex.error('Package "nodetree-embed": You have to use the --shell-escape option')
     end
   end,

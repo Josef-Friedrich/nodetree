@@ -277,6 +277,24 @@ local template = {
     shape = {'yellow'},
   },
 
+  -- Field name abbreviations for verbosity level 0.  A second field
+  -- limits the abbreviation to this node type.
+  --
+  -- Entry '' means to omit the key, printing only the value.  Entry
+  -- '()' means the same, but the value gets printed in parentheses.
+  field_abbrevs = {
+    char = {''},
+    depth = {'dp'},
+    height = {'ht'},
+    kern = {''},
+    mark = {''},
+    penalty = {'', 'penalty'},
+    shrink = {'minus'},
+    stretch = {'plus'},
+    subtype = {'()'},
+    width = {'wd'},
+  },
+
   ---
   -- [SGR (Select Graphic Rendition) Parameters](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters).
   --
@@ -603,19 +621,47 @@ end
 --
 ---@param key string # A key.
 ---@param value string|number # A value.
+---@param typ string # A node type.
 ---@param color ColorName # A color name.
 --
 ---@return string
-function template.key_value(key, value, color)
+function template.key_value(key, value, typ, color)
   if type(color) ~= 'string' then
     color = 'yellow'
   end
   if options.channel == 'tex' then
     key = format.underscore(key)
   end
-  local output = template.colored_string(key .. ':', color)
+
+  local output = ''
+  local abbrev = nil
+  local separator = ':'
+
+  if options.verbosity == 0 then
+    if template.field_abbrevs[key] then
+      local only_this_type = template.field_abbrevs[key][2]
+      if not only_this_type or not typ or only_this_type == typ then
+        abbrev = template.field_abbrevs[key][1]
+      end
+    end
+    separator = ''
+  end
+
+  if abbrev == nil then
+    output = template.colored_string(key .. separator, color)
+  elseif abbrev ~= '' and abbrev ~= '()' then
+    output = template.colored_string(abbrev, color)
+  end
+
   if value then
-    output = output .. ' ' .. value .. ', '
+    if abbrev == '()' then
+      -- Printing '(unused)' is confusing.
+      if value ~= 'unused' then
+        output = output .. '(' .. value .. ') '
+      end
+    else
+      output = output .. ' ' .. value .. ', '
+    end
   end
   return output
 end
@@ -1050,7 +1096,7 @@ function tree.format_field(head, field)
     output = tostring(head[field])
   end
 
-  return template.key_value(field, output)
+  return template.key_value(field, output, node.type(head.id))
 end
 
 ---
@@ -1161,7 +1207,7 @@ function tree.analyze_node(head, level)
 
   -- Append the attributes output if available.
   if attributes ~= '' then
-    output = output .. template.key_value('attr', attributes, 'blue')
+    output = output .. template.key_value('attr', attributes, nil, 'blue')
   end
 
   output = output:gsub(', $', '')
@@ -1175,11 +1221,18 @@ function tree.analyze_node(head, level)
 
   local property = node.getproperty(head)
   if property then
+    local props
+    if options.verbosity == 0 then
+      props = 'props'
+    else
+      props = 'properties:'
+    end
+
     nodetree_print(
       format.node_begin() ..
       template.branches(level, 'field') ..
       '  ' ..
-      template.colored_string('properties:', 'blue') .. ' ' ..
+      template.colored_string(props, 'blue') .. ' ' ..
       template.table_inline(property) ..
       format.node_end() ..
       format.new_line()

@@ -375,12 +375,15 @@ nodetree
 \end{minted}
 
 \item |_nodetree-jobname/1.nttex|: This temporary Lua\LaTeX file is
-compiled using |latexmk| and embed in the environment |NodetreeEmbed|
+compiled using |latexmk| and embedded in the environment |NodetreeEmbed|
+(the trailing |\| character indicates line continuation).
 
 \begin{minted}{latex}
-\par{}\par{}Callback: \textcolor{NTEred}{post\_linebreak\_filter}\par{}
-------------------------------------------\par{}
-\mbox{├─\textcolor{NTEmagentabright}{GLUE\hspace{0.5em}}\textcolor{NTEyellow}{subtype:} baselineskip, \textcolor{NTEyellow}{width:} 5.06\textcolor{NTEwhite}{pt}}\par{}
+Callback: \textcolor{NTEred}{post\_linebreak\_filter}\par
+------------------------------------------\par
+\mbox{├─\textcolor{NTEmagentabright}{GLUE\hspace{0.5em}}\
+  \textcolor{NTEyellow}{subtype:} baselineskip, \
+  \textcolor{NTEyellow}{width:} 5.06\textcolor{NTEwhite}{pt}}\par
 ...
 \end{minted}
 
@@ -729,18 +732,21 @@ terminal like view in your document.
 \label{sec:option:verbosity}
 
 Higher integer values result in a more verbose output. The default value
-for this options is |1|. At the moment only verbosity level |2| is
+for this options is~|1|. At the moment only verbosity levels |0| to~|3| are
 implemented.
 
 \def\TmpExampleVerbosity#1{
   \subsubsection{Example: \texttt{verbosity=#1}}
-  \begin{NodetreeEmbedEnv}[verbosity=#1,callback=pre_linebreak_filter]
+  \begin{NodetreeEmbedEnv}[verbosity=#1,callback=pre_linebreak_filter,
+                           fontsize=\tiny]
   .
   \end{NodetreeEmbedEnv}
 }
 
+\TmpExampleVerbosity{0}
 \TmpExampleVerbosity{1}
 \TmpExampleVerbosity{2}
+\TmpExampleVerbosity{3}
 
 %%
 % color

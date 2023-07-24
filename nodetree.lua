@@ -414,7 +414,8 @@ local template = {
   --
   ---@param head Node # The head node of a node list.
   ---
-  ---@return string # A textual representation of the `char` number, suffixed with `[char number]` in verbosity level 2 or greater.
+  ---@return string # A textual representation of the `char` number,
+  ---suffixed with `[char number]` in verbosity level 2 or greater.
   char = function(head)
     local node_id = todirect(head) -- Convert to node id.
     local props = properties[node_id]
@@ -1072,8 +1073,7 @@ function tree.format_field(head, field)
   elseif options.verbosity < 3 and
     field == 'prev' or
     field == 'next' or
-    field == 'id'
-  then
+    field == 'id' then
     return ''
   end
 

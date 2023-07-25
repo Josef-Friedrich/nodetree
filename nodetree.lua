@@ -23,8 +23,8 @@
 ---@alias ColorName `black` | `red` | `green` | `yellow` | `blue` | `magenta` | `cyan` | `white`
 ---@alias ColorMode `bright`| `dim`
 
----@alias ConnectionType `list` | `field` # A literal
---   is a string, which can be either `list` or `field`.
+---@alias ConnectionType `list` | `field` # A string literal,
+--   which can be either `list` or `field`.
 ---@alias ConnectionState `stop` | `continue` # A literal, which can
 --   be either `continue` or `stop`.
 
@@ -537,7 +537,7 @@ end
 ---@param input number
 --
 ---@return string
-function template.length (input)
+function template.length(input)
   local i = tonumber(input)
   if i ~= nil then
     input = i / tex.sp('1' .. options.unit)
@@ -721,6 +721,8 @@ function template.callback(callback_name, variables)
   nodetree_print(template.line('long'))
 end
 
+--- Format the branching tree for one output line.
+---
 ---@param level number
 ---@param connection_type ConnectionType
 ---
@@ -766,7 +768,6 @@ end
 -- __Nodes without subtypes:__
 --
 -- * `ins` (3)
--- * `whatsit` (8)
 -- * `local_par` (9)
 -- * `dir` (10)
 -- * `penalty` (14)
@@ -802,7 +803,7 @@ end
 -- * `shape` (49)
 --
 ---@return table
-local function get_node_subtypes ()
+local function get_node_subtypes()
     local subtypes = {
     -- hlist (0)
     hlist = {
@@ -1137,7 +1138,7 @@ end
 
 ---
 ---@param fields table
----@param level number
+---@param level number # The current recursion level.
 function tree.analyze_fields(fields, level)
   local max = 0
   local connection_state
@@ -1166,7 +1167,7 @@ end
 
 ---
 ---@param head Node # The head node of a node list.
----@param level number
+---@param level number # The current recursion level.
 function tree.analyze_node(head, level)
   local connection_state
   local output
@@ -1228,6 +1229,7 @@ function tree.analyze_node(head, level)
       props = 'properties:'
     end
 
+    -- Print attributes in a separate line.
     nodetree_print(
       format.node_begin() ..
       template.branches(level, 'field') ..
@@ -1242,9 +1244,10 @@ function tree.analyze_node(head, level)
   tree.analyze_fields(fields, level)
 end
 
+--- Recurse over the current node list.
 ---
 ---@param head Node # The head node of a node list.
----@param level number
+---@param level number # The current recursion level.
 function tree.analyze_list(head, level)
   while head do
     tree.analyze_node(head, level)
@@ -1252,6 +1255,7 @@ function tree.analyze_list(head, level)
   end
 end
 
+--- The top-level internal entry point.
 ---
 ---@param head Node # The head node of a node list.
 function tree.analyze_callback(head)
@@ -1707,7 +1711,7 @@ local export = {
     local absolute_path_tex = parent_path .. '/' .. filename_tex
     output_file = io.open(absolute_path_tex, 'w')
 
-    local format_option = function (key, value)
+    local format_option = function(key, value)
       return '\\NodetreeSetOption[' .. key .. ']{' .. value .. '}' .. '\n'
     end
 

@@ -23,8 +23,8 @@
 ---@alias ColorName `black` | `red` | `green` | `yellow` | `blue` | `magenta` | `cyan` | `white`
 ---@alias ColorMode `bright`| `dim`
 
----@alias ConnectionType `list` | `field` # A literal
---   is a string, which can be either `list` or `field`.
+---@alias ConnectionType `list` | `field` # A string literal,
+--   which can be either `list` or `field`.
 ---@alias ConnectionState `stop` | `continue` # A literal, which can
 --   be either `continue` or `stop`.
 
@@ -285,12 +285,14 @@ local template = {
   field_abbrevs = {
     char = {''},
     depth = {'dp'},
+    dir = {'', 'dir'},
     height = {'ht'},
     kern = {''},
     mark = {''},
     penalty = {'', 'penalty'},
     shrink = {'minus'},
     stretch = {'plus'},
+    style = {''},
     subtype = {'()'},
     width = {'wd'},
   },
@@ -537,7 +539,7 @@ end
 ---@param input number
 --
 ---@return string
-function template.length (input)
+function template.length(input)
   local i = tonumber(input)
   if i ~= nil then
     input = i / tex.sp('1' .. options.unit)
@@ -660,6 +662,8 @@ function template.key_value(key, value, typ, color)
       if value ~= 'unused' then
         output = output .. '(' .. value .. ') '
       end
+    elseif abbrev == '' then
+      output = output .. value .. ', '
     else
       output = output .. ' ' .. value .. ', '
     end
@@ -683,7 +687,7 @@ function template.type(type, id)
     output = output .. format.type_id(id)
   end
   return template.colored_string(
-    output .. format.whitespace(),
+    output,
     template.node_colors[type][1],
     template.node_colors[type][2]
   )
@@ -721,6 +725,8 @@ function template.callback(callback_name, variables)
   nodetree_print(template.line('long'))
 end
 
+--- Format the branching tree for one output line.
+---
 ---@param level number
 ---@param connection_type ConnectionType
 ---
@@ -766,7 +772,6 @@ end
 -- __Nodes without subtypes:__
 --
 -- * `ins` (3)
--- * `whatsit` (8)
 -- * `local_par` (9)
 -- * `dir` (10)
 -- * `penalty` (14)
@@ -802,7 +807,7 @@ end
 -- * `shape` (49)
 --
 ---@return table
-local function get_node_subtypes ()
+local function get_node_subtypes()
     local subtypes = {
     -- hlist (0)
     hlist = {
@@ -1137,7 +1142,7 @@ end
 
 ---
 ---@param fields table
----@param level number
+---@param level number # The current recursion level.
 function tree.analyze_fields(fields, level)
   local max = 0
   local connection_state
@@ -1166,10 +1171,11 @@ end
 
 ---
 ---@param head Node # The head node of a node list.
----@param level number
+---@param level number # The current recursion level.
 function tree.analyze_node(head, level)
   local connection_state
   local output
+  local need_whitespace = true
   if head.next then
     connection_state = 'continue'
   else
@@ -1179,7 +1185,10 @@ function tree.analyze_node(head, level)
   output = template.branches(level, 'list')
     .. template.type(node.type(head.id), head.id)
   if options.verbosity > 1 then
-    output = output .. template.key_value('no', node_extended.node_id(head))
+    output = output ..
+      format.whitespace() ..
+      template.key_value('no', node_extended.node_id(head))
+    need_whitespace = false
   end
 
   -- We store the attributes output so that we can append it to the field
@@ -1202,11 +1211,19 @@ function tree.analyze_node(head, level)
     end
   end
   if output_fields ~= '' then
+    if need_whitespace == true then
+      output = output .. format.whitespace()
+      need_whitespace = false
+    end
     output = output .. output_fields
   end
 
   -- Append the attributes output if available.
-  if attributes ~= '' then
+  if attributes and attributes ~= '' then
+    if need_whitespace == true then
+      output = output .. format.whitespace()
+      need_whitespace = false
+    end
     output = output .. template.key_value('attr', attributes, nil, 'blue')
   end
 
@@ -1228,6 +1245,7 @@ function tree.analyze_node(head, level)
       props = 'properties:'
     end
 
+    -- Print attributes in a separate line.
     nodetree_print(
       format.node_begin() ..
       template.branches(level, 'field') ..
@@ -1242,9 +1260,10 @@ function tree.analyze_node(head, level)
   tree.analyze_fields(fields, level)
 end
 
+--- Recurse over the current node list.
 ---
 ---@param head Node # The head node of a node list.
----@param level number
+---@param level number # The current recursion level.
 function tree.analyze_list(head, level)
   while head do
     tree.analyze_node(head, level)
@@ -1252,6 +1271,7 @@ function tree.analyze_list(head, level)
   end
 end
 
+--- The top-level internal entry point.
 ---
 ---@param head Node # The head node of a node list.
 function tree.analyze_callback(head)
@@ -1707,7 +1727,7 @@ local export = {
     local absolute_path_tex = parent_path .. '/' .. filename_tex
     output_file = io.open(absolute_path_tex, 'w')
 
-    local format_option = function (key, value)
+    local format_option = function(key, value)
       return '\\NodetreeSetOption[' .. key .. ']{' .. value .. '}' .. '\n'
     end
 

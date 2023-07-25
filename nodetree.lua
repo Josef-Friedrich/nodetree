@@ -1209,7 +1209,7 @@ function tree.analyze_node(head, level)
   end
 
   -- Append the attributes output if available.
-  if attributes ~= '' then
+  if attributes and attributes ~= '' then
     output = output .. template.key_value('attr', attributes, nil, 'blue')
   end
 

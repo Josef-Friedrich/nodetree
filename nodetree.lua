@@ -660,6 +660,8 @@ function template.key_value(key, value, typ, color)
       if value ~= 'unused' then
         output = output .. '(' .. value .. ') '
       end
+    elseif abbrev == '' then
+      output = output .. value .. ', '
     else
       output = output .. ' ' .. value .. ', '
     end

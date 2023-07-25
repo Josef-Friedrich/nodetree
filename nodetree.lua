@@ -685,7 +685,7 @@ function template.type(type, id)
     output = output .. format.type_id(id)
   end
   return template.colored_string(
-    output .. format.whitespace(),
+    output,
     template.node_colors[type][1],
     template.node_colors[type][2]
   )
@@ -1173,6 +1173,7 @@ end
 function tree.analyze_node(head, level)
   local connection_state
   local output
+  local need_whitespace = true
   if head.next then
     connection_state = 'continue'
   else
@@ -1182,7 +1183,10 @@ function tree.analyze_node(head, level)
   output = template.branches(level, 'list')
     .. template.type(node.type(head.id), head.id)
   if options.verbosity > 1 then
-    output = output .. template.key_value('no', node_extended.node_id(head))
+    output = output ..
+      format.whitespace() ..
+      template.key_value('no', node_extended.node_id(head))
+    need_whitespace = false
   end
 
   -- We store the attributes output so that we can append it to the field
@@ -1205,11 +1209,19 @@ function tree.analyze_node(head, level)
     end
   end
   if output_fields ~= '' then
+    if need_whitespace == true then
+      output = output .. format.whitespace()
+      need_whitespace = false
+    end
     output = output .. output_fields
   end
 
   -- Append the attributes output if available.
   if attributes and attributes ~= '' then
+    if need_whitespace == true then
+      output = output .. format.whitespace()
+      need_whitespace = false
+    end
     output = output .. template.key_value('attr', attributes, nil, 'blue')
   end
 

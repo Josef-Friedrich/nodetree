@@ -285,7 +285,7 @@ local template = {
   field_abbrevs = {
     char = {''},
     depth = {'dp'},
-    dir = {'', 'dir'},
+    dir = {'()', 'dir'},
     height = {'ht'},
     kern = {''},
     mark = {''},
@@ -773,7 +773,6 @@ end
 --
 -- * `ins` (3)
 -- * `local_par` (9)
--- * `dir` (10)
 -- * `penalty` (14)
 -- * `unset` (15)
 -- * `style` (16)
@@ -886,6 +885,13 @@ local function get_node_subtypes()
       [4] = 'first',
       [5] = 'second',
     },
+    -- dir (10)
+    -- This is an internal detail, see luatex source code file
+    -- `texnodes.h`.
+    -- dir = {
+    --   [0] = 'normal_dir',
+    --   [1] = 'cancel_dir',
+    -- },
     -- math (11)
     math = {
       [0] = 'beginmath',
@@ -1049,10 +1055,17 @@ local tree = {}
 ---@return string
 function tree.format_field(head, field)
   local output
+  local typ = node.type(head.id)
 
-  -- Print subtypes with ID 0.
-  if head[field] ~= nil and field == "subtype" then
-    return template.key_value(field, format.underscore(node_extended.subtype(head)))
+  -- Print subtypes also for nodes with ID=0.  However, suppress the
+  -- internal 'subtype' field for 'dir' nodes.
+  if field == 'subtype' then
+    if typ == 'dir' then
+      return ''
+    elseif head[field] ~= nil then
+      return template.key_value(field,
+                                format.underscore(node_extended.subtype(head)))
+    end
   end
 
   -- Character 0 should be printed in a tree because the corresponding slot
@@ -1068,7 +1081,8 @@ function tree.format_field(head, field)
     field == 'right' or
     field == 'uchyph' or
     -- hlist
-    field == 'dir' or
+    -- Don't drop the 'dir' field of the 'dir' node.
+    (field == 'dir' and typ ~= 'dir') or
     field == 'glue_order' or
     field == 'glue_sign' or
     field == 'glue_set' or

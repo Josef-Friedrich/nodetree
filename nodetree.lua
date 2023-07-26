@@ -285,7 +285,7 @@ local template = {
   field_abbrevs = {
     char = {''},
     depth = {'dp'},
-    dir = {'', 'dir'},
+    dir = {'()', 'dir'},
     height = {'ht'},
     kern = {''},
     mark = {''},
@@ -436,7 +436,7 @@ local template = {
     elseif character_index < 0x110000 then
       textual = utfchar(character_index)
     else
-      textual = string.format("^^^^^^%06X", character_index)
+      textual = string.format('^^^^^^%06X', character_index)
     end
     return character_index .. ' (' .. string.format('0x%x', character_index) .. ', \''.. textual .. '\')'
   end,
@@ -773,7 +773,6 @@ end
 --
 -- * `ins` (3)
 -- * `local_par` (9)
--- * `dir` (10)
 -- * `penalty` (14)
 -- * `unset` (15)
 -- * `style` (16)
@@ -808,7 +807,7 @@ end
 --
 ---@return table
 local function get_node_subtypes()
-    local subtypes = {
+  local subtypes = {
     -- hlist (0)
     hlist = {
       [0] = 'unknown',
@@ -878,7 +877,7 @@ local function get_node_subtypes()
       [3] = 'word',
     },
     -- disc (7)
-    disc  = {
+    disc = {
       [0] = 'discretionary',
       [1] = 'explicit',
       [2] = 'automatic',
@@ -886,6 +885,13 @@ local function get_node_subtypes()
       [4] = 'first',
       [5] = 'second',
     },
+    -- dir (10)
+    -- This is an internal detail, see luatex source code file
+    -- `texnodes.h`.
+    -- dir = {
+    --   [0] = 'normal_dir',
+    --   [1] = 'cancel_dir',
+    -- },
     -- math (11)
     math = {
       [0] = 'beginmath',
@@ -1049,15 +1055,22 @@ local tree = {}
 ---@return string
 function tree.format_field(head, field)
   local output
+  local typ = node.type(head.id)
 
-  -- Print subtypes with ID 0.
-  if head[field] ~= nil and field == "subtype" then
-    return template.key_value(field, format.underscore(node_extended.subtype(head)))
+  -- Print subtypes also for nodes with ID=0.  However, suppress the
+  -- internal 'subtype' field for 'dir' nodes.
+  if field == 'subtype' then
+    if typ == 'dir' then
+      return ''
+    elseif head[field] ~= nil then
+      return template.key_value(field,
+                                format.underscore(node_extended.subtype(head)))
+    end
   end
 
   -- Character 0 should be printed in a tree because the corresponding slot
   -- zero in a TeX font usually contains a symbol.
-  if head[field] == nil or (head[field] == 0 and field ~= "char") then
+  if head[field] == nil or (head[field] == 0 and field ~= 'char') then
     return ''
   end
 
@@ -1068,7 +1081,8 @@ function tree.format_field(head, field)
     field == 'right' or
     field == 'uchyph' or
     -- hlist
-    field == 'dir' or
+    -- Don't drop the 'dir' field of the 'dir' node.
+    (field == 'dir' and typ ~= 'dir') or
     field == 'glue_order' or
     field == 'glue_sign' or
     field == 'glue_set' or
@@ -1752,7 +1766,7 @@ local export = {
     -- Compile the temporary LuaTeX or LuaLaTeX file.
     os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
     local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'r'))
-    local include_content = include_file:read("*all")
+    local include_content = include_file:read('*all')
     include_file:close()
     -- To make the newline character be handled properly by the TeX engine
     -- it would be necessary to set up its correct catcode.  However, it is

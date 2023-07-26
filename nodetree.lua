@@ -436,7 +436,7 @@ local template = {
     elseif character_index < 0x110000 then
       textual = utfchar(character_index)
     else
-      textual = string.format("^^^^^^%06X", character_index)
+      textual = string.format('^^^^^^%06X', character_index)
     end
     return character_index .. ' (' .. string.format('0x%x', character_index) .. ', \''.. textual .. '\')'
   end,
@@ -808,7 +808,7 @@ end
 --
 ---@return table
 local function get_node_subtypes()
-    local subtypes = {
+  local subtypes = {
     -- hlist (0)
     hlist = {
       [0] = 'unknown',
@@ -878,7 +878,7 @@ local function get_node_subtypes()
       [3] = 'word',
     },
     -- disc (7)
-    disc  = {
+    disc = {
       [0] = 'discretionary',
       [1] = 'explicit',
       [2] = 'automatic',
@@ -1057,7 +1057,7 @@ function tree.format_field(head, field)
 
   -- Character 0 should be printed in a tree because the corresponding slot
   -- zero in a TeX font usually contains a symbol.
-  if head[field] == nil or (head[field] == 0 and field ~= "char") then
+  if head[field] == nil or (head[field] == 0 and field ~= 'char') then
     return ''
   end
 
@@ -1752,7 +1752,7 @@ local export = {
     -- Compile the temporary LuaTeX or LuaLaTeX file.
     os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
     local include_file = assert(io.open(parent_path .. '/' .. example_counter .. '.nttex', 'r'))
-    local include_content = include_file:read("*all")
+    local include_content = include_file:read('*all')
     include_file:close()
     -- To make the newline character be handled properly by the TeX engine
     -- it would be necessary to set up its correct catcode.  However, it is

@@ -1112,7 +1112,18 @@ function tree.format_field(head, field)
   elseif field == 'stretch' or field == 'shrink' then
     output = template.fill(head[field], head[field .. '_order'], field)
   else
-    output = tostring(head[field])
+    -- Surround strings with single quotes except values of fields
+    -- that get potentially abbreviated (and thus don't really need
+    -- quotes).
+    if type(head[field]) == 'string' and not template.field_abbrevs[field] then
+      output = template.colored_string("'", 'yellow') ..
+        head[field] ..
+        template.colored_string("'", 'yellow')
+    elseif type(head[field]) == 'table' then
+      output = '<table>'
+    else
+      output = tostring(head[field])
+    end
   end
 
   return template.key_value(field, output, node.type(head.id))

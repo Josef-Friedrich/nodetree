@@ -1722,15 +1722,21 @@ local export = {
       io.open(file_name, 'w'):close() -- Clear former content.
       output_file = io.open(file_name, 'a')
     end
+    -- Split string at ',', then trim whitespace.
     for alias in string.gmatch(options.callback, '([^,]+)') do
-      register_callback(get_callback_name(alias))
+      register_callback(
+        get_callback_name(string.gsub(alias, '^%s*(.-)%s*$', '%1'))
+      )
     end
   end,
 
   ---
   unregister_callbacks = function()
     for alias in string.gmatch(options.callback, '([^,]+)') do
-      unregister_callback(get_callback_name(alias))
+      -- Split string at ',', then trim whitespace.
+      unregister_callback(
+        get_callback_name(string.gsub(alias, '^%s*(.-)%s*$', '%1'))
+      )
     end
   end,
 

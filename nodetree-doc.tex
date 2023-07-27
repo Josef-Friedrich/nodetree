@@ -106,7 +106,7 @@ nodetree
 and \LaTeX{} that visualizes the structure of node lists while
 compiling with the \TeX{} engine. It uses a visual representation of
 node lists similar to the UNIX |tree| command’s output for folder
-trees.  The processed document isn’t changed.
+trees. The processed document isn’t changed.
 
 The tree view can be emitted to the console, to a log file, or as a
 \LaTeX{} input file. Its appearance is highly customizable; multiple
@@ -600,11 +600,14 @@ the overview of callbacks (\rightarrow{} Figure \ref{fig:callback}).
 |nodetree| supports all node-related callbacks as listed in the
 Lua\TeX{} reference manual.
 
-This macros process callback options:
-\cmd{\NodetreeRegisterCallback}\marg{callbacks},
-\cmd{\NodetreeUnregisterCallback}\marg{callbacks},
-\cmd{\NodetreeSet}\marg{callback=<callbacks>} and
-\cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}.
+These macros process callback options:
+
+\begin{quote}
+  \cmd{\NodetreeRegisterCallback}\marg{callbacks}\\
+  \cmd{\NodetreeUnregisterCallback}\marg{callbacks}\\
+  \cmd{\NodetreeSet}\marg{callback=<callbacks>}\\
+  \cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}
+\end{quote}
 
 Use commas to specify multiple callbacks; trailing and leading
 whitespace is ignored.

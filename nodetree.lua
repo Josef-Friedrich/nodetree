@@ -1,4 +1,5 @@
---- The nodetree package.
+--- This file (`nodetree.lua`) is part of the LuaTeX package
+--- 'nodetree'.
 --
 -- Nodetree uses [LDoc](https://github.com/stevedonovan/ldoc) for the
 --  source code documentation. The supported tags are described in
@@ -220,7 +221,7 @@ local function nodetree_print(text)
   end
 end
 
---- Template functions
+--- Template functions.
 -- @section template
 
 local template = {
@@ -747,7 +748,7 @@ function template.branches(level, connection_type)
   return output
 end
 
---- Extend the node library
+--- Extend the node library.
 -- @section node_extended
 
 local node_extended = {}
@@ -1043,7 +1044,7 @@ function node_extended.subtype(n)
   end
 end
 
---- Build the node tree
+--- Build the node tree.
 -- @section tree
 
 local tree = {}
@@ -1705,7 +1706,7 @@ local function unregister_callback(cb)
   end
 end
 
---- Exported functions
+--- Exported functions.
 -- @section export
 
 local export = {

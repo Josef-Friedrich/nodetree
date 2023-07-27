@@ -606,13 +606,16 @@ This macros process callback options:
 \cmd{\NodetreeSet}\marg{callback=<callbacks>} and
 \cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}.
 
-Use commas to specify mulitple callbacks. Avoid using whitespaces:
+Use commas to specify multiple callbacks; trailing and leading
+whitespace is ignored.
 
 \begin{code}
 \NodetreeRegisterCallback{preline,line,postline}
 \end{code}
 
-Wrap your callback aliases in curly braces for the macro |\NodetreeSet|:
+Wrap your callback aliases in curly braces for the macro
+|\NodetreeSet|. Note that no whitespace between |=| and |{| is
+allowed.
 
 \begin{code}
 \NodetreeSet{callback={preline,line,postline}}

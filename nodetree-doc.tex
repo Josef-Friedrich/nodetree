@@ -1,6 +1,6 @@
 %!TEX program = lualatex
 \documentclass{ltxdoc}
-\usepackage{paralist,fontspec,graphicx,fancyvrb}
+\usepackage{paralist,fontspec,graphicx}
 \usepackage[
   colorlinks=true,
   linkcolor=red,
@@ -11,6 +11,11 @@
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
+
+% Improve ltxdoc's `|...|` feature by allowing breaks.
+\usepackage{fvextra}
+\fvset{breaklines=true,breakbefore=.-_}
+\AtBeginDocument{\DefineShortVerb{\|}}
 
 \usepackage{minted}
 \usemintedstyle{colorful}
@@ -168,7 +173,7 @@ Lorem ipsum dolor.
 
 \subsubsection{Available options}
 
-\def\TmpTabularOptionsBase{
+\def\TmpTabularOptionsBase{\scantextokens{
 |callback| &
 \TmpPageSecRef{sec:option:callback} \\
 
@@ -186,7 +191,7 @@ Lorem ipsum dolor.
 
 |decimalplaces| &
 \TmpPageSecRef{sec:option:decimalplaces} \\
-}
+}}
 
 \begin{tabular}{ll}
 \textbf{Option name} &

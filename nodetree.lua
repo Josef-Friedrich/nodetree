@@ -1305,18 +1305,28 @@ function tree.analyze_callback(head)
   nodetree_print(template.line('short'))
 end
 
---- Callback wrapper
+--- Callback wrapper.
+--
+-- Nodetree uses luatexbase's `add_to_callback` function to manage
+-- callbacks if available.  Otherwise a simplistic approach is taken
+-- by appending its diagnostic callbacks to the existing ones (and
+-- also removing them again if requested).
+--
 -- @section callbacks
 
-local callbacks = {
+local orig_callbacks = {}
 
+local callbacks = {
   ---
   ---@param extrainfo string
   ---
   ---@return boolean
   contribute_filter = function(extrainfo)
+    if orig_callbacks[contribute_filter] then
+      orig_callbacks[contribute_filter](extrainfo)
+    end
+
     template.callback('contribute_filter', {extrainfo = extrainfo})
-    return true
   end,
 
   ---
@@ -1324,8 +1334,11 @@ local callbacks = {
   ---
   ---@return boolean
   buildpage_filter = function(extrainfo)
+    if orig_callbacks[buildpage_filter] then
+      orig_callbacks[buildpage_filter](extrainfo)
+    end
+
     template.callback('buildpage_filter', {extrainfo = extrainfo})
-    return true
   end,
 
   ---
@@ -1334,8 +1347,13 @@ local callbacks = {
   ---
   ---@return number
   build_page_insert = function(n, i)
+    local retval = 0
+    if orig_callbacks[build_page_insert] then
+      retval = orig_callbacks[build_page_insert](n, i)
+    end
+
     template.callback('build_page_insert', {n = n, i = i})
-    return 0
+    return retval
   end,
 
   ---
@@ -1344,9 +1362,14 @@ local callbacks = {
   ---
   ---@return boolean
   pre_linebreak_filter = function(head, groupcode)
+    local retval = true
+    if orig_callbacks[pre_linebreak_filter] then
+      retval = orig_callbacks[pre_linebreak_filter](head, groupcode)
+    end
+
     template.callback('pre_linebreak_filter', {groupcode = groupcode})
     tree.analyze_callback(head)
-    return true
+    return retval
   end,
 
   ---
@@ -1355,9 +1378,14 @@ local callbacks = {
   ---
   ---@return boolean
   linebreak_filter = function(head, is_display)
+    local retval = true
+    if orig_callbacks[linebreak_filter] then
+      retval = orig_callbacks[linebreak_filter](head, is_display)
+    end
+
     template.callback('linebreak_filter', {is_display = is_display})
     tree.analyze_callback(head)
-    return true
+    return retval
   end,
 
   ---
@@ -1366,6 +1394,13 @@ local callbacks = {
   ---@param prevdepth number
   ---@param mirrored boolean
   append_to_vlist_filter = function(box, locationcode, prevdepth, mirrored)
+    local box = box
+    local prevdepth = prevdepth
+    if orig_callbacks[append_to_vlist_filter] then
+      box, prevdepth = orig_callbacks[append_to_vlist_filter](box, locationcode,
+                                                              prevdepth, mirrored)
+    end
+
     local variables = {
       locationcode = locationcode,
       prevdepth = prevdepth,
@@ -1373,7 +1408,7 @@ local callbacks = {
     }
     template.callback('append_to_vlist_filter', variables)
     tree.analyze_callback(box)
-    return box
+    return box, prevdepth
   end,
 
   ---
@@ -1382,9 +1417,14 @@ local callbacks = {
   ---
   ---@return boolean
   post_linebreak_filter = function(head, groupcode)
+    local retval = true
+    if orig_callbacks[post_linebreak_filter] then
+      retval = orig_callbacks[post_linebreak_filter](head, groupcode)
+    end
+
     template.callback('post_linebreak_filter', {groupcode = groupcode})
     tree.analyze_callback(head)
-    return true
+    return retval
   end,
 
   ---
@@ -1396,7 +1436,15 @@ local callbacks = {
   ---@param attributelist Node
   ---
   ---@return boolean
-  hpack_filter = function(head, groupcode, size, packtype, direction, attributelist)
+  hpack_filter = function(head, groupcode, size, packtype,
+                          direction, attributelist)
+    local retval = true
+    if orig_callbacks[hpack_filter] then
+      retval = orig_callbacks[hpack_filter](head, groupcode, size,
+                                            packtype, direction,
+                                            attributelist)
+    end
+
     local variables = {
       groupcode = groupcode,
       size = size,
@@ -1406,7 +1454,7 @@ local callbacks = {
     }
     template.callback('hpack_filter', variables)
     tree.analyze_callback(head)
-    return true
+    return retval
   end,
 
   ---
@@ -1419,7 +1467,15 @@ local callbacks = {
   ---@param attributelist Node
   ---
   ---@return boolean
-  vpack_filter = function(head, groupcode, size, packtype, maxdepth, direction, attributelist)
+  vpack_filter = function(head, groupcode, size, packtype,
+                          maxdepth, direction, attributelist)
+    local retval = true
+    if orig_callbacks[vpack_filter] then
+      retval = orig_callbacks[vpack_filter](head, groupcode, size, packtype,
+                                            maxdepth, direction,
+                                            attributelist)
+    end
+
     local variables = {
       groupcode = groupcode,
       size = size,
@@ -1432,7 +1488,7 @@ local callbacks = {
     tree.analyze_callback(head)
     tree.analyze_callback(attributelist)
 
-    return true
+    return retval
   end,
 
   ---
@@ -1442,6 +1498,12 @@ local callbacks = {
   ---@param first number
   ---@param last number
   hpack_quality = function(incident, detail, head, first, last)
+    local retval = nil
+    if orig_callbacks[hpack_quality] then
+      retval = orig_callbacks[hpack_quality](incident, detail, head,
+                                             first, last)
+    end
+
     local variables = {
       incident = incident,
       detail = detail,
@@ -1450,6 +1512,7 @@ local callbacks = {
     }
     template.callback('hpack_quality', variables)
     tree.analyze_callback(head)
+    return retval
   end,
 
   ---
@@ -1459,6 +1522,10 @@ local callbacks = {
   ---@param first number
   ---@param last number
   vpack_quality = function(incident, detail, head, first, last)
+    if orig_callbacks[vpack_quality] then
+      orig_callbacks[vpack_quality](incident, detail, head, first, last)
+    end
+
     local variables = {
       incident = incident,
       detail = detail,
@@ -1476,13 +1543,16 @@ local callbacks = {
   ---
   ---@return boolean
   process_rule = function(head, width, height)
+    if orig_callbacks[process_rule] then
+      orig_callbacks[vprocess_rule](head, width, height)
+    end
+
     local variables = {
       width = width,
       height = height,
     }
     template.callback('process_rule', variables)
     tree.analyze_callback(head)
-    return true
   end,
 
   ---
@@ -1494,7 +1564,15 @@ local callbacks = {
   ---@param direction string
   ---
   ---@return boolean
-  pre_output_filter = function(head, groupcode, size, packtype, maxdepth, direction)
+  pre_output_filter = function(head, groupcode, size, packtype,
+                               maxdepth, direction)
+    local retval = true
+    if orig_callbacks[pre_output_filter] then
+      retval = orig_callbacks[pre_output_filter](head, groupcode, size,
+                                                 packtype, maxdepth,
+                                                 direction)
+    end
+
     local variables = {
       groupcode = groupcode,
       size = size,
@@ -1504,13 +1582,19 @@ local callbacks = {
     }
     template.callback('pre_output_filter', variables)
     tree.analyze_callback(head)
-    return true
+    return retval
   end,
 
   ---
   ---@param head Node # The head node of a node list.
   ---@param tail Node
   hyphenate = function(head, tail)
+    if orig_callbacks[hyphenate] then
+      orig_callbacks[hyphenate](head, tail)
+    else
+      lang.hyphenate(head, tail)
+    end
+
     template.callback('hyphenate')
     nodetree_print('head:' .. format.new_line())
     tree.analyze_callback(head)
@@ -1522,6 +1606,12 @@ local callbacks = {
   ---@param head Node # The head node of a node list.
   ---@param tail Node
   ligaturing = function(head, tail)
+    if orig_callbacks[ligaturing] then
+      orig_callbacks[ligaturing](head, tail)
+    else
+      node.ligaturing(head, tail)
+    end
+
     template.callback('ligaturing')
     nodetree_print('head:' .. format.new_line())
     tree.analyze_callback(head)
@@ -1533,6 +1623,12 @@ local callbacks = {
   ---@param head Node # The head node of a node list.
   ---@param tail Node
   kerning = function(head, tail)
+    if orig_callbacks[kerning] then
+      orig_callbacks[kerning](head, tail)
+    else
+      node.kerning(head, tail)
+    end
+
     template.callback('kerning')
     nodetree_print('head:' .. format.new_line())
     tree.analyze_callback(head)
@@ -1546,9 +1642,12 @@ local callbacks = {
   ---
   ---@return boolean
   insert_local_par = function(local_par, location)
+    if orig_callbacks[insert_local_par] then
+      orig_callbacks[insert_local_par](local_par, location)
+    end
+
     template.callback('insert_local_par', {location = location})
     tree.analyze_callback(local_par)
-    return true
   end,
 
   ---
@@ -1556,13 +1655,21 @@ local callbacks = {
   ---@param display_type string
   ---@param need_penalties boolean
   mlist_to_hlist = function(head, display_type, need_penalties)
+    local retval
+    if orig_callbacks[mlist_to_hlist] then
+      retval = orig_callbacks[mlist_to_hlist](head, display_type,
+                                              need_penalties)
+    else
+      retval = node.mlist_to_hlist(head, display_type, need_penalties)
+    end
+
     local variables = {
       display_type = display_type,
       need_penalties = need_penalties,
     }
     template.callback('mlist_to_hlist', variables)
     tree.analyze_callback(head)
-    return node.mlist_to_hlist(head, display_type, need_penalties)
+    return retval
   end,
 }
 
@@ -1688,6 +1795,8 @@ end
 --
 ---@param cb string # The name of a callback.
 local function register_callback(cb)
+  orig_callbacks[cb] = callback.find(cb)
+
   if luatexbase then
     luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree')
   else
@@ -1702,7 +1811,8 @@ local function unregister_callback(cb)
   if luatexbase then
     luatexbase.remove_from_callback(cb, 'nodetree')
   else
-    register_callback(cb, nil)
+    callback.register(cb, nil)
+    callback.register(cb, orig_callbacks[cb])
   end
 end
 

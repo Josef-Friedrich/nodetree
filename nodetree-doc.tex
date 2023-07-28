@@ -639,8 +639,16 @@ The same applies for the macro |\usepackage|:
 }
 
 \begin{figure}
-The callbacks are listed in the same order as in the Lua\TeX reference
-manual.
+The callbacks are listed in the same order as in the Lua\TeX{}
+reference manual.  Note that the |ligaturing| and |kerning| callbacks
+only have an effect on ligatures and kernings, respectively, if the
+|luaotfload| package (which is the default for Lua\LaTeX{} and an
+optional package for Lua\TeX{}) handles the affected font with
+|mode=base| (see the
+\href{http://mirrors.ctan.org/macros/luatex/generic/luaotfload/luaotfload-latex.pdf}
+{documentation} for more details).
+
+\bigskip
 
 \noindent
 \begin{tabular}{lll}

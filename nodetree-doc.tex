@@ -106,7 +106,7 @@ nodetree
 and \LaTeX{} that visualizes the structure of node lists while
 compiling with the \TeX{} engine. It uses a visual representation of
 node lists similar to the UNIX |tree| command’s output for folder
-trees.  The processed document isn’t changed.
+trees. The processed document isn’t changed.
 
 The tree view can be emitted to the console, to a log file, or as a
 \LaTeX{} input file. Its appearance is highly customizable; multiple
@@ -600,11 +600,14 @@ the overview of callbacks (\rightarrow{} Figure \ref{fig:callback}).
 |nodetree| supports all node-related callbacks as listed in the
 Lua\TeX{} reference manual.
 
-This macros process callback options:
-\cmd{\NodetreeRegisterCallback}\marg{callbacks},
-\cmd{\NodetreeUnregisterCallback}\marg{callbacks},
-\cmd{\NodetreeSet}\marg{callback=<callbacks>} and
-\cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}.
+These macros process callback options:
+
+\begin{quote}
+  \cmd{\NodetreeRegisterCallback}\marg{callbacks}\\
+  \cmd{\NodetreeUnregisterCallback}\marg{callbacks}\\
+  \cmd{\NodetreeSet}\marg{callback=<callbacks>}\\
+  \cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}
+\end{quote}
 
 Use commas to specify multiple callbacks; trailing and leading
 whitespace is ignored.
@@ -636,8 +639,16 @@ The same applies for the macro |\usepackage|:
 }
 
 \begin{figure}
-The callbacks are listed in the same order as in the Lua\TeX reference
-manual.
+The callbacks are listed in the same order as in the Lua\TeX{}
+reference manual.  Note that the |ligaturing| and |kerning| callbacks
+only have an effect on ligatures and kernings, respectively, if the
+|luaotfload| package (which is the default for Lua\LaTeX{} and an
+optional package for Lua\TeX{}) handles the affected font with
+|mode=base| (see the
+\href{http://mirrors.ctan.org/macros/luatex/generic/luaotfload/luaotfload-latex.pdf}
+{documentation} for more details).
+
+\bigskip
 
 \noindent
 \begin{tabular}{lll}

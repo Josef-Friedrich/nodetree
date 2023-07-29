@@ -77,6 +77,10 @@
 \TmpExample{#1}
 }
 
+\newcommand\TmpMacroName[1]{%
+  \texorpdfstring{\cs{#1}}{\textbackslash #1}%
+}
+
 \DefineVerbatimEnvironment{code}{Verbatim}
 {
   frame=single,
@@ -485,7 +489,7 @@ nodetree
 % \NodetreeRegisterCallback
 %%
 
-\subsection{\cmd{\NodetreeRegisterCallback}}
+\subsection{\TmpMacroName{NodetreeRegisterCallback}}
 \label{sec:cmd:nodetree-register-callback}
 
 \DescribeMacro{\NodetreeRegisterCallback}
@@ -497,7 +501,7 @@ nodetree
 % \NodetreeUnregisterCallback
 %%
 
-\subsection{\cmd{\NodetreeUnregisterCallback}}
+\subsection{\TmpMacroName{NodetreeUnregisterCallback}}
 \label{sec:cmd:nodetree-unregister-callback}
 
 \DescribeMacro{\NodetreeUnregisterCallback}
@@ -509,7 +513,7 @@ nodetree
 % \NodetreeSetOption
 %%
 
-\subsection{\cmd{\NodetreeSetOption}}
+\subsection{\TmpMacroName{NodetreeSetOption}}
 \label{sec:cmd:nodetree-set-option}
 
 \DescribeMacro{\NodetreeSetOption}
@@ -520,7 +524,7 @@ single \oarg{option} to \marg{value} \TmpSecRef{sec:options}.
 % \NodetreeResetOption
 %%
 
-\subsection{\cmd{\NodetreeResetOption}}
+\subsection{\TmpMacroName{NodetreeResetOption}}
 \label{sec:cmd:nodetree-reset-option}
 
 \DescribeMacro{\NodetreeResetOption}
@@ -531,7 +535,7 @@ single \oarg{option} to \marg{value} \TmpSecRef{sec:options}.
 % \NodetreeSet
 %%
 
-\subsection{\cmd{\NodetreeSet}}
+\subsection{\TmpMacroName{NodetreeSet}}
 \label{sec:cmd:nodetree-set}
 
 \DescribeMacro{\NodetreeSet}
@@ -547,7 +551,7 @@ are key-value pairs.
 % \NodetreeReset
 %%
 
-\subsection{\cmd{\NodetreeReset}}
+\subsection{\TmpMacroName{NodetreeReset}}
 \label{sec:cmd:nodetree-reset}
 
 \DescribeMacro{\NodetreeReset}
@@ -558,7 +562,7 @@ values.
 %
 %%
 
-\subsection{\cmd{\NodetreeEmbedCmd}}
+\subsection{\TmpMacroName{NodetreeEmbedCmd}}
 \label{sec:cmd:nodetree-embed-cmd}
 
 \DescribeMacro{\NodetreeEmbedCmd}
@@ -576,7 +580,7 @@ Only available in package |nodetree-embed|.
 % \NodetreeEmbedInput
 %%
 
-\subsection{\cmd{\NodetreeEmbedInput}}
+\subsection{\TmpMacroName{NodetreeEmbedInput}}
 \label{sec:cmd:nodetree-embed-input}
 
 \DescribeMacro{\NodetreeEmbedInput}
@@ -970,15 +974,15 @@ Unicode glyphs \ref{fig:unicode}).
 \label{sec:option:fontsize}
 
 \def\TmpExampleFontSize#1{
-  \subsubsection{Example: \string#1}
-  \begin{NodetreeEmbedEnv}[callback=pre_linebreak_filter,fontsize=#1]
+  \subsubsection{Example: \TmpMacroName{#1}}
+  \begin{NodetreeEmbedEnv}[callback=pre_linebreak_filter,
+                           fontsize=\csname #1\endcsname]
   .
   \end{NodetreeEmbedEnv}
 }
 
-\TmpExampleFontSize{\small}
-\TmpExampleFontSize{\tiny}
-
+\TmpExampleFontSize{small}
+\TmpExampleFontSize{tiny}
 
 %-----------------------------------------------------------------------
 % Visual tree structure

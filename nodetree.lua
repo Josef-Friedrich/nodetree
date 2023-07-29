@@ -61,15 +61,21 @@ local default_options = {
   color = 'colored',
   decimalplaces = 2,
   unit = 'pt',
-  verbosity = 1,
+  verbosity = 0,
 }
 
 --- The current options.
--- They are changed very often.
 local options = {}
 for key, value in pairs(default_options) do
   options[key] = value
 end
+
+--- The previous options.
+-- We need this for functions `push_options` and `pop_options` so that
+-- the effects of the `\setkeys` commands in `nodetree-embed.sty`
+-- (which directly manipulates the `options` table) stay local.
+local prev_options = {}
+local option_level = 0
 
 --- File descriptor.
 local output_file
@@ -1939,6 +1945,28 @@ local export = {
   ---@return string|number|boolean
   get_default_option = function(key)
     return default_options[key]
+  end,
+
+  --- Push current options.
+  --
+  push_options = function()
+    prev_options[option_level] = {}
+    for k, v in pairs(options) do
+      prev_options[option_level][k] = v
+    end
+    option_level = option_level + 1
+  end,
+
+  --- Pop previous options.
+  --
+  pop_options = function()
+    if option_level > 0 then
+      prev_options[option_level] = nil
+      option_level = option_level - 1
+      for k, v in pairs(prev_options[option_level]) do
+        options[k] = v
+      end
+    end
   end
 }
 

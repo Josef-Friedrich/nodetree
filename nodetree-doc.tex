@@ -66,15 +66,15 @@
   \includegraphics[scale=0.4]{graphics/#1}
 }
 
-\newcommand{\TmpExample}[1]{
-\begin{NodetreeEmbedView}
+\newcommand{\TmpExample}[2]{
+\begin{NodetreeEmbedView}[fontsize=#2]
 \input{examples/#1.nttex}
 \end{NodetreeEmbedView}
 }
 
-\newcommand{\TmpVerbExample}[1]{
-\VerbatimInput[frame=single,fontsize=\footnotesize,firstline=4]{examples/#1.tex}
-\TmpExample{#1}
+\newcommand{\TmpVerbExample}[2]{
+\VerbatimInput[firstline=4]{examples/#1.tex}
+\TmpExample{#1}{#2}
 }
 
 \newcommand\TmpMacroName[1]{%
@@ -1099,7 +1099,7 @@ $1+2$
 
 The characters \emph{ffi} are deeply nested in a discretionary node.
 
-\begin{NodetreeEmbedEnv}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true,decimalplaces=0]
 Office
 \end{NodetreeEmbedEnv}
 
@@ -1115,9 +1115,9 @@ This chapter shows some node types in a |nodetree| view.
   \subsubsection{Type: \texttt{#1(#2)} Subtype: \texttt{#3(#4)}}
 }
 
-\newcommand{\TmpNodeTypeSub}[4]{
-  \subsubsection{Type: #1(#2) Subtype: #3(#4)}
-  \TmpVerbExample{#2#1#4#3}
+\newcommand{\TmpNodeTypeSub}[5]{
+  \subsubsection{Type: \texttt{#1(#2)} Subtype: \texttt{#3(#4)}}
+  \TmpVerbExample{#2#1#4#3}{#5}
 }
 
 \newcommand{\TmpNodeType}[2]{
@@ -1166,7 +1166,7 @@ I
 
 \TmpHeadingNodeType{vlist}{1}
 
-\begin{NodetreeEmbedEnv}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true,decimalplaces=1]
 L\vbox to 40pt{O}L
 \end{NodetreeEmbedEnv}
 
@@ -1206,7 +1206,7 @@ L\-O\-L
 
 \TmpHeadingNodeTypeSub{disc}{7}{regular}{3}
 
-\begin{NodetreeEmbedEnv}[showmarkup=true]
+\begin{NodetreeEmbedEnv}[showmarkup=true,decimalplaces=0]
 Office
 \end{NodetreeEmbedEnv}
 
@@ -1214,8 +1214,8 @@ Office
 %
 %%
 
-\TmpNodeTypeSub{whatsit}{8}{pdfaction}{22}
-\TmpNodeTypeSub{whatsit}{8}{pdfcolorstack}{28}
+\TmpNodeTypeSub{whatsit}{8}{pdfaction}{22}{\tiny}
+\TmpNodeTypeSub{whatsit}{8}{pdfcolorstack}{28}{\small}
 
 %%
 %

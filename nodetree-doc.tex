@@ -468,8 +468,8 @@ nodetree
 \label{sec:cmd:nodetree-register-callback}
 
 \DescribeMacro{\NodetreeRegisterCallback}
-\cmd{\NodetreeRegisterCallback}\marg{callbacks}: The argument \marg{callbacks}
-takes a comma separated list of callback aliases as described in
+\cmd{\NodetreeRegisterCallback}\marg{callbacks}: Globally register
+\marg{callbacks}, which is a comma-separated list of callback aliases
 \TmpSecRef{sec:option:callback}.
 
 %%
@@ -480,8 +480,8 @@ takes a comma separated list of callback aliases as described in
 \label{sec:cmd:nodetree-unregister-callback}
 
 \DescribeMacro{\NodetreeUnregisterCallback}
-\cmd{\NodetreeUnregisterCallback}\marg{callbacks}: The argument \marg{callbacks}
-takes a comma separated list of callback aliases as described in
+\cmd{\NodetreeUnregisterCallback}\marg{callbacks}: Globally unregister
+\marg{callbacks}, which is a separated list of callback aliases
 \TmpSecRef{sec:option:callback}.
 
 %%
@@ -492,8 +492,8 @@ takes a comma separated list of callback aliases as described in
 \label{sec:cmd:nodetree-set-option}
 
 \DescribeMacro{\NodetreeSetOption}
-\cmd{\NodetreeSetOption}\oarg{option}\marg{value}: \TmpSecRef{sec:options}
-This macro sets a single \oarg{option} to \marg{value}.
+\cmd{\NodetreeSetOption}\oarg{option}\marg{value}: Globally set a
+single \oarg{option} to \marg{value} \TmpSecRef{sec:options}.
 
 %%
 % \NodetreeResetOption
@@ -503,8 +503,8 @@ This macro sets a single \oarg{option} to \marg{value}.
 \label{sec:cmd:nodetree-reset-option}
 
 \DescribeMacro{\NodetreeResetOption}
-\cmd{\NodetreeResetOption}\marg{option}: \TmpSecRef{sec:options}
-This macro resets a single \marg{option} to its default value.
+\cmd{\NodetreeResetOption}\marg{option}: Globally reset a single
+\marg{option} to its default value \TmpSecRef{sec:options}.
 
 %%
 % \NodetreeSet
@@ -514,9 +514,9 @@ This macro resets a single \marg{option} to its default value.
 \label{sec:cmd:nodetree-set}
 
 \DescribeMacro{\NodetreeSet}
-\cmd{\NodetreeSet}\marg{kv-options}:
-This macro sets multiple options a once. It only can be used along with
- Lua\LaTeX{}. \marg{kv-options} are key value pairs.
+\cmd{\NodetreeSet}\marg{kv-options}: Globally set multiple options at
+once. It can only be used along with Lua\LaTeX{}. \marg{kv-options}
+are key-value pairs.
 
 \begin{code}
 \NodetreeSet{color=no,callbacks={hpack,vpack},verbosity=2}
@@ -530,8 +530,8 @@ This macro sets multiple options a once. It only can be used along with
 \label{sec:cmd:nodetree-reset}
 
 \DescribeMacro{\NodetreeReset}
-\cmd{\NodetreeReset}:
-This macro resets multiple options to its default values.
+\cmd{\NodetreeReset}: Globally reset multiple options to their default
+values.
 
 %%
 %
@@ -544,9 +544,12 @@ This macro resets multiple options to its default values.
 \cmd{\NodetreeEmbedCmd}\oarg{kv-options}\marg{tex-markup}:
 
 Main macro (cmd) to evaluate some \TeX{} markup and generate a
-node tree from it. See environment version.
-\TmpSecRef{sec:cmd:nodetree-embed-cmd}. Uses the xparse +v option to
-grab the verbatim content. Only available in the package nodetree-embed.
+node tree from it. See environment version
+\TmpSecRef{sec:cmd:nodetree-embed-cmd}. Uses |xparse|'s |+v| option to
+grab the verbatim content. \marg{kv-options} are key-value pairs and
+set locally only.
+
+Only available in package |nodetree-embed|.
 
 %%
 % \NodetreeEmbedInput
@@ -557,8 +560,10 @@ grab the verbatim content. Only available in the package nodetree-embed.
 
 \DescribeMacro{\NodetreeEmbedInput}
 \cmd{\NodetreeEmbedInput}\oarg{kv-options}\marg{nttex-file}: The path or
-filename of *.nttex file without the extension. Only available in the
-package nodetree-embed.
+file name of the |*.nttex| file without the extension.
+\marg{kv-options} are key-value pairs and set locally only.
+
+Only available in package |nodetree-embed|.
 
 %-----------------------------------------------------------------------
 % Environments
@@ -577,8 +582,10 @@ package nodetree-embed.
 Main environment (env) to evaluate some \TeX{} markup and generate a
 node tree from it. See command version
 \TmpSecRef{sec:cmd:nodetree-embed-cmd}. Uses the \cmd{\detokenize}
-command to grab the verbatim content. Only available in the package
-nodetree-embed.
+command to grab the verbatim content. \marg{kv-options} are key-value
+pairs and set locally only.
+
+Only available in package |nodetree-embed|.
 
 %-----------------------------------------------------------------------
 % Options
@@ -851,8 +858,6 @@ Width of the capital letter M \\
 \label{fig:relative-units}
 \end{figure}
 
-\NodetreeSetOption[verbosity]{1}
-
 \def\TmpExampleUnit#1{
   \subsubsection{Example: \texttt{unit=#1}}
   \begin{NodetreeEmbedEnv}[unit=#1,callback=pre_linebreak_filter]
@@ -889,8 +894,6 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 \TmpExampleDecimalplaces{2}
 \TmpExampleDecimalplaces{5}
 
-\NodetreeReset
-
 %%
 % theme and thememode
 %%
@@ -913,8 +916,6 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 % monokaisoda
 \TmpExampleTheme{monokaisoda}{dark}
 \TmpExampleTheme{monokaisoda}{light}
-
-\NodetreeReset
 
 %%
 % font
@@ -940,8 +941,6 @@ Unicode glyphs \ref{fig:unicode}).
 \TmpExampleFont{Liberation Mono}
 \TmpExampleFont{Ubuntu Mono}
 
-\NodetreeReset
-
 %%
 % fontsize
 %%
@@ -959,7 +958,6 @@ Unicode glyphs \ref{fig:unicode}).
 \TmpExampleFontSize{\small}
 \TmpExampleFontSize{\tiny}
 
-\NodetreeReset
 
 %-----------------------------------------------------------------------
 % Visual tree structure
@@ -1045,8 +1043,6 @@ For |list| connections \emph{light} characters are shown.
 %-----------------------------------------------------------------------
 \newpage
 \section{Examples}
-
-\NodetreeReset
 
 In this section lists some examples of the |nodetree| output.
 
@@ -1175,7 +1171,6 @@ L\vbox to 40pt{O}L
 
 \TmpHeadingNodeTypeSub{disc}{7}{discretionary}{0}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 L\-O\-L
 \end{NodetreeEmbedEnv}
@@ -1186,7 +1181,6 @@ L\-O\-L
 
 \TmpHeadingNodeTypeSub{disc}{7}{regular}{3}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 Office
 \end{NodetreeEmbedEnv}
@@ -1204,7 +1198,7 @@ Office
 
 \TmpHeadingNodeType{dir}{10}
 
-\begin{NodetreeEmbedEnv}[showmarkup=true,verbosity=0]
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 \textdir TRT nur {\textdir TLT run \textdir TRT NUR} nur
 \end{NodetreeEmbedEnv}
 
@@ -1213,8 +1207,6 @@ Office
 %%
 
 \TmpHeadingNodeTypeSub{glue}{12}{baselineskip}{2}
-
-\NodetreeReset
 
 \NodetreeEmbedCmd[showmarkup=true,unit=cm]{
 \baselineskip=5cm
@@ -1229,7 +1221,6 @@ Lorem
 
 \TmpHeadingNodeTypeSub{glue}{12}{parskip}{3}
 
-\NodetreeReset
 \NodetreeEmbedCmd[showmarkup=true,callback=pre_output_filter]{
 \parskip=5cm
 Lorem
@@ -1242,7 +1233,6 @@ Lorem
 
 \TmpHeadingNodeTypeSub{glue}{12}{spaceskip}{13}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 \spaceskip=5cm
 a a
@@ -1254,7 +1244,6 @@ a a
 
 \TmpHeadingNodeTypeSub{glue}{12}{leaders}{100}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 a \leavevmode\leaders\hbox{ . }\hfill\kern0pt a
 \end{NodetreeEmbedEnv}
@@ -1265,7 +1254,6 @@ a \leavevmode\leaders\hbox{ . }\hfill\kern0pt a
 
 \TmpHeadingNodeTypeSub{glue}{12}{cleaders}{101}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 a \leavevmode\cleaders\hbox{ . }\hfill\kern0pt a
 \end{NodetreeEmbedEnv}
@@ -1276,7 +1264,6 @@ a \leavevmode\cleaders\hbox{ . }\hfill\kern0pt a
 
 \TmpHeadingNodeTypeSub{glue}{12}{xleaders}{102}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 a \leavevmode\xleaders\hbox{ . }\hfill\kern0pt a
 \end{NodetreeEmbedEnv}
@@ -1287,7 +1274,6 @@ a \leavevmode\xleaders\hbox{ . }\hfill\kern0pt a
 
 \TmpHeadingNodeTypeSub{glue}{12}{gleaders}{102}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 a \leavevmode\gleaders\hbox{ . }\hfill\kern0pt a
 \end{NodetreeEmbedEnv}
@@ -1298,7 +1284,6 @@ a \leavevmode\gleaders\hbox{ . }\hfill\kern0pt a
 
 \TmpHeadingNodeTypeSub{kern}{13}{userkern}{0}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 a\kern2pt
 \end{NodetreeEmbedEnv}
@@ -1309,7 +1294,6 @@ a\kern2pt
 
 \TmpHeadingNodeTypeSub{kern}{13}{fontkern}{1}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 Ve
 \end{NodetreeEmbedEnv}
@@ -1320,7 +1304,6 @@ Ve
 
 \TmpHeadingNodeTypeSub{kern}{13}{accentkern}{2}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 \accent96 a
 \end{NodetreeEmbedEnv}
@@ -1331,7 +1314,6 @@ Ve
 
 \TmpHeadingNodeTypeSub{kern}{13}{italiccorrection}{3}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 \textit{L}\/OL
 \end{NodetreeEmbedEnv}
@@ -1342,7 +1324,6 @@ Ve
 
 \TmpHeadingNodeType{penalty}{14}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 L \penalty 23 OL
 \end{NodetreeEmbedEnv}
@@ -1353,7 +1334,6 @@ L \penalty 23 OL
 
 \TmpHeadingNodeType{glyph}{29}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true]
 abc
 \end{NodetreeEmbedEnv}
@@ -1366,7 +1346,6 @@ abc
 %
 % \TmpHeadingNodeType{attribute}{38}
 %
-% \NodetreeReset
 % \begin{NodetreeEmbedEnv}[showmarkup=true]
 % {\attribute0=1 A}
 % \end{NodetreeEmbedEnv}
@@ -1377,7 +1356,6 @@ abc
 
 \TmpHeadingNodeType{attributelist}{40}
 
-\NodetreeReset
 \begin{NodetreeEmbedEnv}[showmarkup=true,callback=hpackfilter]
 {\attribute0=1 A}
 \end{NodetreeEmbedEnv}

@@ -386,6 +386,7 @@
 %
 %    \begin{macrocode}
 \newenvironment{NodetreeEmbedView}[1][]{
+  \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \NTE@colors
   \begin{mdframed}[
@@ -396,12 +397,14 @@
   \NTE@fonts
 }{
   \end{mdframed}%
+  \directlua{nodetree.pop_options()}%
 }
 %    \end{macrocode}
 %
 % \begin{environment}{NodetreeEmbedEnv}
 %    \begin{macrocode}
 \NewDocumentEnvironment { NodetreeEmbedEnv } { O{} +b } {
+  \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
@@ -414,6 +417,7 @@
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
   \end{NodetreeEmbedView}
+  \directlua{nodetree.pop_options()}
 }{}
 %    \end{macrocode}
 % \end{environment}
@@ -421,6 +425,7 @@
 % \begin{macro}{\NodetreeEmbedCmd}
 %    \begin{macrocode}
 \NewDocumentCommand { \NodetreeEmbedCmd } { O{} +v } {
+  \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
@@ -433,6 +438,7 @@
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
   \end{NodetreeEmbedView}
+  \directlua{nodetree.pop_options()}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -440,10 +446,12 @@
 % \begin{macro}{\NodetreeEmbedInput}
 %    \begin{macrocode}
 \newcommand{\NodetreeEmbedInput}[2][]{
+  \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \begin{NodetreeEmbedView}
   \input{#2.nttex}
   \end{NodetreeEmbedView}
+  \directlua{nodetree.pop_options()}
 }
 \let\nodetreeterminalemulator\NodetreeEmbedInput
 %    \end{macrocode}

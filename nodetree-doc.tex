@@ -17,6 +17,27 @@
 \fvset{breaklines=true,breakbefore=.-_}
 \AtBeginDocument{\DefineShortVerb{\|}}
 
+% We use 'pmboxdraw' to draw box elements in minted environments.
+
+% https://tex.stackexchange.com/questions/281368/print-box-drawing-characters-with-pdflatex/355403#355403
+\usepackage{pmboxdraw}
+\begingroup
+  \def\DeclareUnicodeCharacter#1{%
+    \begingroup
+      \lccode`\~="#1\relax
+    \lowercase{\endgroup
+      \global\catcode`~=\active
+      \gdef~%
+    }%
+  }%
+  \input{pmboxdrawenc.dfu}%
+\endgroup
+
+% https://tex.stackexchange.com/questions/108127/block-element-characters-pmboxdraw-are-shown-too-wide-in-verbatim-and-verbatim
+\pmboxdrawsetup{
+  Block/box={\texttt{0}},
+}
+
 \usepackage{minted}
 \usemintedstyle{colorful}
 \BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=gray!3]}

@@ -233,7 +233,6 @@
 %
 %    \begin{macrocode}
 \directlua{
-  nodetree = require('nodetree')
   nodetree.check_shell_escape()
 }
 %    \end{macrocode}
@@ -376,7 +375,7 @@
 %
 % \begin{macro}{\NodetreeSet}
 % Same definition as in nodetree.sty. Only implement this command
-% if not already registers.
+% if not already registered.
 %    \begin{macrocode}
 \providecommand{\NodetreeSet}[1]{%
   \setkeys{NTE}{#1}%
@@ -409,7 +408,6 @@
   \ifNTEK@showmarkup
     \noindent
     \texttt{\detokenize{#2}}
-  \else
   \fi
   \NTE@colors
   \begin{NodetreeEmbedView}
@@ -430,7 +428,6 @@
   \ifNTEK@showmarkup
     \noindent
     \texttt{#2}
-  \else
   \fi
   \NTE@colors
   \begin{NodetreeEmbedView}

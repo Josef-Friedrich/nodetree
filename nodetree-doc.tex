@@ -1,6 +1,6 @@
 %!TEX program = lualatex
 \documentclass{ltxdoc}
-\usepackage{paralist,fontspec,graphicx}
+\usepackage{paralist,fontspec,microtype}
 \usepackage[
   colorlinks=true,
   linkcolor=red,
@@ -59,11 +59,6 @@
   \pageref{#1},
   Section
   \ref{#1}
-}
-
-\newcommand{\TmpGraphics}[1]{
-  \noindent
-  \includegraphics[scale=0.4]{graphics/#1}
 }
 
 \newcommand{\TmpExample}[2]{
@@ -409,16 +404,15 @@ nodetree
 \end{document}
 \end{minted}
 
-\item |_nodetree-jobname/1.nttex|: This temporary Lua\LaTeX file is
+\item |_nodetree-jobname/1.nttex|: This temporary Lua\LaTeX{} file is
 compiled using |latexmk| and embedded in the environment |NodetreeEmbed|
 (the trailing |\| character indicates line continuation).
 
 \begin{minted}{latex}
 Callback: \textcolor{NTEred}{post\_linebreak\_filter}\par
 ------------------------------------------\par
-\mbox{├─\textcolor{NTEmagentabright}{GLUE\hspace{0.5em}}\
-  \textcolor{NTEyellow}{subtype:} baselineskip, \
-  \textcolor{NTEyellow}{width:} 5.06\textcolor{NTEwhite}{pt}}\par
+\mbox{├─\textcolor{NTEmagentabright}{GLUE}\hspace{0.5em}(baselineskip)\
+  \textcolor{NTEyellow}{wd} 5.06\textcolor{NTEwhite}{pt}}\par
 ...
 \end{minted}
 
@@ -454,7 +448,7 @@ nodetree
 \textbf{Environment name} &
 \textbf{Reference} \\
 
-|\begin{NodetreeEmbedEnv}|\oarg{kv-options} &
+|\begin{NodetreeEmbedEnv}|\oarg{kv-options} & % |\end{NodetreeEmbedEnv}|
 \TmpPageSecRef{sec:env:nodetree-embed-env} \\
 \end{tabular}
 
@@ -601,8 +595,9 @@ Only available in package |nodetree-embed|.
 \label{sec:env:nodetree-embed-env}
 
 \DescribeEnv{NodetreeEmbedEnv}
-|\begin{NodetreeEmbedEnv}|\oarg{kv-options}
-\dots \textit{\TeX{} markup for evaluation} \dots |\end{NodetreeEmbedEnv}|
+|\begin{NodetreeEmbedEnv}|\oarg{kv-options}\\
+\dots{} \textit{\TeX{} markup for evaluation} \dots\\
+|\end{NodetreeEmbedEnv}|
 
 Main environment (env) to evaluate some \TeX{} markup and generate a
 node tree from it. See command version
@@ -627,8 +622,8 @@ Only available in package |nodetree-embed|.
 \label{sec:option:callback}
 
 The option |callback| is the most important setting of the package. It
-is possible to specify an alias to select the |callback|. Take a look at
-the overview of callbacks (\rightarrow{} Figure \ref{fig:callback}).
+is possible to specify an alias to select the callback. Take a look at
+the overview of callbacks (\rightarrow{} Figure~\ref{fig:callback}).
 |nodetree| supports all node-related callbacks as listed in the
 Lua\TeX{} reference manual.
 
@@ -645,7 +640,7 @@ Use commas to specify multiple callbacks; trailing and leading
 whitespace is ignored.
 
 \begin{code}
-\NodetreeRegisterCallback{preline,line,postline}
+\NodetreeRegisterCallback{preline, line, postline}
 \end{code}
 
 Wrap your callback aliases in curly braces for the macro
@@ -653,14 +648,23 @@ Wrap your callback aliases in curly braces for the macro
 allowed.
 
 \begin{code}
-\NodetreeSet{callback={preline,line,postline}}
+\NodetreeSet{callback={preline, line, postline}}
 \end{code}
 
 The same applies for the macro |\usepackage|:
 
 \begin{code}
-\usepackage{callback={preline,line,postline}}
+\usepackage{callback={preline, line, postline}}
 \end{code}
+
+The callbacks in Figure~\ref{fig:callback} are listed in the same
+order as in the Lua\TeX{} reference manual. Note that the |ligaturing|
+and |kerning| callbacks only have an effect on ligatures and kernings,
+respectively, if the |luaotfload| package (which is the default for
+Lua\LaTeX{} and an optional package for Lua\TeX{}) handles the
+affected font with |mode=base| (see the
+\href{http://mirrors.ctan.org/macros/luatex/generic/luaotfload/luaotfload-latex.pdf}
+{documentation} for more details).
 
 %%
 % Tabular callbacks
@@ -671,18 +675,6 @@ The same applies for the macro |\usepackage|:
 }
 
 \begin{figure}
-The callbacks are listed in the same order as in the Lua\TeX{}
-reference manual.  Note that the |ligaturing| and |kerning| callbacks
-only have an effect on ligatures and kernings, respectively, if the
-|luaotfload| package (which is the default for Lua\LaTeX{} and an
-optional package for Lua\TeX{}) handles the affected font with
-|mode=base| (see the
-\href{http://mirrors.ctan.org/macros/luatex/generic/luaotfload/luaotfload-latex.pdf}
-{documentation} for more details).
-
-\bigskip
-
-\noindent
 \begin{tabular}{lll}
 \textbf{Callback} & \textbf{Alias} & \textbf{Alias (longer)} \\
 \TmpCallbackRow{contribute_filter}
@@ -771,14 +763,14 @@ optional package for Lua\TeX{}) handles the affected font with
 \label{sec:option:channel}
 
 You can select the debug output channel with this option. The default
-value for the option |channel| is |term| which displays the node tree in
+value for the option |channel| is |term|, which displays the node tree in
 the current terminal. Specify |log| and the package creates a log file
-named |jobname.ntlog|. Specify |tex| and a log file named
-|jobname.nttex| is creatred. |nt...| stands for |nodetree|.
-|jobname| is the basename of your file you want to debug. The debug
+named |<jobname>.ntlog|. Specify |tex| and a log file named
+|<jobname>.nttex| is created. |nt...| stands for |nodetree|.
+|<jobname>| is the basename of your file you want to debug. The debug
 channel is only useful for the auxiliary package |nodetree-embed|. Paste
 the markup in the environment |NodetreeEmbedView| and you get a
-terminal like view in your document.
+terminal-like view in your document.
 
 %%
 % verbosity
@@ -1120,11 +1112,6 @@ This chapter shows some node types in a |nodetree| view.
   \TmpVerbExample{#2#1#4#3}{#5}
 }
 
-\newcommand{\TmpNodeType}[2]{
-  \subsubsection{Type: #1(#2)}
-  \TmpVerbExample{#2#1}
-}
-
 \newcommand{\TmpHeadingNodeType}[2]{
   \subsubsection{Type: \texttt{#1(#2)}}
 }
@@ -1252,6 +1239,7 @@ Lorem
 
 Lorem
 }
+
 %%
 %
 %%

@@ -61,7 +61,7 @@ local default_options = {
   color = 'colored',
   decimalplaces = 2,
   unit = 'pt',
-  verbosity = 1,
+  verbosity = 0,
 }
 
 --- The current options.

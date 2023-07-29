@@ -293,7 +293,7 @@ options =  {
   color = 'colored',
   decimalplaces = 2,
   unit = 'pt',
-  verbosity = 1,
+  verbosity = 0,
 }
 \end{minted}
 
@@ -374,7 +374,7 @@ nodetree
 \documentclass{article}
 \usepackage{nodetree}
 \NodetreeSetOption[channel]{tex}
-\NodetreeSetOption[verbosity]{1}
+\NodetreeSetOption[verbosity]{0}
 \NodetreeSetOption[unit]{pt}
 \NodetreeSetOption[decimalplaces]{2}
 \NodetreeUnregisterCallback{post_linebreak_filter}
@@ -756,7 +756,7 @@ terminal like view in your document.
 \label{sec:option:verbosity}
 
 Higher integer values result in a more verbose output. The default value
-for this options is~|1|. At the moment only verbosity levels |0| to~|3| are
+for this option is~|0|. At the moment verbosity levels |0| to~|3| are
 implemented.
 
 \def\TmpExampleVerbosity#1{

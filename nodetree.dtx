@@ -232,12 +232,6 @@
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\directlua{
-  nodetree.check_shell_escape()
-}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
 \define@key{NTE}{callback}[]{\NodetreeSetOption[callback]{#1}}
 %    \end{macrocode}
 %
@@ -403,7 +397,10 @@
 % \begin{environment}{NodetreeEmbedEnv}
 %    \begin{macrocode}
 \NewDocumentEnvironment { NodetreeEmbedEnv } { O{} +b } {
-  \directlua{nodetree.push_options()}
+  \directlua{
+    nodetree.check_shell_escape('NodetreeEmbedEnv', false)
+    nodetree.push_options()
+  }
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
@@ -423,7 +420,10 @@
 % \begin{macro}{\NodetreeEmbedCmd}
 %    \begin{macrocode}
 \NewDocumentCommand { \NodetreeEmbedCmd } { O{} +v } {
-  \directlua{nodetree.push_options()}
+  \directlua{
+    nodetree.check_shell_escape('\string\\NodetreeEmbedCmd', true)
+    nodetree.push_options()
+  }
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent

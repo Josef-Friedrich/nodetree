@@ -30,9 +30,6 @@
   family=NTE,
   prefix=NTEK@
 }
-\directlua{
-  nodetree.check_shell_escape()
-}
 \define@key{NTE}{callback}[]{\NodetreeSetOption[callback]{#1}}
 \DeclareStringOption[0]{verbosity}
 \define@key{NTE}{verbosity}[]{\NodetreeSetOption[verbosity]{#1}}
@@ -144,7 +141,10 @@
   \directlua{nodetree.pop_options()}%
 }
 \NewDocumentEnvironment { NodetreeEmbedEnv } { O{} +b } {
-  \directlua{nodetree.push_options()}
+  \directlua{
+    nodetree.check_shell_escape('NodetreeEmbedEnv', false)
+    nodetree.push_options()
+  }
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
@@ -160,7 +160,10 @@
 }{}
 
 \NewDocumentCommand { \NodetreeEmbedCmd } { O{} +v } {
-  \directlua{nodetree.push_options()}
+  \directlua{
+    nodetree.check_shell_escape('\string\\NodetreeEmbedCmd', true)
+    nodetree.push_options()
+  }
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent

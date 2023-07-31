@@ -1909,12 +1909,27 @@ local export = {
     tex.print(include_content)
   end,
 
-  --- Check for `\--shell-escape`.
+  --- Check for `\--shell-escape` within a command or environment.
+  ---
+  --- @param what string # The name of the command or environment.
+  --- @param is_command boolean # Set if `what` is a command.
   --
-  check_shell_escape = function()
+  check_shell_escape = function(what, is_command)
     local info = status.list()
     if info.shell_escape ~= 1 then
-      tex.error('Package "nodetree-embed": You have to use the --shell-escape option')
+      local typ, stuff
+      if is_command == true then
+        typ = 'command'
+        stuff = 'argument'
+      else
+        typ = 'environment'
+        stuff = 'contents'
+      end
+      tex.error(
+        'Package nodetree-embed Error: ' .. what .. ' needs option --shell-escape',
+        {"You must process this document with 'lualatex --shell-escape ...'",
+         "so that 'latexmk' can be executed to generate the nodetree view",
+         'for the ' .. stuff .. ' of this ' .. typ .. '.'})
     end
   end,
 

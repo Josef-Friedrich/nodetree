@@ -14,22 +14,23 @@
 --   `previous` fields, e.g., `head`, `pre`.
 -- @module nodetree
 
--- luacheck: globals node tex luatexbase lfs callback os unicode status modules
+-- luacheck: globals node lang tex luatexbase lfs
+-- luacheck: globals callback os unicode status modules
 
 ---@class Node
 ---@field next Node|nil # The next node in a list, or nil.
 ---@field id number # The node’s type (id) number.
 ---@field subtype number # The node subtype identifier.
-
+--
 ---@alias ColorName `black` | `red` | `green` | `yellow` | `blue` | `magenta` | `cyan` | `white`
 ---@alias ColorMode `bright`| `dim`
-
+--
 ---@alias ConnectionType `list` | `field` # A string literal,
 --   which can be either `list` or `field`.
 ---@alias ConnectionState `stop` | `continue` # A literal, which can
 --   be either `continue` or `stop`.
 
-if not modules then modules = { } end modules ['nodetree'] = {
+if not modules then modules = {} end modules ['nodetree'] = {
   version   = '2.2.1',
   comment   = 'nodetree',
   author    = 'Josef Friedrich',
@@ -40,18 +41,18 @@ if not modules then modules = { } end modules ['nodetree'] = {
 local direct            = node.direct
 local todirect          = direct.todirect
 local getchar           = direct.getchar
---- Lua 5.1 does not have the utf8 library (Lua 5.1 is the default
+-- Lua 5.1 does not have the utf8 library (Lua 5.1 is the default
 -- version in LuajitTeX). LuaJitTeX does include the slnunicode library.
 local utf8              = utf8 or unicode.utf8
 local utfchar           = utf8.char
 local properties        = direct.get_properties_table()
 
---- A counter for the compiled TeX examples. Some TeX code snippets
+-- A counter for the compiled TeX examples. Some TeX code snippets
 -- a written into files, wrapped with some TeX boilerplate code.
 -- These written files are compiled later on.
 local example_counter = 0
 
---- A flag to indicate that something has been emitted by nodetree.
+-- A flag to indicate that something has been emitted by nodetree.
 local have_output = false
 
 --- The default options.
@@ -77,11 +78,10 @@ end
 local prev_options = {}
 local option_level = 0
 
---- File descriptor.
+-- File descriptor.
 local output_file
 
---- The lua table named `tree_state` holds state values of the current
--- tree item.
+--- The state values of the current tree item.
 --
 -- `tree_state`:
 --
@@ -91,12 +91,14 @@ local output_file
 -- * `2`:
 --   * `list`: `continue`
 --   * `field`: `stop`
--- @table
+--
+-- ...
 local tree_state = {}
 
 --- Format functions.
 --
 -- Low-level template functions.
+--
 -- @section format
 
 local format = {
@@ -228,6 +230,7 @@ local function nodetree_print(text)
 end
 
 --- Template functions.
+--
 -- @section template
 
 local template = {
@@ -284,10 +287,10 @@ local template = {
     shape = {'yellow'},
   },
 
-  -- Field name abbreviations for verbosity level 0.  A second field
+  -- Field name abbreviations for verbosity level 0. A second field
   -- limits the abbreviation to this node type.
   --
-  -- Entry '' means to omit the key, printing only the value.  Entry
+  -- Entry '' means to omit the key, printing only the value. Entry
   -- '()' means the same, but the value gets printed in parentheses.
   field_abbrevs = {
     char = {''},
@@ -639,9 +642,7 @@ function template.key_value(key, value, typ, color)
   if type(color) ~= 'string' then
     color = 'yellow'
   end
-  if options.channel == 'tex' then
-    key = format.underscore(key)
-  end
+  key = format.underscore(key)
 
   local output = ''
   local abbrev = nil
@@ -684,11 +685,7 @@ end
 ---@return string
 function template.type(type, id)
   local output
-  if options.channel == 'tex' then
-    output = format.underscore(type)
-  else
-    output = type
-  end
+  output = format.underscore(type)
   output = string.upper(output)
   if options.verbosity > 1 then
     output = output .. format.type_id(id)
@@ -754,7 +751,8 @@ function template.branches(level, connection_type)
   return output
 end
 
---- Extend the node library.
+--- Node library extensions.
+--
 -- @section node_extended
 
 local node_extended = {}
@@ -1050,7 +1048,8 @@ function node_extended.subtype(n)
   end
 end
 
---- Build the node tree.
+--- Node tree building functions.
+--
 -- @section tree
 
 local tree = {}
@@ -1064,7 +1063,7 @@ function tree.format_field(head, field)
   local output
   local typ = node.type(head.id)
 
-  -- Print subtypes also for nodes with ID=0.  However, suppress the
+  -- Print subtypes also for nodes with ID=0. However, suppress the
   -- internal 'subtype' field for 'dir' nodes.
   if field == 'subtype' then
     if typ == 'dir' then
@@ -1254,7 +1253,6 @@ function tree.analyze_node(head, level)
   if attributes and attributes ~= '' then
     if need_whitespace == true then
       output = output .. format.whitespace()
-      need_whitespace = false
     end
     output = output .. template.key_value('attr', attributes, nil, 'blue')
   end
@@ -1311,7 +1309,9 @@ function tree.analyze_callback(head)
   nodetree_print(template.line('short'))
 end
 
---- Callback wrapper.
+local orig_callbacks = {}
+
+--- Callback wrappers.
 --
 -- Nodetree uses luatexbase's `add_to_callback` function to manage
 -- callbacks if available.  Otherwise a simplistic approach is taken
@@ -1320,13 +1320,9 @@ end
 --
 -- @section callbacks
 
-local orig_callbacks = {}
-
 local callbacks = {
   ---
   ---@param extrainfo string
-  ---
-  ---@return boolean
   contribute_filter = function(extrainfo)
     if orig_callbacks[contribute_filter] then
       orig_callbacks[contribute_filter](extrainfo)
@@ -1337,8 +1333,6 @@ local callbacks = {
 
   ---
   ---@param extrainfo string
-  ---
-  ---@return boolean
   buildpage_filter = function(extrainfo)
     if orig_callbacks[buildpage_filter] then
       orig_callbacks[buildpage_filter](extrainfo)
@@ -1399,9 +1393,10 @@ local callbacks = {
   ---@param locationcode string
   ---@param prevdepth number
   ---@param mirrored boolean
+  ---
+  ---@return Node
+  -- @return number
   append_to_vlist_filter = function(box, locationcode, prevdepth, mirrored)
-    local box = box
-    local prevdepth = prevdepth
     if orig_callbacks[append_to_vlist_filter] then
       box, prevdepth = orig_callbacks[append_to_vlist_filter](box, locationcode,
                                                               prevdepth, mirrored)
@@ -1503,6 +1498,8 @@ local callbacks = {
   ---@param head Node # The head node of a node list.
   ---@param first number
   ---@param last number
+  ---
+  ---@return Node
   hpack_quality = function(incident, detail, head, first, last)
     local retval = nil
     if orig_callbacks[hpack_quality] then
@@ -1546,8 +1543,6 @@ local callbacks = {
   ---@param head Node # The head node of a node list.
   ---@param width number
   ---@param height number
-  ---
-  ---@return boolean
   process_rule = function(head, width, height)
     if orig_callbacks[process_rule] then
       orig_callbacks[vprocess_rule](head, width, height)
@@ -1645,8 +1640,6 @@ local callbacks = {
   ---
   ---@param local_par Node
   ---@param location string
-  ---
-  ---@return boolean
   insert_local_par = function(local_par, location)
     if orig_callbacks[insert_local_par] then
       orig_callbacks[insert_local_par](local_par, location)
@@ -1660,6 +1653,8 @@ local callbacks = {
   ---@param head Node # The head node of a node list.
   ---@param display_type string
   ---@param need_penalties boolean
+  ---
+  ---@return Node
   mlist_to_hlist = function(head, display_type, need_penalties)
     local retval
     if orig_callbacks[mlist_to_hlist] then
@@ -1676,8 +1671,12 @@ local callbacks = {
     template.callback('mlist_to_hlist', variables)
     tree.analyze_callback(head)
     return retval
-  end,
+  end
 }
+
+--- Messages, options
+--
+-- @section messages
 
 --- Emit a warning or error message.
 --
@@ -1760,6 +1759,10 @@ local function set_options(opts)
   end
 end
 
+--- Callback management
+--
+-- @section callback_management
+
 --- Check whether the given callback name exists.
 --
 -- Throw an error if it doesn’t.
@@ -1788,7 +1791,6 @@ end
 ---@return string # The real callback name.
 local function get_callback_name(alias)
   local callback_name
-  -- Listed as in the LuaTeX reference manual.
   if alias == 'contribute' or alias == 'contributefilter' then
     callback_name = 'contribute_filter'
 
@@ -1809,7 +1811,6 @@ local function get_callback_name(alias)
   elseif alias == 'append' or alias == 'appendtovlistfilter' then
     callback_name = 'append_to_vlist_filter'
 
-  -- postlinebreak is not documented.
   elseif alias == 'postline' or alias == 'postlinebreak' or alias == 'postlinebreakfilter' then
     callback_name = 'post_linebreak_filter'
 
@@ -1878,6 +1879,7 @@ local function unregister_callback(cb)
 end
 
 --- Exported functions.
+--
 -- @section export
 
 local export = {
@@ -1935,7 +1937,7 @@ local export = {
     end
 
     -- Process the options.
-    local options =
+    local option_lines =
       format_option('channel', 'tex') ..
       format_option('verbosity', options.verbosity) ..
       format_option('unit', options.unit) ..
@@ -1946,7 +1948,7 @@ local export = {
     local prefix = '%!TEX program = lualatex\n' ..
                   '\\documentclass{article}\n' ..
                   '\\usepackage{nodetree}\n' ..
-                  options .. '\n' ..
+                  option_lines .. '\n' ..
                   '\\begin{document}\n'
     local suffix = '\n\\end{document}'
     output_file:write(prefix .. tex_markup .. suffix)
@@ -1958,7 +1960,7 @@ local export = {
     local include_content = include_file:read('*all')
     include_file:close()
     -- To make the newline character be handled properly by the TeX engine
-    -- it would be necessary to set up its correct catcode.  However, it is
+    -- it would be necessary to set up its correct catcode. However, it is
     -- simpler to just replace all newlines with '{}'.
     include_content = include_content:gsub('[\r\n]', '{}')
     tex.print(include_content)

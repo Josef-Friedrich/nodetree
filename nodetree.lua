@@ -1679,6 +1679,60 @@ local callbacks = {
   end,
 }
 
+--- Emit a warning or error message.
+--
+-- This works for plain TeX, Texinfo, and LaTeX (for plain TeX and
+-- Texinfo we make the message look identical to the LaTeX case).
+-- Note that a full stop gets appended to `what`.
+--
+---@param why string # `'error'` or `'warning'`.
+---@param where string # In which package the error happened.
+---@param what string # The warning message to emit.
+---@param help string # Additional help text for errors.
+local function message(why, where, what, help)
+  local msg
+
+  what = string.gsub(what, '\n', '\\MessageBreak ')
+
+  if why == 'error' then
+    if not help then
+      help = ''
+    end
+
+    msg = {
+      '\\ifx\\mbox\\undefined',
+      '  \\errhelp{' .. help .. '}%',
+      '  \\begingroup',
+      '    \\newlinechar`\\^^J%',
+      '    \\def\\MessageBreak{^^J(' .. where .. ')' .. string.rep('\\space', 16) .. '}%',
+      '    \\errmessage{Package ' .. where .. ' Error: ' .. what .. '}%',
+      '  \\endgroup',
+      '\\else',
+      '  \\PackageError{' .. where .. '}{' .. what .. '}{' .. help .. '}%',
+      '\\fi'
+    }
+  else
+    msg = {
+      '\\ifx\\mbox\\undefined',
+      '  \\begingroup',
+      '    \\newlinechar`\\^^J%',
+      '    \\def\\MessageBreak{^^J(' .. where .. ')' .. string.rep('\\space', 16) .. '}%',
+      '    \\message{Package ' .. where .. ' Warning: ' .. what .. '}%',
+      '  \\endgroup',
+      '\\else',
+      '  \\PackageWarning{' .. where .. '}{' .. what .. '}%',
+      '\\fi'
+    }
+  end
+
+  if tex.escapechar == utf8.codepoint('@') then
+    table.insert(msg, 1, '@tex')
+    table.insert(msg, '@end tex')
+  end
+
+  tex.print(msg)
+end
+
 --- Set a single-option key-value pair.
 --
 ---@param key string # The key of the option pair.
@@ -1716,10 +1770,11 @@ end
 local function check_callback_name(callback_name)
   local info = callback.list()
   if info[callback_name] == nil then
-    tex.error(
-      'Package "nodetree": Unkown callback name or callback alias: "' ..
-      callback_name ..
-      '"'
+    message(
+      'error',
+      'nodetree',
+      'Unknown callback name or callback alias\n'
+      .. "'" .. callback_name .. "'"
     )
   end
   return callback_name
@@ -1925,11 +1980,14 @@ local export = {
         typ = 'environment'
         stuff = 'contents'
       end
-      tex.error(
-        'Package nodetree-embed Error: ' .. what .. ' needs option --shell-escape',
-        {"You must process this document with 'lualatex --shell-escape ...'",
-         "so that 'latexmk' can be executed to generate the nodetree view",
-         'for the ' .. stuff .. ' of this ' .. typ .. '.'})
+      message(
+        'error',
+        'nodetree-embed',
+        what .. ' needs option --shell-escape',
+        "You must process this document with 'lualatex --shell-escape ...'\n"
+        .. "so that 'latexmk' can be executed to generate the nodetree view\n"
+        .. 'for the ' .. stuff .. ' of this ' .. typ .. '.'
+      )
     end
   end,
 

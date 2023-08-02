@@ -1350,6 +1350,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         orig_callbacks[cb](extrainfo)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {extrainfo = extrainfo}, after)
@@ -1369,6 +1371,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         orig_callbacks[cb](extrainfo)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {extrainfo = extrainfo}, after)
@@ -1392,6 +1396,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         retval = orig_callbacks[cb](n, i)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {n = n, i = i}, after)
@@ -1418,6 +1424,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         retval = orig_callbacks[cb](head, groupcode)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {groupcode = groupcode}, after)
@@ -1445,6 +1453,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         retval = orig_callbacks[cb](head, is_display)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {is_display = is_display}, after)
@@ -1477,6 +1487,8 @@ local callbacks = {
         box, prevdepth = orig_callbacks[cb](box, locationcode,
                                             prevdepth, mirrored)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {locationcode = locationcode,
@@ -1506,6 +1518,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         retval = orig_callbacks[cb](head, groupcode)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {groupcode = groupcode}, after)
@@ -1544,6 +1558,8 @@ local callbacks = {
                                     packtype, direction,
                                     attributelist)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {groupcode = groupcode,
@@ -1589,6 +1605,8 @@ local callbacks = {
                                     maxdepth, direction,
                                     attributelist)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {groupcode = groupcode,
@@ -1628,6 +1646,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         retval = orig_callbacks[cb](incident, detail, head, first, last)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {incident = incident,
@@ -1661,6 +1681,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         orig_callbacks[cb](incident, detail, head, first, last)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {incident = incident,
@@ -1687,6 +1709,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         orig_callbacks[cb](head, width, height)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {width = width, height = height}, after)
@@ -1723,6 +1747,8 @@ local callbacks = {
                                     packtype, maxdepth,
                                     direction)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {groupcode = groupcode,
@@ -1755,6 +1781,7 @@ local callbacks = {
         orig_callbacks[cb](head, tail)
       end
     else
+      template.no_callback(cb, true)
       lang.hyphenate(head, tail)
     end
     if after then
@@ -1785,6 +1812,7 @@ local callbacks = {
         orig_callbacks[cb](head, tail)
       end
     else
+      template.no_callback(cb, true)
       node.ligaturing(head, tail)
     end
     if after then
@@ -1815,6 +1843,7 @@ local callbacks = {
         orig_callbacks[cb](head, tail)
       end
     else
+      template.no_callback(cb, true)
       node.kerning(head, tail)
     end
     if after then
@@ -1841,6 +1870,8 @@ local callbacks = {
       if orig_callbacks[cb] ~= '' then
         orig_callbacks[cb](local_par, location)
       end
+    else
+      template.no_callback(cb)
     end
     if after then
       template.callback(cb, {location = location}, after)
@@ -1869,6 +1900,7 @@ local callbacks = {
         retval = orig_callbacks[cb](head, display_type, need_penalties)
       end
     else
+      template.no_callback(cb, true)
       retval = node.mlist_to_hlist(head, display_type, need_penalties)
     end
     if after then
@@ -1980,6 +2012,21 @@ function template.get_print_position(cb)
   local after = print_positions[cb][2]
 
   return before, after
+end
+
+---
+---@param name string
+---@param internal boolean
+function template.no_callback(name, internal)
+  local more = ''
+  if internal == true then
+    more = ',' .. format.new_line() ..
+      ' LuaTeX uses internal function instead'
+  end
+  nodetree_print(
+    format.new_line() ..
+    "<no registered function for '" ..
+    format.underscore(name) .. "' callback" .. more .. ">")
 end
 
 --- Check whether the given callback name exists.

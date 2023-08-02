@@ -1,0 +1,19 @@
+%!TEX program = lualatex
+\documentclass{article}
+
+% Explicitly add `node.mlist_to_hlist` as a callback function.
+\directlua{
+  luatexbase.add_to_callback('mlist_to_hlist', node.mlist_to_hlist, 'dummy')
+}
+
+\usepackage[callback=:mhlist:]{nodetree}
+
+
+\begin{document}
+Lorem ipsum dolor sit amet.
+
+$1 * 1 = 1$
+
+\NodetreeUnregisterCallback{:mhlist:}
+Lorem ipsum dolor sit amet.
+\end{document}

@@ -272,6 +272,16 @@
 %    \end{macrocode}
 %
 %    \begin{macrocode}
+\DeclareStringOption[1]{firstline}
+\define@key{NTE}{firstline}[]{\NodetreeSetOption[firstline]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[-1]{lastline}
+\define@key{NTE}{lastline}[]{\NodetreeSetOption[lastline]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \DeclareBoolOption{showmarkup}
 %    \end{macrocode}
 %
@@ -446,7 +456,7 @@
   \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \begin{NodetreeEmbedView}
-  \input{#2.nttex}
+  \directlua{nodetree.input('#2.nttex')}
   \end{NodetreeEmbedView}
   \directlua{nodetree.pop_options()}
 }

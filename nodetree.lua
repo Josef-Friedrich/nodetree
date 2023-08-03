@@ -63,6 +63,8 @@ local default_options = {
   decimalplaces = 2,
   unit = 'pt',
   verbosity = 0,
+  firstline = 1,
+  lastline = -1,
 }
 
 --- The current options.
@@ -2085,6 +2087,10 @@ local function set_option(key, value)
     options[key] = tonumber(value) or default_options.verbosity
   elseif key == 'decimalplaces' then
     options[key] = tonumber(value) or default_options.decimalplaces
+  elseif key == 'firstline' then
+    options[key] = tonumber(value) or default_options.firstline
+  elseif key == 'lastline' then
+    options[key] = tonumber(value) or default_options.lastline
   else
     options[key] = value
   end
@@ -2558,6 +2564,62 @@ local export = {
         options[k] = v
       end
     end
+  end,
+
+  --- Read a LaTeX input file and emit it immediately, obeying options
+  --- `firstline` and `lastline`.
+  ---
+  --- @function export.input
+  ---
+  --- @tparam string filename
+  input = function(filename)
+    local file = assert(io.open(filename, 'r'))
+    local lines_in = {}
+    for line in file:lines() do
+      table.insert(lines_in, line)
+    end
+
+    local firstline = options.firstline
+    local lastline = options.lastline
+
+    -- Handle negative line numbers.
+    if firstline < 0 then
+      firstline = #lines_in + 1 + firstline
+    elseif firstline == 0 then
+      firstline = 1
+    end
+    if lastline < 0 then
+      lastline = #lines_in + 1 + lastline
+    elseif lastline == 0 then
+      lastline = 1
+    end
+
+    -- Clamp values.
+    if firstline < 1 then
+      firstline = 1
+    elseif firstline > #lines_in then
+      firstline = #lines_in
+    end
+    if lastline < 1 then
+      lastline = 1
+    elseif lastline > #lines_in then
+      lastline = #lines_in
+    end
+
+    if firstline > lastline then
+      local tmp = firstline
+      firstline = lastline
+      lastline = tmp
+    end
+
+    local lines_out = {}
+    for i, line in ipairs(lines_in) do
+      if firstline <= i and i <= lastline then
+        table.insert(lines_out, line)
+      end
+    end
+
+    tex.print(lines_out)
   end
 }
 

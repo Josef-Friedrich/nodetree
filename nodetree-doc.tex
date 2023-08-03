@@ -667,7 +667,7 @@ The callbacks in Figure~\ref{fig:callback} are listed in the same
 order as in the Lua\TeX{} reference manual. Note that the |ligaturing|
 and |kerning| callbacks only have an effect on ligatures and kernings,
 respectively, if the |luaotfload| package (which is the default for
-Lua\LaTeX{} and an optional package for Lua\TeX{}) handles the
+Lua\LaTeX{}, and an optional package for Lua\TeX{}) handles the
 affected font with |mode=base| (see the
 \href{http://mirrors.ctan.org/macros/luatex/generic/luaotfload/luaotfload-latex.pdf}
 {documentation} for more details).
@@ -825,8 +825,8 @@ package.
 \label{sec:option:unit}
 
 The option |unit| sets the length unit to display all length values of
-the nodes. The default option for |unit| is |pt|. See figure
-\ref{fig:fixed-units} and \ref{fig:relative-units} for possible values.
+the nodes. The default option for |unit| is |pt|. See figures
+\ref{fig:fixed-units} and~\ref{fig:relative-units} for possible values.
 
 \begin{figure}
 \begin{tabular}{lp{10cm}}
@@ -958,8 +958,8 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 
 |nodetree-embed| passes the option |font| down to the
 command |\setmonofont{}| of the |fontspec| package. The used font
-should be a monospaced and have some box drawing glyphs (See table
-Unicode glyphs \ref{fig:unicode}).
+should be monospaced and have some box drawing glyphs (see
+table~\ref{fig:unicode}).
 
 \TmpExampleFont{Liberation Mono}
 \TmpExampleFont{Ubuntu Mono}
@@ -994,14 +994,14 @@ Unicode glyphs \ref{fig:unicode}).
 
 \subsection{Two different connections}
 
-Nodes in Lua\TeX{} are connected. The |nodetree| package distinguishs
-between the |list| and |field| connections.
+Nodes in Lua\TeX{} are connected. The |nodetree| package distinguishes
+between \emph{list} and \emph{field} connections.
 
 \begin{itemize}
- \item |list|: Nodes, which are double connected by |next| and
+ \item list: Nodes that are doubly connected by |next| and
        |previous| fields.
- \item |field|: Connections to nodes by other fields than |next| and
-       |previous| fields, e. g. |head|, |pre|.
+ \item field: Connections to nodes by other fields than |next| and
+       |previous|, for example, using |head| and |pre|.
 \end{itemize}
 
 %%
@@ -1067,7 +1067,7 @@ For |list| connections \emph{light} characters are shown.
 \newpage
 \section{Examples}
 
-In this section lists some examples of the |nodetree| output.
+This section lists some examples of the |nodetree| output.
 
 %%
 % packagename
@@ -1105,21 +1105,21 @@ Office
 % Node types
 %-----------------------------------------------------------------------
 
-\subsection{Node types}
+\section{Node types}
 
-This chapter shows some node types in a |nodetree| view.
+This section shows some node types in a |nodetree| view.
 
 \newcommand{\TmpHeadingNodeTypeSub}[4]{
-  \subsubsection{Type: \texttt{#1(#2)} Subtype: \texttt{#3(#4)}}
+  \subsection{Type \texttt{#1(#2)}, subtype \texttt{#3(#4)}}
 }
 
 \newcommand{\TmpNodeTypeSub}[5]{
-  \subsubsection{Type: \texttt{#1(#2)} Subtype: \texttt{#3(#4)}}
+  \subsection{Type \texttt{#1(#2)}, subtype \texttt{#3(#4)}}
   \TmpVerbExample{#2#1#4#3}{#5}
 }
 
 \newcommand{\TmpHeadingNodeType}[2]{
-  \subsubsection{Type: \texttt{#1(#2)}}
+  \subsection{Type \texttt{#1(#2)}}
 }
 
 %%

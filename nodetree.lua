@@ -2543,7 +2543,6 @@ local export = {
   --- Push current options.
   ---
   --- @function export.push_options
-  --
   push_options = function()
     prev_options[option_level] = {}
     for k, v in pairs(options) do
@@ -2555,7 +2554,6 @@ local export = {
   --- Pop previous options.
   ---
   --- @function export.pop_options
-  --
   pop_options = function()
     if option_level > 0 then
       prev_options[option_level] = nil

@@ -43,6 +43,10 @@
 \DeclareStringOption[dark]{thememode}
 \DeclareStringOption[Ubuntu Mono]{font}
 \DeclareStringOption[\footnotesize]{fontsize}
+\DeclareStringOption[1]{firstline}
+\define@key{NTE}{firstline}[]{\NodetreeSetOption[firstline]{#1}}
+\DeclareStringOption[-1]{lastline}
+\define@key{NTE}{lastline}[]{\NodetreeSetOption[lastline]{#1}}
 \DeclareBoolOption{showmarkup}
 \ProcessKeyvalOptions{NTE}
 \ExplSyntaxOn
@@ -181,7 +185,7 @@
   \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \begin{NodetreeEmbedView}
-  \input{#2.nttex}
+  \directlua{nodetree.input('#2.nttex')}
   \end{NodetreeEmbedView}
   \directlua{nodetree.pop_options()}
 }

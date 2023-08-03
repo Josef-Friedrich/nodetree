@@ -201,9 +201,6 @@ Lorem ipsum dolor.
 |callback| &
 \TmpPageSecRef{sec:option:callback} \\
 
-|channel| &
-\TmpPageSecRef{sec:option:channel} \\
-
 |verbosity| &
 \TmpPageSecRef{sec:option:verbosity} \\
 
@@ -222,6 +219,9 @@ Lorem ipsum dolor.
 \textbf{Reference} \\
 
 \TmpTabularOptionsBase
+
+|channel| &
+\TmpPageSecRef{sec:option:channel} \\
 \end{tabular}
 
 %-----------------------------------------------------------------------
@@ -267,6 +267,9 @@ Lorem ipsum dolor.
 \textbf{Reference} \\
 
 \TmpTabularOptionsBase
+
+|channel| &
+\TmpPageSecRef{sec:option:channel} \\
 \end{tabular}
 
 %-----------------------------------------------------------------------
@@ -314,10 +317,15 @@ options =  {
   decimalplaces = 2,
   unit = 'pt',
   verbosity = 0,
+  firstline = 1,
+  lastline = -1,
 }
 \end{minted}
 
-\noindent
+Options |firstline| and |lastline| only have an effect on function
+\mintinline{lua}{nodetree.input(filename)}, which is used to implement
+\cmd{\NodetreeEmbedInput} \TmpSecRef{sec:cmd:nodetree-embed-input}.
+
 The following code snippet demonstrates the usage in Lua\TeX{}.
 |head| is the current node.
 
@@ -471,6 +479,12 @@ nodetree
 
 |fontsize| &
 \TmpPageSecRef{sec:option:fontsize} \\
+
+|firstline| &
+\TmpPageSecRef{sec:option:firstlastline} \\
+
+|lastline| &
+\TmpPageSecRef{sec:option:firstlastline} \\
 \end{tabular}
 
 %-----------------------------------------------------------------------
@@ -639,32 +653,46 @@ These macros process callback options:
   \cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}
 \end{quote}
 
+The |nodetree| package can watch the node tree before and after the
+functions of a callback are executed: It is possible to prepend and/or
+append a colon (|:|) to indicate the desired watchpoint position,
+which defaults to 'before' if no colon is used.
+
 Use commas to specify multiple callbacks; trailing and leading
-whitespace is ignored.
+whitespace is ignored.  For example, this call
 
 \begin{code}
-\NodetreeRegisterCallback{preline, line, postline}
+\NodetreeRegisterCallback{:preline, line, :postline:}
 \end{code}
+
+\noindent
+watches the node tree before the |preline| callback functions, before
+the |line| callback functions, and before and after the |postline|
+callback functions.  In case there are no callback functions
+registered for one of the |hyphenate|, |kerning|, |ligaturing|, and
+|mlist_to_hlist| callbacks, Lua\TeX{} executes some internal code
+instead.  It thus makes sense to watch the node tree before and after
+these (empty) callbacks even in this case.
 
 Wrap your callback aliases in curly braces for the macro
 |\NodetreeSet|. Note that no whitespace between |=| and |{| is
 allowed.
 
 \begin{code}
-\NodetreeSet{callback={preline, line, postline}}
+\NodetreeSet{callback={:preline, line, :postline:}}
 \end{code}
 
 The same applies for the macro |\usepackage|:
 
 \begin{code}
-\usepackage{callback={preline, line, postline}}
+\usepackage{callback={:preline, line, :postline:}}
 \end{code}
 
 The callbacks in Figure~\ref{fig:callback} are listed in the same
 order as in the Lua\TeX{} reference manual. Note that the |ligaturing|
 and |kerning| callbacks only have an effect on ligatures and kernings,
 respectively, if the |luaotfload| package (which is the default for
-Lua\LaTeX{} and an optional package for Lua\TeX{}) handles the
+Lua\LaTeX{}, and an optional package for Lua\TeX{}) handles the
 affected font with |mode=base| (see the
 \href{http://mirrors.ctan.org/macros/luatex/generic/luaotfload/luaotfload-latex.pdf}
 {documentation} for more details).
@@ -822,8 +850,8 @@ package.
 \label{sec:option:unit}
 
 The option |unit| sets the length unit to display all length values of
-the nodes. The default option for |unit| is |pt|. See figure
-\ref{fig:fixed-units} and \ref{fig:relative-units} for possible values.
+the nodes. The default option for |unit| is |pt|. See figures
+\ref{fig:fixed-units} and~\ref{fig:relative-units} for possible values.
 
 \begin{figure}
 \begin{tabular}{lp{10cm}}
@@ -955,8 +983,8 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 
 |nodetree-embed| passes the option |font| down to the
 command |\setmonofont{}| of the |fontspec| package. The used font
-should be a monospaced and have some box drawing glyphs (See table
-Unicode glyphs \ref{fig:unicode}).
+should be monospaced and have some box drawing glyphs (see
+table~\ref{fig:unicode}).
 
 \TmpExampleFont{Liberation Mono}
 \TmpExampleFont{Ubuntu Mono}
@@ -979,6 +1007,17 @@ Unicode glyphs \ref{fig:unicode}).
 \TmpExampleFontSize{small}
 \TmpExampleFontSize{tiny}
 
+\subsection{Options \texttt{firstline} and \texttt{lastline}}
+\label{sec:option:firstlastline}
+
+These two options are for function \cmd{\NodetreeEmbedInput} only
+\TmpSecRef{sec:cmd:nodetree-embed-input}.  They specify the first
+and last shown line of the read |*.nttex| file.  Values |1|, |2|,
+\ldots, corresponds to the first line, second, line, etc.  Values
+|-1|, |-2|, \ldots, correspond to the last line, the line before the
+last line, etc.  The default values are |firstline = 1| and
+|lastline = -1| to display the whole file.
+
 %-----------------------------------------------------------------------
 % Visual tree structure
 %-----------------------------------------------------------------------
@@ -991,14 +1030,14 @@ Unicode glyphs \ref{fig:unicode}).
 
 \subsection{Two different connections}
 
-Nodes in Lua\TeX{} are connected. The |nodetree| package distinguishs
-between the |list| and |field| connections.
+Nodes in Lua\TeX{} are connected. The |nodetree| package distinguishes
+between \emph{list} and \emph{field} connections.
 
 \begin{itemize}
- \item |list|: Nodes, which are double connected by |next| and
+ \item list: Nodes that are doubly connected by |next| and
        |previous| fields.
- \item |field|: Connections to nodes by other fields than |next| and
-       |previous| fields, e. g. |head|, |pre|.
+ \item field: Connections to nodes by other fields than |next| and
+       |previous|, for example, using |head| and |pre|.
 \end{itemize}
 
 %%
@@ -1064,7 +1103,7 @@ For |list| connections \emph{light} characters are shown.
 \newpage
 \section{Examples}
 
-In this section lists some examples of the |nodetree| output.
+This section lists some examples of the |nodetree| output.
 
 %%
 % packagename
@@ -1102,21 +1141,21 @@ Office
 % Node types
 %-----------------------------------------------------------------------
 
-\subsection{Node types}
+\section{Node types}
 
-This chapter shows some node types in a |nodetree| view.
+This section shows some node types in a |nodetree| view.
 
 \newcommand{\TmpHeadingNodeTypeSub}[4]{
-  \subsubsection{Type: \texttt{#1(#2)} Subtype: \texttt{#3(#4)}}
+  \subsection{Type \texttt{#1(#2)}, subtype \texttt{#3(#4)}}
 }
 
 \newcommand{\TmpNodeTypeSub}[5]{
-  \subsubsection{Type: \texttt{#1(#2)} Subtype: \texttt{#3(#4)}}
+  \subsection{Type \texttt{#1(#2)}, subtype \texttt{#3(#4)}}
   \TmpVerbExample{#2#1#4#3}{#5}
 }
 
 \newcommand{\TmpHeadingNodeType}[2]{
-  \subsubsection{Type: \texttt{#1(#2)}}
+  \subsection{Type \texttt{#1(#2)}}
 }
 
 %%

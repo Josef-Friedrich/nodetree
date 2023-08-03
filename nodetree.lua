@@ -2070,11 +2070,21 @@ end
 --- @tparam number|string value
 ---   The value of the option pair.
 local function set_option(key, value)
+  if not default_options[key] then
+    message(
+      'warning',
+      'nodetree',
+      "Ignoring unknown option '" .. key .. "'"
+    )
+    return
+  end
   if not options then
     options = {}
   end
-  if key == 'verbosity' or key == 'decimalplaces' then
-    options[key] = tonumber(value)
+  if key == 'verbosity' then
+    options[key] = tonumber(value) or default_options.verbosity
+  elseif key == 'decimalplaces' then
+    options[key] = tonumber(value) or default_options.decimalplaces
   else
     options[key] = value
   end

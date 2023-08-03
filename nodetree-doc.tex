@@ -317,10 +317,15 @@ options =  {
   decimalplaces = 2,
   unit = 'pt',
   verbosity = 0,
+  firstline = 1,
+  lastline = -1,
 }
 \end{minted}
 
-\noindent
+Options |firstline| and |lastline| only have an effect on function
+\mintinline{lua}{nodetree.input(filename)}, which is used to implement
+\cmd{\NodetreeEmbedInput} \TmpSecRef{sec:cmd:nodetree-embed-input}.
+
 The following code snippet demonstrates the usage in Lua\TeX{}.
 |head| is the current node.
 
@@ -474,6 +479,12 @@ nodetree
 
 |fontsize| &
 \TmpPageSecRef{sec:option:fontsize} \\
+
+|firstline| &
+\TmpPageSecRef{sec:option:firstlastline} \\
+
+|lastline| &
+\TmpPageSecRef{sec:option:firstlastline} \\
 \end{tabular}
 
 %-----------------------------------------------------------------------
@@ -642,25 +653,39 @@ These macros process callback options:
   \cmd{\usepackage}\oarg{callback=<callbacks>}\marg{nodetree}
 \end{quote}
 
+The |nodetree| package can watch the node tree before and after the
+functions of a callback are executed: It is possible to prepend and/or
+append a colon (|:|) to indicate the desired watchpoint position,
+which defaults to 'before' if no colon is used.
+
 Use commas to specify multiple callbacks; trailing and leading
-whitespace is ignored.
+whitespace is ignored.  For example, this call
 
 \begin{code}
-\NodetreeRegisterCallback{preline, line, postline}
+\NodetreeRegisterCallback{:preline, line, :postline:}
 \end{code}
+
+\noindent
+watches the node tree before the |preline| callback functions, before
+the |line| callback functions, and before and after the |postline|
+callback functions.  In case there are no callback functions
+registered for one of the |hyphenate|, |kerning|, |ligaturing|, and
+|mlist_to_hlist| callbacks, Lua\TeX{} executes some internal code
+instead.  It thus makes sense to watch the node tree before and after
+these (empty) callbacks even in this case.
 
 Wrap your callback aliases in curly braces for the macro
 |\NodetreeSet|. Note that no whitespace between |=| and |{| is
 allowed.
 
 \begin{code}
-\NodetreeSet{callback={preline, line, postline}}
+\NodetreeSet{callback={:preline, line, :postline:}}
 \end{code}
 
 The same applies for the macro |\usepackage|:
 
 \begin{code}
-\usepackage{callback={preline, line, postline}}
+\usepackage{callback={:preline, line, :postline:}}
 \end{code}
 
 The callbacks in Figure~\ref{fig:callback} are listed in the same
@@ -981,6 +1006,17 @@ table~\ref{fig:unicode}).
 
 \TmpExampleFontSize{small}
 \TmpExampleFontSize{tiny}
+
+\subsection{Options \texttt{firstline} and \texttt{lastline}}
+\label{sec:option:firstlastline}
+
+These two options are for function \cmd{\NodetreeEmbedInput} only
+\TmpSecRef{sec:cmd:nodetree-embed-input}.  They specify the first
+and last shown line of the read |*.nttex| file.  Values |1|, |2|,
+\ldots, corresponds to the first line, second, line, etc.  Values
+|-1|, |-2|, \ldots, correspond to the last line, the line before the
+last line, etc.  The default values are |firstline = 1| and
+|lastline = -1| to display the whole file.
 
 %-----------------------------------------------------------------------
 % Visual tree structure

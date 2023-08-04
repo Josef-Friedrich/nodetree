@@ -1134,7 +1134,6 @@ function tree.format_field(head, field)
 
   if options.verbosity < 2 and
     -- glyph
-    field == 'font' or
     field == 'left' or
     field == 'right' or
     field == 'uchyph' or

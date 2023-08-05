@@ -8,6 +8,10 @@
   urlcolor=red,
 ]{hyperref}
 \usepackage{nodetree-embed}
+\mdfsetup{
+  innerleftmargin=0.2em,
+  innerrightmargin=0.2em,
+}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -817,7 +821,7 @@ implemented.
 \def\TmpExampleVerbosity#1{
   \subsubsection{Example: \texttt{verbosity=#1}}
   \begin{NodetreeEmbedEnv}[verbosity=#1,callback=pre_linebreak_filter,
-                           fontsize=\tiny]
+                           fontsize=\fontsize{5.5}{6.6}\selectfont]
   .
   \end{NodetreeEmbedEnv}
 }
@@ -972,7 +976,7 @@ node fields. If |decimalplaces| is set to |0| only integer values are shown.
 \subsection{Option \texttt{font}}
 \label{sec:option:font}
 
-\NodetreeSet{fontsize=\small}
+\NodetreeSet{fontsize=\footnotesize}
 
 \def\TmpExampleFont#1{
   \subsubsection{Example: \texttt{font=\{#1\}}}
@@ -1149,9 +1153,9 @@ This section shows some node types in a |nodetree| view.
   \subsection{Type \texttt{#1(#2)}, subtype \texttt{#3(#4)}}
 }
 
-\newcommand{\TmpNodeTypeSub}[5]{
-  \subsection{Type \texttt{#1(#2)}, subtype \texttt{#3(#4)}}
-  \TmpVerbExample{#2#1#4#3}{#5}
+\newcommand{\TmpNodeTypeSub}[6]{
+  \subsection{Type \texttt{#1(#2)}, subtype \texttt{#3\_#4(#5)}}
+  \TmpVerbExample{#2#1#5#3#4}{#6}
 }
 
 \newcommand{\TmpHeadingNodeType}[2]{
@@ -1226,6 +1230,16 @@ L\vbox to 40pt{O}L
 \TmpHeadingNodeTypeSub{disc}{7}{discretionary}{0}
 
 \begin{NodetreeEmbedEnv}[showmarkup=true]
+L\discretionary{}{}{}L
+\end{NodetreeEmbedEnv}
+
+%%
+%
+%%
+
+\TmpHeadingNodeTypeSub{disc}{7}{explicit}{1}
+
+\begin{NodetreeEmbedEnv}[showmarkup=true]
 L\-O\-L
 \end{NodetreeEmbedEnv}
 
@@ -1243,8 +1257,8 @@ Office
 %
 %%
 
-\TmpNodeTypeSub{whatsit}{8}{pdfaction}{22}{\tiny}
-\TmpNodeTypeSub{whatsit}{8}{pdfcolorstack}{28}{\small}
+\TmpNodeTypeSub{whatsit}{8}{pdf}{action}{22}{\fontsize{5.5}{6.6}\selectfont}
+\TmpNodeTypeSub{whatsit}{8}{pdf}{colorstack}{28}{\footnotesize}
 
 %%
 %

@@ -1,34 +1,37 @@
 --- This file (`nodetree.lua`) is part of the LuaTeX package
 --- 'nodetree'.
---
--- Nodetree uses [LDoc](https://github.com/stevedonovan/ldoc) for the
---  source code documentation. The supported tags are described in
---  the [wiki](https://github.com/stevedonovan/LDoc/wiki).
---
--- Nodes in LuaTeX are connected. The nodetree view distinguishes
--- between *list* and *field* connections.
---
--- * list: Nodes that are doubly connected by `next` and `previous`
---   fields.
--- * field: Connections to nodes by other fields than `next` and
---   `previous` fields, e.g., `head`, `pre`.
--- @module nodetree
+---
+---`nodetree` uses the annotation system of the
+---[lua-language-server](https://github.com/LuaLS/lua-language-server/wiki/Annotations).
+---Install the [type definitions for LuaTeX](https://github.com/Josef-Friedrich/LuaTeX_Lua-API)
+---or the [Visual Studio Code Extension](https://marketplace.visualstudio.com/items?itemName=JosefFriedrich.luatex).
+---
+---The LDoc support is deprecated.
+---
+---Nodes in LuaTeX are connected. The nodetree view distinguishes
+---between *list* and *field* connections.
+---
+---* list: Nodes that are doubly connected by `next` and `previous`
+---  fields.
+---* field: Connections to nodes by other fields than `next` and
+---  `previous` fields, e.g., `head`, `pre`.
+---@module nodetree
 
--- luacheck: globals node lang tex luatexbase lfs
--- luacheck: globals callback os unicode status modules
+---luacheck: globals node lang tex luatexbase lfs
+---luacheck: globals callback os unicode status modules
 
 ---@class Node
 ---@field next Node|nil # The next node in a list, or nil.
 ---@field id number # The node’s type (id) number.
 ---@field subtype number # The node subtype identifier.
---
+---
 ---@alias ColorName `black` | `red` | `green` | `yellow` | `blue` | `magenta` | `cyan` | `white`
 ---@alias ColorMode `bright`| `dim`
---
+---
 ---@alias ConnectionType `list` | `field` # A string literal,
---   which can be either `list` or `field`.
+---  which can be either `list` or `field`.
 ---@alias ConnectionState `stop` | `continue` # A literal, which can
---   be either `continue` or `stop`.
+---  be either `continue` or `stop`.
 
 if not modules then modules = {} end modules ['nodetree'] = {
   version   = '2.2.1',
@@ -41,18 +44,18 @@ if not modules then modules = {} end modules ['nodetree'] = {
 local direct            = node.direct
 local todirect          = direct.todirect
 local getchar           = direct.getchar
--- Lua 5.1 does not have the utf8 library (Lua 5.1 is the default
--- version in LuajitTeX). LuaJitTeX does include the slnunicode library.
+---Lua 5.1 does not have the utf8 library (Lua 5.1 is the default
+---version in LuajitTeX). LuaJitTeX does include the slnunicode library.
 local utf8              = utf8 or unicode.utf8
 local utfchar           = utf8.char
 local properties        = direct.get_properties_table()
 
--- A counter for the compiled TeX examples. Some TeX code snippets
--- a written into files, wrapped with some TeX boilerplate code.
--- These written files are compiled later on.
+---A counter for the compiled TeX examples. Some TeX code snippets
+---a written into files, wrapped with some TeX boilerplate code.
+---These written files are compiled later on.
 local example_counter = 0
 
--- A flag to indicate that something has been emitted by nodetree.
+---A flag to indicate that something has been emitted by nodetree.
 local have_output = false
 
 --- The default options.
@@ -74,39 +77,39 @@ for key, value in pairs(default_options) do
 end
 
 --- The previous options.
--- We need this for functions `push_options` and `pop_options` so that
--- the effects of the `\setkeys` commands in `nodetree-embed.sty`
--- (which directly manipulates the `options` table) stay local.
+---We need this for functions `push_options` and `pop_options` so that
+---the effects of the `\setkeys` commands in `nodetree-embed.sty`
+---(which directly manipulates the `options` table) stay local.
 local prev_options = {}
 local option_level = 0
 
--- File descriptor.
+---File descriptor.
 local output_file
 
 --- The state values of the current tree item.
---
--- `tree_state`:
---
--- * `1` (level):
---   * `list`: `continue`
---   * `field`: `stop`
--- * `2`:
---   * `list`: `continue`
---   * `field`: `stop`
---
--- ...
+---
+---`tree_state`:
+---
+---* `1` (level):
+---  * `list`: `continue`
+---  * `field`: `stop`
+---* `2`:
+---  * `list`: `continue`
+---  * `field`: `stop`
+---
+---...
 local tree_state = {}
 
 --- Format functions.
---
--- Low-level template functions.
---
--- @section format
+---
+---Low-level template functions.
+---
+---@section format
 
 local format = {
   --- @function format.underscore
   ---
-  --- @tparam string input
+  ---@param input string
   ---
   --- @treturn string
   underscore = function(input)
@@ -120,7 +123,7 @@ local format = {
 
   --- @function format.escape
   ---
-  --- @tparam string input
+  ---@param input string
   ---
   --- @treturn string
   escape = function(input)
@@ -134,7 +137,7 @@ local format = {
 
   --- @function format.function
   ---
-  --- @tparam number input
+  ---@param input number
   ---
   --- @treturn number
   number = function(input)
@@ -144,8 +147,7 @@ local format = {
 
   --- @function format.whitespace
   ---
-  --- @tparam number count
-  ---   How many spaces should be output.
+  ---@param count number # How many spaces should be output.
   ---
   --- @treturn string
   whitespace = function(count)
@@ -167,7 +169,7 @@ local format = {
 
   --- @function format.color_code
   ---
-  --- @tparam number code
+  ---@param code number
   ---
   --- @treturn string
   color_code = function(code)
@@ -176,8 +178,8 @@ local format = {
 
   --- @function format.color_tex
   ---
-  --- @tparam string color
-  --- @tparam string mode
+  ---@param color string
+  ---@param mode string
   ---
   --- @treturn string
   color_tex = function(color, mode)
@@ -209,8 +211,7 @@ local format = {
 
   --- @function format.new_line
   ---
-  --- @tparam number count
-  ---   How many new lines should be output.
+  ---@param count number # How many new lines should be output.
   ---
   --- @treturn string
   new_line = function(count)
@@ -233,7 +234,7 @@ local format = {
 
   --- @function format.type_id
   ---
-  --- @tparam number id
+  ---@param id number
   ---
   --- @treturn string
   type_id = function(id)
@@ -242,8 +243,8 @@ local format = {
 }
 
 --- Print the output to stdout or write it into a file (`output_file`).
--- New text is appended.
---
+---New text is appended.
+---
 ---@param text string # A text string.
 local function nodetree_print(text)
   if options.channel == 'log' or options.channel == 'tex' then
@@ -254,8 +255,8 @@ local function nodetree_print(text)
 end
 
 --- Template functions.
---
--- @section template
+---
+---@section template
 
 local template = {
   node_colors = {
@@ -375,11 +376,9 @@ local template = {
   --
   --- @function template.color
   ---
-  --- @tparam ColorName color
-  ---   A color name.
-  --- @tparam ColorMode mode
-  --- @tparam boolean background
-  ---   If set, colorize the background instead of the text.
+  ---@param color ColorName # A color name.
+  ---@param mode ColorMode
+  ---@param background boolean # If set, colorize the background instead of the text.
   ---
   --- @treturn string
   color = function(color, mode, background)
@@ -454,8 +453,7 @@ local template = {
   --
   --- @function template.char
   --
-  --- @tparam Node head
-  ---   The head node of a node list.
+  ---@param head Node # The head node of a node list.
   ---
   --- @treturn string
   ---   A textual representation of the `char` number.
@@ -484,8 +482,7 @@ local template = {
 
   --- @function template.line
   ---
-  --- @tparam string length
-  ---   If `long`, emit a longer line.
+  ---@param length string # If `long`, emit a longer line.
   ---
   --- @treturn string
   line = function(length)
@@ -500,9 +497,9 @@ local template = {
 
   --- @function template.branch
   ---
-  --- @tparam ConnectionType connection_type
-  --- @tparam ConnectionState connection_state
-  --- @tparam boolean last
+  ---@param connection_type ConnectionType
+  ---@param connection_state ConnectionState
+  ---@param last boolean
   ---
   --- @treturn string
   branch = function(connection_type, connection_state, last)
@@ -530,10 +527,10 @@ local template = {
   end,
 }
 
---- @tparam number number
---- @tparam number order
---- @tparam string field
---
+---@param number number
+---@param order number
+---@param field string
+---
 --- @treturn string
 function template.fill(number, order, field)
   local output
@@ -557,15 +554,12 @@ function template.fill(number, order, field)
 end
 
 --- Colorize a text string.
---
---- @tparam string text
----   A text string.
---- @tparam ColorName color
----   A color name.
---- @tparam ColorMode mode
---- @tparam boolean background
----   If set, colorize the background instead of the text.
---
+---
+---@param text string # A text string.
+---@param color ColorName # A color name.
+---@param mode ColorMode
+---@param background boolean # If set, colorize the background instead of the text.
+---
 --- @treturn string
 function template.colored_string(text, color, mode, background)
   if options.channel == 'tex' then
@@ -583,10 +577,10 @@ function template.colored_string(text, color, mode, background)
 end
 
 --- Format a scaled point input value into dimension string (`12pt`,
---  `1cm`)
---
---- @tparam number input
---
+--- `1cm`)
+---
+---@param input number
+---
 --- @treturn string
 function template.length(input)
   local i = tonumber(input)
@@ -601,20 +595,20 @@ function template.length(input)
 end
 
 --- Get all data from a table including metatables.
---
--- Properties will reside in a metatable if nodes were copied using an
--- operation like box copy: (\copy). The LuaTeX manual states this: “If
--- the second argument of `set_properties_mode` is true, then a
--- metatable approach is chosen: the copy gets its own table with the
--- original table as metatable.”
---
--- Source: [StackOverflow](https://stackoverflow.com/a/5639667) – this
--- works if `__index` returns a table, which it should as per LuaTeX
--- manual.
---
---- @tparam table data
+---
+---Properties will reside in a metatable if nodes were copied using an
+---operation like box copy: (\copy). The LuaTeX manual states this: “If
+---the second argument of `set_properties_mode` is true, then a
+---metatable approach is chosen: the copy gets its own table with the
+---original table as metatable.”
+---
+---Source: [StackOverflow](https://stackoverflow.com/a/5639667) – this
+---works if `__index` returns a table, which it should as per LuaTeX
+---manual.
+---
+---@param data table
 ---   A Lua table.
---- @tparam table previous_data
+---@param previous_data table
 ---   The data of a Lua table of a previous recursive call.
 ---
 --- @treturn table
@@ -645,10 +639,9 @@ local function get_all_table_data(data, previous_data)
 end
 
 --- Convert a Lua table into a format string.
---
---- @tparam table table
----   A table to generate an inline view of.
---
+---
+---@param table table # A table to generate an inline view of.
+---
 --- @treturn string
 function template.table_inline(table)
   local tex_escape = ''
@@ -675,16 +668,12 @@ function template.table_inline(table)
 end
 
 --- Format a key-value pair (`key: value, `).
---
---- @tparam string key
----   A key.
---- @tparam string|number value
----   A value.
---- @tparam string typ
----   A node type.
---- @tparam ColorName color
----   A color name.
---
+---
+---@param key string # A key.
+---@param value string|number # A value.
+---@param typ string # A node type.
+---@param color ColorName # A color name.
+---
 --- @treturn string
 function template.key_value(key, value, typ, color)
   if type(color) ~= 'string' then
@@ -727,8 +716,8 @@ function template.key_value(key, value, typ, color)
   return output
 end
 
---- @tparam string type
---- @tparam number id
+---@param type string
+---@param id number
 ---
 --- @treturn string
 function template.type(type, id)
@@ -745,10 +734,9 @@ function template.type(type, id)
   )
 end
 
---- @tparam string callback_name
---- @tparam table variables
---- @tparam string where
----   `'before'` or `'after'`
+---@param callback_name string
+---@param variables table
+---@param where string # `'before'` or `'after'`
 ---
 --- @treturn string
 function template.callback(callback_name, variables, where)
@@ -781,8 +769,8 @@ end
 
 --- Format the branching tree for one output line.
 ---
---- @tparam number level
---- @tparam ConnectionType connection_type
+---@param level number
+---@param connection_type ConnectionType
 ---
 --- @treturn string
 function template.branches(level, connection_type)
@@ -791,7 +779,7 @@ function template.branches(level, connection_type)
     output = output .. template.branch('list', tree_state[i]['list'], false)
     output = output .. template.branch('field', tree_state[i]['field'], false)
   end
--- Format the last branches
+---Format the last branches
   if connection_type == 'list' then
     output = output .. template.branch('list', tree_state[level]['list'], true)
   else
@@ -802,21 +790,20 @@ function template.branches(level, connection_type)
 end
 
 --- Node library extensions.
---
--- @section node_extended
+---
+---@section node_extended
 
 local node_extended = {}
 
 --- Get the ID of a node.
---
--- We have to convert the node into a string and then to extract
--- the ID from this string using a regular expression. If you convert a
--- node into a string it looks like: `<node    nil <    172 >    nil :
--- hlist 2>`.
---
---- @tparam Node n
----   A node.
---
+---
+---We have to convert the node into a string and then to extract
+---the ID from this string using a regular expression. If you convert a
+---node into a string it looks like: `<node    nil <    172 >    nil :
+---hlist 2>`.
+---
+---@param n Node # A node.
+---
 --- @treturn string
 function node_extended.node_id(n)
   local result = string.gsub(tostring(n), '^<node%s+%S+%s+<%s+(%d+).*', '%1')
@@ -824,43 +811,43 @@ function node_extended.node_id(n)
 end
 
 --- A table of all node subtype names.
---
--- __Nodes without subtypes:__
---
--- * `ins` (3)
--- * `local_par` (9)
--- * `penalty` (14)
--- * `unset` (15)
--- * `style` (16)
--- * `choice` (17)
--- * `fraction` (20)
--- * `math_char` (23)
--- * `sub_box` (24)
--- * `sub_mlist` (25)
--- * `math_text_char` (26)
--- * `delim` (27)
--- * `margin_kern` (28)
--- * `align_record` (30)
--- * `pseudo_file` (31)
--- * `pseudo_line` (32)
--- * `page_insert` (33)
--- * `split_insert` (34)
--- * `expr_stack` (35)
--- * `nested_list` (36)
--- * `span` (37)
--- * `attribute` (38)
--- * `glue_spec` (39)
--- * `attribute_list` (40)
--- * `temp` (41)
--- * `align_stack` (42)
--- * `movement_stack` (43)
--- * `if_stack` (44)
--- * `unhyphenated` (45)
--- * `hyphenated` (46)
--- * `delta` (47)
--- * `passive` (48)
--- * `shape` (49)
---
+---
+---__Nodes without subtypes:__
+---
+---* `ins` (3)
+---* `local_par` (9)
+---* `penalty` (14)
+---* `unset` (15)
+---* `style` (16)
+---* `choice` (17)
+---* `fraction` (20)
+---* `math_char` (23)
+---* `sub_box` (24)
+---* `sub_mlist` (25)
+---* `math_text_char` (26)
+---* `delim` (27)
+---* `margin_kern` (28)
+---* `align_record` (30)
+---* `pseudo_file` (31)
+---* `pseudo_line` (32)
+---* `page_insert` (33)
+---* `split_insert` (34)
+---* `expr_stack` (35)
+---* `nested_list` (36)
+---* `span` (37)
+---* `attribute` (38)
+---* `glue_spec` (39)
+---* `attribute_list` (40)
+---* `temp` (41)
+---* `align_stack` (42)
+---* `movement_stack` (43)
+---* `if_stack` (44)
+---* `unhyphenated` (45)
+---* `hyphenated` (46)
+---* `delta` (47)
+---* `passive` (48)
+---* `shape` (49)
+---
 --- @treturn table
 local function get_node_subtypes()
   local subtypes = {
@@ -1060,7 +1047,7 @@ local function get_node_subtypes()
   return subtypes
 end
 
---- @tparam Node n
+---@param n Node
 ---
 --- @treturn string
 function node_extended.subtype(n)
@@ -1100,16 +1087,15 @@ function node_extended.subtype(n)
 end
 
 --- Node tree building functions.
---
--- @section tree
+---
+---@section tree
 
 local tree = {}
 
 ---
---- @tparam Node head
----   The head node of a node list.
---- @tparam string field
---
+---@param head Node # The head node of a node list.
+---@param field string
+---
 --- @treturn string
 function tree.format_field(head, field)
   local output
@@ -1187,13 +1173,12 @@ function tree.format_field(head, field)
 end
 
 ---
--- Attributes are key-value number pairs. They are printed as an inline
--- list. The attribute `0` with the value `0` is skipped because this
--- attribute is in every node by default.
---
---- @tparam Node head
----   The head node of a node list.
---
+---Attributes are key-value number pairs. They are printed as an inline
+---list. The attribute `0` with the value `0` is skipped because this
+---attribute is in every node by default.
+---
+---@param head Node # The head node of a node list.
+---
 --- @treturn string
 function tree.format_attributes(head)
   if not head then
@@ -1213,10 +1198,9 @@ function tree.format_attributes(head)
 end
 
 ---
---- @tparam number level
----   `level` is an integer beginning with 1.
---- @tparam ConnectionType connection_type
---- @tparam ConnectionState connection_state
+---@param level number # `level` is an integer beginning with 1.
+---@param connection_type ConnectionType
+---@param connection_state ConnectionState
 function tree.set_state(level, connection_type, connection_state)
   if not tree_state[level] then
     tree_state[level] = {}
@@ -1225,9 +1209,8 @@ function tree.set_state(level, connection_type, connection_state)
 end
 
 ---
---- @tparam table fields
---- @tparam number level
----   The current recursion level.
+---@param fields table
+---@param level number # The current recursion level.
 function tree.analyze_fields(fields, level)
   local max = 0
   local connection_state
@@ -1255,10 +1238,8 @@ function tree.analyze_fields(fields, level)
 end
 
 ---
---- @tparam Node head
----   The head node of a node list.
---- @tparam number level
----   The current recursion level.
+---@param head Node # The head node of a node list.
+---@param level number # The current recursion level.
 function tree.analyze_node(head, level)
   local connection_state
   local output
@@ -1348,10 +1329,8 @@ end
 
 --- Recurse over the current node list.
 ---
---- @tparam Node head
----   The head node of a node list.
---- @tparam number level
----   The current recursion level.
+---@param head Node # The head node of a node list.
+---@param level number # The current recursion level.
 function tree.analyze_list(head, level)
   while head do
     tree.analyze_node(head, level)
@@ -1361,8 +1340,7 @@ end
 
 --- The top-level internal entry point.
 ---
---- @tparam Node head
----   The head node of a node list.
+---@param head Node # The head node of a node list.
 function tree.analyze_callback(head)
   tree.analyze_list(head, 1)
   nodetree_print(template.line('short'))
@@ -1380,24 +1358,24 @@ local callback_has_default_action = {
 }
 
 --- Callback wrappers.
---
--- Nodetree uses luatexbase's functions to manage callbacks if
--- available. Otherwise a simplistic approach is taken by prepending
--- or appending nodetree's diagnostic callbacks to the existing ones
--- (and also removing them again if requested).
---
+---
+---Nodetree uses luatexbase's functions to manage callbacks if
+---available. Otherwise a simplistic approach is taken by prepending
+---or appending nodetree's diagnostic callbacks to the existing ones
+---(and also removing them again if requested).
+---
 --- Each function in the `callbacks` table consists of three parts:
---
--- * before-callback inspection
--- * original callback or default function call
--- * after-callback inspection
---
--- @section callbacks
+---
+---* before-callback inspection
+---* original callback or default function call
+---* after-callback inspection
+---
+---@section callbacks
 
 local callbacks = {
   --- @function callbacks.contribute_filter
   ---
-  --- @tparam string extrainfo
+  ---@param extrainfo string
   contribute_filter = function(extrainfo)
     local cb = 'contribute_filter'
     local before, after = template.get_print_position(cb)
@@ -1419,7 +1397,7 @@ local callbacks = {
 
   --- @function callbacks.buildpage_filter
   ---
-  --- @tparam string extrainfo
+  ---@param extrainfo string
   buildpage_filter = function(extrainfo)
     local cb = 'buildpage_filter'
     local before, after = template.get_print_position(cb)
@@ -1441,8 +1419,8 @@ local callbacks = {
 
   --- @function callbacks.build_page_insert
   ---
-  --- @tparam string n
-  --- @tparam string i
+  ---@param n string
+  ---@param i string
   ---
   --- @treturn number
   build_page_insert = function(n, i)
@@ -1469,9 +1447,8 @@ local callbacks = {
 
   --- @function callbacks.pre_linebreak_filter
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam string groupcode
+  ---@param head Node # The head node of a node list.
+  ---@param groupcode string
   ---
   --- @treturn boolean
   pre_linebreak_filter = function(head, groupcode)
@@ -1500,9 +1477,8 @@ local callbacks = {
 
   --- @function callbacks.linebreak_filter
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam boolean is_display
+  ---@param head Node # The head node of a node list.
+  ---@param is_display boolean
   ---
   --- @treturn boolean
   linebreak_filter = function(head, is_display)
@@ -1531,10 +1507,10 @@ local callbacks = {
 
   --- @function callbacks.append_to_vlist_filter
   ---
-  --- @tparam Node box
-  --- @tparam string locationcode
-  --- @tparam number prevdepth
-  --- @tparam boolean mirrored
+  ---@param box Node
+  ---@param locationcode string
+  ---@param prevdepth number
+  ---@param mirrored boolean
   ---
   --- @treturn Node
   --  @treturn number
@@ -1568,9 +1544,8 @@ local callbacks = {
 
   --- @function callbacks.post_linebreak_filter
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam string groupcode
+  ---@param head Node # The head node of a node list.
+  ---@param groupcode string
   ---
   --- @treturn boolean
   post_linebreak_filter = function(head, groupcode)
@@ -1599,13 +1574,12 @@ local callbacks = {
 
   --- @function callbacks.hpack_filter
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam string groupcode
-  --- @tparam number size
-  --- @tparam string packtype
-  --- @tparam string direction
-  --- @tparam Node attributelist
+  ---@param head Node # The head node of a node list.
+  ---@param groupcode string
+  ---@param size number
+  ---@param packtype string
+  ---@param direction string
+  ---@param attributelist Node
   ---
   --- @treturn boolean
   hpack_filter = function(head, groupcode, size, packtype,
@@ -1645,14 +1619,13 @@ local callbacks = {
 
   --- @function callbacks.vpack_filter
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam string groupcode
-  --- @tparam number size
-  --- @tparam string packtype
-  --- @tparam number maxdepth
-  --- @tparam string direction
-  --- @tparam Node attributelist
+  ---@param head Node # The head node of a node list.
+  ---@param groupcode string
+  ---@param size number
+  ---@param packtype string
+  ---@param maxdepth number
+  ---@param direction string
+  ---@param attributelist Node
   ---
   --- @treturn boolean
   vpack_filter = function(head, groupcode, size, packtype,
@@ -1696,12 +1669,11 @@ local callbacks = {
 
   --- @function callbacks.hpack_quality
   ---
-  --- @tparam string incident
-  --- @tparam number detail
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam number first
-  --- @tparam number last
+  ---@param incident string
+  ---@param detail number
+  ---@param head Node # The head node of a node list.
+  ---@param first number
+  ---@param last number
   ---
   --- @treturn Node
   hpack_quality = function(incident, detail, head, first, last)
@@ -1736,12 +1708,11 @@ local callbacks = {
 
   --- @function callbacks.vpack_quality
   ---
-  --- @tparam string incident
-  --- @tparam number detail
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam number first
-  --- @tparam number last
+  ---@param incident string
+  ---@param detail number
+  ---@param head Node # The head node of a node list.
+  ---@param first number
+  ---@param last number
   vpack_quality = function(incident, detail, head, first, last)
     local cb = 'vpack_quality'
     local before, after = template.get_print_position(cb)
@@ -1771,10 +1742,9 @@ local callbacks = {
 
   --- @function callbacks.process_rule
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam number width
-  --- @tparam number height
+  ---@param head Node # The head node of a node list.
+  ---@param width number
+  ---@param height number
   process_rule = function(head, width, height)
     local cb = 'process_rule'
     local before, after = template.get_print_position(cb)
@@ -1798,13 +1768,12 @@ local callbacks = {
 
   --- @function callbacks.pre_output_filter
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam string groupcode
-  --- @tparam number size
-  --- @tparam string packtype
-  --- @tparam number maxdepth
-  --- @tparam string direction
+  ---@param head Node # The head node of a node list.
+  ---@param groupcode string
+  ---@param size number
+  ---@param packtype string
+  ---@param maxdepth number
+  ---@param direction string
   ---
   --- @treturn boolean
   pre_output_filter = function(head, groupcode, size, packtype,
@@ -1844,9 +1813,8 @@ local callbacks = {
 
   --- @function callbacks.hyphenate
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam Node tail
+  ---@param head Node # The head node of a node list.
+  ---@param tail Node
   hyphenate = function(head, tail)
     local cb = 'hyphenate'
     local before, after = template.get_print_position(cb)
@@ -1877,9 +1845,8 @@ local callbacks = {
 
   --- @function callbacks.ligaturing
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam Node tail
+  ---@param head Node # The head node of a node list.
+  ---@param tail Node
   ligaturing = function(head, tail)
     local cb = 'ligaturing'
     local before, after = template.get_print_position(cb)
@@ -1910,9 +1877,8 @@ local callbacks = {
 
   --- @function callbacks.kerning
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam Node tail
+  ---@param head Node # The head node of a node list.
+  ---@param tail Node
   kerning = function(head, tail)
     local cb = 'kerning'
     local before, after = template.get_print_position(cb)
@@ -1943,8 +1909,8 @@ local callbacks = {
 
   --- @function callbacks.insert_local_par
   ---
-  --- @tparam Node local_par
-  --- @tparam string location
+  ---@param local_par Node
+  ---@param location string
   insert_local_par = function(local_par, location)
     local cb = 'insert_local_par'
     local before, after = template.get_print_position(cb)
@@ -1968,10 +1934,9 @@ local callbacks = {
 
   --- @function callbacks.mlist_to_hlist
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam string display_type
-  --- @tparam boolean need_penalties
+  ---@param head Node # The head node of a node list.
+  ---@param display_type string
+  ---@param need_penalties boolean
   ---
   --- @treturn Node
   mlist_to_hlist = function(head, display_type, need_penalties)
@@ -2003,23 +1968,19 @@ local callbacks = {
 }
 
 --- Messages, options
---
--- @section messages
+---
+---@section messages
 
 --- Emit a warning or error message.
---
--- This works for plain TeX, Texinfo, and LaTeX (for plain TeX and
--- Texinfo we make the message look identical to the LaTeX case).
--- Note that a full stop gets appended to `what`.
---
---- @tparam string why
----   `'error'` or `'warning'`.
---- @tparam string where
----   In which package the error happened.
---- @tparam string what
----   The warning message to emit.
---- @tparam string help
----   Additional help text for errors.
+---
+---This works for plain TeX, Texinfo, and LaTeX (for plain TeX and
+---Texinfo we make the message look identical to the LaTeX case).
+---Note that a full stop gets appended to `what`.
+---
+---@param why string # `'error'` or `'warning'`.
+---@param where string # In which package the error happened.
+---@param what string # The warning message to emit.
+---@param help string # Additional help text for errors.
 local function message(why, where, what, help)
   local msg
 
@@ -2065,11 +2026,9 @@ local function message(why, where, what, help)
 end
 
 --- Set a single-option key-value pair.
---
---- @tparam string key
----   The key of the option pair.
---- @tparam number|string value
----   The value of the option pair.
+---
+---@param key string # The key of the option pair.
+---@param value number|string # The value of the option pair.
 local function set_option(key, value)
   if not default_options[key] then
     message(
@@ -2096,9 +2055,8 @@ local function set_option(key, value)
 end
 
 --- Set multiple key-value option pairs using a table.
---
---- @tparam table opts
----   Options.
+---
+---@param opts table # Options.
 local function set_options(opts)
   if not options then
     options = {}
@@ -2109,15 +2067,14 @@ local function set_options(opts)
 end
 
 --- Callback management
---
--- @section callback_management
+---
+---@section callback_management
 
 ---
---- @tparam string cb
----  The name of a callback.
+---@param cb string # The name of a callback.
 ---
 --- @treturn string
---    `'before'` or `nil`.
+---   `'before'` or `nil`.
 --- @treturn string
 ---   `'after'` or `nil`.
 function template.get_print_position(cb)
@@ -2128,8 +2085,8 @@ function template.get_print_position(cb)
 end
 
 ---
---- @tparam string name
---- @tparam string internal
+---@param name string
+---@param internal string
 function template.no_callback(name, internal)
   local more = ''
   if internal == true then
@@ -2143,12 +2100,11 @@ function template.no_callback(name, internal)
 end
 
 --- Check whether the given callback name exists.
---
--- Throw an error if it doesn’t.
---
---- @tparam string callback_name
----   The name of a callback to check.
---
+---
+---Throw an error if it doesn’t.
+---
+---@param callback_name string # The name of a callback to check.
+---
 --- @treturn string
 ---   The unchanged input of the function.
 local function check_callback_name(callback_name)
@@ -2165,10 +2121,9 @@ local function check_callback_name(callback_name)
 end
 
 --- Get the real callback name from an alias string.
---
---- @tparam string alias
----   The alias of a callback name or the callback name itself.
---
+---
+---@param alias string # The alias of a callback name or the callback name itself.
+---
 --- @treturn string
 ---   The real callback name.
 local function get_callback_name(alias)
@@ -2236,7 +2191,7 @@ local function get_callback_name(alias)
 end
 
 --- Register a callback.
---
+---
 --- Doing this for plain TeX is simple; we have access to LuaTeX's
 --- base function `callback.register` and thus can easily add our
 --- callback wrapper, which in turn calls nodetree's functions at the
@@ -2261,9 +2216,8 @@ end
 ---
 --- * Otherwise register `callbacks.<foo>` as the first and last
 ---   function of callback `<foo>`.
---
---- @tparam string cb
----   The name of a callback.
+---
+---@param cb string # The name of a callback.
 local function register_callback(cb)
   if luatexbase then
     local descriptions = luatexbase.callback_descriptions(cb)
@@ -2314,11 +2268,10 @@ local function register_callback(cb)
 end
 
 --- Unregister a callback.
---
+---
 --- We follow the same logic as with `register_callback`.
---
---- @tparam string cb
----   The name of a callback.
+---
+---@param cb string # The name of a callback.
 local function unregister_callback(cb)
   if luatexbase then
     local descriptions = luatexbase.callback_descriptions(cb)
@@ -2361,8 +2314,8 @@ local function unregister_callback(cb)
 end
 
 --- Exported functions.
---
--- @section export
+---
+---@section export
 
 local export = {
   set_option = set_option,
@@ -2423,7 +2376,7 @@ local export = {
   --
   --- @function export.compile_include
   --
-  --- @tparam string tex_markup
+  ---@param tex_markup string
   compile_include = function(tex_markup)
     -- Generate a subfolder for all tempory files: _nodetree-jobname.
     local parent_path = lfs.currentdir() .. '/' .. '_nodetree-' .. tex.jobname
@@ -2473,10 +2426,8 @@ local export = {
   ---
   --- @function export.check_shell_escape
   ---
-  --- @tparam string what
-  ---   The name of the command or environment.
-  --- @tparam boolean is_command
-  ---   Set if `what` is a command.
+  ---@param what string # The name of the command or environment.
+  ---@param is_command boolean # Set if `what` is a command.
   check_shell_escape = function(what, is_command)
     local info = status.list()
     if info.shell_escape ~= 1 then
@@ -2503,10 +2454,8 @@ local export = {
   ---
   --- @function export.print
   ---
-  --- @tparam Node head
-  ---   The head node of a node list.
-  --- @tparam table opts
-  ---   Options as a table.
+  ---@param head Node # The head node of a node list.
+  ---@param opts table # Options as a table.
   print = function(head, opts)
     if opts and type(opts) == 'table' then
       set_options(opts)
@@ -2519,8 +2468,7 @@ local export = {
   --
   --- @function export.format_dim
   ---
-  --- @tparam number sp
-  ---   A scaled point value.
+  ---@param sp number # A scaled point value.
   --
   --- @treturn string
   format_dim = function(sp)
@@ -2531,8 +2479,7 @@ local export = {
   ---
   --- @function export.get_default_option
   ---
-  --- @tparam string key
-  ---   The key of the option.
+  ---@param key string # The key of the option.
   --
   --- @treturn string|number|boolean
   get_default_option = function(key)
@@ -2568,7 +2515,7 @@ local export = {
   ---
   --- @function export.input
   ---
-  --- @tparam string filename
+  ---@param filename string
   input = function(filename)
     local file = assert(io.open(filename, 'r'))
     local lines_in = {}

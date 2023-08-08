@@ -27,10 +27,10 @@
 <h1>nodetree</h1>
 
 
-
 <h2>Contents</h2>
 <ul>
 <li><a href="#Tables">Tables</a></li>
+<li><a href="#Fields">Fields</a></li>
 <li><a href="#Format_functions">Format functions </a></li>
 <li><a href="#Template_functions">Template functions </a></li>
 <li><a href="#Node_library_extensions">Node library extensions </a></li>
@@ -53,19 +53,25 @@
 
 <h1>Module <code>nodetree</code></h1>
 <p>This file (<code>nodetree.lua</code>) is part of the LuaTeX package
- &lsquo;nodetree&rsquo;.</p>
-<p><p> Nodetree uses <a href="https://github.com/stevedonovan/ldoc">LDoc</a> for the
-  source code documentation. The supported tags are described in
-  the <a href="https://github.com/stevedonovan/LDoc/wiki">wiki</a>.</p>
+ 'nodetree'.</p>
+<p>
 
-<p> Nodes in LuaTeX are connected. The nodetree view distinguishes
- between <em>list</em> and <em>field</em> connections.</p>
+
+<p><a href="index.html#">nodetree</a> uses the annotation system of the
+<a href="https://github.com/LuaLS/lua-language-server/wiki/Annotations">lua-language-server</a>.
+Install the <a href="https://github.com/Josef-Friedrich/LuaTeX_Lua-API">type definitions for LuaTeX</a>
+or the <a href="https://marketplace.visualstudio.com/items?itemName=JosefFriedrich.luatex">Visual Studio Code Extension</a>.</p>
+
+<p>The LDoc support is deprecated.</p>
+
+<p>Nodes in LuaTeX are connected. The nodetree view distinguishes
+between <em>list</em> and <em>field</em> connections.</p>
 
 <ul>
-<li>list: Nodes that are doubly connected by <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and <code>previous</code>
-fields.</li>
-<li>field: Connections to nodes by other fields than <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and
-<code>previous</code> fields, e.g., <code>head</code>, <code>pre</code>.</li>
+    <li>list: Nodes that are doubly connected by <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and <code>previous</code>
+    fields.</li>
+    <li>field: Connections to nodes by other fields than <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and
+    <code>previous</code> fields, e.g., <code>head</code>, <code>pre</code>.</li>
 </ul>
 </p>
 
@@ -86,50 +92,86 @@ fields.</li>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree_state">tree_state</a></td>
-	<td class="summary">The state values of the current tree item.</td>
+	<td class="summary"><a href="index.html#tree_state">tree_state</a>:</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#utf8">utf8</a></td>
+	<td class="summary">Lua 5.1 does not have the utf8 library (Lua 5.1 is the default
+version in LuajitTeX).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#example_counter">example_counter</a></td>
+	<td class="summary">A counter for the compiled TeX examples.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#have_output">have_output</a></td>
+	<td class="summary">A flag to indicate that something has been emitted by nodetree.</td>
 	</tr>
 </table>
 <h2><a href="#Format_functions">Format functions </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#format.underscore">format.underscore (input)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format.escape">format.escape (input)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format.function">format.function (input)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format.whitespace">format.whitespace (count)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format.color_code">format.color_code (code)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format.color_tex">format.color_tex (color, mode)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format.node_begin">format.node_begin ()</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format.node_end">format.node_end ()</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format.new_line">format.new_line (count)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#format.type_id">format.type_id (id)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#nodetree_print">nodetree_print (text)</a></td>
@@ -149,15 +191,21 @@ fields.</li>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.line">template.line (length)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.branch">template.branch (connection_type, connection_state, last)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.fill">template.fill (number, order, field)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.colored_string">template.colored_string (text, color, mode, background)</a></td>
@@ -166,7 +214,7 @@ fields.</li>
 	<tr>
 	<td class="name" nowrap><a href="#template.length">template.length (input)</a></td>
 	<td class="summary">Format a scaled point input value into dimension string (<code>12pt</code>,
-  <code>1cm</code>)</td>
+ <code>1cm</code>)</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_all_table_data">get_all_table_data (data, previous_data)</a></td>
@@ -182,11 +230,15 @@ fields.</li>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.type">template.type (type, id)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.callback">template.callback (callback_name, variables, where)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.branches">template.branches (level, connection_type)</a></td>
@@ -205,14 +257,18 @@ fields.</li>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#node_extended.subtype">node_extended.subtype (n)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 </table>
 <h2><a href="#Node_tree_building_functions">Node tree building functions </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#tree.format_field">tree.format_field (head, field)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.format_attributes">tree.format_attributes (head)</a></td>
@@ -220,15 +276,21 @@ fields.</li>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.set_state">tree.set_state (level, connection_type, connection_state)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.analyze_fields">tree.analyze_fields (fields, level)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.analyze_node">tree.analyze_node (head, level)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.analyze_list">tree.analyze_list (head, level)</a></td>
@@ -243,75 +305,111 @@ fields.</li>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.contribute_filter">callbacks.contribute_filter (extrainfo)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.buildpage_filter">callbacks.buildpage_filter (extrainfo)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.build_page_insert">callbacks.build_page_insert (n, i)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.pre_linebreak_filter">callbacks.pre_linebreak_filter (head, groupcode)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.linebreak_filter">callbacks.linebreak_filter (head, is_display)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.append_to_vlist_filter">callbacks.append_to_vlist_filter (box, locationcode, prevdepth, mirrored)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.post_linebreak_filter">callbacks.post_linebreak_filter (head, groupcode)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.hpack_filter">callbacks.hpack_filter (head, groupcode, size, packtype, direction, attributelist)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.vpack_filter">callbacks.vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.hpack_quality">callbacks.hpack_quality (incident, detail, head, first, last)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.vpack_quality">callbacks.vpack_quality (incident, detail, head, first, last)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.process_rule">callbacks.process_rule (head, width, height)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.pre_output_filter">callbacks.pre_output_filter (head, groupcode, size, packtype, maxdepth, direction)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.hyphenate">callbacks.hyphenate (head, tail)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.ligaturing">callbacks.ligaturing (head, tail)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.kerning">callbacks.kerning (head, tail)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.insert_local_par">callbacks.insert_local_par (local_par, location)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#callbacks.mlist_to_hlist">callbacks.mlist_to_hlist (head, display_type, need_penalties)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 </table>
 <h2><a href="#Messages__options">Messages, options </a></h2>
@@ -333,11 +431,15 @@ fields.</li>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#template.get_print_position">template.get_print_position (cb)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.no_callback">template.no_callback (name, internal)</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#check_callback_name">check_callback_name (callback_name)</a></td>
@@ -360,11 +462,15 @@ fields.</li>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#export.register_callbacks">export.register_callbacks ()</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#export.unregister_callbacks">export.unregister_callbacks ()</a></td>
-	<td class="summary"></td>
+	<td class="summary">
+
+</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#export.compile_include">export.compile_include (tex_markup)</a></td>
@@ -424,26 +530,42 @@ fields.</li>
     <ul>
         <li><span class="parameter">callback</span>
 
+
+
         </li>
         <li><span class="parameter">channel</span>
+
+
 
         </li>
         <li><span class="parameter">color</span>
 
+
+
         </li>
         <li><span class="parameter">decimalplaces</span>
+
+
 
         </li>
         <li><span class="parameter">unit</span>
 
+
+
         </li>
         <li><span class="parameter">verbosity</span>
+
+
 
         </li>
         <li><span class="parameter">firstline</span>
 
+
+
         </li>
         <li><span class="parameter">lastline</span>
+
+
 
         </li>
     </ul>
@@ -473,9 +595,9 @@ fields.</li>
     </dt>
     <dd>
     The previous options.
- We need this for functions <a href="index.html#export.push_options">push_options</a> and <a href="index.html#export.pop_options">pop_options</a> so that
- the effects of the <code>\setkeys</code> commands in <code>nodetree-embed.sty</code>
- (which directly manipulates the <a href="index.html#options">options</a> table) stay local.
+We need this for functions <a href="index.html#export.push_options">push_options</a> and <a href="index.html#export.pop_options">pop_options</a> so that
+the effects of the <code>\setkeys</code> commands in <code>nodetree-embed.sty</code>
+(which directly manipulates the <a href="index.html#options">options</a> table) stay local.
 
 
 
@@ -489,29 +611,63 @@ fields.</li>
     <strong>tree_state</strong>
     </dt>
     <dd>
-    The state values of the current tree item.</p>
+    <a href="index.html#tree_state">tree_state</a>: * <code>1</code> (level):
+  * <code>list</code>: <code>continue</code>
+  * <code>field</code>: <code>stop</code>
+* <code>2</code>:
+  * <code>list</code>: <code>continue</code>
+  * <code>field</code>: <code>stop</code></p>
 
-<p> <a href="index.html#tree_state">tree_state</a>:</p>
-
-<ul>
-<li><code>1</code> (level):
-
-<ul>
-<li><code>list</code>: <code>continue</code></li>
-<li><code>field</code>: <code>stop</code></li>
-</ul>
-</li>
-<li><code>2</code>:
-
-<ul>
-<li><code>list</code>: <code>continue</code></li>
-<li><code>field</code>: <code>stop</code></li>
-</ul>
-</li>
-</ul>
+<p>...
 
 
-<p> &hellip;
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "utf8"></a>
+    <strong>utf8</strong>
+    </dt>
+    <dd>
+    Lua 5.1 does not have the utf8 library (Lua 5.1 is the default
+version in LuajitTeX).  LuaJitTeX does include the slnunicode library.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "example_counter"></a>
+    <strong>example_counter</strong>
+    </dt>
+    <dd>
+    A counter for the compiled TeX examples.  Some TeX code snippets
+a written into files, wrapped with some TeX boilerplate code.
+These written files are compiled later on.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "have_output"></a>
+    <strong>have_output</strong>
+    </dt>
+    <dd>
+    A flag to indicate that something has been emitted by nodetree.
 
 
 
@@ -524,7 +680,7 @@ fields.</li>
     <h2 class="section-header has-description"><a name="Format_functions"></a>Format functions </h2>
 
           <div class="section-description">
-           Low-level template functions.
+          Low-level template functions.
           </div>
     <dl class="function">
     <dt>
@@ -535,11 +691,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">input</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -547,6 +704,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -562,11 +721,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">input</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -574,6 +734,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -589,11 +751,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">input</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
     </ul>
 
@@ -601,6 +764,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">number</span></span>
+
+
 
     </ol>
 
@@ -616,11 +781,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">count</span>
-            <span class="types"><span class="type">number</span></span>
-           How many spaces should be output.
+         number # How many spaces should be output.
         </li>
     </ul>
 
@@ -628,6 +794,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -643,11 +811,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">code</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
     </ul>
 
@@ -655,6 +824,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -670,15 +841,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">color</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">mode</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -686,6 +857,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -702,10 +875,14 @@ fields.</li>
 
 
 
+
+
     <h3>Returns:</h3>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -722,10 +899,14 @@ fields.</li>
 
 
 
+
+
     <h3>Returns:</h3>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -741,11 +922,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">count</span>
-            <span class="types"><span class="type">number</span></span>
-           How many new lines should be output.
+         number # How many new lines should be output.
         </li>
     </ul>
 
@@ -753,6 +935,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -768,11 +952,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
     </ul>
 
@@ -780,6 +965,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -793,7 +980,7 @@ fields.</li>
     </dt>
     <dd>
     Print the output to stdout or write it into a file (<code>output_file</code>).
- New text is appended.
+New text is appended.
 
 
     <h3>Parameters:</h3>
@@ -817,161 +1004,59 @@ fields.</li>
     <strong>template.color (color, mode, background)</strong>
     </dt>
     <dd>
-    <p><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition)
- parameters</a>.</p>
+    <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition)
+ parameters</a>. </p>
 
 <p> <strong>attributes</strong></p>
 
-<table>
-<thead>
-<tr>
-<th> color      </th>
-<th>code</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> reset      </td>
-<td>  0 </td>
-</tr>
-<tr>
-<td> clear      </td>
-<td>  0 </td>
-</tr>
-<tr>
-<td> bright     </td>
-<td>  1 </td>
-</tr>
-<tr>
-<td> dim        </td>
-<td>  2 </td>
-</tr>
-<tr>
-<td> underscore </td>
-<td>  4 </td>
-</tr>
-<tr>
-<td> blink      </td>
-<td>  5 </td>
-</tr>
-<tr>
-<td> reverse    </td>
-<td>  7 </td>
-</tr>
-<tr>
-<td> hidden     </td>
-<td>  8 </td>
-</tr>
-</tbody>
-</table>
-
+<p> | color      |code|
+ |------------|----|
+ | reset      |  0 |
+ | clear      |  0 |
+ | bright     |  1 |
+ | dim        |  2 |
+ | underscore |  4 |
+ | blink      |  5 |
+ | reverse    |  7 |
+ | hidden     |  8 |</p>
 
 <p> <strong>foreground</strong></p>
 
-<table>
-<thead>
-<tr>
-<th> color      </th>
-<th>code</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> black      </td>
-<td> 30 </td>
-</tr>
-<tr>
-<td> red        </td>
-<td> 31 </td>
-</tr>
-<tr>
-<td> green      </td>
-<td> 32 </td>
-</tr>
-<tr>
-<td> yellow     </td>
-<td> 33 </td>
-</tr>
-<tr>
-<td> blue       </td>
-<td> 34 </td>
-</tr>
-<tr>
-<td> magenta    </td>
-<td> 35 </td>
-</tr>
-<tr>
-<td> cyan       </td>
-<td> 36 </td>
-</tr>
-<tr>
-<td> white      </td>
-<td> 37 </td>
-</tr>
-</tbody>
-</table>
-
+<p> | color      |code|
+ |------------|----|
+ | black      | 30 |
+ | red        | 31 |
+ | green      | 32 |
+ | yellow     | 33 |
+ | blue       | 34 |
+ | magenta    | 35 |
+ | cyan       | 36 |
+ | white      | 37 |</p>
 
 <p> <strong>background</strong></p>
 
-<table>
-<thead>
-<tr>
-<th> color      </th>
-<th>code</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> onblack    </td>
-<td> 40 </td>
-</tr>
-<tr>
-<td> onred      </td>
-<td> 41 </td>
-</tr>
-<tr>
-<td> ongreen    </td>
-<td> 42 </td>
-</tr>
-<tr>
-<td> onyellow   </td>
-<td> 43 </td>
-</tr>
-<tr>
-<td> onblue     </td>
-<td> 44 </td>
-</tr>
-<tr>
-<td> onmagenta  </td>
-<td> 45 </td>
-</tr>
-<tr>
-<td> oncyan     </td>
-<td> 46 </td>
-</tr>
-<tr>
-<td> onwhite    </td>
-<td> 47 </td>
-</tr>
-</tbody>
-</table>
-
+<p> | color      |code|
+ |------------|----|
+ | onblack    | 40 |
+ | onred      | 41 |
+ | ongreen    | 42 |
+ | onyellow   | 43 |
+ | onblue     | 44 |
+ | onmagenta  | 45 |
+ | oncyan     | 46 |
+ | onwhite    | 47 |
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">color</span>
-            <span class="types"><span class="type">ColorName</span></span>
-           A color name.
+         ColorName # A color name.
         </li>
         <li><span class="parameter">mode</span>
-            <span class="types"><span class="type">ColorMode</span></span>
-
+         ColorMode
         </li>
         <li><span class="parameter">background</span>
-            <span class="types"><span class="type">boolean</span></span>
-           If set, colorize the background instead of the text.
+         boolean # If set, colorize the background instead of the text.
         </li>
     </ul>
 
@@ -979,6 +1064,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1028,8 +1115,7 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
     </ul>
 
@@ -1052,11 +1138,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">length</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           If <code>long</code>, emit a longer line.
+         string # If <code>long</code>, emit a longer line.
         </li>
     </ul>
 
@@ -1064,6 +1151,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1079,19 +1168,18 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">connection_type</span>
-            <span class="types"><span class="type">ConnectionType</span></span>
-
+         ConnectionType
         </li>
         <li><span class="parameter">connection_state</span>
-            <span class="types"><span class="type">ConnectionState</span></span>
-
+         ConnectionState
         </li>
         <li><span class="parameter">last</span>
-            <span class="types"><span class="type">boolean</span></span>
-
+         boolean
         </li>
     </ul>
 
@@ -1099,6 +1187,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1114,19 +1204,18 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">number</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">order</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">field</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -1134,6 +1223,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1152,20 +1243,16 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">text</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           A text string.
+         string # A text string.
         </li>
         <li><span class="parameter">color</span>
-            <span class="types"><span class="type">ColorName</span></span>
-           A color name.
+         ColorName # A color name.
         </li>
         <li><span class="parameter">mode</span>
-            <span class="types"><span class="type">ColorMode</span></span>
-
+         ColorMode
         </li>
         <li><span class="parameter">background</span>
-            <span class="types"><span class="type">boolean</span></span>
-           If set, colorize the background instead of the text.
+         boolean # If set, colorize the background instead of the text.
         </li>
     </ul>
 
@@ -1173,6 +1260,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1186,14 +1275,13 @@ fields.</li>
     </dt>
     <dd>
     Format a scaled point input value into dimension string (<code>12pt</code>,
-  <code>1cm</code>)
+ <code>1cm</code>)
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">input</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
     </ul>
 
@@ -1201,6 +1289,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1213,28 +1303,28 @@ fields.</li>
     <strong>get_all_table_data (data, previous_data)</strong>
     </dt>
     <dd>
-    Get all data from a table including metatables.</p>
+    Get all data from a table including metatables. </p>
 
-<p> Properties will reside in a metatable if nodes were copied using an
- operation like box copy: (\copy). The LuaTeX manual states this: “If
- the second argument of <code>set_properties_mode</code> is true, then a
- metatable approach is chosen: the copy gets its own table with the
- original table as metatable.”</p>
+<p>Properties will reside in a metatable if nodes were copied using an
+operation like box copy: (\copy). The LuaTeX manual states this: “If
+the second argument of <code>set_properties_mode</code> is true, then a
+metatable approach is chosen: the copy gets its own table with the
+original table as metatable.”</p>
 
-<p> Source: <a href="https://stackoverflow.com/a/5639667">StackOverflow</a> – this
- works if <code>__index</code> returns a table, which it should as per LuaTeX
- manual.
+<p>Source: <a href="https://stackoverflow.com/a/5639667">StackOverflow</a> – this
+works if <code>__index</code> returns a table, which it should as per LuaTeX
+manual.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">data</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
-           A Lua table.
+         table
+   A Lua table.
         </li>
         <li><span class="parameter">previous_data</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
-           The data of a Lua table of a previous recursive call.
+         table
+   The data of a Lua table of a previous recursive call.
         </li>
     </ul>
 
@@ -1260,8 +1350,7 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">table</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
-           A table to generate an inline view of.
+         table # A table to generate an inline view of.
         </li>
     </ul>
 
@@ -1269,6 +1358,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1287,20 +1378,16 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">key</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           A key.
+         string # A key.
         </li>
         <li><span class="parameter">value</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a> or <span class="type">number</span></span>
-           A value.
+         string|number # A value.
         </li>
         <li><span class="parameter">typ</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           A node type.
+         string # A node type.
         </li>
         <li><span class="parameter">color</span>
-            <span class="types"><span class="type">ColorName</span></span>
-           A color name.
+         ColorName # A color name.
         </li>
     </ul>
 
@@ -1308,6 +1395,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1323,15 +1412,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">type</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">id</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
     </ul>
 
@@ -1339,6 +1428,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1354,19 +1445,18 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">callback_name</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">variables</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
-
+         table
         </li>
         <li><span class="parameter">where</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           <code>&apos;before&apos;</code> or <code>&apos;after&apos;</code>
+         string # <code>&apos;before&apos;</code> or <code>&apos;after&apos;</code>
         </li>
     </ul>
 
@@ -1374,6 +1464,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1392,12 +1484,10 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">level</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">connection_type</span>
-            <span class="types"><span class="type">ConnectionType</span></span>
-
+         ConnectionType
         </li>
     </ul>
 
@@ -1405,6 +1495,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1421,19 +1513,18 @@ fields.</li>
     <strong>node_extended.node_id (n)</strong>
     </dt>
     <dd>
-    Get the ID of a node.</p>
+    Get the ID of a node. </p>
 
-<p> We have to convert the node into a string and then to extract
- the ID from this string using a regular expression. If you convert a
- node into a string it looks like: <code>&lt;node    nil &lt;    172 &gt;    nil :
- hlist 2&gt;</code>.
+<p>We have to convert the node into a string and then to extract
+the ID from this string using a regular expression. If you convert a
+node into a string it looks like: <code>&lt;node    nil &lt;    172 &gt;    nil :
+hlist 2&gt;</code>.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">n</span>
-            <span class="types"><span class="type">Node</span></span>
-           A node.
+         Node # A node.
         </li>
     </ul>
 
@@ -1441,6 +1532,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1453,45 +1546,47 @@ fields.</li>
     <strong>get_node_subtypes ()</strong>
     </dt>
     <dd>
-    <p>A table of all node subtype names.</p>
 
-<p> <strong>Nodes without subtypes:</strong></p>
+<p>A table of all node subtype names. </p>
+
+<p><strong>Nodes without subtypes:</strong></p>
 
 <ul>
-<li><code>ins</code> (3)</li>
-<li><code>local_par</code> (9)</li>
-<li><code>penalty</code> (14)</li>
-<li><code>unset</code> (15)</li>
-<li><code>style</code> (16)</li>
-<li><code>choice</code> (17)</li>
-<li><code>fraction</code> (20)</li>
-<li><code>math_char</code> (23)</li>
-<li><code>sub_box</code> (24)</li>
-<li><code>sub_mlist</code> (25)</li>
-<li><code>math_text_char</code> (26)</li>
-<li><code>delim</code> (27)</li>
-<li><code>margin_kern</code> (28)</li>
-<li><code>align_record</code> (30)</li>
-<li><code>pseudo_file</code> (31)</li>
-<li><code>pseudo_line</code> (32)</li>
-<li><code>page_insert</code> (33)</li>
-<li><code>split_insert</code> (34)</li>
-<li><code>expr_stack</code> (35)</li>
-<li><code>nested_list</code> (36)</li>
-<li><code>span</code> (37)</li>
-<li><code>attribute</code> (38)</li>
-<li><code>glue_spec</code> (39)</li>
-<li><code>attribute_list</code> (40)</li>
-<li><code>temp</code> (41)</li>
-<li><code>align_stack</code> (42)</li>
-<li><code>movement_stack</code> (43)</li>
-<li><code>if_stack</code> (44)</li>
-<li><code>unhyphenated</code> (45)</li>
-<li><code>hyphenated</code> (46)</li>
-<li><code>delta</code> (47)</li>
-<li><code>passive</code> (48)</li>
-<li><code>shape</code> (49)</li>
+    <li><code>ins</code> (3)</li>
+    <li><code>local_par</code> (9)</li>
+    <li><code>penalty</code> (14)</li>
+    <li><code>unset</code> (15)</li>
+    <li><code>style</code> (16)</li>
+    <li><code>choice</code> (17)</li>
+    <li><code>fraction</code> (20)</li>
+    <li><code>math_char</code> (23)</li>
+    <li><code>sub_box</code> (24)</li>
+    <li><code>sub_mlist</code> (25)</li>
+    <li><code>math_text_char</code> (26)</li>
+    <li><code>delim</code> (27)</li>
+    <li><code>margin_kern</code> (28)</li>
+    <li><code>align_record</code> (30)</li>
+    <li><code>pseudo_file</code> (31)</li>
+    <li><code>pseudo_line</code> (32)</li>
+    <li><code>page_insert</code> (33)</li>
+    <li><code>split_insert</code> (34)</li>
+    <li><code>expr_stack</code> (35)</li>
+    <li><code>nested_list</code> (36)</li>
+    <li><code>span</code> (37)</li>
+    <li><code>attribute</code> (38)</li>
+    <li><code>glue_spec</code> (39)</li>
+    <li><code>attribute_list</code> (40)</li>
+    <li><code>temp</code> (41)</li>
+    <li><code>align_stack</code> (42)</li>
+    <li><code>movement_stack</code> (43)</li>
+    <li><code>if_stack</code> (44)</li>
+    <li><code>unhyphenated</code> (45)</li>
+    <li><code>hyphenated</code> (46)</li>
+    <li><code>delta</code> (47)</li>
+    <li><code>passive</code> (48)</li>
+    <li><code>shape</code> (49)</li>
 </ul>
+
 
 
 
@@ -1500,6 +1595,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
 
     </ol>
 
@@ -1515,11 +1612,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">n</span>
-            <span class="types"><span class="type">Node</span></span>
-
+         Node
         </li>
     </ul>
 
@@ -1527,6 +1625,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1546,15 +1646,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">field</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -1562,6 +1662,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1575,15 +1677,14 @@ fields.</li>
     </dt>
     <dd>
     Attributes are key-value number pairs.  They are printed as an inline
- list. The attribute <code>0</code> with the value <code>0</code> is skipped because this
- attribute is in every node by default.
+list. The attribute <code>0</code> with the value <code>0</code> is skipped because this
+attribute is in every node by default.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
     </ul>
 
@@ -1591,6 +1692,8 @@ fields.</li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -1606,19 +1709,18 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">level</span>
-            <span class="types"><span class="type">number</span></span>
-           <code>level</code> is an integer beginning with 1.
+         number # <code>level</code> is an integer beginning with 1.
         </li>
         <li><span class="parameter">connection_type</span>
-            <span class="types"><span class="type">ConnectionType</span></span>
-
+         ConnectionType
         </li>
         <li><span class="parameter">connection_state</span>
-            <span class="types"><span class="type">ConnectionState</span></span>
-
+         ConnectionState
         </li>
     </ul>
 
@@ -1635,15 +1737,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">fields</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
-
+         table
         </li>
         <li><span class="parameter">level</span>
-            <span class="types"><span class="type">number</span></span>
-           The current recursion level.
+         number # The current recursion level.
         </li>
     </ul>
 
@@ -1660,15 +1762,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">level</span>
-            <span class="types"><span class="type">number</span></span>
-           The current recursion level.
+         number # The current recursion level.
         </li>
     </ul>
 
@@ -1688,12 +1790,10 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">level</span>
-            <span class="types"><span class="type">number</span></span>
-           The current recursion level.
+         number # The current recursion level.
         </li>
     </ul>
 
@@ -1713,8 +1813,7 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
     </ul>
 
@@ -1727,18 +1826,22 @@ fields.</li>
     <h2 class="section-header has-description"><a name="Callback_wrappers"></a>Callback wrappers </h2>
 
           <div class="section-description">
-          <p> Nodetree uses luatexbase&rsquo;s functions to manage callbacks if
- available. Otherwise a simplistic approach is taken by prepending
- or appending nodetree&rsquo;s diagnostic callbacks to the existing ones
- (and also removing them again if requested).</p>
+
+
+
+<p>Nodetree uses luatexbase's functions to manage callbacks if
+available. Otherwise a simplistic approach is taken by prepending
+or appending nodetree's diagnostic callbacks to the existing ones
+(and also removing them again if requested).</p>
 
 <p> Each function in the <code>callbacks</code> table consists of three parts:</p>
 
 <ul>
-<li>before-callback inspection</li>
-<li>original callback or default function call</li>
-<li>after-callback inspection</li>
+    <li>before-callback inspection</li>
+    <li>original callback or default function call</li>
+    <li>after-callback inspection</li>
 </ul>
+
 
           </div>
     <dl class="function">
@@ -1750,11 +1853,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">extrainfo</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -1771,11 +1875,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">extrainfo</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -1792,15 +1897,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">n</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">i</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -1808,6 +1913,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">number</span></span>
+
+
 
     </ol>
 
@@ -1823,15 +1930,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -1839,6 +1946,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">boolean</span></span>
+
+
 
     </ol>
 
@@ -1854,15 +1963,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">is_display</span>
-            <span class="types"><span class="type">boolean</span></span>
-
+         boolean
         </li>
     </ul>
 
@@ -1870,6 +1979,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">boolean</span></span>
+
+
 
     </ol>
 
@@ -1885,23 +1996,21 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">box</span>
-            <span class="types"><span class="type">Node</span></span>
-
+         Node
         </li>
         <li><span class="parameter">locationcode</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">prevdepth</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">mirrored</span>
-            <span class="types"><span class="type">boolean</span></span>
-
+         boolean
         </li>
     </ul>
 
@@ -1909,10 +2018,14 @@ fields.</li>
     <ol>
         <li>
            <span class="types"><span class="type">Node</span></span>
-        </li>
+
+
+</li>
         <li>
            <span class="types"><span class="type">number</span></span>
-        </li>
+
+
+</li>
     </ol>
 
 
@@ -1927,15 +2040,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -1943,6 +2056,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">boolean</span></span>
+
+
 
     </ol>
 
@@ -1958,31 +2073,27 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">size</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">packtype</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">direction</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">attributelist</span>
-            <span class="types"><span class="type">Node</span></span>
-
+         Node
         </li>
     </ul>
 
@@ -1990,6 +2101,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">boolean</span></span>
+
+
 
     </ol>
 
@@ -2005,35 +2118,30 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">size</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">packtype</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">maxdepth</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">direction</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">attributelist</span>
-            <span class="types"><span class="type">Node</span></span>
-
+         Node
         </li>
     </ul>
 
@@ -2041,6 +2149,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">boolean</span></span>
+
+
 
     </ol>
 
@@ -2056,27 +2166,24 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">incident</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">detail</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">first</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">last</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
     </ul>
 
@@ -2084,6 +2191,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">Node</span></span>
+
+
 
     </ol>
 
@@ -2099,27 +2208,24 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">incident</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">detail</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">first</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">last</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
     </ul>
 
@@ -2136,19 +2242,18 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">width</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">height</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
     </ul>
 
@@ -2165,31 +2270,27 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">size</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">packtype</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">maxdepth</span>
-            <span class="types"><span class="type">number</span></span>
-
+         number
         </li>
         <li><span class="parameter">direction</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -2197,6 +2298,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">boolean</span></span>
+
+
 
     </ol>
 
@@ -2212,15 +2315,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">tail</span>
-            <span class="types"><span class="type">Node</span></span>
-
+         Node
         </li>
     </ul>
 
@@ -2237,15 +2340,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">tail</span>
-            <span class="types"><span class="type">Node</span></span>
-
+         Node
         </li>
     </ul>
 
@@ -2262,15 +2365,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">tail</span>
-            <span class="types"><span class="type">Node</span></span>
-
+         Node
         </li>
     </ul>
 
@@ -2287,15 +2390,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">local_par</span>
-            <span class="types"><span class="type">Node</span></span>
-
+         Node
         </li>
         <li><span class="parameter">location</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -2312,19 +2415,18 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">display_type</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">need_penalties</span>
-            <span class="types"><span class="type">boolean</span></span>
-
+         boolean
         </li>
     </ul>
 
@@ -2332,6 +2434,8 @@ fields.</li>
     <ol>
 
            <span class="types"><span class="type">Node</span></span>
+
+
 
     </ol>
 
@@ -2348,30 +2452,26 @@ fields.</li>
     <strong>message (why, where, what, help)</strong>
     </dt>
     <dd>
-    Emit a warning or error message.</p>
+    Emit a warning or error message. </p>
 
-<p> This works for plain TeX, Texinfo, and LaTeX (for plain TeX and
- Texinfo we make the message look identical to the LaTeX case).
- Note that a full stop gets appended to <code>what</code>.
+<p>This works for plain TeX, Texinfo, and LaTeX (for plain TeX and
+Texinfo we make the message look identical to the LaTeX case).
+Note that a full stop gets appended to <code>what</code>.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">why</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           <code>&apos;error&apos;</code> or <code>&apos;warning&apos;</code>.
+         string # <code>&apos;error&apos;</code> or <code>&apos;warning&apos;</code>.
         </li>
         <li><span class="parameter">where</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           In which package the error happened.
+         string # In which package the error happened.
         </li>
         <li><span class="parameter">what</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           The warning message to emit.
+         string # The warning message to emit.
         </li>
         <li><span class="parameter">help</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           Additional help text for errors.
+         string # Additional help text for errors.
         </li>
     </ul>
 
@@ -2391,12 +2491,10 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">key</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           The key of the option pair.
+         string # The key of the option pair.
         </li>
         <li><span class="parameter">value</span>
-            <span class="types"><span class="type">number</span> or <a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           The value of the option pair.
+         number|string # The value of the option pair.
         </li>
     </ul>
 
@@ -2416,8 +2514,7 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">opts</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
-           Options.
+         table # Options.
         </li>
     </ul>
 
@@ -2438,11 +2535,12 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">cb</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-          The name of a callback.
+         string # The name of a callback.
         </li>
     </ul>
 
@@ -2468,15 +2566,15 @@ fields.</li>
 
 
 
+
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">name</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
         <li><span class="parameter">internal</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -2490,16 +2588,15 @@ fields.</li>
     <strong>check_callback_name (callback_name)</strong>
     </dt>
     <dd>
-    Check whether the given callback name exists.</p>
+    Check whether the given callback name exists. </p>
 
-<p> Throw an error if it doesn’t.
+<p>Throw an error if it doesn’t.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">callback_name</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           The name of a callback to check.
+         string # The name of a callback to check.
         </li>
     </ul>
 
@@ -2525,8 +2622,7 @@ fields.</li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">alias</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           The alias of a callback name or the callback name itself.
+         string # The alias of a callback name or the callback name itself.
         </li>
     </ul>
 
@@ -2546,40 +2642,41 @@ fields.</li>
     <strong>register_callback (cb)</strong>
     </dt>
     <dd>
-    <p>Register a callback.</p>
 
-<p> Doing this for plain TeX is simple; we have access to LuaTeX&rsquo;s
+<p>Register a callback. </p>
+
+<p> Doing this for plain TeX is simple; we have access to LuaTeX's
  base function <code>callback.register</code> and thus can easily add our
- callback wrapper, which in turn calls nodetree&rsquo;s functions at the
+ callback wrapper, which in turn calls nodetree's functions at the
  very beginning and/or at the very end.</p>
 
 <p> Enter LaTeX. It comes with its own callback management that can
  register multiple callbacks, also taking care of the calling
  order. Unfortunately, however, it is also more restrictive: for
  example, some callbacks like <a href="index.html#callbacks.linebreak_filter">linebreak_filter</a> are tagged as
- &lsquo;exclusive&rsquo;, only accepting a single callback. While this makes
+ 'exclusive', only accepting a single callback. While this makes
  sense for the end user, it complicates the situation for nodetree
  to install its non-intrusive, observing-only callbacks.</p>
 
 <p> We thus take the following route.</p>
 
 <ul>
-<li><p>If there is no function for callback <code>&lt;foo&gt;</code> installed, register
-<code>callbacks.&lt;foo&gt;</code>.</p></li>
-<li><p>If there is a (single) function for callback <code>&lt;foo&gt;</code> of type
-three (&lsquo;exclusive&rsquo;), remove it, wrap it into <code>callbacks.&lt;foo&gt;</code>
-(via <code>orig_callbacks</code>) and install <code>callbacks.&lt;foo&gt;</code>.</p></li>
-<li><p>Otherwise register <code>callbacks.&lt;foo&gt;</code> as the first and last
-function of callback <code>&lt;foo&gt;</code>.</p></li>
+    <li><p>If there is no function for callback <code>&lt;foo&gt;</code> installed, register
+    <code>callbacks.&lt;foo&gt;</code>.</p></li>
+    <li><p>If there is a (single) function for callback <code>&lt;foo&gt;</code> of type
+    three ('exclusive'), remove it, wrap it into <code>callbacks.&lt;foo&gt;</code>
+    (via <code>orig_callbacks</code>) and install <code>callbacks.&lt;foo&gt;</code>.</p></li>
+    <li><p>Otherwise register <code>callbacks.&lt;foo&gt;</code> as the first and last
+    function of callback <code>&lt;foo&gt;</code>.</p></li>
 </ul>
+
 
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">cb</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           The name of a callback.
+         string # The name of a callback.
         </li>
     </ul>
 
@@ -2593,7 +2690,7 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <strong>unregister_callback (cb)</strong>
     </dt>
     <dd>
-    Unregister a callback.</p>
+    Unregister a callback. </p>
 
 <p> We follow the same logic as with <a href="index.html#register_callback">register_callback</a>.
 
@@ -2601,8 +2698,7 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">cb</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           The name of a callback.
+         string # The name of a callback.
         </li>
     </ul>
 
@@ -2628,6 +2724,8 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
 
 
 
+
+
 </dd>
     <dt>
     <a name = "export.unregister_callbacks"></a>
@@ -2642,13 +2740,15 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
 
 
 
+
+
 </dd>
     <dt>
     <a name = "export.compile_include"></a>
     <strong>export.compile_include (tex_markup)</strong>
     </dt>
     <dd>
-    Compile a TeX snippet.</p>
+    Compile a TeX snippet. </p>
 
 <p> Write some TeX snippets into a temporary LaTeX file, compile this
  file using <code>latexmk</code>, read the generated <code>*.nttex</code> file, and
@@ -2658,8 +2758,7 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">tex_markup</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -2679,12 +2778,10 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">what</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           The name of the command or environment.
+         string # The name of the command or environment.
         </li>
         <li><span class="parameter">is_command</span>
-            <span class="types"><span class="type">boolean</span></span>
-           Set if <code>what</code> is a command.
+         boolean # Set if <code>what</code> is a command.
         </li>
     </ul>
 
@@ -2704,12 +2801,10 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-            <span class="types"><span class="type">Node</span></span>
-           The head node of a node list.
+         Node # The head node of a node list.
         </li>
         <li><span class="parameter">opts</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
-           Options as a table.
+         table # Options as a table.
         </li>
     </ul>
 
@@ -2729,8 +2824,7 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">sp</span>
-            <span class="types"><span class="type">number</span></span>
-           A scaled point value.
+         number # A scaled point value.
         </li>
     </ul>
 
@@ -2738,6 +2832,8 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
 
     </ol>
 
@@ -2756,8 +2852,7 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">key</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-           The key of the option.
+         string # The key of the option.
         </li>
     </ul>
 
@@ -2765,6 +2860,8 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a>, <span class="type">number</span> or <span class="type">boolean</span></span>
+
+
 
     </ol>
 
@@ -2812,8 +2909,7 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">filename</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
+         string
         </li>
     </ul>
 
@@ -2842,8 +2938,8 @@ function of callback <code>&lt;foo&gt;</code>.</p></li>
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2023-08-03 18:01:54 </i>
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2023-08-08 17:32:05 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

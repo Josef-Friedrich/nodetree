@@ -1,0 +1,16 @@
+%!TEX program = lualatex
+\documentclass{article}
+
+% Explicitly add `lang.hyphenate` as callback functions.
+\directlua{
+  luatexbase.add_to_callback('hyphenate', lang.hyphenate, 'dummy1')
+  luatexbase.add_to_callback('hyphenate', lang.hyphenate, 'dummy2')
+}
+
+\usepackage[callback=:hyph:,channel=log]{nodetree}
+
+\begin{document}
+Lorem ipsum dolor sit amet.
+
+\NodetreeUnregisterCallback{:hyphenate:}
+\end{document}

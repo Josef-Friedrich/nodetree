@@ -31,12 +31,13 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Tables">Tables</a></li>
-<li><a href="#Fields">Fields</a></li>
 <li><a href="#Format_functions">Format functions </a></li>
 <li><a href="#Template_functions">Template functions </a></li>
-<li><a href="#Extend_the_node_library">Extend the node library </a></li>
-<li><a href="#Build_the_node_tree">Build the node tree </a></li>
-<li><a href="#Callback_wrapper">Callback wrapper </a></li>
+<li><a href="#Node_library_extensions">Node library extensions </a></li>
+<li><a href="#Node_tree_building_functions">Node tree building functions </a></li>
+<li><a href="#Callback_wrappers">Callback wrappers </a></li>
+<li><a href="#Messages__options">Messages, options </a></li>
+<li><a href="#Callback_management">Callback management </a></li>
 <li><a href="#Exported_functions">Exported functions </a></li>
 </ul>
 
@@ -51,18 +52,19 @@
 <div id="content">
 
 <h1>Module <code>nodetree</code></h1>
-<p>The nodetree package.</p>
+<p>This file (<code>nodetree.lua</code>) is part of the LuaTeX package
+ &lsquo;nodetree&rsquo;.</p>
 <p><p> Nodetree uses <a href="https://github.com/stevedonovan/ldoc">LDoc</a> for the
   source code documentation. The supported tags are described in
   the <a href="https://github.com/stevedonovan/LDoc/wiki">wiki</a>.</p>
 
 <p> Nodes in LuaTeX are connected. The nodetree view distinguishes
- between the <code>list</code> and <code>field</code> connections.</p>
+ between <em>list</em> and <em>field</em> connections.</p>
 
 <ul>
-<li><code>list</code>: Nodes that are doubly connected by <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and
-<code>previous</code> fields.</li>
-<li><code>field</code>: Connections to nodes by other fields than <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and
+<li>list: Nodes that are doubly connected by <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and <code>previous</code>
+fields.</li>
+<li>field: Connections to nodes by other fields than <a href="https://www.lua.org/manual/5.3/manual.html#pdf-next">next</a> and
 <code>previous</code> fields, e.g., <code>head</code>, <code>pre</code>.</li>
 </ul>
 </p>
@@ -78,63 +80,55 @@
 	<td class="name" nowrap><a href="#options">options</a></td>
 	<td class="summary">The current options.</td>
 	</tr>
-</table>
-<h2><a href="#Fields">Fields</a></h2>
-<table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#utf8">utf8</a></td>
-	<td class="summary">Lua 5.1 does not have the utf8 library (Lua 5.1 is the default
- version in LuajitTeX).</td>
+	<td class="name" nowrap><a href="#prev_options">prev_options</a></td>
+	<td class="summary">The previous options.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#example_counter">example_counter</a></td>
-	<td class="summary">A counter for the compiled TeX examples.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#have_output">have_output</a></td>
-	<td class="summary">A flag to indicate that something has been emitted by nodetree.</td>
+	<td class="name" nowrap><a href="#tree_state">tree_state</a></td>
+	<td class="summary">The state values of the current tree item.</td>
 	</tr>
 </table>
 <h2><a href="#Format_functions">Format functions </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#underscore">underscore (input)</a></td>
+	<td class="name" nowrap><a href="#format.underscore">format.underscore (input)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#escape">escape (input)</a></td>
+	<td class="name" nowrap><a href="#format.escape">format.escape (input)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#number">number (input)</a></td>
+	<td class="name" nowrap><a href="#format.function">format.function (input)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#whitespace">whitespace (count)</a></td>
+	<td class="name" nowrap><a href="#format.whitespace">format.whitespace (count)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#color_code">color_code (code)</a></td>
+	<td class="name" nowrap><a href="#format.color_code">format.color_code (code)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#color_tex">color_tex (color, mode)</a></td>
+	<td class="name" nowrap><a href="#format.color_tex">format.color_tex (color, mode)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#node_begin">node_begin ()</a></td>
+	<td class="name" nowrap><a href="#format.node_begin">format.node_begin ()</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#node_end">node_end ()</a></td>
+	<td class="name" nowrap><a href="#format.node_end">format.node_end ()</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#new_line">new_line (count)</a></td>
+	<td class="name" nowrap><a href="#format.new_line">format.new_line (count)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#type_id">type_id (id)</a></td>
+	<td class="name" nowrap><a href="#format.type_id">format.type_id (id)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
@@ -145,19 +139,20 @@
 <h2><a href="#Template_functions">Template functions </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#color">color (color, mode, background)</a></td>
-	<td class="summary"><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a>.</td>
+	<td class="name" nowrap><a href="#template.color">template.color (color, mode, background)</a></td>
+	<td class="summary"><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition)
+ parameters</a>.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#char">char (head)</a></td>
+	<td class="name" nowrap><a href="#template.char">template.char (head)</a></td>
 	<td class="summary">Format the char field of a node.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#line">line (length)</a></td>
+	<td class="name" nowrap><a href="#template.line">template.line (length)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#branch">branch (connection_type, connection_state, last)</a></td>
+	<td class="name" nowrap><a href="#template.branch">template.branch (connection_type, connection_state, last)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
@@ -182,7 +177,7 @@
 	<td class="summary">Convert a Lua table into a format string.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.key_value">template.key_value (key, value, color)</a></td>
+	<td class="name" nowrap><a href="#template.key_value">template.key_value (key, value, typ, color)</a></td>
 	<td class="summary">Format a key-value pair (<code>key: value, </code>).</td>
 	</tr>
 	<tr>
@@ -190,15 +185,15 @@
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#template.callback">template.callback (callback_name, variables)</a></td>
+	<td class="name" nowrap><a href="#template.callback">template.callback (callback_name, variables, where)</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#template.branches">template.branches (level, connection_type)</a></td>
-	<td class="summary"></td>
+	<td class="summary">Format the branching tree for one output line.</td>
 	</tr>
 </table>
-<h2><a href="#Extend_the_node_library">Extend the node library </a></h2>
+<h2><a href="#Node_library_extensions">Node library extensions </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#node_extended.node_id">node_extended.node_id (n)</a></td>
@@ -213,7 +208,7 @@
 	<td class="summary"></td>
 	</tr>
 </table>
-<h2><a href="#Build_the_node_tree">Build the node tree </a></h2>
+<h2><a href="#Node_tree_building_functions">Node tree building functions </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#tree.format_field">tree.format_field (head, field)</a></td>
@@ -237,86 +232,93 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.analyze_list">tree.analyze_list (head, level)</a></td>
-	<td class="summary"></td>
+	<td class="summary">Recurse over the current node list.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tree.analyze_callback">tree.analyze_callback (head)</a></td>
+	<td class="summary">The top-level internal entry point.</td>
+	</tr>
+</table>
+<h2><a href="#Callback_wrappers">Callback wrappers </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.contribute_filter">callbacks.contribute_filter (extrainfo)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.buildpage_filter">callbacks.buildpage_filter (extrainfo)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.build_page_insert">callbacks.build_page_insert (n, i)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.pre_linebreak_filter">callbacks.pre_linebreak_filter (head, groupcode)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.linebreak_filter">callbacks.linebreak_filter (head, is_display)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.append_to_vlist_filter">callbacks.append_to_vlist_filter (box, locationcode, prevdepth, mirrored)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.post_linebreak_filter">callbacks.post_linebreak_filter (head, groupcode)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.hpack_filter">callbacks.hpack_filter (head, groupcode, size, packtype, direction, attributelist)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.vpack_filter">callbacks.vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.hpack_quality">callbacks.hpack_quality (incident, detail, head, first, last)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.vpack_quality">callbacks.vpack_quality (incident, detail, head, first, last)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.process_rule">callbacks.process_rule (head, width, height)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.pre_output_filter">callbacks.pre_output_filter (head, groupcode, size, packtype, maxdepth, direction)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.hyphenate">callbacks.hyphenate (head, tail)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.ligaturing">callbacks.ligaturing (head, tail)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.kerning">callbacks.kerning (head, tail)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.insert_local_par">callbacks.insert_local_par (local_par, location)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#callbacks.mlist_to_hlist">callbacks.mlist_to_hlist (head, display_type, need_penalties)</a></td>
 	<td class="summary"></td>
 	</tr>
 </table>
-<h2><a href="#Callback_wrapper">Callback wrapper </a></h2>
+<h2><a href="#Messages__options">Messages, options </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#contribute_filter">contribute_filter (extrainfo)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#buildpage_filter">buildpage_filter (extrainfo)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#build_page_insert">build_page_insert (n, i)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#pre_linebreak_filter">pre_linebreak_filter (head, groupcode)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#linebreak_filter">linebreak_filter (head, is_display)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#append_to_vlist_filter">append_to_vlist_filter (box, locationcode, prevdepth, mirrored)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#post_linebreak_filter">post_linebreak_filter (head, groupcode)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#hpack_filter">hpack_filter (head, groupcode, size, packtype, direction, attributelist)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#vpack_filter">vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#hpack_quality">hpack_quality (incident, detail, head, first, last)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#vpack_quality">vpack_quality (incident, detail, head, first, last)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#process_rule">process_rule (head, width, height)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#pre_output_filter">pre_output_filter (head, groupcode, size, packtype, maxdepth, direction)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#hyphenate">hyphenate (head, tail)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#ligaturing">ligaturing (head, tail)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#kerning">kerning (head, tail)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#insert_local_par">insert_local_par (local_par, location)</a></td>
-	<td class="summary"></td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#mlist_to_hlist">mlist_to_hlist (head, display_type, need_penalties)</a></td>
-	<td class="summary"></td>
+	<td class="name" nowrap><a href="#message">message (why, where, what, help)</a></td>
+	<td class="summary">Emit a warning or error message.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#set_option">set_option (key, value)</a></td>
@@ -325,6 +327,17 @@
 	<tr>
 	<td class="name" nowrap><a href="#set_options">set_options (opts)</a></td>
 	<td class="summary">Set multiple key-value option pairs using a table.</td>
+	</tr>
+</table>
+<h2><a href="#Callback_management">Callback management </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#template.get_print_position">template.get_print_position (cb)</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#template.no_callback">template.no_callback (name, internal)</a></td>
+	<td class="summary"></td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#check_callback_name">check_callback_name (callback_name)</a></td>
@@ -346,28 +359,49 @@
 <h2><a href="#Exported_functions">Exported functions </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#compile_include">compile_include (tex_markup)</a></td>
+	<td class="name" nowrap><a href="#export.register_callbacks">export.register_callbacks ()</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#export.unregister_callbacks">export.unregister_callbacks ()</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#export.compile_include">export.compile_include (tex_markup)</a></td>
 	<td class="summary">Compile a TeX snippet.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#check_shell_escape">check_shell_escape ()</a></td>
-	<td class="summary">Check for <code>--shell-escape</code>.</td>
+	<td class="name" nowrap><a href="#export.check_shell_escape">export.check_shell_escape (what, is_command)</a></td>
+	<td class="summary">Check for <code>--shell-escape</code> within a command or environment.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#print">print (head, opts)</a></td>
+	<td class="name" nowrap><a href="#export.print">export.print (head, opts)</a></td>
 	<td class="summary">Print a node tree.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#format_dim">format_dim (sp)</a></td>
+	<td class="name" nowrap><a href="#export.format_dim">export.format_dim (sp)</a></td>
 	<td class="summary">Format a scaled point value as a formatted string.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#get_default_option">get_default_option (key)</a></td>
+	<td class="name" nowrap><a href="#export.get_default_option">export.get_default_option (key)</a></td>
 	<td class="summary">Get a default option that is not changed.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#export.push_options">export.push_options ()</a></td>
+	<td class="summary">Push current options.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#export.pop_options">export.pop_options ()</a></td>
+	<td class="summary">Pop previous options.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#export.input">export.input (filename)</a></td>
+	<td class="summary">Read a LaTeX input file and emit it immediately, obeying options
+ <code>firstline</code> and <code>lastline</code>.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#export.analyze">export.analyze</a></td>
-	<td class="summary">Use <code>export.print</code>.</td>
+	<td class="summary">Set to <a href="index.html#export.print">export.print</a>.</td>
 	</tr>
 </table>
 
@@ -406,6 +440,12 @@
         <li><span class="parameter">verbosity</span>
 
         </li>
+        <li><span class="parameter">firstline</span>
+
+        </li>
+        <li><span class="parameter">lastline</span>
+
+        </li>
     </ul>
 
 
@@ -419,26 +459,6 @@
     </dt>
     <dd>
     The current options.
- They are changed very often.
-
-
-
-
-
-
-
-</dd>
-</dl>
-    <h2 class="section-header "><a name="Fields"></a>Fields</h2>
-
-    <dl class="function">
-    <dt>
-    <a name = "utf8"></a>
-    <strong>utf8</strong>
-    </dt>
-    <dd>
-    Lua 5.1 does not have the utf8 library (Lua 5.1 is the default
- version in LuajitTeX).  LuaJitTeX does include the slnunicode library.
 
 
 
@@ -448,13 +468,14 @@
 
 </dd>
     <dt>
-    <a name = "example_counter"></a>
-    <strong>example_counter</strong>
+    <a name = "prev_options"></a>
+    <strong>prev_options</strong>
     </dt>
     <dd>
-    A counter for the compiled TeX examples.  Some TeX code snippets
- a written into files, wrapped with some TeX boilerplate code.
- These written files are compiled later on.
+    The previous options.
+ We need this for functions <a href="index.html#export.push_options">push_options</a> and <a href="index.html#export.pop_options">pop_options</a> so that
+ the effects of the <code>\setkeys</code> commands in <code>nodetree-embed.sty</code>
+ (which directly manipulates the <a href="index.html#options">options</a> table) stay local.
 
 
 
@@ -464,11 +485,33 @@
 
 </dd>
     <dt>
-    <a name = "have_output"></a>
-    <strong>have_output</strong>
+    <a name = "tree_state"></a>
+    <strong>tree_state</strong>
     </dt>
     <dd>
-    A flag to indicate that something has been emitted by nodetree.
+    The state values of the current tree item.</p>
+
+<p> <a href="index.html#tree_state">tree_state</a>:</p>
+
+<ul>
+<li><code>1</code> (level):
+
+<ul>
+<li><code>list</code>: <code>continue</code></li>
+<li><code>field</code>: <code>stop</code></li>
+</ul>
+</li>
+<li><code>2</code>:
+
+<ul>
+<li><code>list</code>: <code>continue</code></li>
+<li><code>field</code>: <code>stop</code></li>
+</ul>
+</li>
+</ul>
+
+
+<p> &hellip;
 
 
 
@@ -485,8 +528,8 @@
           </div>
     <dl class="function">
     <dt>
-    <a name = "underscore"></a>
-    <strong>underscore (input)</strong>
+    <a name = "format.underscore"></a>
+    <strong>format.underscore (input)</strong>
     </dt>
     <dd>
 
@@ -495,14 +538,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">input</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -510,8 +555,8 @@
 
 </dd>
     <dt>
-    <a name = "escape"></a>
-    <strong>escape (input)</strong>
+    <a name = "format.escape"></a>
+    <strong>format.escape (input)</strong>
     </dt>
     <dd>
 
@@ -520,14 +565,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">input</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -535,8 +582,8 @@
 
 </dd>
     <dt>
-    <a name = "number"></a>
-    <strong>number (input)</strong>
+    <a name = "format.function"></a>
+    <strong>format.function (input)</strong>
     </dt>
     <dd>
 
@@ -545,14 +592,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">input</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        number
+           <span class="types"><span class="type">number</span></span>
+
     </ol>
 
 
@@ -560,8 +609,8 @@
 
 </dd>
     <dt>
-    <a name = "whitespace"></a>
-    <strong>whitespace (count)</strong>
+    <a name = "format.whitespace"></a>
+    <strong>format.whitespace (count)</strong>
     </dt>
     <dd>
 
@@ -570,14 +619,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">count</span>
-         number # How many spaces should be output.
+            <span class="types"><span class="type">number</span></span>
+           How many spaces should be output.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -585,8 +636,8 @@
 
 </dd>
     <dt>
-    <a name = "color_code"></a>
-    <strong>color_code (code)</strong>
+    <a name = "format.color_code"></a>
+    <strong>format.color_code (code)</strong>
     </dt>
     <dd>
 
@@ -595,14 +646,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">code</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -610,8 +663,8 @@
 
 </dd>
     <dt>
-    <a name = "color_tex"></a>
-    <strong>color_tex (color, mode)</strong>
+    <a name = "format.color_tex"></a>
+    <strong>format.color_tex (color, mode)</strong>
     </dt>
     <dd>
 
@@ -620,9 +673,11 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">color</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
 
         </li>
         <li><span class="parameter">mode</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
 
         </li>
     </ul>
@@ -630,7 +685,8 @@
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -638,8 +694,8 @@
 
 </dd>
     <dt>
-    <a name = "node_begin"></a>
-    <strong>node_begin ()</strong>
+    <a name = "format.node_begin"></a>
+    <strong>format.node_begin ()</strong>
     </dt>
     <dd>
 
@@ -649,7 +705,8 @@
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -657,8 +714,8 @@
 
 </dd>
     <dt>
-    <a name = "node_end"></a>
-    <strong>node_end ()</strong>
+    <a name = "format.node_end"></a>
+    <strong>format.node_end ()</strong>
     </dt>
     <dd>
 
@@ -668,7 +725,8 @@
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -676,8 +734,8 @@
 
 </dd>
     <dt>
-    <a name = "new_line"></a>
-    <strong>new_line (count)</strong>
+    <a name = "format.new_line"></a>
+    <strong>format.new_line (count)</strong>
     </dt>
     <dd>
 
@@ -686,14 +744,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">count</span>
-         number # How many new lines should be output.
+            <span class="types"><span class="type">number</span></span>
+           How many new lines should be output.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -701,8 +761,8 @@
 
 </dd>
     <dt>
-    <a name = "type_id"></a>
-    <strong>type_id (id)</strong>
+    <a name = "format.type_id"></a>
+    <strong>format.type_id (id)</strong>
     </dt>
     <dd>
 
@@ -711,14 +771,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -751,11 +813,12 @@
 
     <dl class="function">
     <dt>
-    <a name = "color"></a>
-    <strong>color (color, mode, background)</strong>
+    <a name = "template.color"></a>
+    <strong>template.color (color, mode, background)</strong>
     </dt>
     <dd>
-    <p><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition) Parameters</a>.</p>
+    <p><a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters">SGR (Select Graphic Rendition)
+ parameters</a>.</p>
 
 <p> <strong>attributes</strong></p>
 
@@ -899,20 +962,24 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">color</span>
-         ColorName # A color name.
+            <span class="types"><span class="type">ColorName</span></span>
+           A color name.
         </li>
         <li><span class="parameter">mode</span>
-         ColorMode
+            <span class="types"><span class="type">ColorMode</span></span>
+
         </li>
         <li><span class="parameter">background</span>
-         boolean # Colorize the background, not the text.
+            <span class="types"><span class="type">boolean</span></span>
+           If set, colorize the background instead of the text.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -920,12 +987,12 @@
 
 </dd>
     <dt>
-    <a name = "char"></a>
-    <strong>char (head)</strong>
+    <a name = "template.char"></a>
+    <strong>template.char (head)</strong>
     </dt>
     <dd>
     Format the char field of a node.  Try to find a textual representation that
- corresponds with the number stored in the <a href="index.html#char">char</a> field.</p>
+ corresponds with the number stored in the <a href="index.html#template.char">char</a> field.</p>
 
 <p> LuaTeX’s <code>node.char</code> values are not really characters; they are font glyph indices
  which sometimes happen to match valid Unicode characters. HarfBuzz shapers
@@ -961,14 +1028,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string # A textual representation of the <a href="index.html#char">char</a> number, suffixed with <code>[char number]</code> in verbosity level 2 or greater.
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+        A textual representation of the <a href="index.html#template.char">char</a> number.
     </ol>
 
 
@@ -976,8 +1045,8 @@
 
 </dd>
     <dt>
-    <a name = "line"></a>
-    <strong>line (length)</strong>
+    <a name = "template.line"></a>
+    <strong>template.line (length)</strong>
     </dt>
     <dd>
 
@@ -986,14 +1055,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">length</span>
-         <code>long</code>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           If <code>long</code>, emit a longer line.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1001,8 +1072,8 @@
 
 </dd>
     <dt>
-    <a name = "branch"></a>
-    <strong>branch (connection_type, connection_state, last)</strong>
+    <a name = "template.branch"></a>
+    <strong>template.branch (connection_type, connection_state, last)</strong>
     </dt>
     <dd>
 
@@ -1011,20 +1082,24 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">connection_type</span>
-         ConnectionType
+            <span class="types"><span class="type">ConnectionType</span></span>
+
         </li>
         <li><span class="parameter">connection_state</span>
-         ConnectionState
+            <span class="types"><span class="type">ConnectionState</span></span>
+
         </li>
         <li><span class="parameter">last</span>
-         boolean
+            <span class="types"><span class="type">boolean</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1042,20 +1117,24 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">number</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">order</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">field</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1073,23 +1152,28 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">text</span>
-         string A text string.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           A text string.
         </li>
         <li><span class="parameter">color</span>
-         ColorName A color name.
+            <span class="types"><span class="type">ColorName</span></span>
+           A color name.
         </li>
         <li><span class="parameter">mode</span>
-         ColorMode
+            <span class="types"><span class="type">ColorMode</span></span>
+
         </li>
         <li><span class="parameter">background</span>
-         boolean # Colorize the background, not the text.
+            <span class="types"><span class="type">boolean</span></span>
+           If set, colorize the background instead of the text.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1108,14 +1192,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">input</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1135,24 +1221,28 @@
  metatable approach is chosen: the copy gets its own table with the
  original table as metatable.”</p>
 
-<p> Source: https://stackoverflow.com/a/5639667 Works if __index returns
- table, which it should as per luatex manual.
+<p> Source: <a href="https://stackoverflow.com/a/5639667">StackOverflow</a> – this
+ works if <code>__index</code> returns a table, which it should as per LuaTeX
+ manual.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">data</span>
-         table # A Lua table.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+           A Lua table.
         </li>
         <li><span class="parameter">previous_data</span>
-         table # The data of a Lua table of a previous recursive call.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+           The data of a Lua table of a previous recursive call.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        table # A merged table.
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        A merged table.
     </ol>
 
 
@@ -1170,14 +1260,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">table</span>
-         table # A table to generate an inline view of.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+           A table to generate an inline view of.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1186,7 +1278,7 @@
 </dd>
     <dt>
     <a name = "template.key_value"></a>
-    <strong>template.key_value (key, value, color)</strong>
+    <strong>template.key_value (key, value, typ, color)</strong>
     </dt>
     <dd>
     Format a key-value pair (<code>key: value, </code>).
@@ -1195,20 +1287,28 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">key</span>
-         string # A key.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           A key.
         </li>
         <li><span class="parameter">value</span>
-         string|number # A value.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a> or <span class="type">number</span></span>
+           A value.
+        </li>
+        <li><span class="parameter">typ</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           A node type.
         </li>
         <li><span class="parameter">color</span>
-         ColorName # A color name.
+            <span class="types"><span class="type">ColorName</span></span>
+           A color name.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1226,17 +1326,20 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">type</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">id</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1245,7 +1348,7 @@
 </dd>
     <dt>
     <a name = "template.callback"></a>
-    <strong>template.callback (callback_name, variables)</strong>
+    <strong>template.callback (callback_name, variables, where)</strong>
     </dt>
     <dd>
 
@@ -1254,17 +1357,24 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">callback_name</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">variables</span>
-         table
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+        <li><span class="parameter">where</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <code>&apos;before&apos;</code> or <code>&apos;after&apos;</code>
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1276,23 +1386,26 @@
     <strong>template.branches (level, connection_type)</strong>
     </dt>
     <dd>
-
+    Format the branching tree for one output line.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">level</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">connection_type</span>
-         ConnectionType
+            <span class="types"><span class="type">ConnectionType</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1300,7 +1413,7 @@
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="Extend_the_node_library"></a>Extend the node library </h2>
+    <h2 class="section-header "><a name="Node_library_extensions"></a>Node library extensions </h2>
 
     <dl class="function">
     <dt>
@@ -1319,14 +1432,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">n</span>
-         Node # A node.
+            <span class="types"><span class="type">Node</span></span>
+           A node.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1344,10 +1459,7 @@
 
 <ul>
 <li><code>ins</code> (3)</li>
-<li><code>mark</code> (4)</li>
-<li><code>whatsit</code> (8)</li>
 <li><code>local_par</code> (9)</li>
-<li><code>dir</code> (10)</li>
 <li><code>penalty</code> (14)</li>
 <li><code>unset</code> (15)</li>
 <li><code>style</code> (16)</li>
@@ -1387,7 +1499,8 @@
     <h3>Returns:</h3>
     <ol>
 
-        table
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
     </ol>
 
 
@@ -1405,14 +1518,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">n</span>
-         Node
+            <span class="types"><span class="type">Node</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1420,7 +1535,7 @@
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="Build_the_node_tree"></a>Build the node tree </h2>
+    <h2 class="section-header "><a name="Node_tree_building_functions"></a>Node tree building functions </h2>
 
     <dl class="function">
     <dt>
@@ -1434,17 +1549,20 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">field</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1457,21 +1575,23 @@
     </dt>
     <dd>
     Attributes are key-value number pairs.  They are printed as an inline
- list. The attribute <code>0</code> with the value <code>0</code> is skipped because this
+ list. The attribute <code>0</code> with the value <code>0</code> is skipped because this
  attribute is in every node by default.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -1489,13 +1609,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">level</span>
-         number # <code>level</code> is an integer beginning with 1.
+            <span class="types"><span class="type">number</span></span>
+           <code>level</code> is an integer beginning with 1.
         </li>
         <li><span class="parameter">connection_type</span>
-         ConnectionType
+            <span class="types"><span class="type">ConnectionType</span></span>
+
         </li>
         <li><span class="parameter">connection_state</span>
-         ConnectionState
+            <span class="types"><span class="type">ConnectionState</span></span>
+
         </li>
     </ul>
 
@@ -1515,10 +1638,12 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">fields</span>
-         table
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
         </li>
         <li><span class="parameter">level</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+           The current recursion level.
         </li>
     </ul>
 
@@ -1538,10 +1663,12 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">level</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+           The current recursion level.
         </li>
     </ul>
 
@@ -1555,16 +1682,18 @@
     <strong>tree.analyze_list (head, level)</strong>
     </dt>
     <dd>
-
+    Recurse over the current node list.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">level</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+           The current recursion level.
         </li>
     </ul>
 
@@ -1578,13 +1707,14 @@
     <strong>tree.analyze_callback (head)</strong>
     </dt>
     <dd>
-
+    The top-level internal entry point.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
     </ul>
 
@@ -1594,12 +1724,27 @@
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="Callback_wrapper"></a>Callback wrapper </h2>
+    <h2 class="section-header has-description"><a name="Callback_wrappers"></a>Callback wrappers </h2>
 
+          <div class="section-description">
+          <p> Nodetree uses luatexbase&rsquo;s functions to manage callbacks if
+ available. Otherwise a simplistic approach is taken by prepending
+ or appending nodetree&rsquo;s diagnostic callbacks to the existing ones
+ (and also removing them again if requested).</p>
+
+<p> Each function in the <code>callbacks</code> table consists of three parts:</p>
+
+<ul>
+<li>before-callback inspection</li>
+<li>original callback or default function call</li>
+<li>after-callback inspection</li>
+</ul>
+
+          </div>
     <dl class="function">
     <dt>
-    <a name = "contribute_filter"></a>
-    <strong>contribute_filter (extrainfo)</strong>
+    <a name = "callbacks.contribute_filter"></a>
+    <strong>callbacks.contribute_filter (extrainfo)</strong>
     </dt>
     <dd>
 
@@ -1608,23 +1753,19 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">extrainfo</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "buildpage_filter"></a>
-    <strong>buildpage_filter (extrainfo)</strong>
+    <a name = "callbacks.buildpage_filter"></a>
+    <strong>callbacks.buildpage_filter (extrainfo)</strong>
     </dt>
     <dd>
 
@@ -1633,23 +1774,19 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">extrainfo</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "build_page_insert"></a>
-    <strong>build_page_insert (n, i)</strong>
+    <a name = "callbacks.build_page_insert"></a>
+    <strong>callbacks.build_page_insert (n, i)</strong>
     </dt>
     <dd>
 
@@ -1658,17 +1795,20 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">n</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">i</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        number
+           <span class="types"><span class="type">number</span></span>
+
     </ol>
 
 
@@ -1676,8 +1816,8 @@
 
 </dd>
     <dt>
-    <a name = "pre_linebreak_filter"></a>
-    <strong>pre_linebreak_filter (head, groupcode)</strong>
+    <a name = "callbacks.pre_linebreak_filter"></a>
+    <strong>callbacks.pre_linebreak_filter (head, groupcode)</strong>
     </dt>
     <dd>
 
@@ -1686,17 +1826,20 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        boolean
+           <span class="types"><span class="type">boolean</span></span>
+
     </ol>
 
 
@@ -1704,8 +1847,8 @@
 
 </dd>
     <dt>
-    <a name = "linebreak_filter"></a>
-    <strong>linebreak_filter (head, is_display)</strong>
+    <a name = "callbacks.linebreak_filter"></a>
+    <strong>callbacks.linebreak_filter (head, is_display)</strong>
     </dt>
     <dd>
 
@@ -1714,17 +1857,20 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">is_display</span>
-         boolean
+            <span class="types"><span class="type">boolean</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        boolean
+           <span class="types"><span class="type">boolean</span></span>
+
     </ol>
 
 
@@ -1732,8 +1878,8 @@
 
 </dd>
     <dt>
-    <a name = "append_to_vlist_filter"></a>
-    <strong>append_to_vlist_filter (box, locationcode, prevdepth, mirrored)</strong>
+    <a name = "callbacks.append_to_vlist_filter"></a>
+    <strong>callbacks.append_to_vlist_filter (box, locationcode, prevdepth, mirrored)</strong>
     </dt>
     <dd>
 
@@ -1742,46 +1888,31 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">box</span>
-         Node
+            <span class="types"><span class="type">Node</span></span>
+
         </li>
         <li><span class="parameter">locationcode</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">prevdepth</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">mirrored</span>
-         boolean
-        </li>
-    </ul>
+            <span class="types"><span class="type">boolean</span></span>
 
-
-
-
-
-</dd>
-    <dt>
-    <a name = "post_linebreak_filter"></a>
-    <strong>post_linebreak_filter (head, groupcode)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">head</span>
-         Node # The head node of a node list.
-        </li>
-        <li><span class="parameter">groupcode</span>
-         string
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
-
-        boolean
+        <li>
+           <span class="types"><span class="type">Node</span></span>
+        </li>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+        </li>
     </ol>
 
 
@@ -1789,8 +1920,8 @@
 
 </dd>
     <dt>
-    <a name = "hpack_filter"></a>
-    <strong>hpack_filter (head, groupcode, size, packtype, direction, attributelist)</strong>
+    <a name = "callbacks.post_linebreak_filter"></a>
+    <strong>callbacks.post_linebreak_filter (head, groupcode)</strong>
     </dt>
     <dd>
 
@@ -1799,29 +1930,67 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "callbacks.hpack_filter"></a>
+    <strong>callbacks.hpack_filter (head, groupcode, size, packtype, direction, attributelist)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">head</span>
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
+        </li>
+        <li><span class="parameter">groupcode</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">size</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">packtype</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">direction</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">attributelist</span>
-         Node
+            <span class="types"><span class="type">Node</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        boolean
+           <span class="types"><span class="type">boolean</span></span>
+
     </ol>
 
 
@@ -1829,8 +1998,8 @@
 
 </dd>
     <dt>
-    <a name = "vpack_filter"></a>
-    <strong>vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist)</strong>
+    <a name = "callbacks.vpack_filter"></a>
+    <strong>callbacks.vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist)</strong>
     </dt>
     <dd>
 
@@ -1839,32 +2008,40 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">size</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">packtype</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">maxdepth</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">direction</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">attributelist</span>
-         Node
+            <span class="types"><span class="type">Node</span></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        boolean
+           <span class="types"><span class="type">boolean</span></span>
+
     </ol>
 
 
@@ -1872,8 +2049,8 @@
 
 </dd>
     <dt>
-    <a name = "hpack_quality"></a>
-    <strong>hpack_quality (incident, detail, head, first, last)</strong>
+    <a name = "callbacks.hpack_quality"></a>
+    <strong>callbacks.hpack_quality (incident, detail, head, first, last)</strong>
     </dt>
     <dd>
 
@@ -1882,19 +2059,67 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">incident</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">detail</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">first</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">last</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">Node</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "callbacks.vpack_quality"></a>
+    <strong>callbacks.vpack_quality (incident, detail, head, first, last)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">incident</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">detail</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">head</span>
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
+        </li>
+        <li><span class="parameter">first</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">last</span>
+            <span class="types"><span class="type">number</span></span>
+
         </li>
     </ul>
 
@@ -1904,40 +2129,8 @@
 
 </dd>
     <dt>
-    <a name = "vpack_quality"></a>
-    <strong>vpack_quality (incident, detail, head, first, last)</strong>
-    </dt>
-    <dd>
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">incident</span>
-         string
-        </li>
-        <li><span class="parameter">detail</span>
-         number
-        </li>
-        <li><span class="parameter">head</span>
-         Node # The head node of a node list.
-        </li>
-        <li><span class="parameter">first</span>
-         number
-        </li>
-        <li><span class="parameter">last</span>
-         number
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "process_rule"></a>
-    <strong>process_rule (head, width, height)</strong>
+    <a name = "callbacks.process_rule"></a>
+    <strong>callbacks.process_rule (head, width, height)</strong>
     </dt>
     <dd>
 
@@ -1946,29 +2139,27 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">width</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">height</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "pre_output_filter"></a>
-    <strong>pre_output_filter (head, groupcode, size, packtype, maxdepth, direction)</strong>
+    <a name = "callbacks.pre_output_filter"></a>
+    <strong>callbacks.pre_output_filter (head, groupcode, size, packtype, maxdepth, direction)</strong>
     </dt>
     <dd>
 
@@ -1977,29 +2168,36 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">groupcode</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">size</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">packtype</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">maxdepth</span>
-         number
+            <span class="types"><span class="type">number</span></span>
+
         </li>
         <li><span class="parameter">direction</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        boolean
+           <span class="types"><span class="type">boolean</span></span>
+
     </ol>
 
 
@@ -2007,8 +2205,8 @@
 
 </dd>
     <dt>
-    <a name = "hyphenate"></a>
-    <strong>hyphenate (head, tail)</strong>
+    <a name = "callbacks.hyphenate"></a>
+    <strong>callbacks.hyphenate (head, tail)</strong>
     </dt>
     <dd>
 
@@ -2017,10 +2215,12 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">tail</span>
-         Node
+            <span class="types"><span class="type">Node</span></span>
+
         </li>
     </ul>
 
@@ -2030,8 +2230,8 @@
 
 </dd>
     <dt>
-    <a name = "ligaturing"></a>
-    <strong>ligaturing (head, tail)</strong>
+    <a name = "callbacks.ligaturing"></a>
+    <strong>callbacks.ligaturing (head, tail)</strong>
     </dt>
     <dd>
 
@@ -2040,10 +2240,12 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">tail</span>
-         Node
+            <span class="types"><span class="type">Node</span></span>
+
         </li>
     </ul>
 
@@ -2053,8 +2255,8 @@
 
 </dd>
     <dt>
-    <a name = "kerning"></a>
-    <strong>kerning (head, tail)</strong>
+    <a name = "callbacks.kerning"></a>
+    <strong>callbacks.kerning (head, tail)</strong>
     </dt>
     <dd>
 
@@ -2063,10 +2265,12 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">tail</span>
-         Node
+            <span class="types"><span class="type">Node</span></span>
+
         </li>
     </ul>
 
@@ -2076,8 +2280,8 @@
 
 </dd>
     <dt>
-    <a name = "insert_local_par"></a>
-    <strong>insert_local_par (local_par, location)</strong>
+    <a name = "callbacks.insert_local_par"></a>
+    <strong>callbacks.insert_local_par (local_par, location)</strong>
     </dt>
     <dd>
 
@@ -2086,26 +2290,23 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">local_par</span>
-         Node
+            <span class="types"><span class="type">Node</span></span>
+
         </li>
         <li><span class="parameter">location</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "mlist_to_hlist"></a>
-    <strong>mlist_to_hlist (head, display_type, need_penalties)</strong>
+    <a name = "callbacks.mlist_to_hlist"></a>
+    <strong>callbacks.mlist_to_hlist (head, display_type, need_penalties)</strong>
     </dt>
     <dd>
 
@@ -2114,13 +2315,63 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">display_type</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
         <li><span class="parameter">need_penalties</span>
-         boolean
+            <span class="types"><span class="type">boolean</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">Node</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Messages__options"></a>Messages, options </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "message"></a>
+    <strong>message (why, where, what, help)</strong>
+    </dt>
+    <dd>
+    Emit a warning or error message.</p>
+
+<p> This works for plain TeX, Texinfo, and LaTeX (for plain TeX and
+ Texinfo we make the message look identical to the LaTeX case).
+ Note that a full stop gets appended to <code>what</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">why</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <code>&apos;error&apos;</code> or <code>&apos;warning&apos;</code>.
+        </li>
+        <li><span class="parameter">where</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           In which package the error happened.
+        </li>
+        <li><span class="parameter">what</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           The warning message to emit.
+        </li>
+        <li><span class="parameter">help</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           Additional help text for errors.
         </li>
     </ul>
 
@@ -2140,10 +2391,12 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">key</span>
-         string # The key of the option pair.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           The key of the option pair.
         </li>
         <li><span class="parameter">value</span>
-         number|string # The value of the option pair.
+            <span class="types"><span class="type">number</span> or <a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           The value of the option pair.
         </li>
     </ul>
 
@@ -2163,7 +2416,67 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">opts</span>
-         table # Options
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+           Options.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Callback_management"></a>Callback management </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "template.get_print_position"></a>
+    <strong>template.get_print_position (cb)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cb</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+          The name of a callback.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+        <code>&apos;before&apos;</code> or <code>nil</code>.</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+        <code>&apos;after&apos;</code> or <code>nil</code>.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "template.no_callback"></a>
+    <strong>template.no_callback (name, internal)</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">internal</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
@@ -2185,14 +2498,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">callback_name</span>
-         string # The name of a callback to check.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           The name of a callback to check.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string # The unchanged input of the function.
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+        The unchanged input of the function.
     </ol>
 
 
@@ -2210,15 +2525,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">alias</span>
-         string # The alias of a callback name or the callback
- name itself.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           The alias of a callback name or the callback name itself.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string # The real callback name.
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+        The real callback name.
     </ol>
 
 
@@ -2230,13 +2546,40 @@
     <strong>register_callback (cb)</strong>
     </dt>
     <dd>
-    Register a callback.
+    <p>Register a callback.</p>
+
+<p> Doing this for plain TeX is simple; we have access to LuaTeX&rsquo;s
+ base function <code>callback.register</code> and thus can easily add our
+ callback wrapper, which in turn calls nodetree&rsquo;s functions at the
+ very beginning and/or at the very end.</p>
+
+<p> Enter LaTeX. It comes with its own callback management that can
+ register multiple callbacks, also taking care of the calling
+ order. Unfortunately, however, it is also more restrictive: for
+ example, some callbacks like <a href="index.html#callbacks.linebreak_filter">linebreak_filter</a> are tagged as
+ &lsquo;exclusive&rsquo;, only accepting a single callback. While this makes
+ sense for the end user, it complicates the situation for nodetree
+ to install its non-intrusive, observing-only callbacks.</p>
+
+<p> We thus take the following route.</p>
+
+<ul>
+<li><p>If there is no function for callback <code>&lt;foo&gt;</code> installed, register
+<code>callbacks.&lt;foo&gt;</code>.</p></li>
+<li><p>If there is a (single) function for callback <code>&lt;foo&gt;</code> of type
+three (&lsquo;exclusive&rsquo;), remove it, wrap it into <code>callbacks.&lt;foo&gt;</code>
+(via <code>orig_callbacks</code>) and install <code>callbacks.&lt;foo&gt;</code>.</p></li>
+<li><p>Otherwise register <code>callbacks.&lt;foo&gt;</code> as the first and last
+function of callback <code>&lt;foo&gt;</code>.</p></li>
+</ul>
+
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">cb</span>
-         string # The name of a callback.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           The name of a callback.
         </li>
     </ul>
 
@@ -2250,13 +2593,16 @@
     <strong>unregister_callback (cb)</strong>
     </dt>
     <dd>
-    Unregister a callback.
+    Unregister a callback.</p>
+
+<p> We follow the same logic as with <a href="index.html#register_callback">register_callback</a>.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">cb</span>
-         string # The name of a callback.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           The name of a callback.
         </li>
     </ul>
 
@@ -2270,8 +2616,36 @@
 
     <dl class="function">
     <dt>
-    <a name = "compile_include"></a>
-    <strong>compile_include (tex_markup)</strong>
+    <a name = "export.register_callbacks"></a>
+    <strong>export.register_callbacks ()</strong>
+    </dt>
+    <dd>
+
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "export.unregister_callbacks"></a>
+    <strong>export.unregister_callbacks ()</strong>
+    </dt>
+    <dd>
+
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "export.compile_include"></a>
+    <strong>export.compile_include (tex_markup)</strong>
     </dt>
     <dd>
     Compile a TeX snippet.</p>
@@ -2284,7 +2658,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">tex_markup</span>
-         string
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
         </li>
     </ul>
 
@@ -2294,13 +2669,24 @@
 
 </dd>
     <dt>
-    <a name = "check_shell_escape"></a>
-    <strong>check_shell_escape ()</strong>
+    <a name = "export.check_shell_escape"></a>
+    <strong>export.check_shell_escape (what, is_command)</strong>
     </dt>
     <dd>
-    Check for <code>--shell-escape</code>.
+    Check for <code>--shell-escape</code> within a command or environment.
 
 
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">what</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           The name of the command or environment.
+        </li>
+        <li><span class="parameter">is_command</span>
+            <span class="types"><span class="type">boolean</span></span>
+           Set if <code>what</code> is a command.
+        </li>
+    </ul>
 
 
 
@@ -2308,8 +2694,8 @@
 
 </dd>
     <dt>
-    <a name = "print"></a>
-    <strong>print (head, opts)</strong>
+    <a name = "export.print"></a>
+    <strong>export.print (head, opts)</strong>
     </dt>
     <dd>
     Print a node tree.
@@ -2318,10 +2704,12 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">head</span>
-         Node # The head node of a node list.
+            <span class="types"><span class="type">Node</span></span>
+           The head node of a node list.
         </li>
         <li><span class="parameter">opts</span>
-         table # Options as a table.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+           Options as a table.
         </li>
     </ul>
 
@@ -2331,8 +2719,8 @@
 
 </dd>
     <dt>
-    <a name = "format_dim"></a>
-    <strong>format_dim (sp)</strong>
+    <a name = "export.format_dim"></a>
+    <strong>export.format_dim (sp)</strong>
     </dt>
     <dd>
     Format a scaled point value as a formatted string.
@@ -2341,14 +2729,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">sp</span>
-         number # A scaled point value.
+            <span class="types"><span class="type">number</span></span>
+           A scaled point value.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
     </ol>
 
 
@@ -2356,8 +2746,8 @@
 
 </dd>
     <dt>
-    <a name = "get_default_option"></a>
-    <strong>get_default_option (key)</strong>
+    <a name = "export.get_default_option"></a>
+    <strong>export.get_default_option (key)</strong>
     </dt>
     <dd>
     Get a default option that is not changed.
@@ -2366,15 +2756,67 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">key</span>
-         string # The key of the option.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           The key of the option.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        string|number|boolean
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a>, <span class="type">number</span> or <span class="type">boolean</span></span>
+
     </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "export.push_options"></a>
+    <strong>export.push_options ()</strong>
+    </dt>
+    <dd>
+    Push current options.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "export.pop_options"></a>
+    <strong>export.pop_options ()</strong>
+    </dt>
+    <dd>
+    Pop previous options.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "export.input"></a>
+    <strong>export.input (filename)</strong>
+    </dt>
+    <dd>
+    Read a LaTeX input file and emit it immediately, obeying options
+ <code>firstline</code> and <code>lastline</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">filename</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+        </li>
+    </ul>
+
 
 
 
@@ -2385,14 +2827,9 @@
     <strong>export.analyze</strong>
     </dt>
     <dd>
-    Use <code>export.print</code>.
+    Set to <a href="index.html#export.print">export.print</a>.
 
 
-    <ul>
-        <li><span class="parameter">head</span>
-         Node # The head node of a node list.
-        </li>
-    </ul>
 
 
 
@@ -2406,7 +2843,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2023-07-22 20:04:53 </i>
+<i style="float:right;">Last updated 2023-08-03 18:01:54 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

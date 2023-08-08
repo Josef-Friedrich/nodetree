@@ -30,12 +30,8 @@
   family=NTE,
   prefix=NTEK@
 }
-\directlua{
-  nodetree = require('nodetree')
-  nodetree.check_shell_escape()
-}
 \define@key{NTE}{callback}[]{\NodetreeSetOption[callback]{#1}}
-\DeclareStringOption[1]{verbosity}
+\DeclareStringOption[0]{verbosity}
 \define@key{NTE}{verbosity}[]{\NodetreeSetOption[verbosity]{#1}}
 \DeclareStringOption[colored]{color}
 \define@key{NTE}{color}[]{\NodetreeSetOption[color]{#1}}
@@ -47,6 +43,10 @@
 \DeclareStringOption[dark]{thememode}
 \DeclareStringOption[Ubuntu Mono]{font}
 \DeclareStringOption[\footnotesize]{fontsize}
+\DeclareStringOption[1]{firstline}
+\define@key{NTE}{firstline}[]{\NodetreeSetOption[firstline]{#1}}
+\DeclareStringOption[-1]{lastline}
+\define@key{NTE}{lastline}[]{\NodetreeSetOption[lastline]{#1}}
 \DeclareBoolOption{showmarkup}
 \ProcessKeyvalOptions{NTE}
 \ExplSyntaxOn
@@ -131,6 +131,7 @@
   \setkeys{NTE}{#1}%
 }
 \newenvironment{NodetreeEmbedView}[1][]{
+  \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \NTE@colors
   \begin{mdframed}[
@@ -141,13 +142,17 @@
   \NTE@fonts
 }{
   \end{mdframed}%
+  \directlua{nodetree.pop_options()}%
 }
 \NewDocumentEnvironment { NodetreeEmbedEnv } { O{} +b } {
+  \directlua{
+    nodetree.check_shell_escape('NodetreeEmbedEnv', false)
+    nodetree.push_options()
+  }
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
     \texttt{\detokenize{#2}}
-  \else
   \fi
   \NTE@colors
   \begin{NodetreeEmbedView}
@@ -155,14 +160,18 @@
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
   \end{NodetreeEmbedView}
+  \directlua{nodetree.pop_options()}
 }{}
 
 \NewDocumentCommand { \NodetreeEmbedCmd } { O{} +v } {
+  \directlua{
+    nodetree.check_shell_escape('\string\\NodetreeEmbedCmd', true)
+    nodetree.push_options()
+  }
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
     \texttt{#2}
-  \else
   \fi
   \NTE@colors
   \begin{NodetreeEmbedView}
@@ -170,12 +179,15 @@
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
   \end{NodetreeEmbedView}
+  \directlua{nodetree.pop_options()}
 }
 \newcommand{\NodetreeEmbedInput}[2][]{
+  \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \begin{NodetreeEmbedView}
-  \input{#2.nttex}
+  \directlua{nodetree.input('#2.nttex')}
   \end{NodetreeEmbedView}
+  \directlua{nodetree.pop_options()}
 }
 \let\nodetreeterminalemulator\NodetreeEmbedInput
 \endinput

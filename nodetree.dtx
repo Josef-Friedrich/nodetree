@@ -62,7 +62,7 @@
 % \MacroTopsep = 10pt plus 2pt minus 2pt
 % \MacrocodeTopsep = 10pt plus 1.2pt minus 1pt
 % \makeatletter
-% \c@CodelineNo 25 \relax
+% \c@CodelineNo 22 \relax
 % \makeatother
 %
 % \subsection{The file \tt{nodetree.tex}}
@@ -170,7 +170,7 @@
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\DeclareStringOption[1]{verbosity}
+\DeclareStringOption[0]{verbosity}
 \define@key{NT}{verbosity}[]{\NodetreeSetOption[verbosity]{#1}}
 %    \end{macrocode}
 %
@@ -209,6 +209,12 @@
 %</package>
 %<*packageembed>
 % \fi
+% \makeatletter
+% \c@CodelineNo 22 \relax
+% \makeatother
+%
+% \subsection{The file \tt{nodetree-embed.sty}}
+%
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{nodetree-embed}
@@ -232,18 +238,11 @@
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\directlua{
-  nodetree = require('nodetree')
-  nodetree.check_shell_escape()
-}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
 \define@key{NTE}{callback}[]{\NodetreeSetOption[callback]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\DeclareStringOption[1]{verbosity}
+\DeclareStringOption[0]{verbosity}
 \define@key{NTE}{verbosity}[]{\NodetreeSetOption[verbosity]{#1}}
 %    \end{macrocode}
 %
@@ -276,6 +275,16 @@
 %
 %    \begin{macrocode}
 \DeclareStringOption[\footnotesize]{fontsize}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[1]{firstline}
+\define@key{NTE}{firstline}[]{\NodetreeSetOption[firstline]{#1}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\DeclareStringOption[-1]{lastline}
+\define@key{NTE}{lastline}[]{\NodetreeSetOption[lastline]{#1}}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -376,7 +385,7 @@
 %
 % \begin{macro}{\NodetreeSet}
 % Same definition as in nodetree.sty. Only implement this command
-% if not already registers.
+% if not already registered.
 %    \begin{macrocode}
 \providecommand{\NodetreeSet}[1]{%
   \setkeys{NTE}{#1}%
@@ -386,6 +395,7 @@
 %
 %    \begin{macrocode}
 \newenvironment{NodetreeEmbedView}[1][]{
+  \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \NTE@colors
   \begin{mdframed}[
@@ -396,17 +406,21 @@
   \NTE@fonts
 }{
   \end{mdframed}%
+  \directlua{nodetree.pop_options()}%
 }
 %    \end{macrocode}
 %
 % \begin{environment}{NodetreeEmbedEnv}
 %    \begin{macrocode}
 \NewDocumentEnvironment { NodetreeEmbedEnv } { O{} +b } {
+  \directlua{
+    nodetree.check_shell_escape('NodetreeEmbedEnv', false)
+    nodetree.push_options()
+  }
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
     \texttt{\detokenize{#2}}
-  \else
   \fi
   \NTE@colors
   \begin{NodetreeEmbedView}
@@ -414,6 +428,7 @@
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
   \end{NodetreeEmbedView}
+  \directlua{nodetree.pop_options()}
 }{}
 %    \end{macrocode}
 % \end{environment}
@@ -421,11 +436,14 @@
 % \begin{macro}{\NodetreeEmbedCmd}
 %    \begin{macrocode}
 \NewDocumentCommand { \NodetreeEmbedCmd } { O{} +v } {
+  \directlua{
+    nodetree.check_shell_escape('\string\\NodetreeEmbedCmd', true)
+    nodetree.push_options()
+  }
   \setkeys{NTE}{#1}
   \ifNTEK@showmarkup
     \noindent
     \texttt{#2}
-  \else
   \fi
   \NTE@colors
   \begin{NodetreeEmbedView}
@@ -433,6 +451,7 @@
       nodetree.compile_include('\luaescapestring{\unexpanded{#2}}')
     }
   \end{NodetreeEmbedView}
+  \directlua{nodetree.pop_options()}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -440,10 +459,12 @@
 % \begin{macro}{\NodetreeEmbedInput}
 %    \begin{macrocode}
 \newcommand{\NodetreeEmbedInput}[2][]{
+  \directlua{nodetree.push_options()}
   \setkeys{NTE}{#1}
   \begin{NodetreeEmbedView}
-  \input{#2.nttex}
+  \directlua{nodetree.input('#2.nttex')}
   \end{NodetreeEmbedView}
+  \directlua{nodetree.pop_options()}
 }
 \let\nodetreeterminalemulator\NodetreeEmbedInput
 %    \end{macrocode}

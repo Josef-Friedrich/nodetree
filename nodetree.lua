@@ -20,17 +20,13 @@
 ---luacheck: globals node lang tex luatexbase lfs
 ---luacheck: globals callback os unicode status modules
 
----@class Node
----@field next Node|nil # The next node in a list, or nil.
----@field id number # The node’s type (id) number.
----@field subtype number # The node subtype identifier.
 ---
----@alias ColorName `black` | `red` | `green` | `yellow` | `blue` | `magenta` | `cyan` | `white`
----@alias ColorMode `bright`| `dim`
+---@alias ColorName 'black'|'red' |'green'|'yellow'|'blue'|'magenta'|'cyan'|'white'|'reset'
+---@alias ColorMode 'bright'|'dim'|''
 ---
----@alias ConnectionType `list` | `field` # A string literal,
----  which can be either `list` or `field`.
----@alias ConnectionState `stop` | `continue` # A literal, which can
+---@alias ConnectionType 'list'|'field' # A string literal,
+---  which can be either 'list' or 'field'.
+---@alias ConnectionState 'stop'|'continue' # A literal, which can
 ---  be either `continue` or `stop`.
 
 if not modules then modules = {} end modules ['nodetree'] = {
@@ -147,7 +143,7 @@ local format = {
 
   --- @function format.whitespace
   ---
-  ---@param count number # How many spaces should be output.
+  ---@param count? number # How many spaces should be output.
   ---
   ---@return string
   whitespace = function(count)
@@ -179,7 +175,7 @@ local format = {
   --- @function format.color_tex
   ---
   ---@param color string
-  ---@param mode string
+  ---@param mode? string
   ---
   ---@return string
   color_tex = function(color, mode)
@@ -211,7 +207,7 @@ local format = {
 
   ---@function format.new_line
   ---
-  ---@param count number # How many new lines should be output.
+  ---@param count? number # How many new lines should be output.
   ---
   ---@return string
   new_line = function(count)
@@ -377,8 +373,8 @@ local template = {
   --- @function template.color
   ---
   ---@param color ColorName # A color name.
-  ---@param mode ColorMode
-  ---@param background boolean # If set, colorize the background instead of the text.
+  ---@param mode? ColorMode
+  ---@param background? boolean # If set, colorize the background instead of the text.
   ---
   ---@return string
   color = function(color, mode, background)
@@ -471,7 +467,7 @@ local template = {
       -- (decimal 0-31) and U+007F (decimal 127), the C1 range covers
       -- characters from U+0080 to U+009F (decimal 128-159).
       textual = '???'
-    elseif character_index < 0x110000 then
+    elseif character_index ~= nil and character_index < 0x110000 then
       textual = utfchar(character_index)
     else
       textual = string.format('^^^^^^%06X', character_index)
@@ -556,8 +552,8 @@ end
 ---
 ---@param text string # A text string.
 ---@param color ColorName # A color name.
----@param mode ColorMode
----@param background boolean # If set, colorize the background instead of the text.
+---@param mode? ColorMode
+---@param background? boolean # If set, colorize the background instead of the text.
 ---
 ---@return string
 function template.colored_string(text, color, mode, background)
@@ -605,10 +601,8 @@ end
 ---works if `__index` returns a table, which it should as per LuaTeX
 ---manual.
 ---
----@param data table
----   A Lua table.
----@param previous_data table
----   The data of a Lua table of a previous recursive call.
+---@param data table # A Lua table.
+---@param previous_data? table # The data of a Lua table of a previous recursive call.
 ---
 ---@return table # A merged table.
 local function get_all_table_data(data, previous_data)
@@ -669,8 +663,8 @@ end
 ---
 ---@param key string # A key.
 ---@param value string|number # A value.
----@param typ string # A node type.
----@param color ColorName # A color name.
+---@param typ? string # A node type. Had to be named typ to avoid conflict with the type() function.
+---@param color? ColorName # A color name.
 ---
 ---@return string
 function template.key_value(key, value, typ, color)
@@ -733,10 +727,8 @@ function template.type(type, id)
 end
 
 ---@param callback_name string
----@param variables table
----@param where string # `'before'` or `'after'`
----
----@return string
+---@param variables table|nil
+---@param where 'before'|'after' # `'before'` or `'after'`
 function template.callback(callback_name, variables, where)
   if options.channel == 'term' or have_output == true then
     nodetree_print(format.new_line(2))
@@ -1184,13 +1176,13 @@ function tree.format_attributes(head)
   end
   local space = ''
   local output = ''
-  local attr = head.next
+  local attr = head.next --[[@as AttributeNode]]
   while attr do
     if attr.number ~= 0 or (attr.number == 0 and attr.value ~= 0) then
       output = output .. space .. tostring(attr.number) .. '=' .. tostring(attr.value)
       space = ' '
     end
-    attr = attr.next
+    attr = attr.next --[[@as AttributeNode]]
   end
   return output
 end
@@ -2144,7 +2136,7 @@ local callbacks = {
 ---@param why string # `'error'` or `'warning'`.
 ---@param where string # In which package the error happened.
 ---@param what string # The warning message to emit.
----@param help string # Additional help text for errors.
+---@param help? string # Additional help text for errors.
 local function message(why, where, what, help)
   local msg
 
@@ -2235,10 +2227,10 @@ end
 ---@section callback_management
 
 ---
----@param what string # The name of a callback, or either the string `before` or `after`.
+---@param what? string|'before'|'after' # The name of a callback, or either the string `before` or `after`.
 ---
----@return string # 'before'` or `nil`.
----@return string # `'after'` or `nil`.
+---@return 'before'|nil # 'before'` or `nil`.
+---@return 'after'|nil # `'after'` or `nil`.
 function template.get_print_position(what)
   local before, after
 
@@ -2258,7 +2250,7 @@ end
 
 ---
 ---@param name string
----@param internal string|boolean
+---@param internal? string|boolean
 function template.no_callback(name, internal)
   local more = ''
   if internal == true then
@@ -2579,8 +2571,10 @@ local export = {
                   option_lines .. '\n' ..
                   '\\begin{document}\n'
     local suffix = '\n\\end{document}'
-    output_file:write(prefix .. tex_markup .. suffix)
-    output_file:close()
+    if output_file ~= nil then
+      output_file:write(prefix .. tex_markup .. suffix)
+      output_file:close()
+    end
 
     -- Compile the temporary LuaTeX or LuaLaTeX file.
     os.spawn({ 'latexmk', '-cd', '-pdflua', absolute_path_tex })
@@ -2602,7 +2596,7 @@ local export = {
   ---@param is_command boolean # Set if `what` is a command.
   check_shell_escape = function(what, is_command)
     local info = status.list()
-    if info.shell_escape ~= 1 then
+    if info ~= nil and info.shell_escape ~= 1 then
       local typ, stuff
       if is_command == true then
         typ = 'command'

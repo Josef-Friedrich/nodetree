@@ -1364,21 +1364,25 @@ local callback_has_default_action = {
 ---or appending nodetree's diagnostic callbacks to the existing ones
 ---(and also removing them again if requested).
 ---
---- Each function in the `callbacks` table consists of three parts:
+---Each function in the `callback_wrappers` table consists of three
+---parts:
 ---
 ---* before-callback inspection
 ---* original callback or default function call
 ---* after-callback inspection
 ---
+---The actual callback functions are stored in the `callbacks` table.
+---
 ---@section callbacks
 
-local callbacks = {
+local callback_wrappers = {
   --- @function callbacks.contribute_filter
   ---
   ---@param extrainfo string
-  contribute_filter = function(extrainfo)
+  ---@param where string
+  contribute_filter = function(extrainfo, where)
     local cb = 'contribute_filter'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
 
     if before then
       template.callback(cb, {extrainfo = extrainfo}, before)
@@ -1398,9 +1402,10 @@ local callbacks = {
   --- @function callbacks.buildpage_filter
   ---
   ---@param extrainfo string
-  buildpage_filter = function(extrainfo)
+  ---@param where string
+  buildpage_filter = function(extrainfo, where)
     local cb = 'buildpage_filter'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
 
     if before then
       template.callback(cb, {extrainfo = extrainfo}, before)
@@ -1449,11 +1454,12 @@ local callbacks = {
   ---
   ---@param head Node # The head node of a node list.
   ---@param groupcode string
+  ---@param where string
   ---
   --- @treturn boolean
-  pre_linebreak_filter = function(head, groupcode)
+  pre_linebreak_filter = function(head, groupcode, where)
     local cb = 'pre_linebreak_filter'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
     local retval = true
 
     if before then
@@ -1546,11 +1552,12 @@ local callbacks = {
   ---
   ---@param head Node # The head node of a node list.
   ---@param groupcode string
+  ---@param where string
   ---
   --- @treturn boolean
-  post_linebreak_filter = function(head, groupcode)
+  post_linebreak_filter = function(head, groupcode, where)
     local cb = 'post_linebreak_filter'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
     local retval = true
 
     if before then
@@ -1580,12 +1587,13 @@ local callbacks = {
   ---@param packtype string
   ---@param direction string
   ---@param attributelist Node
+  ---@param where string
   ---
   --- @treturn boolean
   hpack_filter = function(head, groupcode, size, packtype,
-                          direction, attributelist)
+                          direction, attributelist, where)
     local cb = 'hpack_filter'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
     local retval = true
 
     if before then
@@ -1626,12 +1634,13 @@ local callbacks = {
   ---@param maxdepth number
   ---@param direction string
   ---@param attributelist Node
+  ---@param where string
   ---
   --- @treturn boolean
   vpack_filter = function(head, groupcode, size, packtype,
-                          maxdepth, direction, attributelist)
+                          maxdepth, direction, attributelist, where)
     local cb = 'vpack_filter'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
     local retval = true
 
     if before then
@@ -1774,12 +1783,13 @@ local callbacks = {
   ---@param packtype string
   ---@param maxdepth number
   ---@param direction string
+  ---@param where string
   ---
   --- @treturn boolean
   pre_output_filter = function(head, groupcode, size, packtype,
-                               maxdepth, direction)
+                               maxdepth, direction, where)
     local cb = 'pre_output_filter'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
     local retval = true
 
     if before then
@@ -1815,9 +1825,10 @@ local callbacks = {
   ---
   ---@param head Node # The head node of a node list.
   ---@param tail Node
-  hyphenate = function(head, tail)
+  ---@param where string
+  hyphenate = function(head, tail, where)
     local cb = 'hyphenate'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
 
     if before then
       template.callback(cb, nil, before)
@@ -1847,9 +1858,10 @@ local callbacks = {
   ---
   ---@param head Node # The head node of a node list.
   ---@param tail Node
-  ligaturing = function(head, tail)
+  ---@param where string
+  ligaturing = function(head, tail, where)
     local cb = 'ligaturing'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
 
     if before then
       template.callback(cb, nil, before)
@@ -1879,9 +1891,10 @@ local callbacks = {
   ---
   ---@param head Node # The head node of a node list.
   ---@param tail Node
-  kerning = function(head, tail)
+  ---@param where string
+  kerning = function(head, tail, where)
     local cb = 'kerning'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
 
     if before then
       template.callback(cb, nil, before)
@@ -1911,9 +1924,10 @@ local callbacks = {
   ---
   ---@param local_par Node
   ---@param location string
-  insert_local_par = function(local_par, location)
+  ---@param where string
+  insert_local_par = function(local_par, location, where)
     local cb = 'insert_local_par'
-    local before, after = template.get_print_position(cb)
+    local before, after = template.get_print_position(where)
 
     if before then
       template.callback(cb, {location = location}, before)
@@ -1965,6 +1979,158 @@ local callbacks = {
 
     return retval
   end
+}
+
+-- The actual callback functions. The `*_before` and `*_after`
+-- variants are needed for luatexbase. For 'exclusive' callbacks we
+-- directly use the corresponding functions from the
+-- `callback_wrappers` table.
+
+local callbacks = {
+  contribute_filter = function(extrainfo)
+    callback_wrappers.contribute_filter(extrainfo, 'contribute_filter')
+  end,
+  contribute_filter_before = function(extrainfo)
+    callback_wrappers.contribute_filter(extrainfo, 'before')
+  end,
+  contribute_filter_after = function(extrainfo)
+    callback_wrappers.contribute_filter(extrainfo, 'after')
+  end,
+
+  buildpage_filter = function(extrainfo)
+    callback_wrappers.buildpage_filter(extrainfo, 'buildpage_filter')
+  end,
+  buildpage_filter_before = function(extrainfo)
+    callback_wrappers.buildpage_filter(extrainfo, 'before')
+  end,
+  buildpage_filter_after = function(extrainfo)
+    callback_wrappers.buildpage_filter(extrainfo, 'after')
+  end,
+
+  build_page_insert = callback_wrappers.build_page_insert,
+
+  pre_linebreak_filter = function(head, groupcode)
+    callback_wrappers.pre_linebreak_filter(head, groupcode,
+                                           'pre_linebreak_filter')
+  end,
+  pre_linebreak_filter_before = function(head, groupcode)
+    callback_wrappers.pre_linebreak_filter(head, groupcode, 'before')
+  end,
+  pre_linebreak_filter_after = function(head, groupcode)
+    callback_wrappers.pre_linebreak_filter(head, groupcode, 'after')
+  end,
+
+  linebreak_filter = callback_wrappers.linebreak_filter,
+  append_to_vlist = callback_wrappers.append_to_vlist,
+
+  post_linebreak_filter = function(head, groupcode)
+    callback_wrappers.post_linebreak_filter(head, groupcode,
+                                            'post_linebreak_filter')
+  end,
+  post_linebreak_filter_before = function(head, groupcode)
+    callback_wrappers.post_linebreak_filter(head, groupcode, 'before')
+  end,
+  post_linebreak_filter_after = function(head, groupcode)
+    callback_wrappers.post_linebreak_filter(head, groupcode, 'after')
+  end,
+
+  hpack_filter = function(head, groupcode, size, packtype,
+                          direction, attributelist)
+    callback_wrappers.hpack_filter(head, groupcode, size, packtype,
+                                   direction, attributelist, 'hpack_filter')
+  end,
+  hpack_filter_before = function(head, groupcode, size, packtype,
+                                 direction, attributelist)
+    callback_wrappers.hpack_filter(head, groupcode, size, packtype,
+                                   direction, attributelist, 'before')
+  end,
+  hpack_filter_after = function(head, groupcode, size, packtype,
+                                direction, attributelist)
+    callback_wrappers.hpack_filter(head, groupcode, size, packtype,
+                                   direction, attributelist, 'after')
+  end,
+
+  vpack_filter = function(head, groupcode, size, packtype,
+                          maxdepth, direction, attributelist)
+    callback_wrappers.vpack_filter(head, groupcode, size, packtype,
+                                   maxdepth, direction, attributelist,
+                                   'vpack_filter')
+  end,
+  vpack_filter_before = function(head, groupcode, size, packtype,
+                                 maxdepth, direction, attributelist)
+    callback_wrappers.vpack_filter(head, groupcode, size, packtype,
+                                   maxdepth, direction, attributelist,
+                                   'before')
+  end,
+  vpack_filter_after = function(head, groupcode, size, packtype,
+                                maxdepth, direction, attributelist)
+    callback_wrappers.vpack_filter(head, groupcode, size, packtype,
+                                   maxdepth, direction, attributelist,
+                                   'after')
+  end,
+
+  hpack_quality = callback_wrappers.hpack_quality,
+  vpack_quality = callback_wrappers.vpack_quality,
+  process_rule = callback_wrappers.process_rule,
+
+  pre_output_filter = function(head, groupcode, size, packtype,
+                               maxdepth, direction)
+    callback_wrappers.pre_output_filter(head, groupcode, size, packtype,
+                                        maxdepth, direction,
+                                        'pre_output_filter')
+  end,
+  pre_output_filter_before = function(head, groupcode, size, packtype,
+                                      maxdepth, direction)
+    callback_wrappers.pre_output_filter(head, groupcode, size, packtype,
+                                        maxdepth, direction, 'before')
+  end,
+  pre_output_filter_after = function(head, groupcode, size, packtype,
+                                     maxdepth, direction)
+    callback_wrappers.pre_output_filter(head, groupcode, size, packtype,
+                                        maxdepth, direction, 'after')
+  end,
+
+  hyphenate = function(head, tail)
+    callback_wrappers.hyphenate(head, tail, 'hyphenate')
+  end,
+  hyphenate_before = function(head, tail)
+    callback_wrappers.hyphenate(head, tail, 'before')
+  end,
+  hyphenate_after = function(head, tail)
+    callback_wrappers.hyphenate(head, tail, 'after')
+  end,
+
+  ligaturing = function(head, tail)
+    callback_wrappers.ligaturing(head, tail, 'ligaturing')
+  end,
+  ligaturing_before = function(head, tail)
+    callback_wrappers.ligaturing(head, tail, 'before')
+  end,
+  ligaturing_after = function(head, tail)
+    callback_wrappers.ligaturing(head, tail, 'after')
+  end,
+
+  kerning = function(head, tail)
+    callback_wrappers.kerning(head, tail, 'kerning')
+  end,
+  kerning_before = function(head, tail)
+    callback_wrappers.kerning(head, tail, 'before')
+  end,
+  kerning_after = function(head, tail)
+    callback_wrappers.kerning(head, tail, 'after')
+  end,
+
+  insert_local_par = function(head, tail)
+    callback_wrappers.insert_local_par(head, tail, 'insert_local_par')
+  end,
+  insert_local_par_before = function(head, tail)
+    callback_wrappers.insert_local_par(head, tail, 'before')
+  end,
+  insert_local_par_after = function(head, tail)
+    callback_wrappers.insert_local_par(head, tail, 'after')
+  end,
+
+  mlist_to_hlist = callback_wrappers.mlist_to_hlist
 }
 
 --- Messages, options
@@ -2071,15 +2237,25 @@ end
 ---@section callback_management
 
 ---
----@param cb string # The name of a callback.
+---@param what string # The name of a callback, or either the string `before` or `after`.
 ---
 --- @treturn string
 ---   `'before'` or `nil`.
 --- @treturn string
 ---   `'after'` or `nil`.
-function template.get_print_position(cb)
-  local before = print_positions[cb][1]
-  local after = print_positions[cb][2]
+function template.get_print_position(what)
+  local before, after
+
+  if what == 'before' then
+    before = what
+    after = nil
+  elseif what == 'after' then
+    before = nil
+    after = what
+  else
+    before = print_positions[what][1]
+    after = print_positions[what][2]
+  end
 
   return before, after
 end
@@ -2214,8 +2390,8 @@ end
 ---   three ('exclusive'), remove it, wrap it into `callbacks.<foo>`
 ---   (via `orig_callbacks`) and install `callbacks.<foo>`.
 ---
---- * Otherwise register `callbacks.<foo>` as the first and last
----   function of callback `<foo>`.
+--- * Otherwise register `callbacks.<foo>_{before,after}` as
+---   necessary.
 ---
 ---@param cb string # The name of a callback.
 local function register_callback(cb)
@@ -2252,13 +2428,15 @@ local function register_callback(cb)
       end
 
       if before then
-        luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree before')
+        luatexbase.add_to_callback(cb, callbacks[cb .. '_before'],
+                                   'nodetree before')
       end
       for i, _ in ipairs(funcs) do
         luatexbase.add_to_callback(cb, funcs[i], descr[i])
       end
       if after then
-        luatexbase.add_to_callback(cb, callbacks[cb], 'nodetree after')
+        luatexbase.add_to_callback(cb, callbacks[cb .. '_after'],
+                                   'nodetree after')
       end
     end
   else

@@ -1,0 +1,11 @@
+%!TEX program = luatex
+
+% Explicitly add `lang.hyphenate` as a callback function.
+\directlua{
+  callback.register('hyphenate', lang.hyphenate)
+}
+
+\input{nodetree.tex}
+\NodetreeRegisterCallback{:hyph:}
+foobar
+\bye

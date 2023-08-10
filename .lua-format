@@ -1,0 +1,18 @@
+# https://github.com/Koihik/LuaFormatter/blob/master/docs/Style-Config.md
+align_args: false
+align_parameter: false
+break_after_functioncall_lp: false
+break_after_functiondef_lp: false
+break_before_functioncall_rp: false
+break_before_functiondef_rp: false
+chop_down_parameter: true
+chop_down_table: true
+column_limit: 72
+continuation_indent_width: 2
+double_quote_to_single_quote: true
+extra_sep_at_table_end: true
+indent_width: 2
+keep_simple_control_block_one_line: false
+keep_simple_function_one_line: false
+spaces_inside_table_braces: true
+

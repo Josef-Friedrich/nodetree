@@ -2000,57 +2000,58 @@ local callbacks = {
   build_page_insert = callback_wrappers.build_page_insert,
 
   pre_linebreak_filter = function(head, groupcode)
-    callback_wrappers.pre_linebreak_filter(head, groupcode,
-                                           'pre_linebreak_filter')
+    return callback_wrappers.pre_linebreak_filter(head, groupcode,
+                                                  'pre_linebreak_filter')
   end,
   pre_linebreak_filter_before = function(head, groupcode)
-    callback_wrappers.pre_linebreak_filter(head, groupcode, 'before')
+    return callback_wrappers.pre_linebreak_filter(head, groupcode, 'before')
   end,
   pre_linebreak_filter_after = function(head, groupcode)
-    callback_wrappers.pre_linebreak_filter(head, groupcode, 'after')
+    return callback_wrappers.pre_linebreak_filter(head, groupcode, 'after')
   end,
 
   linebreak_filter = callback_wrappers.linebreak_filter,
-  append_to_vlist = callback_wrappers.append_to_vlist,
+  append_to_vlist_filter = callback_wrappers.append_to_vlist_filter,
 
   post_linebreak_filter = function(head, groupcode)
-    callback_wrappers.post_linebreak_filter(head, groupcode,
-                                            'post_linebreak_filter')
+    return callback_wrappers.post_linebreak_filter(head, groupcode,
+                                                   'post_linebreak_filter')
   end,
   post_linebreak_filter_before = function(head, groupcode)
-    callback_wrappers.post_linebreak_filter(head, groupcode, 'before')
+    return callback_wrappers.post_linebreak_filter(head, groupcode, 'before')
   end,
   post_linebreak_filter_after = function(head, groupcode)
-    callback_wrappers.post_linebreak_filter(head, groupcode, 'after')
+    return callback_wrappers.post_linebreak_filter(head, groupcode, 'after')
   end,
 
   hpack_filter = function(head, groupcode, size, packtype,
                           direction, attributelist)
-    callback_wrappers.hpack_filter(head, groupcode, size, packtype,
-                                   direction, attributelist, 'hpack_filter')
+    return callback_wrappers.hpack_filter(head, groupcode, size, packtype,
+                                          direction, attributelist,
+                                          'hpack_filter')
   end,
   hpack_filter_before = function(head, groupcode, size, packtype,
                                  direction, attributelist)
-    callback_wrappers.hpack_filter(head, groupcode, size, packtype,
-                                   direction, attributelist, 'before')
+    return callback_wrappers.hpack_filter(head, groupcode, size, packtype,
+                                          direction, attributelist, 'before')
   end,
   hpack_filter_after = function(head, groupcode, size, packtype,
                                 direction, attributelist)
-    callback_wrappers.hpack_filter(head, groupcode, size, packtype,
-                                   direction, attributelist, 'after')
+    return callback_wrappers.hpack_filter(head, groupcode, size, packtype,
+                                          direction, attributelist, 'after')
   end,
 
   vpack_filter = function(head, groupcode, size, packtype,
                           maxdepth, direction, attributelist)
-    callback_wrappers.vpack_filter(head, groupcode, size, packtype,
-                                   maxdepth, direction, attributelist,
-                                   'vpack_filter')
+    return callback_wrappers.vpack_filter(head, groupcode, size, packtype,
+                                          maxdepth, direction, attributelist,
+                                          'vpack_filter')
   end,
   vpack_filter_before = function(head, groupcode, size, packtype,
                                  maxdepth, direction, attributelist)
-    callback_wrappers.vpack_filter(head, groupcode, size, packtype,
-                                   maxdepth, direction, attributelist,
-                                   'before')
+    return callback_wrappers.vpack_filter(head, groupcode, size, packtype,
+                                          maxdepth, direction, attributelist,
+                                          'before')
   end,
   vpack_filter_after = function(head, groupcode, size, packtype,
                                 maxdepth, direction, attributelist)
@@ -2065,19 +2066,21 @@ local callbacks = {
 
   pre_output_filter = function(head, groupcode, size, packtype,
                                maxdepth, direction)
-    callback_wrappers.pre_output_filter(head, groupcode, size, packtype,
-                                        maxdepth, direction,
-                                        'pre_output_filter')
+    return callback_wrappers.pre_output_filter(head, groupcode, size,
+                                               packtype, maxdepth, direction,
+                                               'pre_output_filter')
   end,
   pre_output_filter_before = function(head, groupcode, size, packtype,
                                       maxdepth, direction)
-    callback_wrappers.pre_output_filter(head, groupcode, size, packtype,
-                                        maxdepth, direction, 'before')
+    return callback_wrappers.pre_output_filter(head, groupcode, size,
+                                               packtype, maxdepth, direction,
+                                               'before')
   end,
   pre_output_filter_after = function(head, groupcode, size, packtype,
                                      maxdepth, direction)
-    callback_wrappers.pre_output_filter(head, groupcode, size, packtype,
-                                        maxdepth, direction, 'after')
+    return callback_wrappers.pre_output_filter(head, groupcode, size,
+                                               packtype, maxdepth, direction,
+                                               'after')
   end,
 
   hyphenate = function(head, tail)

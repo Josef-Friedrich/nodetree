@@ -103,7 +103,7 @@ local tree_state = {}
 ---@section format
 
 local format = {
-  --- @function format.underscore
+  ---@function format.underscore
   ---
   ---@param input string
   ---
@@ -117,7 +117,7 @@ local format = {
     end
   end,
 
-  --- @function format.escape
+  ---@function format.escape
   ---
   ---@param input string
   ---
@@ -131,7 +131,7 @@ local format = {
     end
   end,
 
-  --- @function format.function
+  ---@function format.function
   ---
   ---@param input number
   ---
@@ -141,7 +141,7 @@ local format = {
     return math.floor(input * mult + 0.5) / mult
   end,
 
-  --- @function format.whitespace
+  ---@function format.whitespace
   ---
   ---@param count? number # How many spaces should be output.
   ---
@@ -163,7 +163,7 @@ local format = {
     return output
   end,
 
-  --- @function format.color_code
+  ---@function format.color_code
   ---
   ---@param code number
   ---
@@ -172,7 +172,7 @@ local format = {
     return string.char(27) .. '[' .. tostring(code) .. 'm'
   end,
 
-  --- @function format.color_tex
+  ---@function format.color_tex
   ---
   ---@param color string
   ---@param mode? string
@@ -183,7 +183,7 @@ local format = {
     return 'NTE' .. color .. mode
   end,
 
-  --- @function format.node_begin
+  ---@function format.node_begin
   ---
   ---@return string
   node_begin = function()
@@ -194,7 +194,7 @@ local format = {
     end
   end,
 
-  --- @function format.node_end
+  ---@function format.node_end
   ---
   ---@return string
   node_end = function()
@@ -228,7 +228,7 @@ local format = {
     return output
   end,
 
-  --- @function format.type_id
+  ---@function format.type_id
   ---
   ---@param id number
   ---
@@ -370,7 +370,7 @@ local template = {
   -- | oncyan     | 46 |
   -- | onwhite    | 47 |
   --
-  --- @function template.color
+  ---@function template.color
   ---
   ---@param color ColorName # A color name.
   ---@param mode? ColorMode
@@ -447,7 +447,7 @@ local template = {
   -- It should also noted that this mapping is not unique, the same glyph
   -- can represent different characters in different context.
   --
-  --- @function template.char
+  ---@function template.char
   --
   ---@param head Node # The head node of a node list.
   ---
@@ -475,7 +475,7 @@ local template = {
     return character_index .. ' (' .. string.format('0x%x', character_index) .. ', \''.. textual .. '\')'
   end,
 
-  --- @function template.line
+  ---@function template.line
   ---
   ---@param length string # If `long`, emit a longer line.
   ---
@@ -490,7 +490,7 @@ local template = {
       return output .. format.new_line()
   end,
 
-  --- @function template.branch
+  ---@function template.branch
   ---
   ---@param connection_type ConnectionType
   ---@param connection_state ConnectionState
@@ -1366,7 +1366,7 @@ local callback_has_default_action = {
 ---@section callbacks
 
 local callback_wrappers = {
-  --- @function callbacks.contribute_filter
+  ---@function callbacks.contribute_filter
   ---
   ---@param extrainfo string
   ---@param where string
@@ -1389,7 +1389,7 @@ local callback_wrappers = {
     end
   end,
 
-  --- @function callbacks.buildpage_filter
+  ---@function callbacks.buildpage_filter
   ---
   ---@param extrainfo string
   ---@param where string
@@ -1412,7 +1412,7 @@ local callback_wrappers = {
     end
   end,
 
-  --- @function callbacks.build_page_insert
+  ---@function callbacks.build_page_insert
   ---
   ---@param n string
   ---@param i string
@@ -1440,7 +1440,7 @@ local callback_wrappers = {
     return retval
   end,
 
-  --- @function callbacks.pre_linebreak_filter
+  ---@function callbacks.pre_linebreak_filter
   ---
   ---@param head Node # The head node of a node list.
   ---@param groupcode string
@@ -1471,7 +1471,7 @@ local callback_wrappers = {
     return retval
   end,
 
-  --- @function callbacks.linebreak_filter
+  ---@function callbacks.linebreak_filter
   ---
   ---@param head Node # The head node of a node list.
   ---@param is_display boolean
@@ -1501,7 +1501,7 @@ local callback_wrappers = {
     return retval
   end,
 
-  --- @function callbacks.append_to_vlist_filter
+  ---@function callbacks.append_to_vlist_filter
   ---
   ---@param box Node
   ---@param locationcode string
@@ -1538,7 +1538,7 @@ local callback_wrappers = {
     return box, prevdepth
   end,
 
-  --- @function callbacks.post_linebreak_filter
+  ---@function callbacks.post_linebreak_filter
   ---
   ---@param head Node # The head node of a node list.
   ---@param groupcode string
@@ -1569,7 +1569,7 @@ local callback_wrappers = {
     return retval
   end,
 
-  --- @function callbacks.hpack_filter
+  ---@function callbacks.hpack_filter
   ---
   ---@param head Node # The head node of a node list.
   ---@param groupcode string
@@ -1615,7 +1615,7 @@ local callback_wrappers = {
     return retval
   end,
 
-  --- @function callbacks.vpack_filter
+  ---@function callbacks.vpack_filter
   ---
   ---@param head Node # The head node of a node list.
   ---@param groupcode string
@@ -1666,7 +1666,7 @@ local callback_wrappers = {
     return retval
   end,
 
-  --- @function callbacks.hpack_quality
+  ---@function callbacks.hpack_quality
   ---
   ---@param incident string
   ---@param detail number
@@ -1705,7 +1705,7 @@ local callback_wrappers = {
     return retval
   end,
 
-  --- @function callbacks.vpack_quality
+  ---@function callbacks.vpack_quality
   ---
   ---@param incident string
   ---@param detail number
@@ -1739,7 +1739,7 @@ local callback_wrappers = {
     end
   end,
 
-  --- @function callbacks.process_rule
+  ---@function callbacks.process_rule
   ---
   ---@param head Node # The head node of a node list.
   ---@param width number
@@ -1765,7 +1765,7 @@ local callback_wrappers = {
     end
   end,
 
-  --- @function callbacks.pre_output_filter
+  ---@function callbacks.pre_output_filter
   ---
   ---@param head Node # The head node of a node list.
   ---@param groupcode string
@@ -1811,7 +1811,7 @@ local callback_wrappers = {
     return retval
   end,
 
-  --- @function callbacks.hyphenate
+  ---@function callbacks.hyphenate
   ---
   ---@param head Node # The head node of a node list.
   ---@param tail Node
@@ -1844,7 +1844,7 @@ local callback_wrappers = {
     end
   end,
 
-  --- @function callbacks.ligaturing
+  ---@function callbacks.ligaturing
   ---
   ---@param head Node # The head node of a node list.
   ---@param tail Node
@@ -1877,7 +1877,7 @@ local callback_wrappers = {
     end
   end,
 
-  --- @function callbacks.kerning
+  ---@function callbacks.kerning
   ---
   ---@param head Node # The head node of a node list.
   ---@param tail Node
@@ -1910,7 +1910,7 @@ local callback_wrappers = {
     end
   end,
 
-  --- @function callbacks.insert_local_par
+  ---@function callbacks.insert_local_par
   ---
   ---@param local_par Node
   ---@param location string
@@ -1936,7 +1936,7 @@ local callback_wrappers = {
     end
   end,
 
-  --- @function callbacks.mlist_to_hlist
+  ---@function callbacks.mlist_to_hlist
   ---
   ---@param head Node # The head node of a node list.
   ---@param display_type string
@@ -2488,7 +2488,7 @@ local export = {
   set_option = set_option,
   set_options = set_options,
 
-  --- @function export.register_callbacks
+  ---@function export.register_callbacks
   register_callbacks = function()
     if options.channel == 'log' or options.channel == 'tex' then
       -- nt = nodetree
@@ -2523,7 +2523,7 @@ local export = {
     end
   end,
 
-  --- @function export.unregister_callbacks
+  ---@function export.unregister_callbacks
   unregister_callbacks = function()
     for alias in string.gmatch(options.callback, '([^,]+)') do
       -- Split string at ',', then trim whitespace. For symmetry with
@@ -2541,7 +2541,7 @@ local export = {
   -- file using `latexmk`, read the generated `*.nttex` file, and
   -- return its content.
   --
-  --- @function export.compile_include
+  ---@function export.compile_include
   --
   ---@param tex_markup string
   compile_include = function(tex_markup)
@@ -2593,7 +2593,7 @@ local export = {
 
   --- Check for `\--shell-escape` within a command or environment.
   ---
-  --- @function export.check_shell_escape
+  ---@function export.check_shell_escape
   ---
   ---@param what string # The name of the command or environment.
   ---@param is_command boolean # Set if `what` is a command.
@@ -2621,7 +2621,7 @@ local export = {
 
   --- Print a node tree.
   ---
-  --- @function export.print
+  ---@function export.print
   ---
   ---@param head Node # The head node of a node list.
   ---@param opts table # Options as a table.
@@ -2635,7 +2635,7 @@ local export = {
 
   --- Format a scaled point value as a formatted string.
   --
-  --- @function export.format_dim
+  ---@function export.format_dim
   ---
   ---@param sp number # A scaled point value.
   --
@@ -2646,7 +2646,7 @@ local export = {
 
   --- Get a default option that is not changed.
   ---
-  --- @function export.get_default_option
+  ---@function export.get_default_option
   ---
   ---@param key string # The key of the option.
   --
@@ -2657,7 +2657,7 @@ local export = {
 
   --- Push current options.
   ---
-  --- @function export.push_options
+  ---@function export.push_options
   push_options = function()
     prev_options[option_level] = {}
     for k, v in pairs(options) do
@@ -2668,7 +2668,7 @@ local export = {
 
   --- Pop previous options.
   ---
-  --- @function export.pop_options
+  ---@function export.pop_options
   pop_options = function()
     if option_level > 0 then
       prev_options[option_level] = nil
@@ -2682,7 +2682,7 @@ local export = {
   --- Read a LaTeX input file and emit it immediately, obeying options
   --- `firstline` and `lastline`.
   ---
-  --- @function export.input
+  ---@function export.input
   ---
   ---@param filename string
   input = function(filename)

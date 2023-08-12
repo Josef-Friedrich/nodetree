@@ -458,6 +458,7 @@ local template = {
     local info = props and props.glyph_info
     local textual
     local character_index = getchar(node_id)
+
     if info then
       textual = info
     elseif character_index == 0 then
@@ -472,7 +473,23 @@ local template = {
     else
       textual = string.format('^^^^^^%06X', character_index)
     end
-    return character_index .. ' (' .. string.format('0x%x', character_index) .. ', \''.. textual .. '\')'
+
+    if options.verbosity == 0 then
+      if textual == '???' then
+        return character_index
+      else
+        return "'" .. textual .. "'"
+      end
+    elseif options.verbosity <= 2 then
+      return character_index .. " ('" .. textual .. "')"
+    else
+      return character_index
+        .. ' ('
+        .. string.format('0x%x', character_index)
+        .. ", '"
+        .. textual
+        .. "')"
+    end
   end,
 
   ---@function template.line
@@ -1824,8 +1841,6 @@ local callback_wrappers = {
       template.callback(cb, nil, before)
       nodetree_print('head:' .. format.new_line())
       tree.analyze_callback(head)
-      nodetree_print(format.new_line() .. 'tail:' .. format.new_line())
-      tree.analyze_callback(tail)
     end
     if orig_callbacks[cb] then
       if orig_callbacks[cb] ~= '' then
@@ -1839,8 +1854,6 @@ local callback_wrappers = {
       template.callback(cb, nil, after)
       nodetree_print('head:' .. format.new_line())
       tree.analyze_callback(head)
-      nodetree_print(format.new_line() .. 'tail:' .. format.new_line())
-      tree.analyze_callback(tail)
     end
   end,
 
@@ -1857,8 +1870,6 @@ local callback_wrappers = {
       template.callback(cb, nil, before)
       nodetree_print('head:' .. format.new_line())
       tree.analyze_callback(head)
-      nodetree_print(format.new_line() .. 'tail:' .. format.new_line())
-      tree.analyze_callback(tail)
     end
     if orig_callbacks[cb] then
       if orig_callbacks[cb] ~= '' then
@@ -1872,8 +1883,6 @@ local callback_wrappers = {
       template.callback(cb, nil, after)
       nodetree_print('head:' .. format.new_line())
       tree.analyze_callback(head)
-      nodetree_print(format.new_line() .. 'tail:' .. format.new_line())
-      tree.analyze_callback(tail)
     end
   end,
 
@@ -1890,8 +1899,6 @@ local callback_wrappers = {
       template.callback(cb, nil, before)
       nodetree_print('head:' .. format.new_line())
       tree.analyze_callback(head)
-      nodetree_print(format.new_line() .. 'tail:' .. format.new_line())
-      tree.analyze_callback(tail)
     end
     if orig_callbacks[cb] then
       if orig_callbacks[cb] ~= '' then
@@ -1905,8 +1912,6 @@ local callback_wrappers = {
       template.callback(cb, nil, after)
       nodetree_print('head:' .. format.new_line())
       tree.analyze_callback(head)
-      nodetree_print(format.new_line() .. 'tail:' .. format.new_line())
-      tree.analyze_callback(tail)
     end
   end,
 

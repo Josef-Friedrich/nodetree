@@ -31,6 +31,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ...
 
+## [v2.3.0] - 2023-09-10
+
+### Added
+
+- Option `verbosity=0` provides a narrow output without line breaks
+- New option `firstline` and `lastline` for `\NodetreeEmbedInput`
+
+### Fixed
+
+- Callback handling
+
 ## [v2.2.1] - 2022-12-17
 
 ### Added

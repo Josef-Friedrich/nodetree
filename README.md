@@ -18,7 +18,7 @@ terminal to generate the document.
 
 # License
 
-Copyright (C) 2016-2022 by Josef Friedrich <josef@friedrich.rocks>
+Copyright (C) 2016-2023 by Josef Friedrich <josef@friedrich.rocks>
 ------------------------------------------------------------------------
 This work may be distributed and/or modified under the conditions of
 the LaTeX Project Public License, either version 1.3 of this license
@@ -150,8 +150,8 @@ if not modules then modules = { } end modules ['nodetree'] = {
 ### Update the copyright year:
 
 ```
-sed -i 's/(C) 2016-2022/(C) 2016-2021/g' nodetree.ins
-sed -i 's/(C) 2016-2022/(C) 2016-2021/g' nodetree.dtx
+sed -i 's/(C) 2016-2023/(C) 2016-2021/g' nodetree.ins
+sed -i 's/(C) 2016-2023/(C) 2016-2021/g' nodetree.dtx
 ```
 
 ### Command line tasks:

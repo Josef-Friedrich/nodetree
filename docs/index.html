@@ -304,13 +304,13 @@ version in LuajitTeX).</td>
 <h2><a href="#Callback_wrappers">Callback wrappers </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.contribute_filter">callbacks.contribute_filter (extrainfo)</a></td>
+	<td class="name" nowrap><a href="#callbacks.contribute_filter">callbacks.contribute_filter (extrainfo, where)</a></td>
 	<td class="summary">
 
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.buildpage_filter">callbacks.buildpage_filter (extrainfo)</a></td>
+	<td class="name" nowrap><a href="#callbacks.buildpage_filter">callbacks.buildpage_filter (extrainfo, where)</a></td>
 	<td class="summary">
 
 </td>
@@ -322,7 +322,7 @@ version in LuajitTeX).</td>
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.pre_linebreak_filter">callbacks.pre_linebreak_filter (head, groupcode)</a></td>
+	<td class="name" nowrap><a href="#callbacks.pre_linebreak_filter">callbacks.pre_linebreak_filter (head, groupcode, where)</a></td>
 	<td class="summary">
 
 </td>
@@ -340,19 +340,19 @@ version in LuajitTeX).</td>
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.post_linebreak_filter">callbacks.post_linebreak_filter (head, groupcode)</a></td>
+	<td class="name" nowrap><a href="#callbacks.post_linebreak_filter">callbacks.post_linebreak_filter (head, groupcode, where)</a></td>
 	<td class="summary">
 
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.hpack_filter">callbacks.hpack_filter (head, groupcode, size, packtype, direction, attributelist)</a></td>
+	<td class="name" nowrap><a href="#callbacks.hpack_filter">callbacks.hpack_filter (head, groupcode, size, packtype, direction, attributelist, where)</a></td>
 	<td class="summary">
 
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.vpack_filter">callbacks.vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist)</a></td>
+	<td class="name" nowrap><a href="#callbacks.vpack_filter">callbacks.vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist, where)</a></td>
 	<td class="summary">
 
 </td>
@@ -376,31 +376,31 @@ version in LuajitTeX).</td>
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.pre_output_filter">callbacks.pre_output_filter (head, groupcode, size, packtype, maxdepth, direction)</a></td>
+	<td class="name" nowrap><a href="#callbacks.pre_output_filter">callbacks.pre_output_filter (head, groupcode, size, packtype, maxdepth, direction, where)</a></td>
 	<td class="summary">
 
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.hyphenate">callbacks.hyphenate (head, tail)</a></td>
+	<td class="name" nowrap><a href="#callbacks.hyphenate">callbacks.hyphenate (head, tail, where)</a></td>
 	<td class="summary">
 
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.ligaturing">callbacks.ligaturing (head, tail)</a></td>
+	<td class="name" nowrap><a href="#callbacks.ligaturing">callbacks.ligaturing (head, tail, where)</a></td>
 	<td class="summary">
 
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.kerning">callbacks.kerning (head, tail)</a></td>
+	<td class="name" nowrap><a href="#callbacks.kerning">callbacks.kerning (head, tail, where)</a></td>
 	<td class="summary">
 
 </td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#callbacks.insert_local_par">callbacks.insert_local_par (local_par, location)</a></td>
+	<td class="name" nowrap><a href="#callbacks.insert_local_par">callbacks.insert_local_par (local_par, location, where)</a></td>
 	<td class="summary">
 
 </td>
@@ -430,7 +430,7 @@ version in LuajitTeX).</td>
 <h2><a href="#Callback_management">Callback management </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#template.get_print_position">template.get_print_position (cb)</a></td>
+	<td class="name" nowrap><a href="#template.get_print_position">template.get_print_position (what)</a></td>
 	<td class="summary">
 
 </td>
@@ -703,10 +703,7 @@ These written files are compiled later on.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -733,10 +730,7 @@ These written files are compiled later on.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -763,10 +757,7 @@ These written files are compiled later on.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">number</span></span>
-
-
-
+        number
     </ol>
 
 
@@ -786,17 +777,14 @@ These written files are compiled later on.
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">count</span>
-         number # How many spaces should be output.
+        ? number # How many spaces should be output.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -823,10 +811,7 @@ These written files are compiled later on.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -849,17 +834,14 @@ These written files are compiled later on.
          string
         </li>
         <li><span class="parameter">mode</span>
-         string
+        ? string
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -880,10 +862,7 @@ These written files are compiled later on.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -904,10 +883,7 @@ These written files are compiled later on.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -927,17 +903,14 @@ These written files are compiled later on.
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">count</span>
-         number # How many new lines should be output.
+        ? number # How many new lines should be output.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -964,10 +937,7 @@ These written files are compiled later on.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1053,20 +1023,17 @@ New text is appended.
          ColorName # A color name.
         </li>
         <li><span class="parameter">mode</span>
-         ColorMode
+        ? ColorMode
         </li>
         <li><span class="parameter">background</span>
-         boolean # If set, colorize the background instead of the text.
+        ? boolean # If set, colorize the background instead of the text.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1122,8 +1089,7 @@ New text is appended.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-        A textual representation of the <a href="index.html#template.char">char</a> number.
+        string # A textual representation of the <a href="index.html#template.char">char</a> number.
     </ol>
 
 
@@ -1150,10 +1116,7 @@ New text is appended.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1186,10 +1149,7 @@ New text is appended.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1222,10 +1182,7 @@ New text is appended.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1249,20 +1206,17 @@ New text is appended.
          ColorName # A color name.
         </li>
         <li><span class="parameter">mode</span>
-         ColorMode
+        ? ColorMode
         </li>
         <li><span class="parameter">background</span>
-         boolean # If set, colorize the background instead of the text.
+        ? boolean # If set, colorize the background instead of the text.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1288,10 +1242,7 @@ New text is appended.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1319,20 +1270,17 @@ manual.
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">data</span>
-         table
-   A Lua table.
+         table # A Lua table.
         </li>
         <li><span class="parameter">previous_data</span>
-         table
-   The data of a Lua table of a previous recursive call.
+        ? table # The data of a Lua table of a previous recursive call.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
-        A merged table.
+        table # A merged table.
     </ol>
 
 
@@ -1357,10 +1305,7 @@ manual.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1384,20 +1329,17 @@ manual.
          string|number # A value.
         </li>
         <li><span class="parameter">typ</span>
-         string # A node type.
+        ? string # A node type. Had to be named typ to avoid conflict with the type() function.
         </li>
         <li><span class="parameter">color</span>
-         ColorName # A color name.
+        ? ColorName # A color name.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1427,10 +1369,7 @@ manual.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1453,21 +1392,13 @@ manual.
          string
         </li>
         <li><span class="parameter">variables</span>
-         table
+         table|nil
         </li>
         <li><span class="parameter">where</span>
-         string # <code>&apos;before&apos;</code> or <code>&apos;after&apos;</code>
+         'before'|'after' # <code>&apos;before&apos;</code> or <code>&apos;after&apos;</code>
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
-    </ol>
 
 
 
@@ -1494,10 +1425,7 @@ manual.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1531,10 +1459,7 @@ hlist 2&gt;</code>.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1594,10 +1519,7 @@ hlist 2&gt;</code>.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
-
-
-
+        table
     </ol>
 
 
@@ -1624,10 +1546,7 @@ hlist 2&gt;</code>.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1661,10 +1580,7 @@ hlist 2&gt;</code>.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1691,10 +1607,7 @@ attribute is in every node by default.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -1826,15 +1739,13 @@ attribute is in every node by default.
     <h2 class="section-header has-description"><a name="Callback_wrappers"></a>Callback wrappers </h2>
 
           <div class="section-description">
-
-
-
-<p>Nodetree uses luatexbase's functions to manage callbacks if
+          Nodetree uses luatexbase's functions to manage callbacks if
 available. Otherwise a simplistic approach is taken by prepending
 or appending nodetree's diagnostic callbacks to the existing ones
 (and also removing them again if requested).</p>
 
-<p> Each function in the <code>callbacks</code> table consists of three parts:</p>
+<p>Each function in the <code>callback_wrappers</code> table consists of three
+parts:</p>
 
 <ul>
     <li>before-callback inspection</li>
@@ -1842,12 +1753,12 @@ or appending nodetree's diagnostic callbacks to the existing ones
     <li>after-callback inspection</li>
 </ul>
 
-
+<p>The actual callback functions are stored in the <code>callbacks</code> table.
           </div>
     <dl class="function">
     <dt>
     <a name = "callbacks.contribute_filter"></a>
-    <strong>callbacks.contribute_filter (extrainfo)</strong>
+    <strong>callbacks.contribute_filter (extrainfo, where)</strong>
     </dt>
     <dd>
 
@@ -1860,6 +1771,9 @@ or appending nodetree's diagnostic callbacks to the existing ones
         <li><span class="parameter">extrainfo</span>
          string
         </li>
+        <li><span class="parameter">where</span>
+         string
+        </li>
     </ul>
 
 
@@ -1869,7 +1783,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.buildpage_filter"></a>
-    <strong>callbacks.buildpage_filter (extrainfo)</strong>
+    <strong>callbacks.buildpage_filter (extrainfo, where)</strong>
     </dt>
     <dd>
 
@@ -1880,6 +1794,9 @@ or appending nodetree's diagnostic callbacks to the existing ones
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">extrainfo</span>
+         string
+        </li>
+        <li><span class="parameter">where</span>
          string
         </li>
     </ul>
@@ -1912,10 +1829,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">number</span></span>
-
-
-
+        number
     </ol>
 
 
@@ -1924,7 +1838,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.pre_linebreak_filter"></a>
-    <strong>callbacks.pre_linebreak_filter (head, groupcode)</strong>
+    <strong>callbacks.pre_linebreak_filter (head, groupcode, where)</strong>
     </dt>
     <dd>
 
@@ -1940,15 +1854,15 @@ or appending nodetree's diagnostic callbacks to the existing ones
         <li><span class="parameter">groupcode</span>
          string
         </li>
+        <li><span class="parameter">where</span>
+         string
+        </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
-
-
-
+        boolean
     </ol>
 
 
@@ -1978,10 +1892,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
-
-
-
+        boolean
     </ol>
 
 
@@ -2017,15 +1928,9 @@ or appending nodetree's diagnostic callbacks to the existing ones
     <h3>Returns:</h3>
     <ol>
         <li>
-           <span class="types"><span class="type">Node</span></span>
-
-
-</li>
+        Node</li>
         <li>
-           <span class="types"><span class="type">number</span></span>
-
-
-</li>
+        number</li>
     </ol>
 
 
@@ -2034,7 +1939,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.post_linebreak_filter"></a>
-    <strong>callbacks.post_linebreak_filter (head, groupcode)</strong>
+    <strong>callbacks.post_linebreak_filter (head, groupcode, where)</strong>
     </dt>
     <dd>
 
@@ -2050,15 +1955,15 @@ or appending nodetree's diagnostic callbacks to the existing ones
         <li><span class="parameter">groupcode</span>
          string
         </li>
+        <li><span class="parameter">where</span>
+         string
+        </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
-
-
-
+        boolean
     </ol>
 
 
@@ -2067,7 +1972,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.hpack_filter"></a>
-    <strong>callbacks.hpack_filter (head, groupcode, size, packtype, direction, attributelist)</strong>
+    <strong>callbacks.hpack_filter (head, groupcode, size, packtype, direction, attributelist, where)</strong>
     </dt>
     <dd>
 
@@ -2095,15 +2000,15 @@ or appending nodetree's diagnostic callbacks to the existing ones
         <li><span class="parameter">attributelist</span>
          Node
         </li>
+        <li><span class="parameter">where</span>
+         string
+        </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
-
-
-
+        boolean
     </ol>
 
 
@@ -2112,7 +2017,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.vpack_filter"></a>
-    <strong>callbacks.vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist)</strong>
+    <strong>callbacks.vpack_filter (head, groupcode, size, packtype, maxdepth, direction, attributelist, where)</strong>
     </dt>
     <dd>
 
@@ -2143,15 +2048,15 @@ or appending nodetree's diagnostic callbacks to the existing ones
         <li><span class="parameter">attributelist</span>
          Node
         </li>
+        <li><span class="parameter">where</span>
+         string
+        </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
-
-
-
+        boolean
     </ol>
 
 
@@ -2190,10 +2095,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">Node</span></span>
-
-
-
+        Node
     </ol>
 
 
@@ -2264,7 +2166,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.pre_output_filter"></a>
-    <strong>callbacks.pre_output_filter (head, groupcode, size, packtype, maxdepth, direction)</strong>
+    <strong>callbacks.pre_output_filter (head, groupcode, size, packtype, maxdepth, direction, where)</strong>
     </dt>
     <dd>
 
@@ -2292,15 +2194,15 @@ or appending nodetree's diagnostic callbacks to the existing ones
         <li><span class="parameter">direction</span>
          string
         </li>
+        <li><span class="parameter">where</span>
+         string
+        </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
-
-
-
+        boolean
     </ol>
 
 
@@ -2309,7 +2211,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.hyphenate"></a>
-    <strong>callbacks.hyphenate (head, tail)</strong>
+    <strong>callbacks.hyphenate (head, tail, where)</strong>
     </dt>
     <dd>
 
@@ -2324,6 +2226,9 @@ or appending nodetree's diagnostic callbacks to the existing ones
         </li>
         <li><span class="parameter">tail</span>
          Node
+        </li>
+        <li><span class="parameter">where</span>
+         string
         </li>
     </ul>
 
@@ -2334,7 +2239,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.ligaturing"></a>
-    <strong>callbacks.ligaturing (head, tail)</strong>
+    <strong>callbacks.ligaturing (head, tail, where)</strong>
     </dt>
     <dd>
 
@@ -2349,6 +2254,9 @@ or appending nodetree's diagnostic callbacks to the existing ones
         </li>
         <li><span class="parameter">tail</span>
          Node
+        </li>
+        <li><span class="parameter">where</span>
+         string
         </li>
     </ul>
 
@@ -2359,7 +2267,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.kerning"></a>
-    <strong>callbacks.kerning (head, tail)</strong>
+    <strong>callbacks.kerning (head, tail, where)</strong>
     </dt>
     <dd>
 
@@ -2375,6 +2283,9 @@ or appending nodetree's diagnostic callbacks to the existing ones
         <li><span class="parameter">tail</span>
          Node
         </li>
+        <li><span class="parameter">where</span>
+         string
+        </li>
     </ul>
 
 
@@ -2384,7 +2295,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
 </dd>
     <dt>
     <a name = "callbacks.insert_local_par"></a>
-    <strong>callbacks.insert_local_par (local_par, location)</strong>
+    <strong>callbacks.insert_local_par (local_par, location, where)</strong>
     </dt>
     <dd>
 
@@ -2398,6 +2309,9 @@ or appending nodetree's diagnostic callbacks to the existing ones
          Node
         </li>
         <li><span class="parameter">location</span>
+         string
+        </li>
+        <li><span class="parameter">where</span>
          string
         </li>
     </ul>
@@ -2433,10 +2347,7 @@ or appending nodetree's diagnostic callbacks to the existing ones
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">Node</span></span>
-
-
-
+        Node
     </ol>
 
 
@@ -2471,7 +2382,7 @@ Note that a full stop gets appended to <code>what</code>.
          string # The warning message to emit.
         </li>
         <li><span class="parameter">help</span>
-         string # Additional help text for errors.
+        ? string # Additional help text for errors.
         </li>
     </ul>
 
@@ -2529,7 +2440,7 @@ Note that a full stop gets appended to <code>what</code>.
     <dl class="function">
     <dt>
     <a name = "template.get_print_position"></a>
-    <strong>template.get_print_position (cb)</strong>
+    <strong>template.get_print_position (what)</strong>
     </dt>
     <dd>
 
@@ -2539,19 +2450,17 @@ Note that a full stop gets appended to <code>what</code>.
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">cb</span>
-         string # The name of a callback.
+        <li><span class="parameter">what</span>
+        ? string|'before'|'after' # The name of a callback, or either the string <code>before</code> or <code>after</code>.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-        <code>&apos;before&apos;</code> or <code>nil</code>.</li>
+        'before'|nil # 'before'<code> or </code>nil`.</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-        <code>&apos;after&apos;</code> or <code>nil</code>.</li>
+        'after'|nil # <code>&apos;after&apos;</code> or <code>nil</code>.</li>
     </ol>
 
 
@@ -2574,7 +2483,7 @@ Note that a full stop gets appended to <code>what</code>.
          string
         </li>
         <li><span class="parameter">internal</span>
-         string
+        ? string|boolean
         </li>
     </ul>
 
@@ -2603,8 +2512,7 @@ Note that a full stop gets appended to <code>what</code>.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-        The unchanged input of the function.
+        string # The unchanged input of the function.
     </ol>
 
 
@@ -2629,8 +2537,7 @@ Note that a full stop gets appended to <code>what</code>.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-        The real callback name.
+        string # The real callback name.
     </ol>
 
 
@@ -2666,8 +2573,8 @@ Note that a full stop gets appended to <code>what</code>.
     <li><p>If there is a (single) function for callback <code>&lt;foo&gt;</code> of type
     three ('exclusive'), remove it, wrap it into <code>callbacks.&lt;foo&gt;</code>
     (via <code>orig_callbacks</code>) and install <code>callbacks.&lt;foo&gt;</code>.</p></li>
-    <li><p>Otherwise register <code>callbacks.&lt;foo&gt;</code> as the first and last
-    function of callback <code>&lt;foo&gt;</code>.</p></li>
+    <li><p>Otherwise register <code>callbacks.&lt;foo&gt;_{before,after}</code> as
+    necessary.</p></li>
 </ul>
 
 
@@ -2831,10 +2738,7 @@ Note that a full stop gets appended to <code>what</code>.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
-
-
-
+        string
     </ol>
 
 
@@ -2859,10 +2763,7 @@ Note that a full stop gets appended to <code>what</code>.
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a>, <span class="type">number</span> or <span class="type">boolean</span></span>
-
-
-
+        string|number|boolean
     </ol>
 
 
@@ -2939,7 +2840,7 @@ Note that a full stop gets appended to <code>what</code>.
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2023-08-08 17:32:05 </i>
+<i style="float:right;">Last updated 2023-09-10 21:36:18 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

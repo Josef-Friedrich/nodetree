@@ -55,6 +55,7 @@ ctan: install doc
 	rm -f $(jobname)/README.md.bak
 	cp -f $(jobname).ins $(jobname)/
 	cp -f $(jobname).dtx $(jobname)/
+	cp -f $(jobname)-doc.tex $(jobname)/
 	cp -f $(jobname).pdf $(jobname)/
 	cp -f $(jobname).lua $(jobname)/
 	tar cvfz $(jobname).tar.gz $(jobname)

@@ -649,30 +649,37 @@ end
 
 --- Convert a Lua table into a format string.
 ---
----@param table table # A table to generate an inline view of.
+---@param tbl table # A table to generate an inline view of.
 ---
 ---@return string
-function template.table_inline(table)
+function template.table_inline(tbl)
   local tex_escape = ''
   if options.channel == 'tex' then
     tex_escape = '\\'
   end
-  if type(table) == 'table' then
-    table = get_all_table_data(table)
+  if type(tbl) == 'table' then
+    tbl = get_all_table_data(tbl)
     local output = tex_escape .. '{'
     local kv_list = ''
-    for key, value in pairs(table) do
-        if type(key) ~= 'numbers' then
-          key = '\'' ..
-            template.colored_string(key, 'cyan', 'dim') .. '\''
-        end
-        kv_list = kv_list .. '[' .. key .. '] = ' ..
-          template.table_inline(value) .. ', '
+    local keys = {}
+    for key in pairs(tbl) do
+      keys[#keys + 1] = key
+    end
+    table.sort(keys)
+    for i = 1, #keys do
+      local key = keys[i]
+      local value = tbl[key]
+      if type(key) ~= 'numbers' then
+        key = '\'' ..
+          template.colored_string(key, 'cyan', 'dim') .. '\''
+      end
+      kv_list = kv_list .. '[' .. key .. '] = ' ..
+        template.table_inline(value) .. ', '
     end
     output = output .. kv_list:gsub(', $', '')
     return output .. tex_escape .. '}'
   else
-    return tostring(table)
+    return tostring(tbl)
   end
 end
 

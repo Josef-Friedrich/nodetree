@@ -31,10 +31,7 @@
   },
   // https://github.com/sumneko/lua-language-server/wiki/Libraries
   "Lua.workspace.library": [
-    // https://github.com/sumneko/lua-language-server/tree/master/meta/3rd
     "${3rd}/busted/library",
-    // https://github.com/Josef-Friedrich/LuaTeX_Lua-API
     "~/repos/lua/luatex_api_all/library"
-    // "~/repos/tex/luakeys/luakeys.lua",
   ]
 }

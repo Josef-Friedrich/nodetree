@@ -30,7 +30,7 @@
 ---  be either `continue` or `stop`.
 
 if not modules then modules = {} end modules ['nodetree'] = {
-  version   = '2.3.0',
+  version   = '2.4.0',
   comment   = 'nodetree',
   author    = 'Josef Friedrich',
   copyright = 'Josef Friedrich',

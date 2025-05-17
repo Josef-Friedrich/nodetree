@@ -1,0 +1,29 @@
+% https://github.com/Josef-Friedrich/nodetree/issues/46
+\documentclass[twocolumn]{article}
+
+\usepackage{graphicx}
+\usepackage[base]{babel}
+\usepackage{lipsum}
+\usepackage{luacode}
+\usepackage{luapackageloader}
+\usepackage{nodetree}
+
+
+\NodetreeUnregisterCallback{post_linebreak_filter}
+\NodetreeRegisterCallback{vpack_filter}
+
+\begin{document}
+
+\section{Position Tracking Demo}
+\begin{figure}[t]
+  \centering
+  \caption{Example figure with position tracking}
+  \includegraphics[width=\linewidth]{example-image-a.pdf}
+  \label{fig:example}
+\end{figure}
+\lipsum[1-2]
+
+\section{Paragraph Positioning}
+\lipsum[3-7]
+
+\end{document}

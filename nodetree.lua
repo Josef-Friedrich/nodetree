@@ -1285,6 +1285,15 @@ function tree.analyze_node(head, level)
   for _, field_name in pairs(node.fields(head.id, head.subtype)) do
     if field_name == 'attr' then
       attributes = tree.format_attributes(head.attr)
+  elseif node.type(head.id) == 'whatsit' and field_name == 'data' and head.subtype == 1 then
+    -- Quick fix #46
+    -- Unable to access head.data or head['data']
+    -- A simple assignment causes a crash: local tmp = head.data
+    -- ! Incomplete \iffalse; all text was ignored after line 23.
+    -- <inserted text>
+    -- \fi
+    -- l.23 \end{figure}
+    -- local tmp = head.data
     elseif field_name ~= 'next' and field_name ~= 'prev' and
       node.is_node(head[field_name]) then
       fields[field_name] = head[field_name]

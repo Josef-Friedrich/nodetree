@@ -22,13 +22,12 @@ install_dev:
 doc: doc_examples doc_pdf doc_lua
 
 doc_pdf:
-	lualatex --shell-escape nodetree-doc.tex
-	makeindex -s gglo.ist -o nodetree-doc.gls nodetree-doc.glo
-	makeindex -s gind.ist -o nodetree-doc.ind nodetree-doc.idx
-	lualatex --shell-escape nodetree-doc.tex
+	lualatex --shell-escape $(jobname)-doc.tex
+	makeindex -s gglo.ist -o $(jobname)-doc.gls $(jobname)-doc.glo
+	makeindex -s gind.ist -o $(jobname)-doc.ind $(jobname)-doc.idx
+	lualatex --shell-escape $(jobname)-doc.tex
 	mkdir -p $(texmf)/doc
-	mv nodetree-doc.pdf $(jobname).pdf
-	cp $(jobname).pdf $(texmf)/doc
+	cp $(jobname)-doc.pdf $(texmf)/doc
 
 doc_examples:
 	find . -name "*_nodetree.tex" -exec rm -f {} \;
@@ -56,7 +55,7 @@ ctan: install doc
 	cp -f $(jobname).ins $(jobname)/
 	cp -f $(jobname).dtx $(jobname)/
 	cp -f $(jobname)-doc.tex $(jobname)/
-	cp -f $(jobname).pdf $(jobname)/
+	cp -f $(jobname)-doc.pdf $(jobname)/
 	cp -f $(jobname).lua $(jobname)/
 	tar cvfz $(jobname).tar.gz $(jobname)
 	rm -rf $(jobname)

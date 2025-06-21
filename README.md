@@ -30,17 +30,39 @@ license is in:
 and version 1.3c or later is part of all distributions of LaTeX
 version 2008/05/04 or later.
 
-# CTAN
+## Packaging
 
-Since July 2016 the nodetree package is included in the Comprehensive TeX
-Archive Network (CTAN).
+### CTAN
 
-* TeX archive: http://mirror.ctan.org/macros/luatex/generic/nodetree
-* Package page: http://www.ctan.org/pkg/nodetree
+The `nodetree` package has been included in the Comprehensive TeX Archive
+Network (CTAN) since July 2016.
 
-# Repository
+* [Package page](https://www.ctan.org/pkg/nodetree)
+* [Sources](https://www.ctan.org/tex-archive/macros/luatex/generic/nodetree)
 
-https://github.com/Josef-Friedrich/nodetree
+### Distributions
+
+* TeX Live:
+  * run files:
+    * [tex/luatex/nodetree/nodetree.lua](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/nodetree/nodetree.lua)
+    * [tex/luatex/nodetree/nodetree.sty](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/nodetree/nodetree.sty)
+    * [tex/luatex/nodetree/nodetree.tex](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/nodetree/nodetree.tex)
+    * [tex/luatex/nodetree/nodetree-embed.sty](https://tug.org/svn/texlive/trunk/Master/texmf-dist/tex/luatex/nodetree/nodetree-embed.sty)
+  * source files:
+    * [source/luatex/nodetree/nodetree.dtx](https://tug.org/svn/texlive/trunk/Master/texmf-dist/source/luatex/nodetree/nodetree.dtx)
+    * [source/luatex/nodetree/nodetree.ins](https://tug.org/svn/texlive/trunk/Master/texmf-dist/source/luatex/nodetree/nodetree.ins)
+
+  * doc files:
+    * [doc/luatex/nodetree/nodetree-doc.pdf](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/nodetree/nodetree-doc.pdf)
+    * [doc/luatex/nodetree/nodetree-doc.tex](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/nodetree/nodetree-doc.tex)
+    * [doc/luatex/nodetree/README.md](https://tug.org/svn/texlive/trunk/Master/texmf-dist/doc/luatex/nodetree/README.md)
+* [MiKTeX](https://miktex.org/packages/nodetree)
+
+### Repository
+
+The [Git repository](https://github.com/Josef-Friedrich/nodetree) in
+which the development takes place is hosted on
+[GitHub](https://github.com).
 
 # Installation
 
